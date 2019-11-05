@@ -70,7 +70,8 @@ main() -> int
             bsl::dynarray<Foo> da2;
 
         public:
-            test() : da2{bsl::make_dynarray<Foo>(1)} {}
+            test() : da2{bsl::make_dynarray<Foo>(1)}
+            {}
 
             auto
             test1() -> void
@@ -106,7 +107,8 @@ main() -> int
             bsl::dynarray<Foo> da2;
 
         public:
-            test() : da2{bsl::make_dynarray<Foo>(1)} {}
+            test() : da2{bsl::make_dynarray<Foo>(1)}
+            {}
 
             auto
             test1() -> void
@@ -142,7 +144,8 @@ main() -> int
             bsl::dynarray<Foo> da2;
 
         public:
-            test() : da2{bsl::make_dynarray<Foo>(1)} {}
+            test() : da2{bsl::make_dynarray<Foo>(1)}
+            {}
 
             auto
             test1() -> void
@@ -670,7 +673,8 @@ main() -> int
             bsl::dynarray<Foo> da2;
 
         public:
-            test() : da2{bsl::make_dynarray<Foo>(1)} {}
+            test() : da2{bsl::make_dynarray<Foo>(1)}
+            {}
 
             auto
             test1() -> void
@@ -785,7 +789,8 @@ main() -> int
             bsl::dynarray<Foo> da2;
 
         public:
-            test() : da2{bsl::make_dynarray<Foo>(1)} {}
+            test() : da2{bsl::make_dynarray<Foo>(1)}
+            {}
 
             auto
             test1() -> void
@@ -900,7 +905,8 @@ main() -> int
             bsl::dynarray<Foo> da2;
 
         public:
-            test() : da2{bsl::make_dynarray<Foo>(1)} {}
+            test() : da2{bsl::make_dynarray<Foo>(1)}
+            {}
 
             auto
             test1() -> void
@@ -1015,7 +1021,8 @@ main() -> int
             bsl::dynarray<Foo> da2;
 
         public:
-            test() : da2{bsl::make_dynarray<Foo>(1)} {}
+            test() : da2{bsl::make_dynarray<Foo>(1)}
+            {}
 
             auto
             test1() -> void
@@ -1130,7 +1137,8 @@ main() -> int
             bsl::dynarray<Foo> da2;
 
         public:
-            test() : da2{bsl::make_dynarray<Foo>(1)} {}
+            test() : da2{bsl::make_dynarray<Foo>(1)}
+            {}
 
             auto
             test1() -> void

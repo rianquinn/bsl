@@ -20,7 +20,7 @@
 # SOFTWARE.
 
 include(CTest)
-enable_testing()
+include(ExternalProject)
 
 # ------------------------------------------------------------------------------
 # Catch
@@ -49,44 +49,37 @@ ExternalProject_Add(
 include_directories(SYSTEM ${CMAKE_BINARY_DIR}/external/include)
 
 # ------------------------------------------------------------------------------
-# Flags
+# Tests
 # ------------------------------------------------------------------------------
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-access-control")
-set(CMAKE_CXX_FLAGS_COVERAGE "-O0 -g --coverage -fprofile-arcs -ftest-coverage")
-set(CMAKE_LINKER_FLAGS_COVERAGE "-O0 -g --coverage -fprofile-arcs -ftest-coverage")
+macro(add_tests NAME)
+    add_executable(test_${NAME} ${NAME}.cpp)
+    add_dependencies(test_${NAME} ut)
+    add_test(test_${NAME} test_${NAME})
+    target_compile_options(test_${NAME} PRIVATE -fno-access-control)
+endmacro(add_tests)
+
+add_tests(contracts_build_level_0)
+add_tests(contracts_build_level_1)
+add_tests(contracts_build_level_2)
+add_tests(contracts_continue)
+add_tests(contracts_no_continue)
 
 # ------------------------------------------------------------------------------
-# Initial Setup
-# ------------------------------------------------------------------------------
-
-add_executable(test_dynarray dynarray.cpp)
-add_executable(test_random_access_iterator random_access_iterator.cpp)
-add_executable(test_ifarray ifarray.cpp)
-
-add_dependencies(test_dynarray ut)
-add_dependencies(test_random_access_iterator ut)
-add_dependencies(test_ifarray ut)
-
-add_test(test_dynarray test_dynarray)
-add_test(test_random_access_iterator test_random_access_iterator)
-add_test(test_ifarray test_ifarray)
-
-if(ENABLE_CPPCHECK)
-    add_dependencies(test_dynarray cppcheck)
-    add_dependencies(test_random_access_iterator cppcheck)
-    add_dependencies(test_ifarray cppcheck)
-endif()
-
-# ------------------------------------------------------------------------------
-# Targets
+# Coverage Targets
 # ------------------------------------------------------------------------------
 
 if(CMAKE_BUILD_TYPE STREQUAL "COVERAGE")
     add_custom_target(
         unittest
         COMMAND lcov --zerocounters --directory . -q
-        COMMAND ctest --output-on-failure
+        COMMAND ${CMAKE_COMMAND} -E chdir .. ctest --output-on-failure
+    )
+
+    add_custom_target(
+        memcheck
+        COMMAND lcov --zerocounters --directory . -q
+        COMMAND ${CMAKE_COMMAND} -E chdir .. ctest --output-on-failure -T memcheck
     )
 
     add_custom_target(
@@ -121,6 +114,11 @@ if(CMAKE_BUILD_TYPE STREQUAL "COVERAGE")
 else()
     add_custom_target(
         unittest
-        COMMAND ctest --output-on-failure
+        COMMAND ${CMAKE_COMMAND} -E chdir .. ctest --output-on-failure
+    )
+
+    add_custom_target(
+        memcheck
+        COMMAND ${CMAKE_COMMAND} -E chdir .. ctest --output-on-failure -T memcheck
     )
 endif()

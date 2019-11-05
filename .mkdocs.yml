@@ -19,7 +19,51 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
+site_name: Bareflank Support Library
+repo_url: https://github.com/Bareflank/bsl
+repo_name: GitHub
+site_description: support library used by our various projects
+site_author: Assured Information Security, Inc.
 
-add_subdirectory(contracts)
-add_subdirectory(utility)
+theme:
+  name: 'material'
+
+extra_css:
+    - extra.css
+
+nav:
+    - 'About': 'index.md'
+    - 'Getting Started': 'getting_started.md'
+    - 'APIs': 'apis.md'
+    - 'Contributing': 'contributing.md'
+    - 'Code of Conduct': 'code_of_conduct.md'
+    - 'Support': 'support.md'
+    - 'License': 'license.md'
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      linenums: true
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+      toc_depth: 2-2
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - mdx_include:
+      allow_circular_inclusion: true

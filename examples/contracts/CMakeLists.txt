@@ -19,50 +19,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-site_name: Bareflank Support Library
-repo_url: https://github.com/Bareflank/bsl
-repo_name: GitHub
-site_description: support library used by our various projects
-site_author: Assured Information Security, Inc.
+# add_executable(examples_contracts_general_usage general_usage.cpp)
+# add_executable(examples_contracts_continue_on_contract_violation continue_on_contract_violation.cpp)
+# add_executable(examples_contracts_set_violation_handler set_violation_handler.cpp)
 
-theme:
-  name: 'material'
+add_executable(examples_contracts_expects expects.cpp)
+# add_executable(examples_contracts_ensures ensures.cpp)
+# add_executable(examples_contracts_assert assert.cpp)
 
-extra_css:
-    - extra.css
+# add_executable(examples_contracts_expects_audit expects_audit.cpp)
+# add_executable(examples_contracts_ensures_audit ensures_audit.cpp)
+# add_executable(examples_contracts_assert_audit assert_audit.cpp)
 
-nav:
-    - 'About': 'index.md'
-    - 'Getting Started': 'getting_started.md'
-    - 'Examples': 'examples.md'
-    - 'APIs': 'apis.md'
-    - 'Contributing': 'contributing.md'
-    - 'License': 'license.md'
-
-markdown_extensions:
-  - admonition
-  - codehilite:
-      linenums: true
-  - footnotes
-  - meta
-  - toc:
-      permalink: true
-      toc_depth: 2-2
-  - pymdownx.arithmatex
-  - pymdownx.betterem:
-      smart_enable: all
-  - pymdownx.caret
-  - pymdownx.critic
-  - pymdownx.details
-  - pymdownx.emoji:
-      emoji_generator: !!python/name:pymdownx.emoji.to_svg
-  - pymdownx.inlinehilite
-  - pymdownx.magiclink
-  - pymdownx.mark
-  - pymdownx.smartsymbols
-  - pymdownx.superfences
-  - pymdownx.tasklist:
-      custom_checkbox: true
-  - pymdownx.tilde
-  - mdx_include:
-      allow_circular_inclusion: true
+# add_executable(examples_contracts_expects_axiom expects_axiom.cpp)
+# add_executable(examples_contracts_ensures_axiom ensures_axiom.cpp)
+# add_executable(examples_contracts_assert_axiom assert_axiom.cpp)

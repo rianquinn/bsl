@@ -19,14 +19,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <bsl.h>
+#ifndef BSL_FINALLY
+#define BSL_FINALLY
 
-auto
-main() -> int
+// clang-format off
+
+namespace bsl
 {
-    for (const auto &c : bsl::ifarray<char>(FILENAME)) {
-        std::cout << c;
-    }
+    ///
+    template<
+        typename FUNC,
+        std::enable_if_t<std::is_nothrow_invocable_v<FUNC>, int> = 0>
+    class finally
+    {
+        FUNC m_func{};
 
-    std::cout << '\n';
-}
+    public:
+        explicit finally(FUNC &&func) noexcept :
+            m_func(std::move(func))
+        {}
+
+        ~finally() noexcept
+        {
+            m_func();
+        }
+
+    public:
+        finally(const finally &) = delete;
+        finally &operator=(const finally &) = delete;
+        finally(finally &&) noexcept = delete;
+        finally &operator=(finally &&) noexcept = delete;
+    };
+
+}    // namespace bsl
+
+// clang-format on
+
+#endif

@@ -20,9 +20,8 @@
 # SOFTWARE.
 
 cmake_minimum_required(VERSION 3.13)
-project(dynarray CXX)
+project(bsl CXX)
 
-include(ExternalProject)
 set(CMAKE_CXX_STANDARD 20)
 
 # ------------------------------------------------------------------------------
@@ -31,80 +30,105 @@ set(CMAKE_CXX_STANDARD 20)
 
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_TESTS "Build test programs" ON)
-option(ENABLE_CLANG_TIDY "Enable the use of clang tidy" OFF)
-option(ENABLE_CPPCHECK "Enable the use of cppcheck" OFF)
 
 # ------------------------------------------------------------------------------
 # Development Mode
 # ------------------------------------------------------------------------------
 
-if(ENABLE_DEVELOPMENT STREQUAL "ASAN")
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(BUILD_EXAMPLES ON)
+    set(BUILD_TESTS OFF)
+    message(STATUS "[enabled]: CMake's Release mode")
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(BUILD_EXAMPLES ON)
     set(BUILD_TESTS ON)
-    set(ENABLE_CLANG_TIDY ON)
-    set(ENABLE_CPPCHECK ON)
-    set(CMAKE_BUILD_TYPE ASAN)
+    message(STATUS "[enabled]: CMake's Debug mode")
 endif()
 
-if(ENABLE_DEVELOPMENT STREQUAL "UBSAN")
+if(CMAKE_BUILD_TYPE STREQUAL "WEVERYTHING")
     set(BUILD_EXAMPLES ON)
     set(BUILD_TESTS ON)
-    set(ENABLE_CLANG_TIDY ON)
-    set(ENABLE_CPPCHECK ON)
-    set(CMAKE_BUILD_TYPE UBSAN)
+    message(STATUS "[enabled]: Clang's -Weverything")
 endif()
 
-if(ENABLE_DEVELOPMENT STREQUAL "COVERAGE")
-    set(BUILD_EXAMPLES OFF)
+if(CMAKE_BUILD_TYPE STREQUAL "STATIC_ANALYSIS")
+    set(BUILD_EXAMPLES ON)
     set(BUILD_TESTS ON)
-    set(ENABLE_CLANG_TIDY OFF)
-    set(ENABLE_CPPCHECK OFF)
-    set(CMAKE_BUILD_TYPE COVERAGE)
+    message(STATUS "[enabled]: Clang Tidy")
+    message(STATUS "[enabled]: CppCheck")
 endif()
 
-# ------------------------------------------------------------------------------
-# Sanity Checks
-# ------------------------------------------------------------------------------
+if(CMAKE_BUILD_TYPE STREQUAL "ASAN")
+    set(BUILD_EXAMPLES ON)
+    set(BUILD_TESTS ON)
+    message(STATUS "[enabled]: Google's ASAN")
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "MSAN")
+    set(BUILD_EXAMPLES ON)
+    set(BUILD_TESTS ON)
+    message(STATUS "[enabled]: Google's MSAN")
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "TSAN")
+    set(BUILD_EXAMPLES ON)
+    set(BUILD_TESTS ON)
+    message(STATUS "[enabled]: Google's TSAN")
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "UBSAN")
+    set(BUILD_EXAMPLES ON)
+    set(BUILD_TESTS ON)
+    message(STATUS "[enabled]: Google's UBSAN")
+endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "COVERAGE")
-    if(BUILD_EXAMPLES)
-        message(FATAL_ERROR "BUILD_EXAMPLES must be OFF if COVERAGE is enabled")
-    endif()
-    if(ENABLE_CLANG_TIDY)
-        message(FATAL_ERROR "ENABLE_CLANG_TIDY must be OFF if COVERAGE is enabled")
-    endif()
-    if(ENABLE_CPPCHECK)
-        message(FATAL_ERROR "ENABLE_CPPCHECK must be OFF if COVERAGE is enabled")
-    endif()
+    set(BUILD_EXAMPLES OFF)
+    set(BUILD_TESTS ON)
+    message(STATUS "[enabled]: LCOV Coverage Tools")
 endif()
+
+set(CMAKE_CXX_FLAGS_WEVERYTHING "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded")
+set(CMAKE_LINKER_FLAGS_WEVERYTHING "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded")
+set(CMAKE_CXX_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Wall -Wextra -Wpedantic")
+set(CMAKE_LINKER_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address")
+set(CMAKE_LINKER_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address")
+set(CMAKE_CXX_FLAGS_MSAN "-Og -g -fno-omit-frame-pointer -fsanitize=memory")
+set(CMAKE_LINKER_FLAGS_MSAN "-Og -g -fno-omit-frame-pointer -fsanitize=memory")
+set(CMAKE_CXX_FLAGS_TSAN "-Og -g -fsanitize=thread")
+set(CMAKE_LINKER_FLAGS_TSAN "-Og -g -fsanitize=thread")
+set(CMAKE_CXX_FLAGS_UBSAN "-Og -g -fsanitize=undefined")
+set(CMAKE_LINKER_FLAGS_UBSAN "-Og -g -fsanitize=undefined")
+set(CMAKE_CXX_FLAGS_COVERAGE "-O0 -g --coverage -fprofile-arcs -ftest-coverage")
+set(CMAKE_LINKER_FLAGS_COVERAGE "-O0 -g --coverage -fprofile-arcs -ftest-coverage")
 
 # ------------------------------------------------------------------------------
 # Flags
 # ------------------------------------------------------------------------------
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -Werror")
-set(CMAKE_CXX_FLAGS_ASAN "-fno-omit-frame-pointer -fsanitize=address -g")
-set(CMAKE_LINKER_FLAGS_ASAN "-fno-omit-frame-pointer -fsanitize=address -g")
-set(CMAKE_CXX_FLAGS_UBSAN "-fsanitize=undefined -g")
-set(CMAKE_LINKER_FLAGS_UBSAN "-fsanitize=undefined -g")
+set(CMAKE_CXX_FLAGS "-fdiagnostics-color=auto")
 
 # ------------------------------------------------------------------------------
-# Clang Tidy
+# Static Analysis Tools
 # ------------------------------------------------------------------------------
 
-if(ENABLE_CLANG_TIDY AND NOT CMAKE_CXX_CLANG_TIDY)
+if(CMAKE_BUILD_TYPE STREQUAL "STATIC_ANALYSIS")
     list(APPEND CMAKE_CXX_CLANG_TIDY
         clang-tidy
     )
 endif()
 
-if(ENABLE_CPPCHECK AND NOT CMAKE_CXX_CPPCHECK)
+if(CMAKE_BUILD_TYPE STREQUAL "STATIC_ANALYSIS")
     list(APPEND CMAKE_CXX_CPPCHECK
-        ${CMAKE_BINARY_DIR}/external/bin/cppcheck
+        cppcheck
         --enable=all
         --error-exitcode=1
         --quiet
         --inline-suppr
+        --suppress=unmatchedSuppression         # Handle different versions of CppCheck
         --suppress=missingInclude               # Noisy warning
         --suppress=operatorEq                   # Mutually exclusive with Clang Tidy
         --template="{file}:{line}: {severity}: {id}: {message}"
@@ -119,9 +143,10 @@ if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-if(BUILD_TESTS)
-    add_subdirectory(tests)
-endif()
+# if(BUILD_TESTS)
+#     enable_testing()
+#     add_subdirectory(tests)
+# endif()
 
 # ------------------------------------------------------------------------------
 # Install
@@ -130,45 +155,59 @@ endif()
 install(FILES include/bsl.h DESTINATION include/bsl)
 
 # ------------------------------------------------------------------------------
-# Package
-# ------------------------------------------------------------------------------
-
-add_library(bsl INTERFACE)
-
-target_include_directories(bsl INTERFACE
-    ${CMAKE_SOURCE_DIR}/include
-)
-
-export(TARGETS bsl FILE bslConfig.cmake APPEND)
-export(PACKAGE bsl)
-
-# ------------------------------------------------------------------------------
 # Targets
 # ------------------------------------------------------------------------------
 
 add_custom_target(
     format
+    COMMAND find ${CMAKE_SOURCE_DIR}/examples -iname *.h -o -iname *.cpp | xargs clang-format -i
     COMMAND find ${CMAKE_SOURCE_DIR}/include -iname *.h -o -iname *.cpp | xargs clang-format -i
     COMMAND find ${CMAKE_SOURCE_DIR}/tests -iname *.h -o -iname *.cpp | xargs clang-format -i
 )
 
 # ------------------------------------------------------------------------------
-# CppCheck
+# Info
 # ------------------------------------------------------------------------------
 
-if(ENABLE_CPPCHECK)
-    list(APPEND CPPCHECK_CMAKE_ARGS
-        -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/external/
-        -DCMAKE_CXX_FLAGS="-w"
-        -DCMAKE_BUILD_TYPE=Release
-    )
+string(ASCII 27 Esc)
+set(COLOR_E "${Esc}[m")
+set(COLOR_G "${Esc}[1;92m")
+set(COLOR_Y "${Esc}[1;93m")
+set(COLOR_M "${Esc}[1;95m")
+set(COLOR_W "${Esc}[1;97m")
 
-    ExternalProject_Add(
-        cppcheck
-        URL https://github.com/danmar/cppcheck/archive/1.89.tar.gz
-        URL_MD5 3bc61e54f13639c60a3fc698edb18d61
-        CMAKE_ARGS ${CPPCHECK_CMAKE_ARGS}
-        UPDATE_COMMAND ""
-        UPDATE_DISCONNECTED ON
-    )
-endif()
+message(STATUS "${COLOR_M}  ____    ____    _      ${COLOR_E}")
+message(STATUS "${COLOR_M} | __ )  / ___|  | |     ${COLOR_E}")
+message(STATUS "${COLOR_M} |  _ \\  \\___ \\  | |  ${COLOR_E}")
+message(STATUS "${COLOR_M} | |_) |  ___) | | |___  ${COLOR_E}")
+message(STATUS "${COLOR_M} |____/  |____/  |_____| ${COLOR_E}")
+message(STATUS "")
+message(STATUS "${COLOR_G} Please give us a star on: ${White}https://github.com/Bareflank/bsl${COLOR_E}")
+message(STATUS "")
+message(STATUS "${COLOR_G} CMake configuration options:${COLOR_E}")
+message(STATUS "${COLOR_Y}   -DBUILD_EXAMPLES=ON                   ${COLOR_E}build the examples")
+message(STATUS "${COLOR_Y}   -DBUILD_TESTS=ON                      ${COLOR_E}build the unittests")
+message(STATUS "")
+
+message(STATUS "${COLOR_G} BSL build types:${COLOR_E}")
+message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=Release            ${COLOR_E}compile in release mode")
+message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=Debug              ${COLOR_E}compile in debug mode")
+message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=WEVERYTHING        ${COLOR_E}compile with -Weverything")
+message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=STATIC_ANALYSIS    ${COLOR_E}compile with Clang Tidy and CppCheck")
+message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=ASAN               ${COLOR_E}compile with Google's ASAN")
+message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=MSAN               ${COLOR_E}compile with Google's MSAN")
+message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=TSAN               ${COLOR_E}compile with Google's TSAN")
+message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=UBSAN              ${COLOR_E}compile with Google's UBSAN")
+message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=COVERAGE           ${COLOR_E}compile with LCOV coverage")
+message(STATUS "")
+
+message(STATUS "${COLOR_G} BSL build targets:${COLOR_E}")
+message(STATUS "${COLOR_Y}   make format                           ${COLOR_E}formats the source code")
+message(STATUS "${COLOR_Y}   make unittest                         ${COLOR_E}runs the unittests")
+message(STATUS "${COLOR_Y}   make memcheck                         ${COLOR_E}runs the unittests with Valgrind")
+message(STATUS "${COLOR_Y}   make coverage                         ${COLOR_E}runs the unittests with LCOV")
+message(STATUS "")
+
+message(STATUS "${COLOR_G} BSL installation:${COLOR_E}")
+message(STATUS "${COLOR_Y}   make install                          ${COLOR_E}installs BSL on your system")
+message(STATUS "")

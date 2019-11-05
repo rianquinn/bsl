@@ -19,7 +19,5 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
-
-add_subdirectory(contracts)
-add_subdirectory(utility)
+add_executable(examples_utility_discard discard.cpp)
+add_executable(examples_utility_narrow_cast narrow_cast.cpp)

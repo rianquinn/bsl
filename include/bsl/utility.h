@@ -19,18 +19,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#define BSL_CORE_GUIDELINE_COMPLIANT
-#define BSL_THROW_ON_CONTRACT_VIOLATION
-#include <bsl.h>
+#ifndef BSL_UTILITY
+#define BSL_UTILITY
 
-auto
-main() -> int
+#include <utility>
+
+namespace bsl
 {
-    try {
-        auto da = bsl::make_dynarray<int>(1);
-        da[1] = 0;    // <-- throws
+    template<typename T, typename U>
+    constexpr auto
+    narrow_cast(U &&u) noexcept -> T
+    {
+        return static_cast<T>(std::forward<U>(u));
     }
-    catch (const std::exception &e) {
-        std::cout << "error: " << e.what() << '\n';
-    }
-}
+
+    template<typename... ARGS>
+    constexpr auto
+    discard(ARGS &&...) noexcept -> void    // NOLINT
+    {}
+}    // namespace bsl
+
+#endif
