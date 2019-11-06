@@ -1,10 +1,11 @@
+#define BSL_CONTINUE_OPTION 1
 #include <bsl/contracts.h>
 
 #include <string>
-#include <stdexcept>
+#include <iostream>
 
-[[noreturn]] static auto
-violation_handler(const bsl::violation_info &info) -> void
+static auto
+violation_handler(const bsl::violation_info &info) noexcept -> void
 {
     std::string what;
     what += "contract violation detected\n";
@@ -13,13 +14,14 @@ violation_handler(const bsl::violation_info &info) -> void
     what += "  - func: " + std::string(info.location.function_name()) + '\n';
     what += "  - line: " + std::to_string(info.location.line()) + '\n';
 
-    throw std::logic_error(what);
+    std::cerr << what << '\n';
 }
 
-static constexpr auto
+static auto
 the_answer(int val) noexcept -> void
 {
     bsl::expects(val == 42);
+    std::cout << "the violation was logged and ignored\n";
 }
 
 auto
@@ -29,11 +31,10 @@ main() -> int
     the_answer(23);
 }
 
-// terminate called after throwing an instance of 'std::logic_error'
-//   what():  contract violation detected
+// contract violation detected
 //   - type: default precondition
 //   - file: ...
 //   - func: the_answer
-//   - line: 19
-//
-// Aborted (core dumped)
+//   - line: 23
+
+// the violation was logged and ignored

@@ -19,9 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#define BSL_BUILD_LEVEL BSL_BUILD_LEVEL_OFF
-#define BSL_CONTINUE_ON_CONTRACT_VIOLATION 1
-#include "../include/bsl/contracts.h"
+#define BSL_BUILD_LEVEL 0
+#include "../../include/bsl/contracts.h"
 
 #include "boost/ut.hpp"
 using namespace boost::ut;

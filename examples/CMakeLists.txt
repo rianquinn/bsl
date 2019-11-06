@@ -22,4 +22,4 @@
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_subdirectory(contracts)
-add_subdirectory(utility)
+# add_subdirectory(utility)

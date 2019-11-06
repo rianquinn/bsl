@@ -19,9 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#define BSL_BUILD_LEVEL BSL_BUILD_LEVEL_AUDIT
-#define BSL_CONTINUE_ON_CONTRACT_VIOLATION 1
-#include "../include/bsl/contracts.h"
+#define BSL_BUILD_LEVEL 2
+#include "../../include/bsl/contracts.h"
 
 #include "boost/ut.hpp"
 using namespace boost::ut;
@@ -30,18 +29,14 @@ auto
 main() -> int
 {
     bsl::set_violation_handler([](auto info) {
-        bsl::discard(info);
-    });
-
-    std::set_terminate([] {
-        throw std::runtime_error("attempted to terminate");
+        throw std::runtime_error(info.comment);
     });
 
     "expects"_test = [] {
         expect(nothrow([] {
             bsl::expects(true);
         }));
-        expect(nothrow([] {
+        expect(throws([] {
             bsl::expects(false);
         }));
     };
@@ -50,7 +45,7 @@ main() -> int
         expect(nothrow([] {
             bsl::ensures(true);
         }));
-        expect(nothrow([] {
+        expect(throws([] {
             bsl::ensures(false);
         }));
     };
@@ -59,7 +54,7 @@ main() -> int
         expect(nothrow([] {
             bsl::assert(true);
         }));
-        expect(nothrow([] {
+        expect(throws([] {
             bsl::assert(false);
         }));
     };
@@ -68,7 +63,7 @@ main() -> int
         expect(nothrow([] {
             bsl::expects_audit(true);
         }));
-        expect(nothrow([] {
+        expect(throws([] {
             bsl::expects_audit(false);
         }));
     };
@@ -77,7 +72,7 @@ main() -> int
         expect(nothrow([] {
             bsl::ensures_audit(true);
         }));
-        expect(nothrow([] {
+        expect(throws([] {
             bsl::ensures_audit(false);
         }));
     };
@@ -86,7 +81,7 @@ main() -> int
         expect(nothrow([] {
             bsl::assert_audit(true);
         }));
-        expect(nothrow([] {
+        expect(throws([] {
             bsl::assert_audit(false);
         }));
     };

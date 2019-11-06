@@ -19,13 +19,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BSL_SOURCE_LOCATION
-#define BSL_SOURCE_LOCATION
+#ifndef BSL_SOURCE_LOCATION_H
+#define BSL_SOURCE_LOCATION_H
 
 #include <cstdint>
 
 namespace bsl
 {
+    /// Source Location
+    ///
+    /// The following implements the source_location specification that will
+    /// eventually be included in C++20. For more information on how this
+    /// works, please see the following:
+    ///
+    /// https://en.cppreference.com/w/cpp/utility/source_location
+    ///
     class source_location
     {
         using file_type = const char *;
@@ -39,6 +47,32 @@ namespace bsl
         {}
 
     public:
+        /// Default Constructor
+        ///
+        /// @expects none
+        /// @ensures none
+        ///
+        /// @param none
+        /// @return none
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        constexpr source_location() noexcept = default;
+
+        /// Current
+        ///
+        /// Returns the current source location
+        ///
+        /// @expects none
+        /// @ensures none
+        ///
+        /// @param file defaults to the current file
+        /// @param func defaults to the current function
+        /// @param line defaults to the current line
+        /// @return current source location
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
         static constexpr auto
         current(
             file_type file = __builtin_FILE(),
@@ -48,24 +82,63 @@ namespace bsl
             return {file, func, line};
         }
 
+        /// File Name
+        ///
+        /// @expects none
+        /// @ensures none
+        ///
+        /// @param none
+        /// @return source location file name
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
         [[nodiscard]] constexpr auto
-        file() const noexcept -> file_type
+        file_name() const noexcept -> file_type
         {
             return m_file;
         }
 
+        /// Function Name
+        ///
+        /// @expects none
+        /// @ensures none
+        ///
+        /// @param none
+        /// @return source location function name
+        /// @throw none
+        ///
         [[nodiscard]] constexpr auto
-        function() const noexcept -> file_type
+        function_name() const noexcept -> func_type
         {
             return m_func;
         }
 
+        /// Line
+        ///
+        /// @expects none
+        /// @ensures none
+        ///
+        /// @param none
+        /// @return source location line
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
         [[nodiscard]] constexpr auto
         line() const noexcept -> line_type
         {
             return m_line;
         }
 
+        /// Column
+        ///
+        /// @expects none
+        /// @ensures none
+        ///
+        /// @param none
+        /// @return always 0 as the column is not supported
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
         [[nodiscard]] static constexpr auto
         column() noexcept -> column_type
         {
@@ -73,9 +146,9 @@ namespace bsl
         }
 
     private:
-        file_type m_file;
-        file_type m_func;
-        line_type m_line;
+        file_type m_file{};
+        func_type m_func{};
+        line_type m_line{};
     };
 }    // namespace bsl
 

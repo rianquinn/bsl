@@ -18,25 +18,3 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
-#ifndef BSL_UTILITY
-#define BSL_UTILITY
-
-#include <utility>
-
-namespace bsl
-{
-    template<typename T, typename U>
-    constexpr auto
-    narrow_cast(U &&u) noexcept -> T
-    {
-        return static_cast<T>(std::forward<U>(u));
-    }
-
-    template<typename... ARGS>
-    constexpr auto
-    discard(ARGS &&...) noexcept -> void    // NOLINT
-    {}
-}    // namespace bsl
-
-#endif

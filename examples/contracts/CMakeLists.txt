@@ -19,18 +19,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# add_executable(examples_contracts_general_usage general_usage.cpp)
-# add_executable(examples_contracts_continue_on_contract_violation continue_on_contract_violation.cpp)
-# add_executable(examples_contracts_set_violation_handler set_violation_handler.cpp)
+add_executable(examples_contracts_autosar_compliant autosar_compliant.cpp)
+add_executable(examples_contracts_continue_option continue_option.cpp)
+add_executable(examples_contracts_general_usage general_usage.cpp)
+add_executable(examples_contracts_set_violation_handler set_violation_handler.cpp)
 
 add_executable(examples_contracts_expects expects.cpp)
-# add_executable(examples_contracts_ensures ensures.cpp)
-# add_executable(examples_contracts_assert assert.cpp)
+add_executable(examples_contracts_ensures ensures.cpp)
+add_executable(examples_contracts_assert assert.cpp)
 
-# add_executable(examples_contracts_expects_audit expects_audit.cpp)
-# add_executable(examples_contracts_ensures_audit ensures_audit.cpp)
-# add_executable(examples_contracts_assert_audit assert_audit.cpp)
+add_executable(examples_contracts_expects_audit expects_audit.cpp)
+add_executable(examples_contracts_ensures_audit ensures_audit.cpp)
+add_executable(examples_contracts_assert_audit assert_audit.cpp)
 
-# add_executable(examples_contracts_expects_axiom expects_axiom.cpp)
-# add_executable(examples_contracts_ensures_axiom ensures_axiom.cpp)
-# add_executable(examples_contracts_assert_axiom assert_axiom.cpp)
+add_executable(examples_contracts_expects_axiom expects_axiom.cpp)
+add_executable(examples_contracts_ensures_axiom ensures_axiom.cpp)
+add_executable(examples_contracts_assert_axiom assert_axiom.cpp)

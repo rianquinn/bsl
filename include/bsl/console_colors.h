@@ -19,39 +19,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BSL_CONSOLE_COLORS
-#define BSL_CONSOLE_COLORS
+#ifndef BSL_CONSOLE_COLORS_H
+#define BSL_CONSOLE_COLORS_H
 
 namespace bsl::console_color
 {
 #ifdef _MSC_VER
-    constexpr const auto red = "";
-    constexpr const auto green = "";
-    constexpr const auto yellow = "";
-    constexpr const auto blue = "";
-    constexpr const auto magenta = "";
-    constexpr const auto cyan = "";
-    constexpr const auto light_red = "";
-    constexpr const auto light_green = "";
-    constexpr const auto light_yellow = "";
-    constexpr const auto light_blue = "";
-    constexpr const auto light_magenta = "";
-    constexpr const auto light_cyan = "";
-    constexpr const auto end = "";
+    constexpr const char *red = "";
+    constexpr const char *green = "";
+    constexpr const char *yellow = "";
+    constexpr const char *blue = "";
+    constexpr const char *magenta = "";
+    constexpr const char *cyan = "";
+    constexpr const char *light_red = "";
+    constexpr const char *light_green = "";
+    constexpr const char *light_yellow = "";
+    constexpr const char *light_blue = "";
+    constexpr const char *light_magenta = "";
+    constexpr const char *light_cyan = "";
+    constexpr const char *end = "";
 #else
-    constexpr const auto red = "\033[1;31m";
-    constexpr const auto green = "\033[1;32m";
-    constexpr const auto yellow = "\033[1;33m";
-    constexpr const auto blue = "\033[1;34m";
-    constexpr const auto magenta = "\033[1;35m";
-    constexpr const auto cyan = "\033[1;36m";
-    constexpr const auto light_red = "\033[1;91m";
-    constexpr const auto light_green = "\033[1;92m";
-    constexpr const auto light_yellow = "\033[1;93m";
-    constexpr const auto light_blue = "\033[1;94m";
-    constexpr const auto light_magenta = "\033[1;95m";
-    constexpr const auto light_cyan = "\033[1;96m";
-    constexpr const auto end = "\033[0m";
+    constexpr const char *red = "\033[1;31m";
+    constexpr const char *green = "\033[1;32m";
+    constexpr const char *yellow = "\033[1;33m";
+    constexpr const char *blue = "\033[1;34m";
+    constexpr const char *magenta = "\033[1;35m";
+    constexpr const char *cyan = "\033[1;36m";
+    constexpr const char *light_red = "\033[1;91m";
+    constexpr const char *light_green = "\033[1;92m";
+    constexpr const char *light_yellow = "\033[1;93m";
+    constexpr const char *light_blue = "\033[1;94m";
+    constexpr const char *light_magenta = "\033[1;95m";
+    constexpr const char *light_cyan = "\033[1;96m";
+    constexpr const char *end = "\033[0m";
 #endif
 }    // namespace bsl::console_color
 

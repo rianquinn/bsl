@@ -52,18 +52,18 @@ include_directories(SYSTEM ${CMAKE_BINARY_DIR}/external/include)
 # Tests
 # ------------------------------------------------------------------------------
 
-macro(add_tests NAME)
-    add_executable(test_${NAME} ${NAME}.cpp)
+macro(add_tests NAME FOLDER)
+    add_executable(test_${NAME} ${FOLDER}/${NAME}.cpp)
     add_dependencies(test_${NAME} ut)
     add_test(test_${NAME} test_${NAME})
     target_compile_options(test_${NAME} PRIVATE -fno-access-control)
 endmacro(add_tests)
 
-add_tests(contracts_build_level_0)
-add_tests(contracts_build_level_1)
-add_tests(contracts_build_level_2)
-add_tests(contracts_continue)
-add_tests(contracts_no_continue)
+add_tests(autosar_compliant_1 contracts)
+add_tests(build_level_0 contracts)
+add_tests(build_level_1 contracts)
+add_tests(build_level_2 contracts)
+add_tests(continue_option_1 contracts)
 
 # ------------------------------------------------------------------------------
 # Coverage Targets

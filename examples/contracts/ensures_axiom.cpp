@@ -1,14 +1,9 @@
 #include <bsl/contracts.h>
 
-static auto
-the_answer(int val) noexcept -> auto
+static constexpr auto
+the_answer(int val) noexcept -> void
 {
-    auto ret = [&] {
-        return val;
-    }();
-
-    bsl::ensures_axiom(ret == 42);    // <--- Ignored
-    return ret;
+    bsl::ensures_axiom(val == 42);    // <--- ignored
 }
 
 auto

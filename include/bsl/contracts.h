@@ -22,44 +22,51 @@
 #ifndef BSL_CONTRACTS_H
 #define BSL_CONTRACTS_H
 
+// -----------------------------------------------------------------------------
+// !!! AUTOSAR EXCEPTIONS !!!
+// -----------------------------------------------------------------------------
+//
+// - Rule M0-1-11: There shall be no unused parameters (named or unnamed)
+//   in non-virtualfunctions.
+//
+//   We use bsl::discard() to hide unused parameters from the compiler and
+//   static analysis tools specifically so that the compiler will optimize away
+//   contracts when they are disabled. As a result, there are two options:
+//
+//   - BSL_BUILD_LEVEL == 2: This will enable all contract checks, and as a
+//     result will ensure that all parameters are used. This will include
+//     audit tests. Not advisable in release builds.
+//
+//   - BSL_BUILD_LEVEL <= 1: This will either disable audit checks, or will
+//     disable all checks. In both cases, an exception to AUTOSAR would be
+//     required to stay compliant. This is advised in release builds.
+//
+
 #include "console_colors.h"
 #include "source_location.h"
-#include "utility.h"
+#include "discard.h"
+#include "autosar.h"
 
 #include <string>
 #include <iostream>
 
-// The following implementation is inspired from the following:
-//
-// http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0380r1.pdf
-//
-// There are some differences:
-// - We cannot use the attribute syntax, so this is implemented using regular
-//   C++ functions
-// - There is no support for the declaration based syntax.
-// - Axioms are supported but do nothing other than comment.
-//
-
-#define BSL_BUILD_LEVEL_OFF 0        ///< Turns off contract checks
-#define BSL_BUILD_LEVEL_DEFAULT 1    ///< Turns on default contract checks
-#define BSL_BUILD_LEVEL_AUDIT 2      ///< Turns on all contract checks
-
 #ifndef BSL_BUILD_LEVEL
-#define BSL_BUILD_LEVEL BSL_BUILD_LEVEL_DEFAULT
+#define BSL_BUILD_LEVEL 1
 #endif
 
-#ifndef BSL_CONTINUE_ON_CONTRACT_VIOLATION
-#define BSL_CONTINUE_ON_CONTRACT_VIOLATION false
+#ifndef BSL_CONTINUE_OPTION
+#define BSL_CONTINUE_OPTION 0
 #endif
 
-#if BSL_BUILD_LEVEL < 0 || BSL_BUILD_LEVEL > 2
-#error "invalid BSL_BUILD_LEVEL: expecting 0, 1, or 2"
-#endif
+static_assert(BSL_BUILD_LEVEL >= 0 and BSL_BUILD_LEVEL <= 2);
+static_assert(BSL_CONTINUE_OPTION >= 0 and BSL_CONTINUE_OPTION <= 1);
 
-#if BSL_CONTINUE_ON_CONTRACT_VIOLATION != 0 &&                                 \
-    BSL_CONTINUE_ON_CONTRACT_VIOLATION != 1
-#error "invalid BSL_BUILD_LEVEL: expecting 0, 1, or 2"
-#endif
+namespace bsl::details::contracts
+{
+    constexpr bool check_default = (BSL_BUILD_LEVEL >= 1);
+    constexpr bool check_audit = (BSL_BUILD_LEVEL == 2);
+    constexpr bool continue_on_violation = (BSL_CONTINUE_OPTION == 1);
+};    // namespace bsl::details::contracts
 
 // -----------------------------------------------------------------------------
 // Definition
@@ -85,38 +92,53 @@ namespace bsl
         const char *comment;
     };
 
-    /// Private Details
-    ///
     namespace details::contracts
     {
+        /// Default Violation Handler
+        ///
+        /// This function implements the default violation handler that is
+        /// executed when a contract violation occurs. You can override this
+        /// handler by calling set_violation_handler(). By default, this
+        /// handler will output a message and call std::abort() as defined in
+        /// the contracts spec. The use of std::abort() is not allowed with
+        /// AUTOSAR, so if you enable AUTOSAR compliance, this function will
+        /// throw instead.
+        ///
+        /// @expects
+        /// @ensures
+        ///
+        /// @param info the violation information
+        /// @return none
+        /// @throw [checked]: none
+        /// @throw [unchecked]: possible
+        ///
         [[noreturn]] inline auto
-        default_handler(const violation_info &info) noexcept -> void
+        default_handler(const violation_info &info) -> void
         {
-            if constexpr (BSL_BUILD_LEVEL > BSL_BUILD_LEVEL_OFF) {
-                std::string msg;
-                msg += console_color::light_red;
-                msg += "FATAL ERROR:";
-                msg += console_color::end;
-                msg += " ";
-                msg += console_color::light_magenta;
-                msg += info.comment;
-                msg += console_color::end;
-                msg += " [";
-                msg += console_color::light_cyan;
-                msg += info.location.line();
-                msg += console_color::end;
-                msg += "]: ";
-                msg += console_color::light_yellow;
-                msg += info.location.file();
-                msg += console_color::end;
+            std::string msg;
+            msg += console_color::light_red;
+            msg += "FATAL ERROR:";
+            msg += console_color::end;
+            msg += " ";
+            msg += console_color::light_magenta;
+            msg += info.comment;
+            msg += console_color::end;
+            msg += " violation [";
+            msg += console_color::light_cyan;
+            msg += std::to_string(info.location.line());
+            msg += console_color::end;
+            msg += "]: ";
+            msg += console_color::light_yellow;
+            msg += info.location.file_name();
+            msg += console_color::end;
 
-                std::cerr << msg << '\n';
+            if constexpr (autosar_compliant) {
+                throw std::logic_error(msg);
             }
             else {
-                bsl::discard(info);
+                std::cerr << msg << '\n';
+                std::abort();
             }
-
-            std::abort();
         }
 
         void (*handler)(const violation_info &) = default_handler;
@@ -129,21 +151,17 @@ namespace bsl
     ///
     /// @expects none
     /// @ensures none
-    /// @excepts none
     ///
     /// @param handler the handler to call when a contract violation occurs
     /// @return none
+    /// @throw [checked]: none
+    /// @throw [unchecked]: none
     ///
     constexpr auto
     set_violation_handler(void (*handler)(const violation_info &)) noexcept
         -> void
     {
-        if constexpr (BSL_BUILD_LEVEL > BSL_BUILD_LEVEL_OFF) {
-            details::contracts::handler = handler;
-        }
-        else {
-            bsl::discard(handler);
-        }
+        details::contracts::handler = handler;
     }
 
     /// Expects
@@ -153,21 +171,25 @@ namespace bsl
     ///
     /// @expects none
     /// @ensures none
-    /// @excepts depends on the violation handler. the default violation
-    ///     handler is marked as noexcept and called std::abort().
     ///
     /// @param test the precondition to check
     /// @return none
+    /// @throw [checked]: none
+    /// @throw [unchecked]: possible
     ///
     constexpr auto
     expects(bool test, source_location loc = source_location::current()) -> void
     {
-        if constexpr (BSL_BUILD_LEVEL >= BSL_BUILD_LEVEL_DEFAULT) {
-            if (!test) {
-                details::contracts::handler({loc, "precondition violation"});
+        using details::contracts::check_default;
+        using details::contracts::continue_on_violation;
+        using details::contracts::handler;
+        using details::contracts::default_handler;
 
-                if constexpr (!BSL_CONTINUE_ON_CONTRACT_VIOLATION) {
-                    std::get_terminate()();
+        if constexpr (check_default) {
+            if (!test) {
+                handler({loc, "default precondition"});
+                if constexpr (!continue_on_violation) {
+                    default_handler({loc, "[unhandled] default precondition"});
                 }
             }
         }
@@ -184,21 +206,25 @@ namespace bsl
     ///
     /// @expects none
     /// @ensures none
-    /// @excepts depends on the violation handler. the default violation
-    ///     handler is marked as noexcept and called std::abort().
     ///
-    /// @param test the postcondition to check
+    /// @param test the precondition to check
     /// @return none
+    /// @throw [checked]: none
+    /// @throw [unchecked]: possible
     ///
     constexpr auto
     ensures(bool test, source_location loc = source_location::current()) -> void
     {
-        if constexpr (BSL_BUILD_LEVEL >= BSL_BUILD_LEVEL_DEFAULT) {
-            if (!test) {
-                details::contracts::handler({loc, "postcondition violation"});
+        using details::contracts::check_default;
+        using details::contracts::continue_on_violation;
+        using details::contracts::handler;
+        using details::contracts::default_handler;
 
-                if constexpr (!BSL_CONTINUE_ON_CONTRACT_VIOLATION) {
-                    std::get_terminate()();
+        if constexpr (check_default) {
+            if (!test) {
+                handler({loc, "default postcondition"});
+                if constexpr (!continue_on_violation) {
+                    default_handler({loc, "[unhandled] default postcondition"});
                 }
             }
         }
@@ -215,21 +241,25 @@ namespace bsl
     ///
     /// @expects none
     /// @ensures none
-    /// @excepts depends on the violation handler. the default violation
-    ///     handler is marked as noexcept and called std::abort().
     ///
-    /// @param test the assertion to check
+    /// @param test the precondition to check
     /// @return none
+    /// @throw [checked]: none
+    /// @throw [unchecked]: possible
     ///
     constexpr auto
     assert(bool test, source_location loc = source_location::current()) -> void
     {
-        if constexpr (BSL_BUILD_LEVEL >= BSL_BUILD_LEVEL_DEFAULT) {
-            if (!test) {
-                details::contracts::handler({loc, "assertion violation"});
+        using details::contracts::check_default;
+        using details::contracts::continue_on_violation;
+        using details::contracts::handler;
+        using details::contracts::default_handler;
 
-                if constexpr (!BSL_CONTINUE_ON_CONTRACT_VIOLATION) {
-                    std::get_terminate()();
+        if constexpr (check_default) {
+            if (!test) {
+                handler({loc, "default assertion"});
+                if constexpr (!continue_on_violation) {
+                    default_handler({loc, "[unhandled] default assertion"});
                 }
             }
         }
@@ -246,22 +276,26 @@ namespace bsl
     ///
     /// @expects none
     /// @ensures none
-    /// @excepts depends on the violation handler. the default violation
-    ///     handler is marked as noexcept and called std::abort().
     ///
     /// @param test the precondition to check
     /// @return none
+    /// @throw [checked]: none
+    /// @throw [unchecked]: possible
     ///
     constexpr auto
     expects_audit(bool test, source_location loc = source_location::current())
         -> void
     {
-        if constexpr (BSL_BUILD_LEVEL >= BSL_BUILD_LEVEL_DEFAULT) {
-            if (!test) {
-                details::contracts::handler({loc, "precondition violation"});
+        using details::contracts::check_audit;
+        using details::contracts::continue_on_violation;
+        using details::contracts::handler;
+        using details::contracts::default_handler;
 
-                if constexpr (!BSL_CONTINUE_ON_CONTRACT_VIOLATION) {
-                    std::get_terminate()();
+        if constexpr (check_audit) {
+            if (!test) {
+                handler({loc, "audit precondition"});
+                if constexpr (!continue_on_violation) {
+                    default_handler({loc, "[unhandled] audit precondition"});
                 }
             }
         }
@@ -278,22 +312,26 @@ namespace bsl
     ///
     /// @expects none
     /// @ensures none
-    /// @excepts depends on the violation handler. the default violation
-    ///     handler is marked as noexcept and called std::abort().
     ///
-    /// @param test the postcondition to check
+    /// @param test the precondition to check
     /// @return none
+    /// @throw [checked]: none
+    /// @throw [unchecked]: possible
     ///
     constexpr auto
     ensures_audit(bool test, source_location loc = source_location::current())
         -> void
     {
-        if constexpr (BSL_BUILD_LEVEL >= BSL_BUILD_LEVEL_DEFAULT) {
-            if (!test) {
-                details::contracts::handler({loc, "postcondition violation"});
+        using details::contracts::check_audit;
+        using details::contracts::continue_on_violation;
+        using details::contracts::handler;
+        using details::contracts::default_handler;
 
-                if constexpr (!BSL_CONTINUE_ON_CONTRACT_VIOLATION) {
-                    std::get_terminate()();
+        if constexpr (check_audit) {
+            if (!test) {
+                handler({loc, "audit postcondition"});
+                if constexpr (!continue_on_violation) {
+                    default_handler({loc, "[unhandled] audit postcondition"});
                 }
             }
         }
@@ -310,22 +348,26 @@ namespace bsl
     ///
     /// @expects none
     /// @ensures none
-    /// @excepts depends on the violation handler. the default violation
-    ///     handler is marked as noexcept and called std::abort().
     ///
-    /// @param test the assertion to check
+    /// @param test the precondition to check
     /// @return none
+    /// @throw [checked]: none
+    /// @throw [unchecked]: possible
     ///
     constexpr auto
     assert_audit(bool test, source_location loc = source_location::current())
         -> void
     {
-        if constexpr (BSL_BUILD_LEVEL >= BSL_BUILD_LEVEL_DEFAULT) {
-            if (!test) {
-                details::contracts::handler({loc, "assertion violation"});
+        using details::contracts::check_audit;
+        using details::contracts::continue_on_violation;
+        using details::contracts::handler;
+        using details::contracts::default_handler;
 
-                if constexpr (!BSL_CONTINUE_ON_CONTRACT_VIOLATION) {
-                    std::get_terminate()();
+        if constexpr (check_audit) {
+            if (!test) {
+                handler({loc, "audit assertion"});
+                if constexpr (!continue_on_violation) {
+                    default_handler({loc, "[unhandled] audit assertion"});
                 }
             }
         }
@@ -338,17 +380,19 @@ namespace bsl
     /// Expects (Axiom)
     ///
     /// A precondition to check. If this check evaluates to false, the
-    /// violation is ignored. This is for documentation purposes only.
+    /// violation will be ignored. This exists for documentation only. Note
+    /// that this is not compatible with AUTOSAR.
     ///
     /// @expects none
     /// @ensures none
-    /// @excepts none
     ///
-    /// @param test the precondition to check
+    /// @param test ignored
     /// @return none
+    /// @throw [checked]: none
+    /// @throw [unchecked]: none
     ///
     constexpr auto
-    expects_axiom(bool test) -> void
+    expects_axiom(bool test) noexcept -> void
     {
         bsl::discard(test);
     }
@@ -356,17 +400,19 @@ namespace bsl
     /// Ensures (Axiom)
     ///
     /// A postcondition to check. If this check evaluates to false, the
-    /// violation is ignored. This is for documentation purposes only.
+    /// violation will be ignored. This exists for documentation only. Note
+    /// that this is not compatible with AUTOSAR.
     ///
     /// @expects none
     /// @ensures none
-    /// @excepts none
     ///
-    /// @param test the postcondition to check
+    /// @param test ignored
     /// @return none
+    /// @throw [checked]: none
+    /// @throw [unchecked]: none
     ///
     constexpr auto
-    ensures_axiom(bool test) -> void
+    ensures_axiom(bool test) noexcept -> void
     {
         bsl::discard(test);
     }
@@ -374,17 +420,19 @@ namespace bsl
     /// Assert (Axiom)
     ///
     /// An assertion to check. If this check evaluates to false, the
-    /// violation is ignored. This is for documentation purposes only.
+    /// violation will be ignored. This exists for documentation only. Note
+    /// that this is not compatible with AUTOSAR.
     ///
     /// @expects none
     /// @ensures none
-    /// @excepts none
     ///
-    /// @param test the assertion to check
+    /// @param test ignored
     /// @return none
+    /// @throw [checked]: none
+    /// @throw [unchecked]: none
     ///
     constexpr auto
-    assert_axiom(bool test) -> void
+    assert_axiom(bool test) noexcept -> void
     {
         bsl::discard(test);
     }

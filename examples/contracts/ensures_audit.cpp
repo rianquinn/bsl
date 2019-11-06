@@ -1,15 +1,10 @@
-#define BSL_BUILD_LEVEL BSL_BUILD_LEVEL_AUDIT    // i.e., 2
+#define BSL_BUILD_LEVEL 2
 #include <bsl/contracts.h>
 
-static auto
-the_answer(int val) noexcept -> auto
+static constexpr auto
+the_answer(int val) noexcept -> void
 {
-    auto ret = [&] {
-        return val;
-    }();
-
-    bsl::ensures_audit(ret == 42);
-    return ret;
+    bsl::ensures_audit(val == 42);
 }
 
 auto
@@ -18,5 +13,5 @@ main() -> int
     the_answer(23);
 }
 
-// FATAL ERROR: contract violation [[ensures audit]] [11]: ...
+// FATAL ERROR: audit postcondition violation [7]: ...
 // Aborted (core dumped)

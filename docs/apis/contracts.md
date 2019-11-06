@@ -15,11 +15,11 @@ http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0542r5.html
 
         Defines which types of contracts are checked (defaults to 1):
 
-        -   0 (BSL_BUILD_LEVEL_OFF): off, no contracts are checked.
-        -   1 (BSL_BUILD_LEVEL_DEFAULT): default, default contracts are checked.
-        -   2 (BSL_BUILD_LEVEL_AUDIT): audit, default and audit contracts are                   checked.
+        -   0: off, no contracts are checked.
+        -   1: default, default contracts are checked.
+        -   2: audit, default and audit contracts are checked.
 
-    ??? summary "BSL_CONTINUE_ON_CONTRACT_VIOLATION"
+    ??? summary "BSL_CONTINUE_OPTION"
 
         Defines whether or not contract violations should continue after their          execution. Note that the default violation handler executes
         `#!c++ std::abort()` as per the spec. Therefore, if you want a contract
@@ -27,9 +27,8 @@ http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0542r5.html
         violation handle that safely returns (defaults to 0).
 
         -   0: off, unhandled contract violations result in
-            `#!c++ std::terminate()` being called.
-        -   1: on, unhandled contract violations are ignored, and execution
-            continues (likely in an undefined state).
+            `#!c++ std::abort()` being called.
+        -   1: on, unhandled contract violations are ignored.
 
 ### **Functions**
 
@@ -61,7 +60,7 @@ auto
 expects(bool test) -> void
 ```
 
-Checks the preconditions of a function. If the precondition evaluates to false, the violation handler is executed if the BSL_BUILD_LEVEL is set to BSL_BUILD_LEVEL_DEFAULT or BSL_BUILD_LEVEL_AUDIT, otherwise it is ignored. Execution will only continue if a custom violation handler is provided using set_violation_handler(), and BSL_CONTINUE_ON_CONTRACT_VIOLATION is enabled, otherwise execution will halt.
+Checks the preconditions of a function. If the precondition evaluates to false, the violation handler is executed if the BSL_BUILD_LEVEL is set to 1 or 2, otherwise it is ignored. Execution will only continue if a custom violation handler is provided using set_violation_handler(), and BSL_CONTINUE_OPTION is enabled, otherwise execution will halt.
 
 ??? note "Parameters"
 
@@ -88,7 +87,7 @@ auto
 ensures(bool test) -> void
 ```
 
-Checks the postconditions of a function. If the postcondition evaluates to false, the violation handler is executed if the BSL_BUILD_LEVEL is set to BSL_BUILD_LEVEL_DEFAULT or BSL_BUILD_LEVEL_AUDIT, otherwise it is ignored. Execution will only continue if a custom violation handler is provided using set_violation_handler(), and BSL_CONTINUE_ON_CONTRACT_VIOLATION is enabled, otherwise execution will halt.
+Checks the postconditions of a function. If the postcondition evaluates to false, the violation handler is executed if the BSL_BUILD_LEVEL is set to 1 or 2, otherwise it is ignored. Execution will only continue if a custom violation handler is provided using set_violation_handler(), and BSL_CONTINUE_OPTION is enabled, otherwise execution will halt.
 
 ??? note "Parameters"
 
@@ -115,7 +114,7 @@ auto
 assert(bool test) -> void
 ```
 
-Checks an assertion at any location within a function. If the assertion evaluates to false, the violation handler is executed if the BSL_BUILD_LEVEL is set to BSL_BUILD_LEVEL_DEFAULT or BSL_BUILD_LEVEL_AUDIT, otherwise it is ignored. Execution will only continue if a custom violation handler is provided using set_violation_handler(), and BSL_CONTINUE_ON_CONTRACT_VIOLATION is enabled, otherwise execution will halt.
+Checks an assertion at any location within a function. If the assertion evaluates to false, the violation handler is executed if the BSL_BUILD_LEVEL is set to 1 or 2, otherwise it is ignored. Execution will only continue if a custom violation handler is provided using set_violation_handler(), and BSL_CONTINUE_OPTION is enabled, otherwise execution will halt.
 
 ??? note "Parameters"
 
@@ -142,7 +141,7 @@ auto
 expects_audit(bool test) -> void
 ```
 
-Checks the preconditions of a function. If the precondition evaluates to false, the violation handler is executed if the BSL_BUILD_LEVEL is set to BSL_BUILD_LEVEL_AUDIT, otherwise it is ignored. Execution will only continue if a custom violation handler is provided using set_violation_handler(), and BSL_CONTINUE_ON_CONTRACT_VIOLATION is enabled, otherwise execution will halt.
+Checks the preconditions of a function. If the precondition evaluates to false, the violation handler is executed if the BSL_BUILD_LEVEL is set to 2, otherwise it is ignored. Execution will only continue if a custom violation handler is provided using set_violation_handler(), and BSL_CONTINUE_OPTION is enabled, otherwise execution will halt.
 
 ??? note "Parameters"
 
@@ -169,7 +168,7 @@ auto
 ensures_audit(bool test) -> void
 ```
 
-Checks the postconditions of a function. If the postcondition evaluates to false, the violation handler is executed if the BSL_BUILD_LEVEL is set to BSL_BUILD_LEVEL_DEFAULT, otherwise it is ignored. Execution will only continue if a custom violation handler is provided using set_violation_handler(), and BSL_CONTINUE_ON_CONTRACT_VIOLATION is enabled, otherwise execution will halt.
+Checks the postconditions of a function. If the postcondition evaluates to false, the violation handler is executed if the BSL_BUILD_LEVEL is set to 1, otherwise it is ignored. Execution will only continue if a custom violation handler is provided using set_violation_handler(), and BSL_CONTINUE_OPTION is enabled, otherwise execution will halt.
 
 ??? note "Parameters"
 
@@ -196,7 +195,7 @@ auto
 assert_audit(bool test) -> void
 ```
 
-Checks an assertion at any location within a function. If the assertion evaluates to false, the violation handler is executed if the BSL_BUILD_LEVEL is set to BSL_BUILD_LEVEL_DEFAULT, otherwise it is ignored. Execution will only continue if a custom violation handler is provided using set_violation_handler(), and BSL_CONTINUE_ON_CONTRACT_VIOLATION is enabled, otherwise execution will halt.
+Checks an assertion at any location within a function. If the assertion evaluates to false, the violation handler is executed if the BSL_BUILD_LEVEL is set to 1, otherwise it is ignored. Execution will only continue if a custom violation handler is provided using set_violation_handler(), and BSL_CONTINUE_OPTION is enabled, otherwise execution will halt.
 
 ??? note "Parameters"
 

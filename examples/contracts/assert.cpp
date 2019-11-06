@@ -1,10 +1,9 @@
 #include <bsl/contracts.h>
 
-static auto
-the_answer(int val) noexcept -> auto
+static constexpr auto
+the_answer(int val) noexcept -> void
 {
-    bsl::assert(1 + 1 == 3);
-    return val;
+    bsl::assert(val == 42);
 }
 
 auto
@@ -13,5 +12,5 @@ main() -> int
     the_answer(23);
 }
 
-// FATAL ERROR: contract violation [[assert default]] [6]: ...
+// FATAL ERROR: default assertion violation [6]: ...
 // Aborted (core dumped)
