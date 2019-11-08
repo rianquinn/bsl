@@ -24,6 +24,8 @@
 #include "../../include/bsl/contracts.h"
 #include "../../include/bsl/ut.h"
 
+#include <iostream>
+
 auto
 main() -> int
 {
