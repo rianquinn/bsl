@@ -31,11 +31,9 @@ namespace bsl
     /// parameters do not exist, and therefore, the use of this function must
     /// be documented to explain why it is needed. Use with caution.
     ///
-    /// @expects
-    /// @ensures
+    /// expects:
+    /// ensures:
     ///
-    /// @param none
-    /// @return none
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///

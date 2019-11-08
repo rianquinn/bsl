@@ -26,30 +26,42 @@
 
 namespace bsl
 {
-    ///
     template<
         typename FUNC,
-        std::enable_if_t<std::is_nothrow_invocable_v<FUNC>, int> = 0>
+        std::enable_if_t<std::is_invocable_v<FUNC>, int> = 0
+        >
     class finally
     {
         FUNC m_func{};
+        bool m_invoke{true};
 
     public:
-        explicit finally(FUNC &&func) noexcept :
+        explicit constexpr finally(FUNC &&func) noexcept :
             m_func(std::move(func))
         {}
 
         ~finally() noexcept
         {
-            m_func();
+            if (m_invoke) {
+                m_func();
+            }
+        }
+
+        constexpr auto
+        ignore() noexcept -> void
+        {
+            m_invoke = false;
         }
 
     public:
         finally(const finally &) = delete;
-        finally &operator=(const finally &) = delete;
+        auto operator=(const finally &) -> finally & = delete;
         finally(finally &&) noexcept = delete;
-        finally &operator=(finally &&) noexcept = delete;
+        auto operator=(finally &&) noexcept -> finally & = delete;
     };
+
+    template<typename FUNC>
+    finally(FUNC &&func) -> finally<FUNC>;
 
 }    // namespace bsl
 

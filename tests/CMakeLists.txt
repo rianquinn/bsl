@@ -19,51 +19,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-include(CTest)
-include(ExternalProject)
-
-# ------------------------------------------------------------------------------
-# Catch
-# ------------------------------------------------------------------------------
-
-list(APPEND UT_CMAKE_ARGS
-    -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/external/
-    -DBUILD_TESTS=OFF
-    -DBUILD_EXAMPLES=OFF
-    -DBUILD_BENCHMARKS=OFF
-)
-
-ExternalProject_Add(
-    ut
-    GIT_REPOSITORY https://github.com/boost-experimental/ut.git
-    GIT_SHALLOW 1
-    CMAKE_ARGS ${UT_CMAKE_ARGS}
-    UPDATE_COMMAND ""
-    UPDATE_DISCONNECTED ON
-)
-
-# ------------------------------------------------------------------------------
-# External Includes
-# ------------------------------------------------------------------------------
-
-include_directories(SYSTEM ${CMAKE_BINARY_DIR}/external/include)
-
 # ------------------------------------------------------------------------------
 # Tests
 # ------------------------------------------------------------------------------
 
 macro(add_tests NAME FOLDER)
     add_executable(test_${NAME} ${FOLDER}/${NAME}.cpp)
-    add_dependencies(test_${NAME} ut)
     add_test(test_${NAME} test_${NAME})
     target_compile_options(test_${NAME} PRIVATE -fno-access-control)
+    target_link_libraries(test_${NAME} fmt::fmt)
 endmacro(add_tests)
 
 add_tests(autosar_compliant_1 contracts)
-add_tests(build_level_0 contracts)
-add_tests(build_level_1 contracts)
-add_tests(build_level_2 contracts)
-add_tests(continue_option_1 contracts)
+# add_tests(build_level_0 contracts)
+# add_tests(build_level_1 contracts)
+# add_tests(build_level_2 contracts)
+# add_tests(continue_option_1 contracts)
 
 # ------------------------------------------------------------------------------
 # Coverage Targets

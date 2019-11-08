@@ -42,13 +42,14 @@
 //     required to stay compliant. This is advised in release builds.
 //
 
-#include "console_colors.h"
 #include "source_location.h"
 #include "discard.h"
 #include "autosar.h"
 
 #include <string>
-#include <iostream>
+
+#include <fmt/core.h>
+#include <fmt/color.h>
 
 #ifndef BSL_BUILD_LEVEL
 #define BSL_BUILD_LEVEL 1
@@ -66,7 +67,11 @@ namespace bsl::details::contracts
     constexpr bool check_default = (BSL_BUILD_LEVEL >= 1);
     constexpr bool check_audit = (BSL_BUILD_LEVEL == 2);
     constexpr bool continue_on_violation = (BSL_CONTINUE_OPTION == 1);
-};    // namespace bsl::details::contracts
+}    // namespace bsl::details::contracts
+
+#ifdef assert
+#undef assert
+#endif
 
 // -----------------------------------------------------------------------------
 // Definition
@@ -88,8 +93,8 @@ namespace bsl
     ///
     struct violation_info
     {
-        source_location location;
-        const char *comment;
+        source_location location{};
+        const char *comment{};
     };
 
     namespace details::contracts
@@ -104,44 +109,39 @@ namespace bsl
         /// AUTOSAR, so if you enable AUTOSAR compliance, this function will
         /// throw instead.
         ///
-        /// @expects
-        /// @ensures
+        /// expects: none
+        /// ensures: none
         ///
         /// @param info the violation information
-        /// @return none
         /// @throw [checked]: none
         /// @throw [unchecked]: possible
         ///
         [[noreturn]] inline auto
         default_handler(const violation_info &info) -> void
         {
+            constexpr auto red = fmt::fg(fmt::terminal_color::bright_red);
+            constexpr auto yellow = fmt::fg(fmt::terminal_color::bright_yellow);
+            constexpr auto blue = fmt::fg(fmt::terminal_color::bright_blue);
+            constexpr auto cyan = fmt::fg(fmt::terminal_color::bright_cyan);
+
             std::string msg;
-            msg += console_color::light_red;
-            msg += "FATAL ERROR:";
-            msg += console_color::end;
-            msg += " ";
-            msg += console_color::light_magenta;
-            msg += info.comment;
-            msg += console_color::end;
-            msg += " violation [";
-            msg += console_color::light_cyan;
-            msg += std::to_string(info.location.line());
-            msg += console_color::end;
-            msg += "]: ";
-            msg += console_color::light_yellow;
-            msg += info.location.file_name();
-            msg += console_color::end;
+            msg += fmt::format(red, "FATAL ERROR: ");
+            msg += fmt::format(blue, "{}", info.comment);
+            msg += fmt::format(" violation [");
+            msg += fmt::format(cyan, "{}", info.location.line());
+            msg += fmt::format("]: ");
+            msg += fmt::format(yellow, "{}", info.location.file_name());
 
             if constexpr (autosar_compliant) {
                 throw std::logic_error(msg);
             }
             else {
-                std::cerr << msg << '\n';
+                fmt::print(msg);
                 std::abort();
             }
         }
 
-        void (*handler)(const violation_info &) = default_handler;
+        inline void (*handler)(const violation_info &) = default_handler;
     }    // namespace details::contracts
 
     /// Set Violation Handler
@@ -149,11 +149,10 @@ namespace bsl
     /// Sets the global violation handler that is called when a contract
     /// violation occurs.
     ///
-    /// @expects none
-    /// @ensures none
+    /// expects: none
+    /// ensures: none
     ///
     /// @param handler the handler to call when a contract violation occurs
-    /// @return none
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///
@@ -169,11 +168,10 @@ namespace bsl
     /// A precondition to check. If this check evaluates to false, the
     /// violation handler is called.
     ///
-    /// @expects none
-    /// @ensures none
+    /// expects: none
+    /// ensures: none
     ///
     /// @param test the precondition to check
-    /// @return none
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
@@ -204,11 +202,10 @@ namespace bsl
     /// A postcondition to check. If this check evaluates to false, the
     /// violation handler is called.
     ///
-    /// @expects none
-    /// @ensures none
+    /// expects: none
+    /// ensures: none
     ///
     /// @param test the precondition to check
-    /// @return none
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
@@ -239,11 +236,10 @@ namespace bsl
     /// An assertion to check. If this check evaluates to false, the
     /// violation handler is called.
     ///
-    /// @expects none
-    /// @ensures none
+    /// expects: none
+    /// ensures: none
     ///
     /// @param test the precondition to check
-    /// @return none
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
@@ -274,11 +270,10 @@ namespace bsl
     /// A precondition to check. If this check evaluates to false, the
     /// violation handler is called.
     ///
-    /// @expects none
-    /// @ensures none
+    /// expects: none
+    /// ensures: none
     ///
     /// @param test the precondition to check
-    /// @return none
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
@@ -310,11 +305,10 @@ namespace bsl
     /// A postcondition to check. If this check evaluates to false, the
     /// violation handler is called.
     ///
-    /// @expects none
-    /// @ensures none
+    /// expects: none
+    /// ensures: none
     ///
     /// @param test the precondition to check
-    /// @return none
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
@@ -346,11 +340,10 @@ namespace bsl
     /// An assertion to check. If this check evaluates to false, the
     /// violation handler is called.
     ///
-    /// @expects none
-    /// @ensures none
+    /// expects: none
+    /// ensures: none
     ///
     /// @param test the precondition to check
-    /// @return none
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
@@ -383,11 +376,10 @@ namespace bsl
     /// violation will be ignored. This exists for documentation only. Note
     /// that this is not compatible with AUTOSAR.
     ///
-    /// @expects none
-    /// @ensures none
+    /// expects: none
+    /// ensures: none
     ///
     /// @param test ignored
-    /// @return none
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///
@@ -403,11 +395,10 @@ namespace bsl
     /// violation will be ignored. This exists for documentation only. Note
     /// that this is not compatible with AUTOSAR.
     ///
-    /// @expects none
-    /// @ensures none
+    /// expects: none
+    /// ensures: none
     ///
     /// @param test ignored
-    /// @return none
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///
@@ -423,11 +414,10 @@ namespace bsl
     /// violation will be ignored. This exists for documentation only. Note
     /// that this is not compatible with AUTOSAR.
     ///
-    /// @expects none
-    /// @ensures none
+    /// expects: none
+    /// ensures: none
     ///
     /// @param test ignored
-    /// @return none
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///

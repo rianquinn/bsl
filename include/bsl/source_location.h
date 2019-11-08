@@ -49,11 +49,9 @@ namespace bsl
     public:
         /// Default Constructor
         ///
-        /// @expects none
-        /// @ensures none
+        /// expects: none
+        /// ensures: none
         ///
-        /// @param none
-        /// @return none
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
@@ -63,8 +61,8 @@ namespace bsl
         ///
         /// Returns the current source location
         ///
-        /// @expects none
-        /// @ensures none
+        /// expects: none
+        /// ensures: none
         ///
         /// @param file defaults to the current file
         /// @param func defaults to the current function
@@ -84,10 +82,9 @@ namespace bsl
 
         /// File Name
         ///
-        /// @expects none
-        /// @ensures none
+        /// expects: none
+        /// ensures: none
         ///
-        /// @param none
         /// @return source location file name
         /// @throw [checked]: none
         /// @throw [unchecked]: none
@@ -100,10 +97,9 @@ namespace bsl
 
         /// Function Name
         ///
-        /// @expects none
-        /// @ensures none
+        /// expects: none
+        /// ensures: none
         ///
-        /// @param none
         /// @return source location function name
         /// @throw none
         ///
@@ -115,10 +111,9 @@ namespace bsl
 
         /// Line
         ///
-        /// @expects none
-        /// @ensures none
+        /// expects: none
+        /// ensures: none
         ///
-        /// @param none
         /// @return source location line
         /// @throw [checked]: none
         /// @throw [unchecked]: none
@@ -131,10 +126,9 @@ namespace bsl
 
         /// Column
         ///
-        /// @expects none
-        /// @ensures none
+        /// expects: none
+        /// ensures: none
         ///
-        /// @param none
         /// @return always 0 as the column is not supported
         /// @throw [checked]: none
         /// @throw [unchecked]: none

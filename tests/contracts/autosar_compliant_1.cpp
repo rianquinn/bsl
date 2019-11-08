@@ -24,93 +24,89 @@
 #include "../../include/bsl/contracts.h"
 #include "../../include/bsl/ut.h"
 
-// #include "boost/ut.hpp"
-// using namespace boost::ut;
-
 auto
 main() -> int
 {
-    bsl::test_case("hello") = [] {
-        std::cout << "Hello World\n";
+    bsl::test_case("expects") = [] {
+        bsl::check_nothrow([] {
+            bsl::expects(true);
+        });
+        bsl::check_throws([] {
+            bsl::expects(false);
+        });
     };
-    // "expects"_test = [] {
-    //     expect(nothrow([] {
-    //         bsl::expects(true);
-    //     }));
-    //     expect(throws([] {
-    //         bsl::expects(false);
-    //     }));
-    // };
 
-    // "ensures"_test = [] {
-    //     expect(nothrow([] {
-    //         bsl::ensures(true);
-    //     }));
-    //     expect(throws([] {
-    //         bsl::ensures(false);
-    //     }));
-    // };
+    bsl::test_case("ensures") = [] {
+        bsl::check_nothrow([] {
+            bsl::ensures(true);
+        });
+        bsl::check_throws([] {
+            bsl::ensures(false);
+        });
+    };
 
-    // "assert"_test = [] {
-    //     expect(nothrow([] {
-    //         bsl::assert(true);
-    //     }));
-    //     expect(throws([] {
-    //         bsl::assert(false);
-    //     }));
-    // };
+    bsl::test_case("assert") = [] {
+        bsl::check_nothrow([] {
+            bsl::assert(true);
+        });
+        bsl::check_throws([] {
+            bsl::assert(false);
+        });
+    };
 
-    // "expects_audit"_test = [] {
-    //     expect(nothrow([] {
-    //         bsl::expects_audit(true);
-    //     }));
-    //     expect(throws([] {
-    //         bsl::expects_audit(false);
-    //     }));
-    // };
+    bsl::test_case("expects_audit") = [] {
+        bsl::check_nothrow([] {
+            bsl::expects_audit(true);
+        });
+        bsl::check_throws([] {
+            bsl::expects_audit(false);
+        });
+    };
 
-    // "ensures_audit"_test = [] {
-    //     expect(nothrow([] {
-    //         bsl::ensures_audit(true);
-    //     }));
-    //     expect(throws([] {
-    //         bsl::ensures_audit(false);
-    //     }));
-    // };
+    bsl::test_case("ensures_audit") = [] {
+        bsl::check_nothrow([] {
+            bsl::ensures_audit(true);
+        });
+        bsl::check_throws([] {
+            bsl::ensures_audit(false);
+        });
+    };
 
-    // "assert_audit"_test = [] {
-    //     expect(nothrow([] {
-    //         bsl::assert_audit(true);
-    //     }));
-    //     expect(throws([] {
-    //         bsl::assert_audit(false);
-    //     }));
-    // };
+    bsl::test_case("assert_audit") = [] {
+        bsl::check_nothrow([] {
+            bsl::assert_audit(true);
+        });
+        bsl::check_throws([] {
+            bsl::assert_audit(false);
+        });
+    };
 
-    // "expects_axiom"_test = [] {
-    //     expect(nothrow([] {
-    //         bsl::expects_axiom(true);
-    //     }));
-    //     expect(nothrow([] {
-    //         bsl::expects_axiom(false);
-    //     }));
-    // };
+    bsl::test_case("expects_axiom") = [] {
+        bsl::check_nothrow([] {
+            bsl::expects_axiom(true);
+        });
+        bsl::check_nothrow([] {
+            bsl::expects_axiom(false);
+        });
+    };
 
-    // "ensures_axiom"_test = [] {
-    //     expect(nothrow([] {
-    //         bsl::ensures_axiom(true);
-    //     }));
-    //     expect(nothrow([] {
-    //         bsl::ensures_axiom(false);
-    //     }));
-    // };
+    bsl::test_case("ensures_axiom") = [] {
+        bsl::check_nothrow([] {
+            bsl::ensures_axiom(true);
+        });
+        bsl::check_nothrow([] {
+            bsl::ensures_axiom(false);
+        });
+    };
 
-    // "assert_axiom"_test = [] {
-    //     expect(nothrow([] {
-    //         bsl::assert_axiom(true);
-    //     }));
-    //     expect(nothrow([] {
-    //         bsl::assert_axiom(false);
-    //     }));
-    // };
+    bsl::test_case("assert_axiom") = [] {
+        bsl::check_nothrow([] {
+            bsl::assert_axiom(true);
+        });
+        bsl::check_nothrow([] {
+            bsl::assert_axiom(false);
+        });
+    };
+
+    return bsl::check_results();
 }

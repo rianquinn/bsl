@@ -22,7 +22,7 @@
 cmake_minimum_required(VERSION 3.13)
 project(bsl CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 # ------------------------------------------------------------------------------
 # Initial Setup
@@ -30,6 +30,12 @@ set(CMAKE_CXX_STANDARD 20)
 
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_TESTS "Build test programs" ON)
+
+# ------------------------------------------------------------------------------
+# Dependencies
+# ------------------------------------------------------------------------------
+
+find_package(fmt REQUIRED)
 
 # ------------------------------------------------------------------------------
 # Development Mode
@@ -90,8 +96,8 @@ if(CMAKE_BUILD_TYPE STREQUAL "COVERAGE")
     message(STATUS "[enabled]: LCOV Coverage Tools")
 endif()
 
-set(CMAKE_CXX_FLAGS_WEVERYTHING "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded")
-set(CMAKE_LINKER_FLAGS_WEVERYTHING "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded")
+set(CMAKE_CXX_FLAGS_WEVERYTHING "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables")
+set(CMAKE_LINKER_FLAGS_WEVERYTHING "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables")
 set(CMAKE_CXX_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address")
@@ -144,7 +150,7 @@ if(BUILD_EXAMPLES)
 endif()
 
 if(BUILD_TESTS)
-    enable_testing()
+    include(CTest)
     add_subdirectory(tests)
 endif()
 
