@@ -96,8 +96,17 @@ if(CMAKE_BUILD_TYPE STREQUAL "COVERAGE")
     message(STATUS "[enabled]: LCOV Coverage Tools")
 endif()
 
-set(CMAKE_CXX_FLAGS_WEVERYTHING "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables")
-set(CMAKE_LINKER_FLAGS_WEVERYTHING "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables")
+if(CMAKE_BUILD_TYPE STREQUAL "AUTOSAR")
+    set(BUILD_EXAMPLES ON)
+    set(BUILD_TESTS ON)
+    message(STATUS "[enabled]: Clang's -Weverything")
+    message(STATUS "[enabled]: Clang Tidy")
+    message(STATUS "[enabled]: CppCheck")
+    message(STATUS "[enabled]: Google's UBSAN")
+endif()
+
+set(CMAKE_CXX_FLAGS_WEVERYTHING "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded")
+set(CMAKE_LINKER_FLAGS_WEVERYTHING "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded")
 set(CMAKE_CXX_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address")
@@ -110,6 +119,8 @@ set(CMAKE_CXX_FLAGS_UBSAN "-Og -g -fsanitize=undefined")
 set(CMAKE_LINKER_FLAGS_UBSAN "-Og -g -fsanitize=undefined")
 set(CMAKE_CXX_FLAGS_COVERAGE "-O0 -g --coverage -fprofile-arcs -ftest-coverage")
 set(CMAKE_LINKER_FLAGS_COVERAGE "-O0 -g --coverage -fprofile-arcs -ftest-coverage")
+set(CMAKE_CXX_FLAGS_AUTOSAR "-Og -g -fsanitize=undefined -Werror -Weverything -Wno-c++98-compat -Wno-padded")
+set(CMAKE_LINKER_FLAGS_AUTOSAR "-Og -g -fsanitize=undefined -Werror -Weverything -Wno-c++98-compat -Wno-padded")
 
 # ------------------------------------------------------------------------------
 # Flags
@@ -121,13 +132,13 @@ set(CMAKE_CXX_FLAGS "-fdiagnostics-color=auto")
 # Static Analysis Tools
 # ------------------------------------------------------------------------------
 
-if(CMAKE_BUILD_TYPE STREQUAL "STATIC_ANALYSIS")
+if(CMAKE_BUILD_TYPE STREQUAL "STATIC_ANALYSIS" OR CMAKE_BUILD_TYPE STREQUAL "AUTOSAR")
     list(APPEND CMAKE_CXX_CLANG_TIDY
         clang-tidy
     )
 endif()
 
-if(CMAKE_BUILD_TYPE STREQUAL "STATIC_ANALYSIS")
+if(CMAKE_BUILD_TYPE STREQUAL "STATIC_ANALYSIS" OR CMAKE_BUILD_TYPE STREQUAL "AUTOSAR")
     list(APPEND CMAKE_CXX_CPPCHECK
         cppcheck
         --enable=all
@@ -140,12 +151,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "STATIC_ANALYSIS")
         --template="{file}:{line}: {severity}: {id}: {message}"
     )
 endif()
-
-# ------------------------------------------------------------------------------
-# {fmt}
-# ------------------------------------------------------------------------------
-
-
 
 # ------------------------------------------------------------------------------
 # Sub Directories
@@ -211,6 +216,7 @@ message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=MSAN               ${COLOR_E}com
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=TSAN               ${COLOR_E}compile with Google's TSAN")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=UBSAN              ${COLOR_E}compile with Google's UBSAN")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=COVERAGE           ${COLOR_E}compile with LCOV coverage")
+message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=AUTOSAR            ${COLOR_E}compile with WEVERYTHING, STATIC_ANAYLSIS and UBSAN")
 message(STATUS "")
 
 message(STATUS "${COLOR_G} BSL build targets:${COLOR_E}")

@@ -19,29 +19,55 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BSL_DISCARD_H
-#define BSL_DISCARD_H
+#include "../../include/bsl/ut.h"
 
-namespace bsl
+// static auto
+// fn1(std::uint8_t param) noexcept -> std::uint8_t
+// {
+//     std::int32_t x{0}; // -Wunused-variable (clang)
+
+//     if (param > 0) {
+//         return 1;
+//     }
+
+//     return 0;
+// }
+
+// static auto
+// fn2() noexcept -> std::int32_t
+// {
+//     std::int8_t x{10};
+//     std::int8_t y{20};
+//     std::int16_t result = x + y;
+
+//     x = 0; // clang-analyzer-deadcode.DeadStores (tidy)
+//     y = 0; // clang-analyzer-deadcode.DeadStores (tidy)
+
+//     return result;
+// }
+
+// #include <array>
+
+static auto
+fn5(std::array<int, 5> &a) noexcept
 {
-    /// Discard
-    ///
-    /// The following will silence the compiler as well as static analysis
-    /// checks complaining about unused parameters. This is the only compliant
-    /// way to silence unused variable warnings.
-    ///
-    /// expects:
-    /// ensures:
-    ///
-    /// @throw [checked]: none
-    /// @throw [unchecked]: none
-    ///
-    template<typename T>
-    constexpr auto
-    discard(T &&t) noexcept -> void
-    {
-        static_cast<void>(t);
-    }
-}    // namespace bsl
+    std::uint8_t y{0};
 
-#endif
+    for (int i = 0; i < 5; i++) {
+        a.at(y) = i;
+        ++y;    // FAILED - unused on final not detected
+    }
+}
+
+auto
+main() -> int
+try {
+    std::array<int, 5> a{};
+    fn5(a);
+
+    // fmt::print("{}\n", fn1(42));
+    // fmt::print("{}\n", fn2());
+    fmt::print("{}\n", a.at(2));
+}
+catch (...) {
+}

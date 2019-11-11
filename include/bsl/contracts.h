@@ -73,6 +73,10 @@ namespace bsl::details::contracts
 #undef assert
 #endif
 
+#ifndef BSL_CONTRACTS_ABORT
+#define BSL_CONTRACTS_ABORT std::abort()
+#endif
+
 // -----------------------------------------------------------------------------
 // Definition
 // -----------------------------------------------------------------------------
@@ -124,21 +128,23 @@ namespace bsl
             constexpr auto blue = fmt::fg(fmt::terminal_color::bright_blue);
             constexpr auto cyan = fmt::fg(fmt::terminal_color::bright_cyan);
 
-            std::string msg;
-            msg += fmt::format(red, "FATAL ERROR: ");
-            msg += fmt::format(blue, "{}", info.comment);
-            msg += fmt::format(" violation [");
-            msg += fmt::format(cyan, "{}", info.location.line());
-            msg += fmt::format("]: ");
-            msg += fmt::format(yellow, "{}", info.location.file_name());
+            {
+                std::string msg;
+                msg += fmt::format(red, "FATAL ERROR: ");
+                msg += fmt::format(blue, "{}", info.comment);
+                msg += fmt::format(" violation [");
+                msg += fmt::format(cyan, "{}", info.location.line());
+                msg += fmt::format("]: ");
+                msg += fmt::format(yellow, "{}", info.location.file_name());
 
-            if constexpr (autosar_compliant) {
-                throw std::logic_error(msg);
+                if constexpr (autosar_compliant) {
+                    throw std::logic_error(msg);
+                }
+
+                fmt::print("{}\n", msg);
             }
-            else {
-                fmt::print(msg);
-                std::abort();
-            }
+
+            BSL_CONTRACTS_ABORT;
         }
 
         inline void (*handler)(const violation_info &) = default_handler;

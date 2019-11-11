@@ -22,8 +22,6 @@
 #ifndef BSL_SOURCE_LOCATION_H
 #define BSL_SOURCE_LOCATION_H
 
-#include <cstdint>
-
 namespace bsl
 {
     /// Source Location
@@ -38,8 +36,8 @@ namespace bsl
     {
         using file_type = const char *;
         using func_type = const char *;
-        using line_type = std::uint_least32_t;
-        using column_type = std::uint_least32_t;
+        using line_type = int;
+        using column_type = int;
 
         constexpr source_location(
             file_type file, func_type func, line_type line) noexcept :
@@ -73,9 +71,16 @@ namespace bsl
         ///
         static constexpr auto
         current(
+#ifdef __linux__
             file_type file = __builtin_FILE(),
             func_type func = __builtin_FUNCTION(),
-            line_type line = __builtin_LINE()) noexcept -> source_location
+            line_type line = __builtin_LINE()
+#else
+            file_type file = "file location not available on Windows",
+            func_type func = "function name not available on Windows",
+            line_type line = -1
+#endif
+                ) noexcept -> source_location
         {
             return {file, func, line};
         }

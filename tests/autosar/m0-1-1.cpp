@@ -19,29 +19,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BSL_DISCARD_H
-#define BSL_DISCARD_H
+#include "../../include/bsl/ut.h"
 
-namespace bsl
+static auto
+foo(int16_t val) -> int16_t
 {
-    /// Discard
-    ///
-    /// The following will silence the compiler as well as static analysis
-    /// checks complaining about unused parameters. This is the only compliant
-    /// way to silence unused variable warnings.
-    ///
-    /// expects:
-    /// ensures:
-    ///
-    /// @throw [checked]: none
-    /// @throw [unchecked]: none
-    ///
-    template<typename T>
-    constexpr auto
-    discard(T &&t) noexcept -> void
-    {
-        static_cast<void>(t);
-    }
-}    // namespace bsl
+    int16_t local1{0};
+    int16_t local2{0};
 
-#endif
+    switch (val) {
+            // local1++;   // -Wunreachable-code (clang)
+
+        case 1: {
+            local2 = 1;
+            break;
+        }
+
+        case 2: {
+            local2 = 2;
+            break;
+        }
+
+        default: {
+            break;
+        }
+    }
+
+    return local1 + local2;
+    // local1++;    // unreachableCode (CppCheck)
+}
+
+auto
+main() -> int
+try {
+    fmt::print("{}\n", foo(42));
+}
+catch (...) {
+}

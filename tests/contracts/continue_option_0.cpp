@@ -20,6 +20,8 @@
 // SOFTWARE.
 
 #define BSL_BUILD_LEVEL 2
+#define BSL_CONTINUE_OPTION 0
+#define BSL_CONTRACTS_ABORT std::exit(0)
 
 #include "../../include/bsl/contracts.h"
 #include "../../include/bsl/ut.h"
@@ -28,14 +30,14 @@ auto
 main() -> int
 {
     bsl::set_violation_handler([](auto info) {
-        throw std::runtime_error(info.comment);
+        bsl::discard(info);
     });
 
     bsl::test_case("expects") = [] {
         bsl::check_nothrow([] {
             bsl::expects(true);
         });
-        bsl::check_throws([] {
+        bsl::check_death([] {
             bsl::expects(false);
         });
     };
@@ -44,7 +46,7 @@ main() -> int
         bsl::check_nothrow([] {
             bsl::ensures(true);
         });
-        bsl::check_throws([] {
+        bsl::check_death([] {
             bsl::ensures(false);
         });
     };
@@ -53,7 +55,7 @@ main() -> int
         bsl::check_nothrow([] {
             bsl::assert(true);
         });
-        bsl::check_throws([] {
+        bsl::check_death([] {
             bsl::assert(false);
         });
     };
@@ -62,7 +64,7 @@ main() -> int
         bsl::check_nothrow([] {
             bsl::expects_audit(true);
         });
-        bsl::check_throws([] {
+        bsl::check_death([] {
             bsl::expects_audit(false);
         });
     };
@@ -71,7 +73,7 @@ main() -> int
         bsl::check_nothrow([] {
             bsl::ensures_audit(true);
         });
-        bsl::check_throws([] {
+        bsl::check_death([] {
             bsl::ensures_audit(false);
         });
     };
@@ -80,7 +82,7 @@ main() -> int
         bsl::check_nothrow([] {
             bsl::assert_audit(true);
         });
-        bsl::check_throws([] {
+        bsl::check_death([] {
             bsl::assert_audit(false);
         });
     };

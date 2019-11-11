@@ -19,28 +19,42 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-add_custom_target(unittest)
-
 macro(bf_add_test NAME)
     add_executable(test_${NAME} ${NAME}.cpp)
     target_compile_options(test_${NAME} PRIVATE -fno-access-control)
     target_link_libraries(test_${NAME} PRIVATE fmt::fmt-header-only)
     add_test(test_${NAME} test_${NAME})
-    # add_custom_target(run_test_${NAME} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/test_${NAME})
-    # add_dependencies(unittest run_test_${NAME})
 endmacro(bf_add_test)
 
 # ------------------------------------------------------------------------------
 # Tests
 # ------------------------------------------------------------------------------
 
+add_subdirectory(autosar)
 add_subdirectory(contracts)
+add_subdirectory(discard)
+add_subdirectory(finally)
+# add_subdirectory(int)
+add_subdirectory(source_location)
+add_subdirectory(ut)
 
 # ------------------------------------------------------------------------------
 # Coverage Targets
 # ------------------------------------------------------------------------------
 
 if(CMAKE_BUILD_TYPE STREQUAL "COVERAGE")
+    add_custom_target(
+        unittest
+        COMMAND lcov --zerocounters --directory . -q
+        COMMAND ${CMAKE_COMMAND} -E chdir .. ctest --output-on-failure
+    )
+
+    add_custom_target(
+        memcheck
+        COMMAND lcov --zerocounters --directory . -q
+        COMMAND ${CMAKE_COMMAND} -E chdir .. ctest --output-on-failure -T memcheck
+    )
+
     add_custom_target(
         coverage_info
         COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/coverage.info
@@ -51,6 +65,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "COVERAGE")
         COMMAND lcov --capture --directory . --output-file ${CMAKE_BINARY_DIR}/coverage.info
         COMMAND lcov --remove ${CMAKE_BINARY_DIR}/coverage.info '/usr/*' --output-file ${CMAKE_BINARY_DIR}/coverage.info -q
         COMMAND lcov --remove ${CMAKE_BINARY_DIR}/coverage.info '${CMAKE_BINARY_DIR}/*' --output-file ${CMAKE_BINARY_DIR}/coverage.info -q
+        COMMAND lcov --remove ${CMAKE_BINARY_DIR}/coverage.info '${CMAKE_SOURCE_DIR}/tests/*' --output-file ${CMAKE_BINARY_DIR}/coverage.info -q
     )
 
     add_custom_target(
@@ -69,5 +84,15 @@ if(CMAKE_BUILD_TYPE STREQUAL "COVERAGE")
         COMMAND curl -s https://codecov.io/bash > ${CMAKE_BINARY_DIR}/codecov.sh
         COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_SOURCE_DIR}
         bash ${CMAKE_BINARY_DIR}/codecov.sh -t 3127698f-3d70-4a23-a00f-cd7e54768434 -f ${CMAKE_BINARY_DIR}/coverage.info
+    )
+else()
+    add_custom_target(
+        unittest
+        COMMAND ${CMAKE_COMMAND} -E chdir .. ctest --output-on-failure
+    )
+
+    add_custom_target(
+        memcheck
+        COMMAND ${CMAKE_COMMAND} -E chdir .. ctest --output-on-failure -T memcheck
     )
 endif()

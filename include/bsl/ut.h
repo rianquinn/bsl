@@ -104,8 +104,8 @@
 //     not like this limitation (but why... the BSL is awesome).
 //
 
-#include "finally.h"
 #include "discard.h"
+#include "finally.h"
 #include "source_location.h"
 
 #include <string>
@@ -113,9 +113,11 @@
 #include <fmt/core.h>
 #include <fmt/color.h>
 
+#ifdef __linux__
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#endif
 
 // -----------------------------------------------------------------------------
 // Global Resources
@@ -127,32 +129,6 @@ namespace bsl
 
     namespace details::ut
     {
-        /// Required Failed
-        ///
-        /// This exception is thrown when a required() assertion fails,
-        /// which tells the unit test to stop execution as it cannot continue.
-        ///
-        class required_failed : public std::exception
-        {
-        public:
-            /// What
-            ///
-            /// Returns this exception's error message.
-            ///
-            /// expects: none
-            /// ensures: none
-            ///
-            /// @return error message
-            /// @throw [checked]: none
-            /// @throw [unchecked]: none
-            ///
-            [[nodiscard]] auto
-            what() const noexcept -> const char * override
-            {
-                return "required assertion failed... exiting\n";
-            }
-        };
-
         using name_type = const char *;       ///< Used to store names/labels
         using info_type = source_location;    ///< Used to store location info
 
@@ -190,12 +166,11 @@ namespace bsl
         /// @throw [unchecked]: possible
         ///
         inline auto
-        assertion_failure(name_type name, info_type info, name_type what)
+        assertion_failure(name_type name, const info_type &info, name_type what)
             -> void
         {
             if (failures == nullptr) {
-                fmt::print(stderr, "invalid use of unit test assertion\n");
-                std::abort();
+                throw std::logic_error("check/require outside of test case\n");
             }
 
             *failures += fmt::format("  | [");
@@ -238,63 +213,79 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     [[nodiscard]] inline auto
-    check_results() -> int
+    check_results() noexcept -> int
     {
         using details::ut::green;
         using details::ut::yellow;
         using details::ut::red;
 
-        using details::ut::total_test_cases;
-        using details::ut::total_assertions;
-        using details::ut::failed_test_cases;
-        using details::ut::failed_assertions;
-        using details::ut::skipped_test_cases;
+        auto total_test_cases = details::ut::total_test_cases;
+        auto total_assertions = details::ut::total_assertions;
+        auto failed_test_cases = details::ut::failed_test_cases;
+        auto failed_assertions = details::ut::failed_assertions;
+        auto skipped_test_cases = details::ut::skipped_test_cases;
 
-        if (total_test_cases == 0) {
-            fmt::print(yellow, "{:=^80}\n", "=");
-            fmt::print(yellow, "No tests ran\n");
+        details::ut::total_test_cases = {};
+        details::ut::total_assertions = {};
+        details::ut::failed_test_cases = {};
+        details::ut::failed_assertions = {};
+        details::ut::skipped_test_cases = {};
 
-            return EXIT_FAILURE;
-        }
+        auto as = total_assertions != 1 ? "s" : "";
+        auto ts = total_test_cases != 1 ? "s" : "";
+        auto ss = skipped_test_cases != 1 ? "s" : "";
 
-        if (total_test_cases > 0 and failed_test_cases == 0) {
-            auto as = total_assertions != 1 ? "s" : "";
-            auto ts = total_test_cases != 1 ? "s" : "";
-            auto ss = skipped_test_cases != 1 ? "s" : "";
+        try {
+            if (total_test_cases == 0) {
+                fmt::print(yellow, "{:=^80}\n", "=");
+                fmt::print(yellow, "No tests ran\n");
+
+                throw std::runtime_error("No tests ran");
+            }
+
+            if (total_test_cases > 0 and failed_test_cases > 0) {
+                fmt::print(red, "{:=^80}\n", "=");
+                fmt::print("test cases: {:>3}", total_test_cases);
+                fmt::print(" | ");
+                fmt::print(red, "{:>3} ", failed_test_cases);
+                fmt::print(red, "failed");
+
+                if (skipped_test_cases > 0) {
+                    fmt::print(" | ");
+                    fmt::print(yellow, "{:>3} ", skipped_test_cases);
+                    fmt::print(yellow, "skipped");
+                }
+
+                fmt::print("\n");
+                fmt::print("assertions: {:>3}", total_assertions);
+                fmt::print(" | ");
+                fmt::print(red, "{:>3} ", failed_assertions);
+                fmt::print(red, "failed");
+                fmt::print("\n");
+
+                throw std::runtime_error("Unit test failed");
+            }
+
             fmt::print(green, "{:=^80}\n", "=");
             fmt::print(green, "All tests passed ");
             fmt::print("(");
             fmt::print("{} assertion{}", total_assertions, as);
             fmt::print(" in ");
             fmt::print("{} test case{}", total_test_cases, ts);
+
             if (skipped_test_cases > 0) {
                 fmt::print(yellow, " [");
                 fmt::print(yellow, "{} case{}", skipped_test_cases, ss);
                 fmt::print(yellow, " skipped]");
             }
+
             fmt::print(")\n");
-
-            return EXIT_SUCCESS;
+        }
+        catch (...) {
+            return EXIT_FAILURE;
         }
 
-        fmt::print(red, "{:=^80}\n", "=");
-        fmt::print("test cases: {:>3}", total_test_cases);
-        fmt::print(" | ");
-        fmt::print(red, "{:>3} ", failed_test_cases);
-        fmt::print(red, "failed");
-        if (skipped_test_cases > 0) {
-            fmt::print(" | ");
-            fmt::print(yellow, "{:>3} ", skipped_test_cases);
-            fmt::print(yellow, "skipped");
-        }
-        fmt::print("\n");
-        fmt::print("assertions: {:>3}", total_assertions);
-        fmt::print(" | ");
-        fmt::print(red, "{:>3} ", failed_assertions);
-        fmt::print(red, "failed");
-        fmt::print("\n");
-
-        return EXIT_FAILURE;
+        return EXIT_SUCCESS;
     }
 
     /// Test Case
@@ -313,28 +304,49 @@ namespace bsl
     {
         /// Execute Test
         ///
-        /// This function executes a test case lambda. The main job of this
-        /// function is to ensure that the test case lambda has the proper
-        /// failures log and that the log is returned to normal when the
-        /// test case is complete.
+        /// Executes a test function. This function ensures that the test
+        /// function has a failures log, and catches all possible exceptions
+        /// so that they can be handled properly. If a required failure
+        /// occurs, this function will return EXIT_FAILURE so that the unit
+        /// test can be halted.
         ///
         /// expects: none
         /// ensures: none
         ///
-        /// @param func the test case lambda to execute
-        /// @param failures the failures log the test case will use.
-        /// @throw [checked]: possible, depends on the test case
-        /// @throw [unchecked]: possible, depends on the test case
+        /// @param func the test function to execute
+        /// @return EXIT_FAILURE if a required check fails, EXIT_SUCCESS
+        ///     otherwise.
+        /// @throw [checked]: none
+        /// @throw [unchecked]: possible
         ///
         template<typename F>
         auto
-        execute_test(F &&func, std::string &failures) -> void
+        execute_test(F &&func, std::string *failures) -> int
         {
             auto tmp = details::ut::failures;
+            details::ut::failures = failures;
 
-            details::ut::failures = &failures;
-            func();
-            details::ut::failures = tmp;
+            auto restore_failures = bsl::finally([&] {
+                details::ut::failures = tmp;
+            });
+
+            try {
+                func();
+            }
+            catch (const std::exception &e) {
+                if (std::string("x|required failed|x") == e.what()) {
+                    return EXIT_FAILURE;
+                }
+
+                details::ut::assertion_failure(
+                    "unexpected exception", {}, e.what());
+            }
+            catch (...) {
+                details::ut::assertion_failure(
+                    "unexpected exception", {}, "unknown");
+            }
+
+            return EXIT_SUCCESS;
         }
 
     public:
@@ -375,46 +387,46 @@ namespace bsl
         ///
         template<typename F>
         [[maybe_unused]] auto
-        operator=(F &&func) -> test_case &
+        operator=(F &&func) noexcept -> test_case &
         {
-            bool exit = false;
-            std::string failures{};
+            int exit_code = EXIT_SUCCESS;
 
             try {
-                this->execute_test(std::forward<F>(func), failures);
-            }
-            catch (const details::ut::required_failed &e) {
-                details::ut::assertion_failure("required check", {}, e.what());
+                std::string failures{};
+                exit_code = execute_test(std::forward<F>(func), &failures);
 
-                exit = true;
-            }
-            catch (const std::exception &e) {
-                details::ut::assertion_failure(
-                    "unexpected exception", {}, e.what());
-            }
-            catch (...) {
-                details::ut::assertion_failure(
-                    "unexpected exception", {}, "unknown");
-            }
+                if (!failures.empty()) {
+                    fmt::print(details::ut::red, "{:-^80}\n", "-");
+                    fmt::print(details::ut::red, "failed: ");
+                    fmt::print(details::ut::yellow, "{}\n", m_name);
+                    fmt::print(details::ut::red, "{:-^80}\n", "-");
+                    fmt::print("  | ");
+                    fmt::print(details::ut::cyan, "{} ", m_info.file_name());
+                    fmt::print("[");
+                    fmt::print(details::ut::yellow, "{}", m_info.line());
+                    fmt::print("]\n");
+                    fmt::print("  |\n{}", failures);
 
-            if (!failures.empty()) {
-                fmt::print(details::ut::red, "{:-^80}\n", "-");
-                fmt::print(details::ut::red, "failed: ");
-                fmt::print(details::ut::yellow, "{}\n", m_name);
-                fmt::print(details::ut::red, "{:-^80}\n", "-");
-                fmt::print("  | ");
-                fmt::print(details::ut::cyan, "{} ", m_info.file_name());
-                fmt::print("[");
-                fmt::print(details::ut::yellow, "{}", m_info.line());
-                fmt::print("]\n");
-                fmt::print("  |\n{}  |\n\n", failures);
+                    if (exit_code != EXIT_SUCCESS) {
+                        fmt::print(details::ut::red, "  |    ^^^ \n");
+                        fmt::print(
+                            details::ut::red,
+                            "  |     |  REQUIRED FAILED... EXITING !!! \n");
+                        fmt::print(details::ut::red, "  |\n");
+                    }
 
-                if (exit) {
-                    std::exit(EXIT_FAILURE);
+                    fmt::print("  |\n");
+                    fmt::print("\n");
+
+                    details::ut::failed_test_cases++;
                 }
 
-                details::ut::failed_test_cases++;
-                return *this;
+                if (exit_code != EXIT_SUCCESS) {
+                    throw std::runtime_error("required failed");
+                }
+            }
+            catch (...) {
+                std::exit(exit_code);
             }
 
             return *this;
@@ -520,6 +532,14 @@ namespace bsl
     ///
     using section = test_case;
 
+    /// Scenario
+    ///
+    /// This is a rename of the test_case() to mimic a SCENARIO from Catch2. The
+    /// test_case() class already provides the support that is needed to make
+    /// this work, but the rename provides better self-documentation.
+    ///
+    using scenario = test_case;
+
 }    // namespace bsl
 
 // -----------------------------------------------------------------------------
@@ -596,7 +616,7 @@ namespace bsl
         details::ut::info_type info = source_location::current()) -> bool
     {
         if (!check(test, name, info)) {
-            throw details::ut::required_failed();
+            throw std::runtime_error("x|required failed|x");
         }
 
         return true;
@@ -740,7 +760,7 @@ namespace bsl
         -> bool
     {
         if (!check_throws(std::forward<F>(func), "require_throws", info)) {
-            throw details::ut::required_failed();
+            throw std::runtime_error("x|required failed|x");
         }
 
         return true;
@@ -832,7 +852,7 @@ namespace bsl
     {
         if (!check_throws_checked(
                 std::forward<F>(func), "require_throws_checked", info)) {
-            throw details::ut::required_failed();
+            throw std::runtime_error("x|required failed|x");
         }
 
         return true;
@@ -924,7 +944,7 @@ namespace bsl
     {
         if (!check_throws_unchecked(
                 std::forward<F>(func), "require_throws_unchecked", info)) {
-            throw details::ut::required_failed();
+            throw std::runtime_error("x|required failed|x");
         }
 
         return true;
@@ -1010,11 +1030,13 @@ namespace bsl
         -> bool
     {
         if (!check_nothrow(std::forward<F>(func), "require_nothrow", info)) {
-            throw details::ut::required_failed();
+            throw std::runtime_error("x|required failed|x");
         }
 
         return true;
     }
+
+#ifdef __linux__
 
     /// Check Death
     ///
@@ -1045,18 +1067,21 @@ namespace bsl
         details::ut::name_type name = "check_death",
         details::ut::info_type info = source_location::current()) -> bool
     {
-        int exit_status;
-        constexpr auto failure = 0xBF;
+        int exit_code = 0xBF;
+
+        fflush(stdout);
+        details::ut::total_assertions++;
 
         if (fork() == 0) {
+            std::string().swap(*details::ut::failures);
             func();
-            std::exit(failure);
+            std::exit(exit_code);
         }
         else {
+            int exit_status;
             wait(&exit_status);
-            details::ut::total_assertions++;
 
-            if (WEXITSTATUS(exit_status) == failure) {    // NOLINT
+            if (WEXITSTATUS(exit_status) == exit_code) {    // NOLINT
                 details::ut::assertion_failure(name, info, {});
                 details::ut::failed_assertions++;
 
@@ -1099,7 +1124,7 @@ namespace bsl
         -> bool
     {
         if (!check_death(std::forward<F>(func), "require_death", info)) {
-            throw details::ut::required_failed();
+            throw std::runtime_error("x|required failed|x");
         }
 
         return true;
@@ -1134,18 +1159,21 @@ namespace bsl
         details::ut::name_type name = "check_nodeath",
         details::ut::info_type info = source_location::current()) -> bool
     {
-        int exit_status;
-        constexpr auto success = 0xBF;
+        int exit_code = 0xBF;
+
+        fflush(stdout);
+        details::ut::total_assertions++;
 
         if (fork() == 0) {
+            std::string().swap(*details::ut::failures);
             func();
-            std::exit(success);
+            std::exit(exit_code);
         }
         else {
+            int exit_status;
             wait(&exit_status);
-            details::ut::total_assertions++;
 
-            if (WEXITSTATUS(exit_status) != success) {    // NOLINT
+            if (WEXITSTATUS(exit_status) != exit_code) {    // NOLINT
                 details::ut::assertion_failure(name, info, {});
                 details::ut::failed_assertions++;
 
@@ -1188,11 +1216,14 @@ namespace bsl
         -> bool
     {
         if (!check_nodeath(std::forward<F>(func), "require_nodeath", info)) {
-            throw details::ut::required_failed();
+            throw std::runtime_error("x|required failed|x");
         }
 
         return true;
     }
+
+#endif
+
 }    // namespace bsl
 
 #endif

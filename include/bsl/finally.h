@@ -22,6 +22,9 @@
 #ifndef BSL_FINALLY
 #define BSL_FINALLY
 
+#include <utility>
+#include <type_traits>
+
 // clang-format off
 
 namespace bsl

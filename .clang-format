@@ -77,7 +77,7 @@ FixNamespaceComments: true
 # IncludeBlocks
 # IncludeCategories
 # IncludeIsMainRegex
-IndentCaseLabels: false
+IndentCaseLabels: true
 IndentPPDirectives: None
 IndentWidth: 4
 IndentWrappedFunctionNames: false

@@ -19,10 +19,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-bf_add_test(autosar_compliant_0)
-bf_add_test(autosar_compliant_1)
-bf_add_test(build_level_0)
-bf_add_test(build_level_1)
-bf_add_test(build_level_2)
-bf_add_test(continue_option_0)
-bf_add_test(continue_option_1)
+bf_add_test(m0-1-1)
+bf_add_test(m0-1-2)
+bf_add_test(m0-1-3)
+bf_add_test(m0-1-4)
+bf_add_test(m0-1-5)
+bf_add_test(a0-1-1)
+bf_add_test(a0-1-2)
+bf_add_test(m0-1-8)
+bf_add_test(m0-1-9)
+bf_add_test(m0-1-10)
+bf_add_test(a0-1-3)
+bf_add_test(m0-1-11)
+bf_add_test(m0-1-12)

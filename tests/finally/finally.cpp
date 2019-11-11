@@ -19,29 +19,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BSL_DISCARD_H
-#define BSL_DISCARD_H
+#include "../../include/bsl/finally.h"
+#include "../../include/bsl/ut.h"
 
-namespace bsl
+auto
+main() -> int
 {
-    /// Discard
-    ///
-    /// The following will silence the compiler as well as static analysis
-    /// checks complaining about unused parameters. This is the only compliant
-    /// way to silence unused variable warnings.
-    ///
-    /// expects:
-    /// ensures:
-    ///
-    /// @throw [checked]: none
-    /// @throw [unchecked]: none
-    ///
-    template<typename T>
-    constexpr auto
-    discard(T &&t) noexcept -> void
-    {
-        static_cast<void>(t);
-    }
-}    // namespace bsl
+    bsl::test_case("ignore") = [] {
+        bool ran = false;
 
-#endif
+        {
+            auto this_is_ignored = bsl::finally([&] {
+                ran = true;
+            });
+
+            this_is_ignored.ignore();
+        }
+
+        bsl::check(!ran);
+    };
+
+    bsl::test_case("not ignore") = [] {
+        bool ran = false;
+
+        {
+            auto this_is_not_ignored = bsl::finally([&] {
+                ran = true;
+            });
+        }
+
+        bsl::check(ran);
+    };
+
+    return bsl::check_results();
+}

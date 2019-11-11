@@ -19,29 +19,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BSL_DISCARD_H
-#define BSL_DISCARD_H
+#include "../../include/bsl/ut.h"
 
-namespace bsl
-{
-    /// Discard
-    ///
-    /// The following will silence the compiler as well as static analysis
-    /// checks complaining about unused parameters. This is the only compliant
-    /// way to silence unused variable warnings.
-    ///
-    /// expects:
-    /// ensures:
-    ///
-    /// @throw [checked]: none
-    /// @throw [unchecked]: none
-    ///
-    template<typename T>
-    constexpr auto
-    discard(T &&t) noexcept -> void
-    {
-        static_cast<void>(t);
-    }
-}    // namespace bsl
+auto
+main() -> int
+try {
+    // enum color_t {RED, GREEN};
+    // color_t color{RED};
 
-#endif
+    // if (color <= GREEN) {
+    //     fmt::print("");  // knownConditionTrueFalse (cppcheck)
+    // }
+
+    // uint8_t u8{0};
+
+    // if (u8 >= 0U) {
+    //     fmt::print("");  // knownConditionTrueFalse (cppcheck)
+    // }
+
+    // if (u8 < 0) {
+    //     fmt::print("");  // knownConditionTrueFalse (cppcheck)
+    // }
+
+    // if (u8 < 0xFF) {
+    //     fmt::print("");  // knownConditionTrueFalse (cppcheck)
+    // }
+
+    // int8_t s8{0};
+
+    // if (s8 < 130) {
+    //     fmt::print("");  // knownConditionTrueFalse (cppcheck)
+    // }
+
+    // if (s8 < 10 && s8 > 20) {
+    //     fmt::print("");  // misc-redundant-expression (tidy)
+    // }
+
+    // if (s8 < 10 || s8 > 5) {
+    //     fmt::print("");  // misc-redundant-expression (tidy)
+    // }
+
+    // if (s8 < 10) {
+    //     if (s8 > 5) {
+    //         fmt::print("");  // knownConditionTrueFalse (cppcheck)
+    //     }
+    // }
+}
+catch (...) {
+}

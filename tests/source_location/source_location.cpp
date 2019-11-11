@@ -19,29 +19,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BSL_DISCARD_H
-#define BSL_DISCARD_H
+#include "../../include/bsl/source_location.h"
+#include "../../include/bsl/ut.h"
 
-namespace bsl
+auto
+main() -> int
 {
-    /// Discard
-    ///
-    /// The following will silence the compiler as well as static analysis
-    /// checks complaining about unused parameters. This is the only compliant
-    /// way to silence unused variable warnings.
-    ///
-    /// expects:
-    /// ensures:
-    ///
-    /// @throw [checked]: none
-    /// @throw [unchecked]: none
-    ///
-    template<typename T>
-    constexpr auto
-    discard(T &&t) noexcept -> void
-    {
-        static_cast<void>(t);
-    }
-}    // namespace bsl
+    bsl::test_case("default constructor") = [] {
+        auto loc = bsl::source_location{};
+        bsl::check(loc.file_name() == nullptr);
+        bsl::check(loc.function_name() == nullptr);
+        bsl::check(loc.line() == 0);
+    };
 
-#endif
+    bsl::test_case("current") = [] {
+        auto loc = bsl::source_location::current();
+        bsl::check(loc.file_name() != nullptr);
+        bsl::check(loc.function_name() != nullptr);
+        bsl::check(loc.line() == 36);
+    };
+
+    bsl::test_case("column") = [] {
+        bsl::check(bsl::source_location::column() == 0);
+    };
+
+    return bsl::check_results();
+}

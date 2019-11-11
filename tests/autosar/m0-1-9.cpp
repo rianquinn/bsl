@@ -19,29 +19,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BSL_DISCARD_H
-#define BSL_DISCARD_H
+#include "../../include/bsl/ut.h"
 
-namespace bsl
+static auto
+has_dead_code(std::int16_t para) noexcept -> std::int16_t
 {
-    /// Discard
-    ///
-    /// The following will silence the compiler as well as static analysis
-    /// checks complaining about unused parameters. This is the only compliant
-    /// way to silence unused variable warnings.
-    ///
-    /// expects:
-    /// ensures:
-    ///
-    /// @throw [checked]: none
-    /// @throw [unchecked]: none
-    ///
-    template<typename T>
-    constexpr auto
-    discard(T &&t) noexcept -> void
-    {
-        static_cast<void>(t);
-    }
-}    // namespace bsl
+    std::int16_t local = 99;
+    para = para + local;
 
-#endif
+    local = para;        // FAILED. dead code not detected
+    if (0 == local) {    // FAILED. dead code not detected
+        local++;         // FAILED. dead code not detected
+    }
+
+    return para;
+}
+
+auto
+main() -> int
+try {
+    fmt::print("{}\n", has_dead_code(42));
+}
+catch (...) {
+}

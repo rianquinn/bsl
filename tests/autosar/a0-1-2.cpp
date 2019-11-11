@@ -18,3 +18,19 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+
+#include "../../include/bsl/ut.h"
+
+// static auto
+// fn1() noexcept -> std::uint8_t
+// {
+//     return 0;
+// }
+
+auto
+main() -> int
+try {
+    // auto x = fn1(); // clang-analyzer-deadcode.DeadStores (tidy)
+}
+catch (...) {
+}

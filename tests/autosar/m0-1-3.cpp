@@ -19,29 +19,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BSL_DISCARD_H
-#define BSL_DISCARD_H
+#include "../../include/bsl/ut.h"
 
-namespace bsl
-{
-    /// Discard
-    ///
-    /// The following will silence the compiler as well as static analysis
-    /// checks complaining about unused parameters. This is the only compliant
-    /// way to silence unused variable warnings.
-    ///
-    /// expects:
-    /// ensures:
-    ///
-    /// @throw [checked]: none
-    /// @throw [unchecked]: none
-    ///
-    template<typename T>
-    constexpr auto
-    discard(T &&t) noexcept -> void
-    {
-        static_cast<void>(t);
-    }
-}    // namespace bsl
+// struct C
+// {};
 
-#endif
+// static C c; // -Wunused-variable (clang)
+
+auto
+main() -> int
+try {
+    // int unused; // unusedVariable (cppcheck)
+
+    // struct S
+    // {
+    //     int a : 3;
+    //     int pad : 1; // unusedStructMember (cppcheck)
+    //     int b : 2;
+    // };
+
+    // S s{};
+
+    // s.a = 1;
+    // s.b = 1;
+
+    // bsl::discard(s);
+}
+catch (...) {
+}

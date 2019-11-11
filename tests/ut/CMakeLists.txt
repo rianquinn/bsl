@@ -19,10 +19,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-bf_add_test(autosar_compliant_0)
-bf_add_test(autosar_compliant_1)
-bf_add_test(build_level_0)
-bf_add_test(build_level_1)
-bf_add_test(build_level_2)
-bf_add_test(continue_option_0)
-bf_add_test(continue_option_1)
+bf_add_test(check_results)
+bf_add_test(checks)
+bf_add_test(misc_ut_apis)
+bf_add_test(requires)
