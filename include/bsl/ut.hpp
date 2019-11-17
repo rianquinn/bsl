@@ -115,6 +115,9 @@ namespace bsl
 
     namespace details::ut
     {
+        using general_error = std::runtime_error;
+        using required_failed_error = std::runtime_error;
+
         using name_type = const char *;       ///< Used to store names/labels
         using info_type = source_location;    ///< Used to store location info
 
@@ -157,17 +160,17 @@ namespace bsl
             const info_type &info,
             const name_type what) noexcept -> void
         {
-            if (nullptr == failures) {
-                fmt::print(red, "FATAL ERROR: ");
-                fmt::print(" check ignored [");
-                fmt::print(cyan, "{}", info.line());
-                fmt::print("]: ");
-                fmt::print(yellow, "{}", info.file_name());
-
-                return;
-            }
-
             try {
+                if (nullptr == failures) {
+                    fmt::print(red, "FATAL ERROR: ");
+                    fmt::print(" check ignored [");
+                    fmt::print(cyan, "{}", info.line());
+                    fmt::print("]: ");
+                    fmt::print(yellow, "{}", info.file_name());
+
+                    throw general_error("error");
+                }
+
                 *failures += fmt::format("  | [");
                 *failures += fmt::format(magenta, "{}", name);
 
@@ -186,7 +189,6 @@ namespace bsl
                 }
             }
             catch (...) {    //NOSONAR
-                fmt::print("assertion_failure: unexpected exception\n");
             }
         }
     }    // namespace details::ut
@@ -230,9 +232,9 @@ namespace bsl
         details::ut::failed_assertions = {};
         details::ut::skipped_test_cases = {};
 
-        const char * const as = total_assertions != 1 ? "s" : "";
-        const char * const ts = total_test_cases != 1 ? "s" : "";
-        const char * const ss = skipped_test_cases != 1 ? "s" : "";
+        const auto *const as = total_assertions != 1 ? "s" : "";
+        const auto *const ts = total_test_cases != 1 ? "s" : "";
+        const auto *const ss = skipped_test_cases != 1 ? "s" : "";
 
         try {
             if (0 == total_test_cases) {
@@ -321,10 +323,10 @@ namespace bsl
         ///
         template<typename F>
         auto
-        execute_test(F &&func, std::string * const failures) noexcept
+        execute_test(F &&func, std::string *const failures) noexcept
             -> std::int32_t
         {
-            auto * const tmp = details::ut::failures;
+            auto *const tmp = details::ut::failures;
             details::ut::failures = failures;
 
             try {
@@ -644,7 +646,8 @@ namespace bsl
     ///
     [[maybe_unused]] inline auto
     check_false(
-        bool test, details::ut::info_type info = source_location::current()) noexcept
+        bool test,
+        details::ut::info_type info = source_location::current()) noexcept
         -> bool
     {
         return check(!test, "check_false", info);
@@ -707,7 +710,8 @@ namespace bsl
     check_throws(
         F &&func,
         details::ut::name_type name = "check_throws",
-        details::ut::info_type info = source_location::current()) noexcept -> bool
+        details::ut::info_type info = source_location::current()) noexcept
+        -> bool
     {
         bool caught = false;
         details::ut::total_assertions++;
@@ -715,7 +719,7 @@ namespace bsl
         try {
             func();
         }
-        catch (...) { //NOSONAR
+        catch (...) {    //NOSONAR
             caught = true;
         }
 
@@ -793,7 +797,8 @@ namespace bsl
     check_throws_checked(
         F &&func,
         details::ut::name_type name = "check_throws_checked",
-        details::ut::info_type info = source_location::current()) noexcept -> bool
+        details::ut::info_type info = source_location::current()) noexcept
+        -> bool
     {
         bool caught = false;
         details::ut::total_assertions++;
@@ -805,7 +810,7 @@ namespace bsl
             bsl::discard(e);
             caught = true;
         }
-        catch (...) {//NOSONAR
+        catch (...) {    //NOSONAR
             caught = false;
         }
 
@@ -885,7 +890,8 @@ namespace bsl
     check_throws_unchecked(
         F &&func,
         details::ut::name_type name = "check_throws_unchecked",
-        details::ut::info_type info = source_location::current()) noexcept -> bool
+        details::ut::info_type info = source_location::current()) noexcept
+        -> bool
     {
         bool caught = false;
         details::ut::total_assertions++;
@@ -897,7 +903,7 @@ namespace bsl
             bsl::discard(e);
             caught = false;
         }
-        catch (...) {//NOSONAR
+        catch (...) {    //NOSONAR
             caught = true;
         }
 
@@ -976,7 +982,8 @@ namespace bsl
     check_nothrow(
         F &&func,
         details::ut::name_type name = "check_nothrow",
-        details::ut::info_type info = source_location::current()) noexcept -> bool
+        details::ut::info_type info = source_location::current()) noexcept
+        -> bool
     {
         details::ut::total_assertions++;
 
@@ -989,7 +996,7 @@ namespace bsl
 
             return false;
         }
-        catch (...) {//NOSONAR
+        catch (...) {    //NOSONAR
             details::ut::assertion_failure(name, info, "unknown");
             details::ut::failed_assertions++;
 
