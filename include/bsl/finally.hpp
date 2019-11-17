@@ -30,7 +30,7 @@ namespace bsl
     template<
         typename FUNC,
         std::enable_if_t<std::is_invocable_v<FUNC>> * = nullptr>
-    class finally
+    class finally    //NOSONAR
     {
         FUNC m_func{};
 

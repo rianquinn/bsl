@@ -47,12 +47,12 @@ main() -> int
         });
     };
 
-    bsl::test_case("assert") = [] {
+    bsl::test_case("confirm") = [] {
         bsl::check_nodeath([] {
-            bsl::assert(true);
+            bsl::confirm(true);
         });
         bsl::check_death([] {
-            bsl::assert(false);
+            bsl::confirm(false);
         });
     };
 
@@ -74,12 +74,12 @@ main() -> int
         });
     };
 
-    bsl::test_case("assert_audit") = [] {
+    bsl::test_case("confirm_audit") = [] {
         bsl::check_nodeath([] {
-            bsl::assert_audit(true);
+            bsl::confirm_audit(true);
         });
         bsl::check_death([] {
-            bsl::assert_audit(false);
+            bsl::confirm_audit(false);
         });
     };
 
@@ -101,12 +101,12 @@ main() -> int
         });
     };
 
-    bsl::test_case("assert_axiom") = [] {
+    bsl::test_case("confirm_axiom") = [] {
         bsl::check_nodeath([] {
-            bsl::assert_axiom(true);
+            bsl::confirm_axiom(true);
         });
         bsl::check_nodeath([] {
-            bsl::assert_axiom(false);
+            bsl::confirm_axiom(false);
         });
     };
 

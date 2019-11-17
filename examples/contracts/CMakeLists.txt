@@ -26,12 +26,12 @@
 
 # add_executable(examples_contracts_expects expects.cpp)
 # add_executable(examples_contracts_ensures ensures.cpp)
-# add_executable(examples_contracts_assert assert.cpp)
+# add_executable(examples_contracts_confirm confirm.cpp)
 
 # add_executable(examples_contracts_expects_audit expects_audit.cpp)
 # add_executable(examples_contracts_ensures_audit ensures_audit.cpp)
-# add_executable(examples_contracts_assert_audit assert_audit.cpp)
+# add_executable(examples_contracts_confirm_audit confirm_audit.cpp)
 
 # add_executable(examples_contracts_expects_axiom expects_axiom.cpp)
 # add_executable(examples_contracts_ensures_axiom ensures_axiom.cpp)
-# add_executable(examples_contracts_assert_axiom assert_axiom.cpp)
+# add_executable(examples_contracts_confirm_axiom confirm_axiom.cpp)

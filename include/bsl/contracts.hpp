@@ -75,16 +75,6 @@ namespace bsl::details::contracts
 #endif
 }    // namespace bsl::details::contracts
 
-// Disable Assert
-//
-// Sadly, the C language defines an assert macro, which we do not want
-// other to use, nor do we wish for this macro to interfer with our
-// own APIs, so we disable it here.
-//
-#ifdef assert
-#undef assert    // NOSONAR
-#endif
-
 // Abort Policy
 //
 // Note that this is for internal use only as this is needed for cleaner
@@ -93,7 +83,7 @@ namespace bsl::details::contracts
 namespace bsl::details::contracts
 {
     [[noreturn]] inline auto
-    abort() noexcept -> void
+    halt() noexcept -> void
     {
 #ifndef BSL_CONTRACTS_EXIT_INSTEAD_OF_ABORT
         std::abort();    // NOSONAR
@@ -123,8 +113,8 @@ namespace bsl
     ///
     struct violation_info
     {
-        source_location location{};
-        const char *comment{};
+        source_location location;    //NOSONAR
+        const char *comment;         //NOSONAR
     };
 
     namespace details::contracts
@@ -162,7 +152,7 @@ namespace bsl
             }
 
             fmt::print(stderr, "{}\n", msg);
-            abort();
+            halt();
         }
 
         inline std::function<void(const violation_info &)> handler =
@@ -256,10 +246,13 @@ namespace bsl
         }
     }
 
-    /// Assert
+    /// Confirm (Assert)
     ///
     /// An assertion to check. If this check evaluates to false, the
     /// violation handler is called.
+    ///
+    /// NOTE: We use confirm instead of assert as assert is a reserved
+    ///     symbol that we cannot use.
     ///
     /// expects: none
     /// ensures: none
@@ -269,7 +262,7 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    assert(bool test, source_location loc = source_location::current()) -> void
+    confirm(bool test, source_location loc = source_location::current()) -> void
     {
         using details::contracts::check_default;
         using details::contracts::continue_on_violation;
@@ -360,10 +353,13 @@ namespace bsl
         }
     }
 
-    /// Assert (Audit)
+    /// Confirm (Assert Audit)
     ///
     /// An assertion to check. If this check evaluates to false, the
     /// violation handler is called.
+    ///
+    /// NOTE: We use confirm instead of assert as assert is a reserved
+    ///     symbol that we cannot use.
     ///
     /// expects: none
     /// ensures: none
@@ -373,7 +369,7 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    assert_audit(bool test, source_location loc = source_location::current())
+    confirm_audit(bool test, source_location loc = source_location::current())
         -> void
     {
         using details::contracts::check_audit;
@@ -433,11 +429,14 @@ namespace bsl
         bsl::discard(test);
     }
 
-    /// Assert (Axiom)
+    /// Confirm (Assert Axiom)
     ///
     /// An assertion to check. If this check evaluates to false, the
     /// violation will be ignored. This exists for documentation only. Note
     /// that this is not compatible with AUTOSAR.
+    ///
+    /// NOTE: We use confirm instead of assert as assert is a reserved
+    ///     symbol that we cannot use.
     ///
     /// expects: none
     /// ensures: none
@@ -447,7 +446,7 @@ namespace bsl
     /// @throw [unchecked]: none
     ///
     constexpr auto
-    assert_axiom(bool test) noexcept -> void
+    confirm_axiom(bool test) noexcept -> void
     {
         bsl::discard(test);
     }

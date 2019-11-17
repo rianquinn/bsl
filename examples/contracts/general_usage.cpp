@@ -23,7 +23,7 @@ static auto
 the_answer(std::int32_t val) -> std::unique_ptr<std::int32_t>
 {
     bsl::expects(val == 42);
-    bsl::assert_axiom(1 + 1 != 3);
+    bsl::confirm_axiom(1 + 1 != 3);
 
     auto ret = std::make_unique<std::int32_t>(val);
     bsl::ensures_audit(!!ret);
