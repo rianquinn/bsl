@@ -24,8 +24,8 @@
 auto
 main() -> int
 try {
-    // typedef int type1; // modernize-use-using (tidy)
-    // using type2 = int; // -Wunused-local-typedef (clang)
+    typedef std::int32_t type1;    // modernize-use-using (tidy)
+    using type2 = std::int32_t;    // -Wunused-local-typedef (clang)
 }
 catch (...) {
 }

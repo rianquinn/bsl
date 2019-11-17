@@ -47,13 +47,14 @@
 // }
 
 // #include <array>
+constexpr std::int32_t size = 5;
 
 static auto
-fn5(std::array<int, 5> &a) noexcept
+fn5(std::array<std::int32_t, size> &a) noexcept
 {
     std::uint8_t y{0};
 
-    for (int i = 0; i < 5; i++) {
+    for (std::int32_t i = 0; i < size; i++) {
         a.at(y) = i;
         ++y;    // FAILED - unused on final not detected
     }
@@ -62,7 +63,7 @@ fn5(std::array<int, 5> &a) noexcept
 auto
 main() -> int
 try {
-    std::array<int, 5> a{};
+    std::array<std::int32_t, size> a{};
     fn5(a);
 
     // fmt::print("{}\n", fn1(42));

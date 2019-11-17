@@ -21,36 +21,35 @@
 
 #include "../../include/bsl/ut.h"
 
-// static auto
-// fn1() -> void // unusedFunction (cppcheck)
-// {}
+static auto
+fn1() -> void    // unusedFunction (cppcheck)
+{}
 
-// class C
-// {
-//     std::int32_t m_x;
+class C
+{
+    std::int32_t m_x;
 
-// public:
-//     explicit constexpr C(std::int32_t x) noexcept :
-//         m_x{x}
-//     {}
+public:
+    explicit constexpr C(std::int32_t x) noexcept : m_x{x}
+    {}
 
-//     [[nodiscard]] constexpr auto
-//     get() const noexcept -> std::int32_t
-//     {
-//         return m_x;
-//     }
+    [[nodiscard]] constexpr auto
+    get() const noexcept -> std::int32_t
+    {
+        return m_x;
+    }
 
-// private:
-//     constexpr auto
-//     foo() const noexcept -> void // unusedPrivateFunction (cppcheck)
-//     {}
-// };
+private:
+    constexpr auto
+    foo() const noexcept -> void    // unusedPrivateFunction (cppcheck)
+    {}
+};
 
 auto
 main() -> int
 try {
-    // C c{42};
-    // fmt::print("{}\n", c.get());
+    C c{42};
+    fmt::print("{}\n", c.get());
 }
 catch (...) {
 }

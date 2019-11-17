@@ -22,7 +22,7 @@
 #include "../../include/bsl/ut.h"
 
 static auto
-pointless() -> void    // FAILED pointless function not detected
+pointless() noexcept -> void    // FAILED pointless function not detected
 {}
 
 auto

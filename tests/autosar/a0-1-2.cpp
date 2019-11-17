@@ -21,16 +21,16 @@
 
 #include "../../include/bsl/ut.h"
 
-// static auto
-// fn1() noexcept -> std::uint8_t
-// {
-//     return 0;
-// }
+static auto
+fn1() noexcept -> std::uint8_t
+{
+    return 0;
+}
 
 auto
 main() -> int
 try {
-    // auto x = fn1(); // clang-analyzer-deadcode.DeadStores (tidy)
+    auto x = fn1();    // clang-analyzer-deadcode.DeadStores (tidy)
 }
 catch (...) {
 }

@@ -20,12 +20,12 @@ violation_handler(const bsl::violation_info &info) -> void
 }
 
 static auto
-the_answer(int val) -> std::unique_ptr<int>
+the_answer(std::int32_t val) -> std::unique_ptr<std::int32_t>
 {
     bsl::expects(val == 42);
     bsl::assert_axiom(1 + 1 != 3);
 
-    auto ret = std::make_unique<int>(val);
+    auto ret = std::make_unique<std::int32_t>(val);
     bsl::ensures_audit(!!ret);
 
     return ret;

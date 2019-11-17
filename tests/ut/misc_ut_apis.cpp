@@ -76,84 +76,16 @@ main() -> int
         bsl::require(caught);
     };
 
-    bsl::scenario("vectors can be sized and resized") = [] {
-        bsl::given("A vector with some items") = [] {
-            std::vector<int> v(5);
-
-            bsl::require(v.size() == 5);
-            bsl::require(v.capacity() >= 5);
-
-            bsl::when("the size is increased") = [=]() mutable {
-                v.resize(10);
-
-                bsl::then("the size and capacity change") = [=] {
-                    bsl::require(v.size() == 10);
-                    bsl::require(v.capacity() >= 10);
-                };
-            };
-
-            bsl::when("the size is reduced") = [=]() mutable {
-                v.resize(0);
-
-                bsl::then("the size changes but not capacity") = [=] {
-                    bsl::require(v.empty());
-                    bsl::require(v.capacity() == 0);
-                };
-            };
-
-            bsl::when("more capacity is reserved") = [=]() mutable {
-                v.reserve(10);
-
-                bsl::then("the capacity changes but not the size") = [=] {
-                    bsl::require(v.size() == 5);
-                    bsl::require(v.capacity() >= 5);
-                };
-            };
-
-            bsl::when("less capacity is reserved") = [=]() mutable {
-                v.reserve(0);
-
-                bsl::then("neither size nor capacity are changed") = [=] {
-                    bsl::require(v.size() == 5);
-                    bsl::require(v.capacity() >= 5);
-                };
+    bsl::scenario("1") = [] {
+        bsl::given("2") = [] {
+            bsl::when("3") = [] {
+                bsl::then("4") = [] {};
             };
         };
     };
 
-    bsl::test_case("vectors can be sized and resized") = [] {
-        std::vector<int> v(5);
-
-        bsl::require(v.size() == 5);
-        bsl::require(v.capacity() >= 5);
-
-        bsl::section("the size is increased") = [=]() mutable {
-            v.resize(10);
-
-            bsl::require(v.size() == 10);
-            bsl::require(v.capacity() >= 10);
-        };
-
-        bsl::section("the size is reduced") = [=]() mutable {
-            v.resize(0);
-
-            bsl::require(v.empty());
-            bsl::require(v.capacity() == 5);
-        };
-
-        bsl::section("more capacity is reserved") = [=]() mutable {
-            v.reserve(10);
-
-            bsl::require(v.size() == 5);
-            bsl::require(v.capacity() >= 10);
-        };
-
-        bsl::section("less capacity is reserved") = [=]() mutable {
-            v.reserve(0);
-
-            bsl::require(v.size() == 5);
-            bsl::require(v.capacity() >= 5);
-        };
+    bsl::test_case("1") = [] {
+        bsl::section("2") = [] {};
     };
 
     return bsl::check_results();

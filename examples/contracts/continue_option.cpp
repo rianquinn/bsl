@@ -18,7 +18,7 @@ violation_handler(const bsl::violation_info &info) noexcept -> void
 }
 
 static auto
-the_answer(int val) noexcept -> void
+the_answer(std::int32_t val) noexcept -> void
 {
     bsl::expects(val == 42);
     std::cout << "the violation was logged and ignored\n";

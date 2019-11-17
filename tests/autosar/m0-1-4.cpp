@@ -21,15 +21,15 @@
 
 #include "../../include/bsl/ut.h"
 
-// constexpr int x{23};
-// constexpr int y{42}; // -Wunused-const-variable (clang)
+constexpr std::int32_t x{23};
+constexpr std::int32_t y{42};    // -Wunused-const-variable (clang)
 
 auto
 main() -> int
 try {
-    // int a{4}; // unreadVariable (cppcheck)
-    // int b;
-    // b = x;  // clang-analyzer-deadcode.DeadStores (tidy)
+    std::int32_t a{4};    // unreadVariable (cppcheck)
+    std::int32_t b;
+    b = x;    // clang-analyzer-deadcode.DeadStores (tidy)
 }
 catch (...) {
 }

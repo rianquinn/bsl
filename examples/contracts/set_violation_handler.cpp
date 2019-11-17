@@ -17,7 +17,7 @@ violation_handler(const bsl::violation_info &info) -> void
 }
 
 static constexpr auto
-the_answer(int val) noexcept -> void
+the_answer(std::int32_t val) noexcept -> void
 {
     bsl::expects(val == 42);
 }

@@ -29,8 +29,6 @@ main() -> int
         bsl::int64_t i1;
         bsl::int64_t i2{};
 
-        unsigned i = 5;
-
         bsl::check(i1 == 0);
         bsl::check(i2 == i);
     };

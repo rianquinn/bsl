@@ -21,18 +21,18 @@
 
 #include "../../include/bsl/ut.h"
 
-// static auto
-// fn1() -> void
-// {}
+static auto
+fn1() noexcept -> void
+{}
 
-// static auto
-// fn2() -> void // unusedFunction (cppcheck)
-// {}
+static auto
+fn2() noexcept -> void    // unusedFunction (cppcheck)
+{}
 
 auto
 main() -> int
 try {
-    // fn1();
+    fn1();
 }
 catch (...) {
 }

@@ -76,8 +76,8 @@ main() -> int
     };
 
     bsl::test_case("verify_checks") = [] {
-        bsl::require(bsl::details::ut::total_assertions == 19);
-        bsl::require(bsl::details::ut::failed_assertions == 10);
+        bsl::require(bsl::details::ut::total_assertions == 19);     // NOLINT
+        bsl::require(bsl::details::ut::failed_assertions == 10);    // NOLINT
     };
 
     return 0;

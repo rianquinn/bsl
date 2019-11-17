@@ -26,19 +26,9 @@
 #     as the std::unique_ptr that this rule is based on so that the user of
 #     this library doesn't have to use new/delete
 #
-# -bugprone-macro-parentheses
-#     We are having issues with this one telling us to add () in macros that
-#     would cause the code not to compile. In other words, although this is
-#     likely a good test to use, it is buggy and not working right.
-#
-# -readability-magic-numbers
-# -cppcoreguidelines-avoid-magic-numbers
-#     Both of these do not work with the UT engine that we use, and in general
-#     do not work well with unit testing.
-#
 
-Checks: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-cppcoreguidelines-owning-memory,-bugprone-macro-parentheses,-readability-magic-numbers,-cppcoreguidelines-avoid-magic-numbers'
-WarningsAsErrors: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-cppcoreguidelines-owning-memory,-bugprone-macro-parentheses,-readability-magic-numbers,-cppcoreguidelines-avoid-magic-numbers'
+Checks: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-cppcoreguidelines-owning-memory'
+WarningsAsErrors: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-cppcoreguidelines-owning-memory'
 HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false
 CheckOptions:

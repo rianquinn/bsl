@@ -1,0 +1,222 @@
+[[rules]]
+name      = "check for digraphs"
+pattern   = '<%|%>|<:|:>|%:'
+forbidden = '<%|%>|<:|:>|%:'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = "digraphs <%, %>, <:, :>, %: and %:%: are not allowed"
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for C-style comments"
+pattern   = '(/\*/?([^/]|[^*]/)*\*/)'
+forbidden = '(/\*/?([^/]|[^*]/)*\*/)'
+hint      = "C-style comments are not allowed"
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for octal"
+pattern   = '\D0[1-7][0-7]*'
+forbidden = '\D0[1-7][0-7]*'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = "octal literals are not allowed"
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for octal escapes"
+pattern   = '\\0[1-7][0-7]*'
+forbidden = '\\0[1-7][0-7]*'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)'
+hint      = "octal escapes are not allowed"
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for signed hex constants"
+pattern   = '0[xX][0-9a-fA-F]+[^0-9a-fA-FU]'
+forbidden = '0[xX][0-9a-fA-F]+[^0-9a-fA-FU]'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = "hex constants must end in U"
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for lowercase hex"
+pattern   = '0[xX][0-9a-fA-F]*[a-f][0-9a-fA-F]*'
+forbidden = '0[xX][0-9a-fA-F]*[a-f][0-9a-fA-F]*'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = "hex constants must be in uppercase"
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for wchar_t"
+pattern   = 'wchar_t|L"'
+forbidden = 'wchar_t|L"'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)'
+hint      = 'wchar_t, L<string> and L<char> are not allowed'
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for wchar_t"
+pattern   = "L'"
+forbidden = "L'"
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)'
+hint      = 'wchar_t, L<string> and L<char> are not allowed'
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for proper use of int8_t"
+pattern   = '(?m)(^|[\t ;<\(])int8_t'
+forbidden = '(?m)(^|[\t ;<\(])int8_t'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = 'prefix int8_t type with std:: or bsl::'
+includes  = ["**/*.h", "**/*.cpp"]
+excludes  = ["include/bsl/int*", "tests/int/*"]
+
+[[rules]]
+name      = "check for proper use of int16_t"
+pattern   = '(?m)(^|[\t ;<\(])int16_t'
+forbidden = '(?m)(^|[\t ;<\(])int16_t'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = 'prefix int16_t type with std:: or bsl::'
+includes  = ["**/*.h", "**/*.cpp"]
+excludes  = ["include/bsl/int*", "tests/int/*"]
+
+[[rules]]
+name      = "check for proper use of int32_t"
+pattern   = '(?m)(^|[\t ;<\(])int32_t'
+forbidden = '(?m)(^|[\t ;<\(])int32_t'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = 'prefix int32_t type with std:: or bsl::'
+includes  = ["**/*.h", "**/*.cpp"]
+excludes  = ["include/bsl/int*", "tests/int/*"]
+
+[[rules]]
+name      = "check for proper use of int64_t"
+pattern   = '(?m)(^|[\t ;<\(])int64_t'
+forbidden = '(?m)(^|[\t ;<\(])int64_t'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = 'prefix int64_t type with std:: or bsl::'
+includes  = ["**/*.h", "**/*.cpp"]
+excludes  = ["include/bsl/int*", "tests/int/*"]
+
+[[rules]]
+name      = "check for proper use of uint8_t"
+pattern   = '(?m)(^|[\t ;<\(])uint8_t'
+forbidden = '(?m)(^|[\t ;<\(])uint8_t'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = 'prefix uint8_t type with std:: or bsl::'
+includes  = ["**/*.h", "**/*.cpp"]
+excludes  = ["include/bsl/int*", "tests/int/*"]
+
+[[rules]]
+name      = "check for proper use of uint16_t"
+pattern   = '(?m)(^|[\t ;<\(])uint16_t'
+forbidden = '(?m)(^|[\t ;<\(])uint16_t'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = 'prefix uint16_t type with std:: or bsl::'
+includes  = ["**/*.h", "**/*.cpp"]
+excludes  = ["include/bsl/int*", "tests/int/*"]
+
+[[rules]]
+name      = "check for proper use of uint32_t"
+pattern   = '(?m)(^|[\t ;<\(])uint32_t'
+forbidden = '(?m)(^|[\t ;<\(])uint32_t'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = 'prefix uint32_t type with std:: or bsl::'
+includes  = ["**/*.h", "**/*.cpp"]
+excludes  = ["include/bsl/int*", "tests/int/*"]
+
+[[rules]]
+name      = "check for proper use of uint64_t"
+pattern   = '(?m)(^|[\t ;<\(])uint64_t'
+forbidden = '(?m)(^|[\t ;<\(])uint64_t'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = 'prefix uint64_t type with std:: or bsl::'
+includes  = ["**/*.h", "**/*.cpp"]
+excludes  = ["include/bsl/int*", "tests/int/*"]
+
+[[rules]]
+name      = "check for non-fixed width integer types"
+pattern   = '(?m)(^|[\t ;<\(])int.'
+required  = '(?m)(^|[\t ;<\(])int\d'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")|(main.*)|(operator.*)'
+hint      = 'only fixed width types are supported'
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for long"
+pattern   = '(?m)(^|[\t ;<\(])long([\t ;<])'
+forbidden = '(?m)(^|[\t ;<\(])long([\t ;<])'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = '"long" is not allowed'
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for short"
+pattern   = '(?m)(^|[\t ;<\(])short([\t ;<])'
+forbidden = '(?m)(^|[\t ;<\(])short([\t ;<])'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = '"short" is not allowed'
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for signed"
+pattern   = '(?m)(^|[\t ;<\(])signed([\t ;<])'
+forbidden = '(?m)(^|[\t ;<\(])signed([\t ;<])'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = '"signed" is not allowed'
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for unsigned"
+pattern   = '(?m)(^|[\t ;<\(])unsigned([\t ;<])'
+forbidden = '(?m)(^|[\t ;<\(])unsigned([\t ;<])'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = '"unsigned" is not allowed'
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for float"
+pattern   = '(?m)(^|[\t ;<\(])float([\t ;<])'
+forbidden = '(?m)(^|[\t ;<\(])float([\t ;<])'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = '"float" is not allowed'
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for double"
+pattern   = '(?m)(^|[\t ;<\(])double([\t ;<])'
+forbidden = '(?m)(^|[\t ;<\(])double([\t ;<])'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = '"double" is not allowed'
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for non string use of char"
+pattern   = '(?m)(^|[\t ;<\(])char'
+forbidden = '(?m)(^|[\t ;<\(])char'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")|(const[\t ]char[\t \w]*\*)'
+hint      = 'char can only be used for const C-style strings'
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for auto val = constant"
+pattern   = 'auto[\t ][^=]*=[\t ]\d'
+forbidden = 'auto[\t ][^=]*?=[\t ]\d'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = 'auto cannot be initialized from a constant'
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for auto val = string"
+pattern   = '(?m)auto[\t ][^=]*=[\t \n]*([uU]|u8)?"'
+forbidden = '(?m)auto[\t ][^=]*?=[\t \n]*([uU]|u8)?"'
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = 'auto cannot be initialized from string'
+includes  = ["**/*.h", "**/*.cpp"]
+
+[[rules]]
+name      = "check for auto val = char"
+pattern   = "(?m)auto[\t ][^=]*=[\t \n]*([uU]|u8)?'"
+forbidden = "(?m)auto[\t ][^=]*?=[\t \n]*([uU]|u8)?'"
+ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+hint      = 'auto cannot be initialized from string'
+includes  = ["**/*.h", "**/*.cpp"]

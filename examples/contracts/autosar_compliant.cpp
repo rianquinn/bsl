@@ -2,7 +2,7 @@
 #include <bsl/contracts.h>
 
 static constexpr auto
-the_answer(int val) -> void
+the_answer(std::int32_t val) -> void
 {
     bsl::expects(val == 42);
 }

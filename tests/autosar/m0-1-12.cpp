@@ -21,29 +21,29 @@
 
 #include "../../include/bsl/ut.h"
 
-// class A
-// {
-// public:
-//     virtual auto
-//     foo(std::int32_t a, std::int32_t b) noexcept -> std::int32_t = 0;
-// };
+class A
+{
+public:
+    virtual auto
+    foo(std::int32_t a, std::int32_t b) noexcept -> std::int32_t = 0;
+};
 
-// class B : public A
-// {
-// public:
-//     auto
-//     foo(std::int32_t a, std::int32_t b) noexcept
-//         -> std::int32_t override    // misc-unused-parameters (tidy)
-//     {
-//         return a;
-//     }
-// };
+class B : public A
+{
+public:
+    auto
+    foo(std::int32_t a, std::int32_t b) noexcept
+        -> std::int32_t override    // misc-unused-parameters (tidy)
+    {
+        return a;
+    }
+};
 
 auto
 main() -> int
 try {
-    // B b;
-    // fmt::print("{}\n", b.foo(42, 42));
+    B b;
+    fmt::print("{}\n", b.foo(42, 42));
 }
 catch (...) {
 }

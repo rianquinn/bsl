@@ -21,29 +21,29 @@
 
 #include "../../include/bsl/ut.h"
 
-// struct C
-// {};
+struct C
+{};
 
-// static C c; // -Wunused-variable (clang)
+static C c;    // -Wunused-variable (clang)
 
 auto
 main() -> int
 try {
-    // int unused; // unusedVariable (cppcheck)
+    std::int32_t unused;    // unusedVariable (cppcheck)
 
-    // struct S
-    // {
-    //     int a : 3;
-    //     int pad : 1; // unusedStructMember (cppcheck)
-    //     int b : 2;
-    // };
+    struct S
+    {
+        std::int32_t a : 3;
+        std::int32_t pad : 1;    // unusedStructMember (cppcheck)
+        std::int32_t b : 2;
+    };
 
-    // S s{};
+    S s{};
 
-    // s.a = 1;
-    // s.b = 1;
+    s.a = 1;
+    s.b = 1;
 
-    // bsl::discard(s);
+    bsl::discard(s);
 }
 catch (...) {
 }

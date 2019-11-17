@@ -22,6 +22,8 @@
 #ifndef BSL_SOURCE_LOCATION_H
 #define BSL_SOURCE_LOCATION_H
 
+#include <cstdint>
+
 namespace bsl
 {
     /// Source Location
@@ -36,8 +38,8 @@ namespace bsl
     {
         using file_type = const char *;
         using func_type = const char *;
-        using line_type = int;
-        using column_type = int;
+        using line_type = std::int_least32_t;
+        using column_type = std::int_least32_t;
 
         constexpr source_location(
             file_type file, func_type func, line_type line) noexcept :

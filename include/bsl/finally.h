@@ -31,7 +31,7 @@ namespace bsl
 {
     template<
         typename FUNC,
-        std::enable_if_t<std::is_invocable_v<FUNC>, int> = 0
+        std::enable_if_t<std::is_invocable_v<FUNC>>* = nullptr
         >
     class finally
     {

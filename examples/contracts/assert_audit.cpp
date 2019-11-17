@@ -2,7 +2,7 @@
 #include <bsl/contracts.h>
 
 static auto
-the_answer(int val) noexcept -> void
+the_answer(std::int32_t val) noexcept -> void
 {
     bsl::assert_audit(val == 42);
 }

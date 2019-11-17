@@ -27,7 +27,7 @@ main() -> int
 {
     bsl::test_case("discard") = [] {
         bsl::check_nothrow([] {
-            int answer = 42;
+            std::int32_t answer = 1;
             bsl::discard(answer);
         });
     };

@@ -21,17 +21,17 @@
 
 #include "../../include/bsl/ut.h"
 
-// static auto
-// fn1(std::int32_t a, std::int32_t b) noexcept
-//     -> std::int32_t    // misc-unused-parameters (tidy)
-// {
-//     return a;
-// }
+static auto
+fn1(std::int32_t a, std::int32_t b) noexcept
+    -> std::int32_t    // misc-unused-parameters (tidy)
+{
+    return a;
+}
 
 auto
 main() -> int
 try {
-    // fmt::print("{}\n", fn1(42, 42));
+    fmt::print("{}\n", fn1(42, 42));
 }
 catch (...) {
 }

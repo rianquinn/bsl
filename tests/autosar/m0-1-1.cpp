@@ -22,13 +22,13 @@
 #include "../../include/bsl/ut.h"
 
 static auto
-foo(int16_t val) -> int16_t
+foo(std::int16_t val) noexcept -> std::int16_t
 {
-    int16_t local1{0};
-    int16_t local2{0};
+    std::int16_t local1{0};
+    std::int16_t local2{0};
 
     switch (val) {
-            // local1++;   // -Wunreachable-code (clang)
+        local1++;    // -Wunreachable-code (clang)
 
         case 1: {
             local2 = 1;
@@ -46,7 +46,7 @@ foo(int16_t val) -> int16_t
     }
 
     return local1 + local2;
-    // local1++;    // unreachableCode (CppCheck)
+    local1++;    // unreachableCode (CppCheck)
 }
 
 auto

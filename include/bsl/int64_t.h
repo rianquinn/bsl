@@ -101,9 +101,11 @@ namespace bsl
 // int64_t rational operators
 // -------------------------------------------------------------------------
 
-template<typename T, std::enable_if_t<std::is_integral_v<T>, int> = 0>
-constexpr auto
-operator==(const bsl::int64_t &lhs, const T rhs) noexcept -> bool
+template<
+    typename T,
+    std::enable_if_t<std::is_integral_v<T>> * =
+        nullptr constexpr auto operator==(
+            const bsl::int64_t &lhs, const T rhs) noexcept->bool
 {
     if constexpr (std::is_same_v<T, int64_t>) {
         return lhs.get() == rhs;
@@ -116,9 +118,11 @@ operator==(const bsl::int64_t &lhs, const T rhs) noexcept -> bool
     return lhs.narrow<T>() == rhs;
 }
 
-template<typename T, std::enable_if_t<std::is_integral_v<T>, int> = 0>
-constexpr auto
-operator!=(const bsl::int64_t &lhs, const T rhs) noexcept -> bool
+template<
+    typename T,
+    std::enable_if_t<std::is_integral_v<T>> * =
+        nullptr constexpr auto operator!=(
+            const bsl::int64_t &lhs, const T rhs) noexcept->bool
 {
     return !(lhs == rhs);
 }

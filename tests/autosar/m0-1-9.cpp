@@ -24,7 +24,7 @@
 static auto
 has_dead_code(std::int16_t para) noexcept -> std::int16_t
 {
-    std::int16_t local = 99;
+    std::int16_t local = 1;
     para = para + local;
 
     local = para;        // FAILED. dead code not detected
@@ -38,7 +38,7 @@ has_dead_code(std::int16_t para) noexcept -> std::int16_t
 auto
 main() -> int
 try {
-    fmt::print("{}\n", has_dead_code(42));
+    fmt::print("{}\n", has_dead_code(1));
 }
 catch (...) {
 }

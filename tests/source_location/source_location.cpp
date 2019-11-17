@@ -36,7 +36,7 @@ main() -> int
         auto loc = bsl::source_location::current();
         bsl::check(loc.file_name() != nullptr);
         bsl::check(loc.function_name() != nullptr);
-        bsl::check(loc.line() == 36);
+        bsl::check(loc.line() == 36);    // NOLINT
     };
 
     bsl::test_case("column") = [] {

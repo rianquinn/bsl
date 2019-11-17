@@ -22,12 +22,6 @@
 #ifndef BSL_AUTOSAR_H
 #define BSL_AUTOSAR_H
 
-#ifndef BSL_AUTOSAR_COMPLIANT
-#define BSL_AUTOSAR_COMPLIANT 0
-#endif
-
-static_assert(BSL_AUTOSAR_COMPLIANT >= 0 and BSL_AUTOSAR_COMPLIANT <= 1);
-
 namespace bsl
 {
     /// AUTOSAR C++14 Compliant (Read-Only)
@@ -35,7 +29,11 @@ namespace bsl
     /// Set to true if AUTOSAR C++14 compliance is enabled, false
     /// (the default) otherwise.
     ///
-    constexpr bool autosar_compliant = (BSL_AUTOSAR_COMPLIANT == 1);
+#ifdef BSL_AUTOSAR_COMPLIANT
+    constexpr bool autosar_compliant = true;
+#else
+    constexpr bool autosar_compliant = false;
+#endif
 }    // namespace bsl
 
 #endif

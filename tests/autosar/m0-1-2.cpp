@@ -24,46 +24,46 @@
 auto
 main() -> int
 try {
-    // enum color_t {RED, GREEN};
-    // color_t color{RED};
+    enum color_t { RED, GREEN };
+    color_t color{RED};
 
-    // if (color <= GREEN) {
-    //     fmt::print("");  // knownConditionTrueFalse (cppcheck)
-    // }
+    if (color <= GREEN) {
+        fmt::print("");    // knownConditionTrueFalse (cppcheck)
+    }
 
-    // uint8_t u8{0};
+    std::uint8_t u8{0};
 
-    // if (u8 >= 0U) {
-    //     fmt::print("");  // knownConditionTrueFalse (cppcheck)
-    // }
+    if (u8 >= 0U) {
+        fmt::print("");    // knownConditionTrueFalse (cppcheck)
+    }
 
-    // if (u8 < 0) {
-    //     fmt::print("");  // knownConditionTrueFalse (cppcheck)
-    // }
+    if (u8 < 0) {
+        fmt::print("");    // knownConditionTrueFalse (cppcheck)
+    }
 
-    // if (u8 < 0xFF) {
-    //     fmt::print("");  // knownConditionTrueFalse (cppcheck)
-    // }
+    if (u8 < 0xFFU) {
+        fmt::print("");    // knownConditionTrueFalse (cppcheck)
+    }
 
-    // int8_t s8{0};
+    std::int8_t s8{0};
 
-    // if (s8 < 130) {
-    //     fmt::print("");  // knownConditionTrueFalse (cppcheck)
-    // }
+    if (s8 < 130) {
+        fmt::print("");    // knownConditionTrueFalse (cppcheck)
+    }
 
-    // if (s8 < 10 && s8 > 20) {
-    //     fmt::print("");  // misc-redundant-expression (tidy)
-    // }
+    if (s8 < 10 && s8 > 20) {
+        fmt::print("");    // misc-redundant-expression (tidy)
+    }
 
-    // if (s8 < 10 || s8 > 5) {
-    //     fmt::print("");  // misc-redundant-expression (tidy)
-    // }
+    if (s8 < 10 || s8 > 5) {
+        fmt::print("");    // misc-redundant-expression (tidy)
+    }
 
-    // if (s8 < 10) {
-    //     if (s8 > 5) {
-    //         fmt::print("");  // knownConditionTrueFalse (cppcheck)
-    //     }
-    // }
+    if (s8 < 10) {
+        if (s8 > 5) {
+            fmt::print("");    // knownConditionTrueFalse (cppcheck)
+        }
+    }
 }
 catch (...) {
 }

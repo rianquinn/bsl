@@ -42,40 +42,66 @@
 //     required to stay compliant. This is advised in release builds.
 //
 
-#include "source_location.h"
+#include "debug.h"
 #include "discard.h"
 #include "autosar.h"
 
 #include <string>
+#include <stdexcept>
+#include <functional>
 
-#include <fmt/core.h>
-#include <fmt/color.h>
-
-#ifndef BSL_BUILD_LEVEL
-#define BSL_BUILD_LEVEL 1
-#endif
-
-#ifndef BSL_CONTINUE_OPTION
-#define BSL_CONTINUE_OPTION 0
-#endif
-
-static_assert(BSL_BUILD_LEVEL >= 0 and BSL_BUILD_LEVEL <= 2);
-static_assert(BSL_CONTINUE_OPTION >= 0 and BSL_CONTINUE_OPTION <= 1);
-
+// Configuration Settings
+//
 namespace bsl::details::contracts
 {
-    constexpr bool check_default = (BSL_BUILD_LEVEL >= 1);
-    constexpr bool check_audit = (BSL_BUILD_LEVEL == 2);
-    constexpr bool continue_on_violation = (BSL_CONTINUE_OPTION == 1);
+#if !defined(BSL_BUILD_LEVEL)
+    constexpr bool check_default = true;
+    constexpr bool check_audit = false;
+#elif BSL_BUILD_LEVEL == 1
+    constexpr bool check_default = true;
+    constexpr bool check_audit = false;
+#elif BSL_BUILD_LEVEL == 2
+    constexpr bool check_default = true;
+    constexpr bool check_audit = true;
+#else
+    constexpr bool check_default = false;
+    constexpr bool check_audit = false;
+#endif
+
+#ifdef BSL_CONTINUE_OPTION
+    constexpr bool continue_on_violation = true;
+#else
+    constexpr bool continue_on_violation = false;
+#endif
 }    // namespace bsl::details::contracts
 
+// Disable Assert
+//
+// Sadly, the C language defines an assert macro, which we do not want
+// other to use, nor do we wish for this macro to interfer with our
+// own APIs, so we disable it here.
+//
 #ifdef assert
-#undef assert
+#undef assert    // NOSONAR
 #endif
 
-#ifndef BSL_CONTRACTS_ABORT
-#define BSL_CONTRACTS_ABORT std::abort()
+// Abort Policy
+//
+// Note that this is for internal use only as this is needed for cleaner
+// unit testing.
+//
+namespace bsl::details::contracts
+{
+    [[noreturn]] inline auto
+    abort() noexcept -> void
+    {
+#ifndef BSL_CONTRACTS_EXIT_INSTEAD_OF_ABORT
+        std::abort();    // NOSONAR
+#else
+        std::exit(0);    // NOSONAR
 #endif
+    }
+}    // namespace bsl::details::contracts
 
 // -----------------------------------------------------------------------------
 // Definition
@@ -123,31 +149,24 @@ namespace bsl
         [[noreturn]] inline auto
         default_handler(const violation_info &info) -> void
         {
-            constexpr auto red = fmt::fg(fmt::terminal_color::bright_red);
-            constexpr auto yellow = fmt::fg(fmt::terminal_color::bright_yellow);
-            constexpr auto blue = fmt::fg(fmt::terminal_color::bright_blue);
-            constexpr auto cyan = fmt::fg(fmt::terminal_color::bright_cyan);
+            std::string msg;
+            msg += fmt::format(red, "FATAL ERROR: ");
+            msg += fmt::format(blue, "{}", info.comment);
+            msg += fmt::format(" violation [");
+            msg += fmt::format(cyan, "{}", info.location.line());
+            msg += fmt::format("]: ");
+            msg += fmt::format(yellow, "{}", info.location.file_name());
 
-            {
-                std::string msg;
-                msg += fmt::format(red, "FATAL ERROR: ");
-                msg += fmt::format(blue, "{}", info.comment);
-                msg += fmt::format(" violation [");
-                msg += fmt::format(cyan, "{}", info.location.line());
-                msg += fmt::format("]: ");
-                msg += fmt::format(yellow, "{}", info.location.file_name());
-
-                if constexpr (autosar_compliant) {
-                    throw std::logic_error(msg);
-                }
-
-                fmt::print("{}\n", msg);
+            if constexpr (autosar_compliant) {
+                throw std::domain_error(msg);
             }
 
-            BSL_CONTRACTS_ABORT;
+            fmt::print(stderr, "{}\n", msg);
+            abort();
         }
 
-        inline void (*handler)(const violation_info &) = default_handler;
+        inline std::function<void(const violation_info &)> handler =
+            default_handler;
     }    // namespace details::contracts
 
     /// Set Violation Handler
@@ -158,15 +177,16 @@ namespace bsl
     /// expects: none
     /// ensures: none
     ///
-    /// @param handler the handler to call when a contract violation occurs
+    /// @param func the handler to call when a contract violation occurs
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///
+    template<typename FUNC>
     constexpr auto
-    set_violation_handler(void (*handler)(const violation_info &)) noexcept
+    set_violation_handler(FUNC &&func) noexcept
         -> void
     {
-        details::contracts::handler = handler;
+        details::contracts::handler = func;
     }
 
     /// Expects

@@ -41,6 +41,10 @@ find_package(fmt REQUIRED)
 # Development Mode
 # ------------------------------------------------------------------------------
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(BUILD_EXAMPLES ON)
     set(BUILD_TESTS OFF)
@@ -53,17 +57,13 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "[enabled]: CMake's Debug mode")
 endif()
 
-if(CMAKE_BUILD_TYPE STREQUAL "WEVERYTHING")
-    set(BUILD_EXAMPLES ON)
-    set(BUILD_TESTS ON)
-    message(STATUS "[enabled]: Clang's -Weverything")
-endif()
-
 if(CMAKE_BUILD_TYPE STREQUAL "STATIC_ANALYSIS")
     set(BUILD_EXAMPLES ON)
     set(BUILD_TESTS ON)
     message(STATUS "[enabled]: Clang Tidy")
     message(STATUS "[enabled]: CppCheck")
+    message(STATUS "[enabled]: Clang's -Weverything")
+    message(STATUS "[enabled]: Google's UBSAN")
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "ASAN")
@@ -96,19 +96,10 @@ if(CMAKE_BUILD_TYPE STREQUAL "COVERAGE")
     message(STATUS "[enabled]: LCOV Coverage Tools")
 endif()
 
-if(CMAKE_BUILD_TYPE STREQUAL "AUTOSAR")
-    set(BUILD_EXAMPLES ON)
-    set(BUILD_TESTS ON)
-    message(STATUS "[enabled]: Clang's -Weverything")
-    message(STATUS "[enabled]: Clang Tidy")
-    message(STATUS "[enabled]: CppCheck")
-    message(STATUS "[enabled]: Google's UBSAN")
-endif()
-
-set(CMAKE_CXX_FLAGS_WEVERYTHING "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded")
-set(CMAKE_LINKER_FLAGS_WEVERYTHING "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded")
-set(CMAKE_CXX_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Wall -Wextra -Wpedantic")
-set(CMAKE_LINKER_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS_RELEASE "-Werror -Wall -Wextra -Wpedantic")
+set(CMAKE_LINKER_FLAGS_RELEASE "-Werror -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded")
+set(CMAKE_LINKER_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded")
 set(CMAKE_CXX_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address")
 set(CMAKE_LINKER_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address")
 set(CMAKE_CXX_FLAGS_MSAN "-Og -g -fno-omit-frame-pointer -fsanitize=memory")
@@ -119,8 +110,6 @@ set(CMAKE_CXX_FLAGS_UBSAN "-Og -g -fsanitize=undefined")
 set(CMAKE_LINKER_FLAGS_UBSAN "-Og -g -fsanitize=undefined")
 set(CMAKE_CXX_FLAGS_COVERAGE "-O0 -g --coverage -fprofile-arcs -ftest-coverage")
 set(CMAKE_LINKER_FLAGS_COVERAGE "-O0 -g --coverage -fprofile-arcs -ftest-coverage")
-set(CMAKE_CXX_FLAGS_AUTOSAR "-Og -g -fsanitize=undefined -Werror -Weverything -Wno-c++98-compat -Wno-padded")
-set(CMAKE_LINKER_FLAGS_AUTOSAR "-Og -g -fsanitize=undefined -Werror -Weverything -Wno-c++98-compat -Wno-padded")
 
 # ------------------------------------------------------------------------------
 # Flags
@@ -132,13 +121,13 @@ set(CMAKE_CXX_FLAGS "-fdiagnostics-color=auto")
 # Static Analysis Tools
 # ------------------------------------------------------------------------------
 
-if(CMAKE_BUILD_TYPE STREQUAL "STATIC_ANALYSIS" OR CMAKE_BUILD_TYPE STREQUAL "AUTOSAR")
+if(CMAKE_BUILD_TYPE STREQUAL "STATIC_ANALYSIS")
     list(APPEND CMAKE_CXX_CLANG_TIDY
         clang-tidy
     )
 endif()
 
-if(CMAKE_BUILD_TYPE STREQUAL "STATIC_ANALYSIS" OR CMAKE_BUILD_TYPE STREQUAL "AUTOSAR")
+if(CMAKE_BUILD_TYPE STREQUAL "STATIC_ANALYSIS")
     list(APPEND CMAKE_CXX_CPPCHECK
         cppcheck
         --enable=all
@@ -209,14 +198,12 @@ message(STATUS "")
 message(STATUS "${COLOR_G} BSL build types:${COLOR_E}")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=Release            ${COLOR_E}compile in release mode")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=Debug              ${COLOR_E}compile in debug mode")
-message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=WEVERYTHING        ${COLOR_E}compile with -Weverything")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=STATIC_ANALYSIS    ${COLOR_E}compile with Clang Tidy and CppCheck")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=ASAN               ${COLOR_E}compile with Google's ASAN")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=MSAN               ${COLOR_E}compile with Google's MSAN")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=TSAN               ${COLOR_E}compile with Google's TSAN")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=UBSAN              ${COLOR_E}compile with Google's UBSAN")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=COVERAGE           ${COLOR_E}compile with LCOV coverage")
-message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=AUTOSAR            ${COLOR_E}compile with WEVERYTHING, STATIC_ANAYLSIS and UBSAN")
 message(STATUS "")
 
 message(STATUS "${COLOR_G} BSL build targets:${COLOR_E}")
@@ -224,6 +211,7 @@ message(STATUS "${COLOR_Y}   make format                           ${COLOR_E}for
 message(STATUS "${COLOR_Y}   make unittest                         ${COLOR_E}runs the unittests")
 message(STATUS "${COLOR_Y}   make memcheck                         ${COLOR_E}runs the unittests with Valgrind")
 message(STATUS "${COLOR_Y}   make coverage                         ${COLOR_E}runs the unittests with LCOV")
+message(STATUS "${COLOR_Y}   make flexlint                         ${COLOR_E}runs flexlint")
 message(STATUS "")
 
 message(STATUS "${COLOR_G} BSL installation:${COLOR_E}")

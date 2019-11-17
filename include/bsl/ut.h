@@ -132,11 +132,11 @@ namespace bsl
         using name_type = const char *;       ///< Used to store names/labels
         using info_type = source_location;    ///< Used to store location info
 
-        inline uint64_t total_test_cases{};      ///< Total # of tests
-        inline uint64_t total_assertions{};      ///< Total # of assertions
-        inline uint64_t failed_test_cases{};     ///< Failed tests
-        inline uint64_t failed_assertions{};     ///< Failed assertions
-        inline uint64_t skipped_test_cases{};    ///< Total # of skipped tests
+        inline std::uint64_t total_test_cases{};      ///< Total # of tests
+        inline std::uint64_t total_assertions{};      ///< Total # of assertions
+        inline std::uint64_t failed_test_cases{};     ///< Failed tests
+        inline std::uint64_t failed_assertions{};     ///< Failed assertions
+        inline std::uint64_t skipped_test_cases{};    ///< Total # of skipped
 
         constexpr auto red = fmt::fg(fmt::terminal_color::bright_red);
         constexpr auto green = fmt::fg(fmt::terminal_color::bright_green);
@@ -213,7 +213,7 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     [[nodiscard]] inline auto
-    check_results() noexcept -> int
+    check_results() noexcept -> std::int32_t
     {
         using details::ut::green;
         using details::ut::yellow;
@@ -321,7 +321,7 @@ namespace bsl
         ///
         template<typename F>
         auto
-        execute_test(F &&func, std::string *failures) -> int
+        execute_test(F &&func, std::string *failures) -> std::int32_t
         {
             auto tmp = details::ut::failures;
             details::ut::failures = failures;
@@ -389,7 +389,7 @@ namespace bsl
         [[maybe_unused]] auto
         operator=(F &&func) noexcept -> test_case &
         {
-            int exit_code = EXIT_SUCCESS;
+            std::int32_t exit_code = EXIT_SUCCESS;
 
             try {
                 std::string failures{};
@@ -1067,7 +1067,7 @@ namespace bsl
         details::ut::name_type name = "check_death",
         details::ut::info_type info = source_location::current()) -> bool
     {
-        int exit_code = 0xBF;
+        constexpr std::int32_t exit_code = 191;
 
         fflush(stdout);
         details::ut::total_assertions++;
@@ -1078,7 +1078,7 @@ namespace bsl
             std::exit(exit_code);
         }
         else {
-            int exit_status;
+            std::int32_t exit_status;
             wait(&exit_status);
 
             if (WEXITSTATUS(exit_status) == exit_code) {    // NOLINT
@@ -1159,7 +1159,7 @@ namespace bsl
         details::ut::name_type name = "check_nodeath",
         details::ut::info_type info = source_location::current()) -> bool
     {
-        int exit_code = 0xBF;
+        constexpr std::int32_t exit_code = 191;
 
         fflush(stdout);
         details::ut::total_assertions++;
@@ -1170,7 +1170,7 @@ namespace bsl
             std::exit(exit_code);
         }
         else {
-            int exit_status;
+            std::int32_t exit_status;
             wait(&exit_status);
 
             if (WEXITSTATUS(exit_status) != exit_code) {    // NOLINT
