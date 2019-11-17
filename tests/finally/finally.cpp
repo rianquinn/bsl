@@ -25,21 +25,7 @@
 auto
 main() -> int
 {
-    bsl::test_case("ignore") = [] {
-        bool ran = false;
-
-        {
-            auto this_is_ignored = bsl::finally([&] {
-                ran = true;
-            });
-
-            this_is_ignored.ignore();
-        }
-
-        bsl::check(!ran);
-    };
-
-    bsl::test_case("not ignore") = [] {
+    bsl::test_case("validate") = [] {
         bool ran = false;
 
         {

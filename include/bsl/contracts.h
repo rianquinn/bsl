@@ -183,8 +183,7 @@ namespace bsl
     ///
     template<typename FUNC>
     constexpr auto
-    set_violation_handler(FUNC &&func) noexcept
-        -> void
+    set_violation_handler(FUNC &&func) noexcept -> void
     {
         details::contracts::handler = func;
     }

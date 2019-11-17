@@ -24,8 +24,8 @@
 class A
 {
 public:
-    virtual auto
-    foo(std::int32_t a, std::int32_t b) noexcept -> std::int32_t = 0;
+    virtual auto foo(std::int32_t a, std::int32_t b) noexcept
+        -> std::int32_t = 0;
 };
 
 class B : public A

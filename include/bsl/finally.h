@@ -25,49 +25,35 @@
 #include <utility>
 #include <type_traits>
 
-// clang-format off
-
 namespace bsl
 {
     template<
         typename FUNC,
-        std::enable_if_t<std::is_invocable_v<FUNC>>* = nullptr
-        >
+        std::enable_if_t<std::is_invocable_v<FUNC>> * = nullptr>
     class finally
     {
         FUNC m_func{};
-        bool m_invoke{true};
 
     public:
         explicit constexpr finally(FUNC &&func) noexcept :
             m_func(std::move(func))
         {}
 
-        ~finally() noexcept
+        ~finally() noexcept    // NOSONAR
         {
-            if (m_invoke) {
-                m_func();
-            }
-        }
-
-        constexpr auto
-        ignore() noexcept -> void
-        {
-            m_invoke = false;
+            m_func();
         }
 
     public:
-        finally(const finally &) = delete;
-        auto operator=(const finally &) -> finally & = delete;
-        finally(finally &&) noexcept = delete;
-        auto operator=(finally &&) noexcept -> finally & = delete;
+        finally(const finally &) = delete;                            // NOSONAR
+        auto operator=(const finally &) -> finally & = delete;        // NOSONAR
+        finally(finally &&) noexcept = delete;                        // NOSONAR
+        auto operator=(finally &&) noexcept -> finally & = delete;    // NOSONAR
     };
 
     template<typename FUNC>
-    finally(FUNC &&func) -> finally<FUNC>;
+    finally(FUNC &&func)->finally<FUNC>;
 
 }    // namespace bsl
-
-// clang-format on
 
 #endif
