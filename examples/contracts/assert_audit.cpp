@@ -1,5 +1,5 @@
 #define BSL_BUILD_LEVEL 2
-#include <bsl/contracts.h>
+#include <bsl/contracts.hpp>
 
 static auto
 the_answer(std::int32_t val) noexcept -> void

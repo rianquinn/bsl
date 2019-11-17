@@ -1,5 +1,5 @@
 #define BSL_CONTINUE_OPTION 1
-#include <bsl/contracts.h>
+#include <bsl/contracts.hpp>
 
 #include <string>
 #include <iostream>

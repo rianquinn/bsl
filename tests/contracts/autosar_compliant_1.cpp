@@ -22,8 +22,8 @@
 #define BSL_AUTOSAR_COMPLIANT 1
 #define BSL_BUILD_LEVEL 2
 
-#include "../../include/bsl/contracts.h"
-#include "../../include/bsl/ut.h"
+#include "../../include/bsl/contracts.hpp"
+#include "../../include/bsl/ut.hpp"
 
 #include <iostream>
 

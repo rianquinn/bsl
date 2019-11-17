@@ -1,5 +1,5 @@
 #define BSL_AUTOSAR_COMPLIANT 1
-#include <bsl/contracts.h>
+#include <bsl/contracts.hpp>
 
 static constexpr auto
 the_answer(std::int32_t val) -> void

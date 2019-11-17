@@ -1,4 +1,4 @@
-#include <bsl/contracts.h>
+#include <bsl/contracts.hpp>
 
 #include <string>
 #include <stdexcept>

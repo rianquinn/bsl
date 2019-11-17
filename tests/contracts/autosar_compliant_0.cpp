@@ -23,8 +23,8 @@
 #define BSL_BUILD_LEVEL 2
 #define BSL_CONTRACTS_ABORT std::exit(0)
 
-#include "../../include/bsl/contracts.h"
-#include "../../include/bsl/ut.h"
+#include "../../include/bsl/contracts.hpp"
+#include "../../include/bsl/ut.hpp"
 
 auto
 main() -> int

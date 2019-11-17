@@ -1,5 +1,5 @@
 #define BSL_BUILD_LEVEL 2
-#include <bsl/contracts.h>
+#include <bsl/contracts.hpp>
 
 #include <memory>
 #include <string>

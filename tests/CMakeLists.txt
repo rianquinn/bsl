@@ -30,7 +30,7 @@ endmacro(bf_add_test)
 # Tests
 # ------------------------------------------------------------------------------
 
-add_subdirectory(autosar)
+# add_subdirectory(autosar)
 add_subdirectory(contracts)
 add_subdirectory(discard)
 add_subdirectory(finally)

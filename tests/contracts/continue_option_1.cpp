@@ -22,8 +22,8 @@
 #define BSL_BUILD_LEVEL 2
 #define BSL_CONTINUE_OPTION 1
 
-#include "../../include/bsl/contracts.h"
-#include "../../include/bsl/ut.h"
+#include "../../include/bsl/contracts.hpp"
+#include "../../include/bsl/ut.hpp"
 
 auto
 main() -> int
