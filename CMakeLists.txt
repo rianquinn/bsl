@@ -166,9 +166,9 @@ install(FILES include/bsl.h DESTINATION include/bsl)
 
 add_custom_target(
     format
-    COMMAND find ${CMAKE_SOURCE_DIR}/examples -iname *.h -o -iname *.cpp | xargs clang-format -i
-    COMMAND find ${CMAKE_SOURCE_DIR}/include -iname *.h -o -iname *.cpp | xargs clang-format -i
-    COMMAND find ${CMAKE_SOURCE_DIR}/tests -iname *.h -o -iname *.cpp | xargs clang-format -i
+    COMMAND find ${CMAKE_SOURCE_DIR}/examples -iname *.hpp -o -iname *.cpp | xargs clang-format -i
+    COMMAND find ${CMAKE_SOURCE_DIR}/include -iname *.hpp -o -iname *.cpp | xargs clang-format -i
+    COMMAND find ${CMAKE_SOURCE_DIR}/tests -iname *.hpp -o -iname *.cpp | xargs clang-format -i
 )
 
 # ------------------------------------------------------------------------------

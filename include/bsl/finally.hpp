@@ -39,16 +39,15 @@ namespace bsl
             m_func(std::move(func))
         {}
 
-        ~finally() noexcept    // NOSONAR
+        ~finally() noexcept    //NOSONAR
         {
             m_func();
         }
 
-    public:
-        finally(const finally &) = delete;                            // NOSONAR
-        auto operator=(const finally &) -> finally & = delete;        // NOSONAR
-        finally(finally &&) noexcept = delete;                        // NOSONAR
-        auto operator=(finally &&) noexcept -> finally & = delete;    // NOSONAR
+        finally(const finally &) = delete;                            //NOSONAR
+        auto operator=(const finally &) -> finally & = delete;        //NOSONAR
+        finally(finally &&) noexcept = delete;                        //NOSONAR
+        auto operator=(finally &&) noexcept -> finally & = delete;    //NOSONAR
     };
 
     template<typename FUNC>

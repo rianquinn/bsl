@@ -24,6 +24,10 @@
 
 #include <cstdint>
 
+int __builtin_LINE();
+const char *__builtin_FILE();
+const char *__builtin_FUNCTION();
+
 namespace bsl
 {
     /// Source Location
@@ -42,7 +46,9 @@ namespace bsl
         using column_type = std::int_least32_t;
 
         constexpr source_location(
-            file_type file, func_type func, line_type line) noexcept :
+            const file_type file,
+            const func_type func,
+            const line_type line) noexcept :
             m_file{file}, m_func{func}, m_line{line}
         {}
 
@@ -73,16 +79,9 @@ namespace bsl
         ///
         static constexpr auto
         current(
-#ifdef __linux__
             file_type file = __builtin_FILE(),
             func_type func = __builtin_FUNCTION(),
-            line_type line = __builtin_LINE()
-#else
-            file_type file = "file location not available on Windows",
-            func_type func = "function name not available on Windows",
-            line_type line = -1
-#endif
-                ) noexcept -> source_location
+            line_type line = __builtin_LINE()) noexcept -> source_location
         {
             return {file, func, line};
         }

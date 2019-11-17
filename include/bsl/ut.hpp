@@ -89,20 +89,6 @@
 //   would just add another header and more code to this library, making it
 //   more complicated for a feature that is simple to add yourself.
 //
-// - TODO:
-//
-//   - Support for runners/reporters. We don't need this feature, but if
-//     others wish to use this library, they might like how we output the
-//     the results.
-//
-//   - Windows support. We don't need this, but others might find it useful.
-//     This might be simple to do by just disabling support for death tests
-//     as that is the feature that would be hard to duplicate in Windows.
-//
-//   - Remove the extra dependencies. We don't need to worry about this as
-//     we need the entire BSL as well as the {fmt} library, but others might
-//     not like this limitation (but why... the BSL is awesome).
-//
 
 #include "discard.hpp"
 #include "finally.hpp"
@@ -156,7 +142,7 @@ namespace bsl
         /// with a pointer to the test case's log. This allows the test cases
         /// to handle nested test cases safely.
         ///
-        /// expects: failures != nullptr;
+        /// expects: none
         /// ensures: none
         ///
         /// @param name the name of the assertion that failed
@@ -166,17 +152,18 @@ namespace bsl
         /// @throw [unchecked]: possible
         ///
         inline auto
-        assertion_failure(name_type name, const info_type &info, name_type what)
+        assertion_failure(
+            const name_type name, const info_type &info, const name_type what)
             -> void
         {
-            if (failures == nullptr) {
-                throw std::logic_error("check/require outside of test case\n");
+            if (nullptr == failures) {
+                throw std::domain_error("check/require outside of test case\n");
             }
 
             *failures += fmt::format("  | [");
             *failures += fmt::format(magenta, "{}", name);
 
-            if (info.file_name() != nullptr) {
+            if (nullptr != info.file_name()) {
                 *failures += fmt::format("] failed on line: ");
                 *failures += fmt::format(yellow, "{}\n", info.line());
             }
@@ -184,7 +171,7 @@ namespace bsl
                 *failures += fmt::format("]\n");
             }
 
-            if (what != nullptr) {
+            if (nullptr != what) {
                 *failures += fmt::format("  |   - ");
                 *failures += fmt::format(cyan, "what");
                 *failures += fmt::format(": {}\n", what);
@@ -219,11 +206,11 @@ namespace bsl
         using details::ut::yellow;
         using details::ut::red;
 
-        auto total_test_cases = details::ut::total_test_cases;
-        auto total_assertions = details::ut::total_assertions;
-        auto failed_test_cases = details::ut::failed_test_cases;
-        auto failed_assertions = details::ut::failed_assertions;
-        auto skipped_test_cases = details::ut::skipped_test_cases;
+        const auto total_test_cases = details::ut::total_test_cases;
+        const auto total_assertions = details::ut::total_assertions;
+        const auto failed_test_cases = details::ut::failed_test_cases;
+        const auto failed_assertions = details::ut::failed_assertions;
+        const auto skipped_test_cases = details::ut::skipped_test_cases;
 
         details::ut::total_test_cases = {};
         details::ut::total_assertions = {};
@@ -231,19 +218,19 @@ namespace bsl
         details::ut::failed_assertions = {};
         details::ut::skipped_test_cases = {};
 
-        auto as = total_assertions != 1 ? "s" : "";
-        auto ts = total_test_cases != 1 ? "s" : "";
-        auto ss = skipped_test_cases != 1 ? "s" : "";
+        const char *as = total_assertions != 1 ? "s" : "";
+        const char *ts = total_test_cases != 1 ? "s" : "";
+        const char *ss = skipped_test_cases != 1 ? "s" : "";
 
         try {
-            if (total_test_cases == 0) {
+            if (0 == total_test_cases) {
                 fmt::print(yellow, "{:=^80}\n", "=");
                 fmt::print(yellow, "No tests ran\n");
 
-                throw std::runtime_error("No tests ran");
+                return EXIT_FAILURE;
             }
 
-            if (total_test_cases > 0 and failed_test_cases > 0) {
+            if ((total_test_cases > 0) && (failed_test_cases > 0)) {
                 fmt::print(red, "{:=^80}\n", "=");
                 fmt::print("test cases: {:>3}", total_test_cases);
                 fmt::print(" | ");
@@ -263,7 +250,7 @@ namespace bsl
                 fmt::print(red, "failed");
                 fmt::print("\n");
 
-                throw std::runtime_error("Unit test failed");
+                return EXIT_FAILURE;
             }
 
             fmt::print(green, "{:=^80}\n", "=");
@@ -281,7 +268,7 @@ namespace bsl
 
             fmt::print(")\n");
         }
-        catch (...) {
+        catch (...) {    //NOSONAR
             return EXIT_FAILURE;
         }
 

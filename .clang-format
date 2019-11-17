@@ -104,7 +104,7 @@ NamespaceIndentation: All
 # PenaltyReturnTypeOnItsOwnLine
 PointerAlignment: Right
 # RawStringFormats
-ReflowComments: true
+ReflowComments: false
 SortIncludes: false
 SortUsingDeclarations: false
 SpaceAfterCStyleCast: false
