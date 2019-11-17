@@ -1,7 +1,0 @@
-organization=rianquinn
-projectKey=BSL
-serverUrl=https://sonarcloud.io
-serverVersion=8.0.0.2662
-dashboardUrl=https://sonarcloud.io/dashboard?id=BSL
-ceTaskId=AW55yfrojglVWMblFeZU
-ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AW55yfrojglVWMblFeZU
