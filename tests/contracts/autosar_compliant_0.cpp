@@ -19,9 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#define BSL_AUTOSAR_COMPLIANT 0
 #define BSL_BUILD_LEVEL 2
-#define BSL_CONTRACTS_ABORT std::exit(0)
+#define BSL_CONTRACTS_EXIT_INSTEAD_OF_ABORT
 
 #include "../../include/bsl/contracts.hpp"
 #include "../../include/bsl/ut.hpp"

@@ -20,7 +20,7 @@
 // SOFTWARE.
 
 #define BSL_BUILD_LEVEL 2
-#define BSL_CONTINUE_OPTION 1
+#define BSL_CONTINUE_OPTION
 
 #include "../../include/bsl/contracts.hpp"
 #include "../../include/bsl/ut.hpp"

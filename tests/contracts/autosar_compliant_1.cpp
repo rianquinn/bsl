@@ -19,8 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#define BSL_AUTOSAR_COMPLIANT 1
 #define BSL_BUILD_LEVEL 2
+#define BSL_AUTOSAR_COMPLIANT
 
 #include "../../include/bsl/contracts.hpp"
 #include "../../include/bsl/ut.hpp"

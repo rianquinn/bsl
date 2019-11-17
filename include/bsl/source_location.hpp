@@ -24,10 +24,6 @@
 
 #include <cstdint>
 
-int __builtin_LINE();
-const char *__builtin_FILE();
-const char *__builtin_FUNCTION();
-
 namespace bsl
 {
     /// Source Location

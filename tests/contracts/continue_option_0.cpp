@@ -20,8 +20,7 @@
 // SOFTWARE.
 
 #define BSL_BUILD_LEVEL 2
-#define BSL_CONTINUE_OPTION 0
-#define BSL_CONTRACTS_ABORT std::exit(0)
+#define BSL_CONTRACTS_EXIT_INSTEAD_OF_ABORT
 
 #include "../../include/bsl/contracts.hpp"
 #include "../../include/bsl/ut.hpp"
