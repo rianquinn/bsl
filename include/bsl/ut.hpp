@@ -91,7 +91,7 @@
 //
 
 #include "discard.hpp"
-#include "finally.hpp"
+#include "exception.hpp"
 #include "source_location.hpp"
 
 #include <string>
@@ -111,17 +111,15 @@
 
 namespace bsl
 {
-    class test_case;
-
     namespace details::ut
     {
-        class generic_error : public std::runtime_error
-        {
-        public:
-            generic_error() :
-                std::runtime_error("generic_error")
-            {}
-        };
+        const char generic_error_msg[] = "generic_error";
+        const char ut_failed_msg[] = "ut_failed";
+        const char required_failed_msg[] = "required_failed";
+
+        using generic_error = bsl::checked_error<generic_error_msg>;
+        using ut_failed = bsl::checked_error<ut_failed_msg>;
+        using required_failed = bsl::checked_error<required_failed_msg>;
 
         using name_type = const char *;       ///< Used to store names/labels
         using info_type = source_location;    ///< Used to store location info
@@ -149,6 +147,12 @@ namespace bsl
         /// test case is executed, it updates the global "failures" string
         /// with a pointer to the test case's log. This allows the test cases
         /// to handle nested test cases safely.
+        ///
+        /// NOSONAR:
+        /// - We don't want each unit test to have to have a try/catch block,
+        ///   so we mark this function as noexcept, which means we need to
+        ///   catch all exceptions, which is why we use catch(...). This is
+        ///   fine as this is just a UT and not the actual, deployed code.
         ///
         /// expects: none
         /// ensures: none
@@ -211,6 +215,12 @@ namespace bsl
     /// check the results of the unit test itself and report success or
     /// failure.
     ///
+    /// NOSONAR:
+    /// - We don't want each unit test to have to have a try/catch block,
+    ///   so we mark this function as noexcept, which means we need to
+    ///   catch all exceptions, which is why we use catch(...). This is
+    ///   fine as this is just a UT and not the actual, deployed code.
+    ///
     /// expects: none
     /// ensures: none
     ///
@@ -246,7 +256,7 @@ namespace bsl
                 fmt::print(yellow, "{:=^80}\n", "=");
                 fmt::print(yellow, "No tests ran\n");
 
-                return EXIT_FAILURE;
+                throw details::ut::ut_failed{};
             }
 
             if ((total_test_cases > 0) && (failed_test_cases > 0)) {
@@ -269,7 +279,7 @@ namespace bsl
                 fmt::print(red, "failed");
                 fmt::print("\n");
 
-                return EXIT_FAILURE;
+                throw details::ut::ut_failed{};
             }
 
             fmt::print(green, "{:=^80}\n", "=");
@@ -286,12 +296,12 @@ namespace bsl
             }
 
             fmt::print(")\n");
+            return EXIT_SUCCESS;
         }
         catch (...) {    //NOSONAR
-            return EXIT_FAILURE;
         }
 
-        return EXIT_SUCCESS;
+        return EXIT_FAILURE;
     }
 
     /// Test Case
@@ -316,6 +326,12 @@ namespace bsl
         /// occurs, this function will return EXIT_FAILURE so that the unit
         /// test can be halted.
         ///
+        /// NOSONAR:
+        /// - We don't want each unit test to have to have a try/catch block,
+        ///   so we mark this function as noexcept, which means we need to
+        ///   catch all exceptions, which is why we use catch(...). This is
+        ///   fine as this is just a UT and not the actual, deployed code.
+        ///
         /// expects: none
         /// ensures: none
         ///
@@ -336,7 +352,7 @@ namespace bsl
             try {
                 func();
             }
-            catch (const std::exception &e) {
+            catch (const details::ut::required_failed &e) {
                 if (std::string("x|required failed|x") == e.what()) {
                     details::ut::failures = tmp;
                     return EXIT_FAILURE;
@@ -381,6 +397,12 @@ namespace bsl
         /// test case lambda is set, it is executed. It should be noted that
         /// this function will catch all exceptions to ensure the rest of the
         /// unit test is not alterred by other test cases.
+        ///
+        /// NOSONAR:
+        /// - We don't want each unit test to have to have a try/catch block,
+        ///   so we mark this function as noexcept, which means we need to
+        ///   catch all exceptions, which is why we use catch(...). This is
+        ///   fine as this is just a UT and not the actual, deployed code.
         ///
         /// expects:
         /// ensures:

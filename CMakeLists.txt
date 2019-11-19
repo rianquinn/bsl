@@ -30,6 +30,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_TESTS "Build test programs" ON)
+option(ENABLE_SONARCLOUD "Enable SonarCloud build targets" OFF)
 
 # ------------------------------------------------------------------------------
 # Dependencies
@@ -171,19 +172,20 @@ add_custom_target(
     COMMAND find ${CMAKE_SOURCE_DIR}/tests -iname *.hpp -o -iname *.cpp | xargs clang-format -i
 )
 
-add_custom_target(
-    sonar-build
-    COMMAND build-wrapper-linux-x86-64 --out-dir ${CMAKE_BINARY_DIR}/bw_output make clean all
-)
+if(ENABLE_SONARCLOUD AND UNIX)
+    add_custom_target(
+        sonar-build
+        COMMAND build-wrapper-linux-x86-64 --out-dir ${CMAKE_BINARY_DIR}/bw_output make clean all
+    )
 
-add_custom_target(
-    sonar-upload
-    COMMAND
-    COMMAND sonar-scanner
-    ARGS -Dsonar.login=81bb5447bd6ef44979b75e67ab255e7364408418
-    ARGS -Dproject.settings=${CMAKE_SOURCE_DIR}/.sonarsource
-    ARGS -Dsonar.cfamily.build-wrapper-output=${CMAKE_BINARY_DIR}/bw_output
-)
+    add_custom_target(
+        sonar-upload
+        COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_SOURCE_DIR} sonar-scanner
+        -Dsonar.login=81bb5447bd6ef44979b75e67ab255e7364408418
+        -Dproject.settings=.sonarsource
+        -Dsonar.cfamily.build-wrapper-output=${CMAKE_BINARY_DIR}/bw_output
+    )
+endif()
 
 # ------------------------------------------------------------------------------
 # Info
@@ -207,6 +209,7 @@ message(STATUS "")
 message(STATUS "${COLOR_G} CMake configuration options:${COLOR_E}")
 message(STATUS "${COLOR_Y}   -DBUILD_EXAMPLES=ON                   ${COLOR_E}build the examples")
 message(STATUS "${COLOR_Y}   -DBUILD_TESTS=ON                      ${COLOR_E}build the unittests")
+message(STATUS "${COLOR_Y}   -DENABLE_SONARCLOUD=ON                ${COLOR_E}enable SonarCloud build targets")
 message(STATUS "")
 
 message(STATUS "${COLOR_G} BSL build types:${COLOR_E}")
