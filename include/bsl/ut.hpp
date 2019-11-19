@@ -115,8 +115,13 @@ namespace bsl
 
     namespace details::ut
     {
-        using general_error = std::runtime_error;
-        using required_failed_error = std::runtime_error;
+        class generic_error : public std::runtime_error
+        {
+        public:
+            generic_error() :
+                std::runtime_error("generic_error")
+            {}
+        };
 
         using name_type = const char *;       ///< Used to store names/labels
         using info_type = source_location;    ///< Used to store location info
@@ -168,7 +173,7 @@ namespace bsl
                     fmt::print("]: ");
                     fmt::print(yellow, "{}", info.file_name());
 
-                    throw general_error("error");
+                    throw generic_error{};
                 }
 
                 *failures += fmt::format("  | [");
@@ -283,7 +288,6 @@ namespace bsl
             fmt::print(")\n");
         }
         catch (...) {    //NOSONAR
-            fmt::print("check_results: unexpected exception\n");
             return EXIT_FAILURE;
         }
 

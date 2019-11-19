@@ -155,8 +155,8 @@ namespace bsl
             halt();
         }
 
-        inline std::function<void(const violation_info &)> handler =
-            default_handler;
+        using handler_t = std::function<void(const violation_info &)>;
+        inline handler_t handler = default_handler;    // NOLINT
     }    // namespace details::contracts
 
     /// Set Violation Handler

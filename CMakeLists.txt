@@ -217,3 +217,6 @@ message(STATUS "")
 message(STATUS "${COLOR_G} BSL installation:${COLOR_E}")
 message(STATUS "${COLOR_Y}   make install                          ${COLOR_E}installs BSL on your system")
 message(STATUS "")
+
+
+sonar-scanner -Dsonar.login=81bb5447bd6ef44979b75e67ab255e7364408418 -Dproject.settings=.sonarsource -Dsonar.cfamily.build-wrapper-output=../build/bw-outputs/
