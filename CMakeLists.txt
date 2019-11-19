@@ -171,6 +171,20 @@ add_custom_target(
     COMMAND find ${CMAKE_SOURCE_DIR}/tests -iname *.hpp -o -iname *.cpp | xargs clang-format -i
 )
 
+add_custom_target(
+    sonar-build
+    COMMAND build-wrapper-linux-x86-64 --out-dir ${CMAKE_BINARY_DIR}/bw_output make clean all
+)
+
+add_custom_target(
+    sonar-upload
+    COMMAND
+    COMMAND sonar-scanner
+    ARGS -Dsonar.login=81bb5447bd6ef44979b75e67ab255e7364408418
+    ARGS -Dproject.settings=${CMAKE_SOURCE_DIR}/.sonarsource
+    ARGS -Dsonar.cfamily.build-wrapper-output=${CMAKE_BINARY_DIR}/bw_output
+)
+
 # ------------------------------------------------------------------------------
 # Info
 # ------------------------------------------------------------------------------
@@ -217,6 +231,3 @@ message(STATUS "")
 message(STATUS "${COLOR_G} BSL installation:${COLOR_E}")
 message(STATUS "${COLOR_Y}   make install                          ${COLOR_E}installs BSL on your system")
 message(STATUS "")
-
-
-sonar-scanner -Dsonar.login=81bb5447bd6ef44979b75e67ab255e7364408418 -Dproject.settings=.sonarsource -Dsonar.cfamily.build-wrapper-output=../build/bw-outputs/
