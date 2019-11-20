@@ -639,9 +639,9 @@ namespace bsl
     ///
     [[maybe_unused]] inline auto
     require(
-        bool test,
-        details::ut::name_type name = "require",
-        details::ut::info_type info = source_location::current()) -> bool
+        const bool test,
+        const details::ut::name_type name = "require",
+        const details::ut::info_type info = source_location::current()) -> bool
     {
         if (!check(test, name, info)) {
             throw details::ut::required_failed{};
@@ -672,8 +672,8 @@ namespace bsl
     ///
     [[maybe_unused]] inline auto
     check_false(
-        bool test,
-        details::ut::info_type info = source_location::current()) noexcept
+        const bool test,
+        const details::ut::info_type info = source_location::current()) noexcept
         -> bool
     {
         return check(!test, "check_false", info);
@@ -704,8 +704,8 @@ namespace bsl
     ///
     [[maybe_unused]] inline auto
     require_false(
-        bool test, details::ut::info_type info = source_location::current())
-        -> bool
+        const bool test,
+        const details::ut::info_type info = source_location::current()) -> bool
     {
         return require(!test, "require_false", info);
     }
@@ -735,12 +735,12 @@ namespace bsl
     [[maybe_unused]] auto
     check_throws(
         F &&func,
-        details::ut::name_type name = "check_throws",
-        details::ut::info_type info = source_location::current()) noexcept
+        const details::ut::name_type name = "check_throws",
+        const details::ut::info_type info = source_location::current()) noexcept
         -> bool
     {
         bool caught = false;
-        details::ut::total_assertions++;
+        ++details::ut::total_assertions;
 
         try {
             func();
@@ -751,7 +751,7 @@ namespace bsl
 
         if (!caught) {
             details::ut::assertion_failure(name, info, {});
-            details::ut::failed_assertions++;
+            ++details::ut::failed_assertions;
 
             return false;
         }
@@ -786,8 +786,8 @@ namespace bsl
     template<typename F>
     [[maybe_unused]] auto
     require_throws(
-        F &&func, details::ut::info_type info = source_location::current())
-        -> bool
+        F &&func,
+        const details::ut::info_type info = source_location::current()) -> bool
     {
         if (!check_throws(std::forward<F>(func), "require_throws", info)) {
             throw details::ut::required_failed{};
@@ -822,17 +822,17 @@ namespace bsl
     [[maybe_unused]] auto
     check_throws_checked(
         F &&func,
-        details::ut::name_type name = "check_throws_checked",
-        details::ut::info_type info = source_location::current()) noexcept
+        const details::ut::name_type name = "check_throws_checked",
+        const details::ut::info_type info = source_location::current()) noexcept
         -> bool
     {
         bool caught = false;
-        details::ut::total_assertions++;
+        ++details::ut::total_assertions;
 
         try {
             func();
         }
-        catch (const std::runtime_error &e) {
+        catch (const std::runtime_error &e) {    //NOSONAR
             bsl::discard(e);
             caught = true;
         }
@@ -842,7 +842,7 @@ namespace bsl
 
         if (!caught) {
             details::ut::assertion_failure(name, info, {});
-            details::ut::failed_assertions++;
+            ++details::ut::failed_assertions;
 
             return false;
         }
@@ -878,8 +878,8 @@ namespace bsl
     template<typename F>
     [[maybe_unused]] auto
     require_throws_checked(
-        F &&func, details::ut::info_type info = source_location::current())
-        -> bool
+        F &&func,
+        const details::ut::info_type info = source_location::current()) -> bool
     {
         if (!check_throws_checked(
                 std::forward<F>(func), "require_throws_checked", info)) {
@@ -920,12 +920,12 @@ namespace bsl
         -> bool
     {
         bool caught = false;
-        details::ut::total_assertions++;
+        ++details::ut::total_assertions;
 
         try {
             func();
         }
-        catch (const std::runtime_error &e) {
+        catch (const std::runtime_error &e) {    //NOSONAR
             bsl::discard(e);
             caught = false;
         }
@@ -935,7 +935,7 @@ namespace bsl
 
         if (!caught) {
             details::ut::assertion_failure(name, info, {});
-            details::ut::failed_assertions++;
+            ++details::ut::failed_assertions;
 
             return false;
         }
@@ -971,8 +971,8 @@ namespace bsl
     template<typename F>
     [[maybe_unused]] auto
     require_throws_unchecked(
-        F &&func, details::ut::info_type info = source_location::current())
-        -> bool
+        F &&func,
+        const details::ut::info_type info = source_location::current()) -> bool
     {
         if (!check_throws_unchecked(
                 std::forward<F>(func), "require_throws_unchecked", info)) {
@@ -1007,24 +1007,24 @@ namespace bsl
     [[maybe_unused]] auto
     check_nothrow(
         F &&func,
-        details::ut::name_type name = "check_nothrow",
-        details::ut::info_type info = source_location::current()) noexcept
+        const details::ut::name_type name = "check_nothrow",
+        const details::ut::info_type info = source_location::current()) noexcept
         -> bool
     {
-        details::ut::total_assertions++;
+        ++details::ut::total_assertions;
 
         try {
             func();
         }
-        catch (const std::exception &e) {
+        catch (const std::exception &e) {    //NOSONAR
             details::ut::assertion_failure(name, info, e.what());
-            details::ut::failed_assertions++;
+            ++details::ut::failed_assertions;
 
             return false;
         }
         catch (...) {    //NOSONAR
             details::ut::assertion_failure(name, info, "unknown");
-            details::ut::failed_assertions++;
+            ++details::ut::failed_assertions;
 
             return false;
         }
@@ -1059,8 +1059,8 @@ namespace bsl
     template<typename F>
     [[maybe_unused]] auto
     require_nothrow(
-        F &&func, details::ut::info_type info = source_location::current())
-        -> bool
+        F &&func,
+        const details::ut::info_type info = source_location::current()) -> bool
     {
         if (!check_nothrow(std::forward<F>(func), "require_nothrow", info)) {
             throw details::ut::required_failed{};
@@ -1097,13 +1097,13 @@ namespace bsl
     [[maybe_unused]] auto
     check_death(
         F &&func,
-        details::ut::name_type name = "check_death",
-        details::ut::info_type info = source_location::current()) -> bool
+        const details::ut::name_type name = "check_death",
+        const details::ut::info_type info = source_location::current()) -> bool
     {
         constexpr std::int32_t exit_code = 191;
 
         fflush(stdout);
-        details::ut::total_assertions++;
+        ++details::ut::total_assertions;
 
         if (fork() == 0) {
             std::string().swap(*details::ut::failures);
@@ -1116,7 +1116,7 @@ namespace bsl
 
             if (WEXITSTATUS(exit_status) == exit_code) {    // NOLINT
                 details::ut::assertion_failure(name, info, {});
-                details::ut::failed_assertions++;
+                ++details::ut::failed_assertions;
 
                 return false;
             }
@@ -1153,8 +1153,8 @@ namespace bsl
     template<typename F>
     [[maybe_unused]] auto
     require_death(
-        F &&func, details::ut::info_type info = source_location::current())
-        -> bool
+        F &&func,
+        const details::ut::info_type info = source_location::current()) -> bool
     {
         if (!check_death(std::forward<F>(func), "require_death", info)) {
             throw details::ut::required_failed{};
@@ -1189,13 +1189,13 @@ namespace bsl
     [[maybe_unused]] auto
     check_nodeath(
         F &&func,
-        details::ut::name_type name = "check_nodeath",
-        details::ut::info_type info = source_location::current()) -> bool
+        const details::ut::name_type name = "check_nodeath",
+        const details::ut::info_type info = source_location::current()) -> bool
     {
         constexpr std::int32_t exit_code = 191;
 
         fflush(stdout);
-        details::ut::total_assertions++;
+        ++details::ut::total_assertions;
 
         if (fork() == 0) {
             std::string().swap(*details::ut::failures);
@@ -1208,7 +1208,7 @@ namespace bsl
 
             if (WEXITSTATUS(exit_status) != exit_code) {    // NOLINT
                 details::ut::assertion_failure(name, info, {});
-                details::ut::failed_assertions++;
+                ++details::ut::failed_assertions;
 
                 return false;
             }
@@ -1245,8 +1245,8 @@ namespace bsl
     template<typename F>
     [[maybe_unused]] auto
     require_nodeath(
-        F &&func, details::ut::info_type info = source_location::current())
-        -> bool
+        F &&func,
+        const details::ut::info_type info = source_location::current()) -> bool
     {
         if (!check_nodeath(std::forward<F>(func), "require_nodeath", info)) {
             throw details::ut::required_failed{};
