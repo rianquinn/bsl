@@ -19,8 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#define BSL_BUILD_LEVEL 2
-
 #include "../../include/bsl/contracts.hpp"
 #include "../../include/bsl/ut.hpp"
 
@@ -28,7 +26,7 @@ auto
 main() -> int
 {
     bsl::set_violation_handler([](auto info) {
-        throw std::runtime_error(info.comment);
+        throw std::domain_error(info.comment);
     });
 
     bsl::test_case("expects") = [] {

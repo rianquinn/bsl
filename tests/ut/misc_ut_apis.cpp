@@ -64,17 +64,7 @@ main() -> int
         bsl::require(bsl::check_results() == EXIT_FAILURE);
     };
 
-    bool caught = false;
-    try {
-        bsl::check(false);
-    }
-    catch (...) {
-        caught = true;
-    }
-
-    bsl::test_case("verify assertion without test") = [&] {
-        bsl::require(caught);
-    };
+    bsl::check(false);
 
     bsl::scenario("1") = [] {
         bsl::given("2") = [] {

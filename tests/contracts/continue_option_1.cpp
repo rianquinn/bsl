@@ -19,9 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#define BSL_BUILD_LEVEL 2
-#define BSL_CONTINUE_OPTION
-
 #include "../../include/bsl/contracts.hpp"
 #include "../../include/bsl/ut.hpp"
 

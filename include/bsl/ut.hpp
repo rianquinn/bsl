@@ -915,8 +915,8 @@ namespace bsl
     [[maybe_unused]] auto
     check_throws_unchecked(
         F &&func,
-        details::ut::name_type name = "check_throws_unchecked",
-        details::ut::info_type info = source_location::current()) noexcept
+        const details::ut::name_type name = "check_throws_unchecked",
+        const details::ut::info_type info = source_location::current()) noexcept
         -> bool
     {
         bool caught = false;
@@ -1105,10 +1105,10 @@ namespace bsl
         fflush(stdout);
         ++details::ut::total_assertions;
 
-        if (fork() == 0) {
+        if (0 == fork()) {
             std::string().swap(*details::ut::failures);
             func();
-            std::exit(exit_code);
+            std::exit(exit_code);   //NOSONAR
         }
         else {
             std::int32_t exit_status;
@@ -1197,10 +1197,10 @@ namespace bsl
         fflush(stdout);
         ++details::ut::total_assertions;
 
-        if (fork() == 0) {
+        if (0 == fork()) {
             std::string().swap(*details::ut::failures);
             func();
-            std::exit(exit_code);
+            std::exit(exit_code);   //NOSONAR
         }
         else {
             std::int32_t exit_status;
