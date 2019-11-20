@@ -43,7 +43,6 @@ namespace bsl
     class checked_error : public std::runtime_error
     {
     public:
-
         /// Default Constructor
         ///
         /// Creates a default checked error type based on the string the
@@ -55,8 +54,7 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        checked_error() :
-            std::runtime_error(L)
+        checked_error() : std::runtime_error(L)
         {}
 
         /// Constructor (const char *)
@@ -71,8 +69,7 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        explicit checked_error(const char *msg) :
-            std::runtime_error(msg)
+        explicit checked_error(const char *const msg) : std::runtime_error(msg)
         {}
     };
 
@@ -90,7 +87,6 @@ namespace bsl
     class unchecked_error : public std::logic_error
     {
     public:
-
         /// Default Constructor
         ///
         /// Creates a default unchecked error type based on the string the
@@ -102,8 +98,7 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        unchecked_error() :
-            std::runtime_error(L)
+        unchecked_error() : std::runtime_error(L)
         {}
 
         /// Constructor (const char *)
@@ -118,7 +113,7 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        explicit unchecked_error(const char *msg) :
+        explicit unchecked_error(const char *const msg) :
             std::runtime_error(msg)
         {}
     };

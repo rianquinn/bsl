@@ -113,11 +113,11 @@ namespace bsl
 {
     namespace details::ut
     {
-        const char generic_error_msg[] = "generic_error";
+        const char invalid_check_msg[] = "invalid_check";
         const char ut_failed_msg[] = "ut_failed";
         const char required_failed_msg[] = "required_failed";
 
-        using generic_error = bsl::checked_error<generic_error_msg>;
+        using invalid_check = bsl::checked_error<invalid_check_msg>;
         using ut_failed = bsl::checked_error<ut_failed_msg>;
         using required_failed = bsl::checked_error<required_failed_msg>;
 
@@ -177,7 +177,7 @@ namespace bsl
                     fmt::print("]: ");
                     fmt::print(yellow, "{}", info.file_name());
 
-                    throw generic_error{};
+                    throw invalid_check{};
                 }
 
                 *failures += fmt::format("  | [");
@@ -336,15 +336,13 @@ namespace bsl
         /// ensures: none
         ///
         /// @param func the test function to execute
-        /// @return EXIT_FAILURE if a required check fails, EXIT_SUCCESS
-        ///     otherwise.
+        /// @return false if a required check fails, true otherwise.
         /// @throw [checked]: none
         /// @throw [unchecked]: possible
         ///
         template<typename F>
         auto
-        execute_test(F &&func, std::string *const failures) noexcept
-            -> std::int32_t
+        execute_test(F &&func, std::string *const failures) noexcept -> bool
         {
             auto *const tmp = details::ut::failures;
             details::ut::failures = failures;
@@ -353,21 +351,18 @@ namespace bsl
                 func();
             }
             catch (const details::ut::required_failed &e) {
-                if (std::string("x|required failed|x") == e.what()) {
-                    details::ut::failures = tmp;
-                    return EXIT_FAILURE;
-                }
+                bsl::discard(e);
 
-                details::ut::assertion_failure(
-                    "unexpected exception", {}, e.what());
+                details::ut::failures = tmp;
+                return false;
             }
             catch (...) {    //NOSONAR
                 details::ut::assertion_failure(
-                    "unexpected exception", {}, "unknown");
+                    "unexpected exception", {}, "missing check_throws?");
             }
 
             details::ut::failures = tmp;
-            return EXIT_SUCCESS;
+            return true;
         }
 
     public:
@@ -384,11 +379,12 @@ namespace bsl
         /// @throw [unchecked]: none
         ///
         explicit constexpr test_case(
-            details::ut::name_type name = "",
-            details::ut::info_type info = source_location::current()) noexcept :
+            const details::ut::name_type name = "",
+            const details::ut::info_type info =
+                source_location::current()) noexcept :
             m_name{name}, m_info{info}
         {
-            details::ut::total_test_cases++;
+            ++details::ut::total_test_cases;
         }
 
         /// Execute Test Case
@@ -403,6 +399,8 @@ namespace bsl
         ///   so we mark this function as noexcept, which means we need to
         ///   catch all exceptions, which is why we use catch(...). This is
         ///   fine as this is just a UT and not the actual, deployed code.
+        /// - We call std::exit() in this function to handle required() checks.
+        ///   This is fine since we are just unit testing.
         ///
         /// expects:
         /// ensures:
@@ -416,11 +414,9 @@ namespace bsl
         [[maybe_unused]] auto
         operator=(F &&func) noexcept -> test_case &
         {
-            std::int32_t exit_code = EXIT_SUCCESS;
-
             try {
                 std::string failures{};
-                exit_code = execute_test(std::forward<F>(func), &failures);
+                auto status = execute_test(std::forward<F>(func), &failures);
 
                 if (!failures.empty()) {
                     fmt::print(details::ut::red, "{:-^80}\n", "-");
@@ -434,7 +430,7 @@ namespace bsl
                     fmt::print("]\n");
                     fmt::print("  |\n{}", failures);
 
-                    if (exit_code != EXIT_SUCCESS) {
+                    if (!status) {
                         fmt::print(details::ut::red, "  |    ^^^ \n");
                         fmt::print(
                             details::ut::red,
@@ -445,15 +441,15 @@ namespace bsl
                     fmt::print("  |\n");
                     fmt::print("\n");
 
-                    details::ut::failed_test_cases++;
+                    ++details::ut::failed_test_cases;
                 }
 
-                if (exit_code != EXIT_SUCCESS) {
-                    throw std::runtime_error("required failed");
+                if (!status) {
+                    throw details::ut::required_failed{};
                 }
             }
-            catch (...) {    //NOSONAR
-                std::exit(exit_code);
+            catch (...) {                   //NOSONAR
+                std::exit(EXIT_FAILURE);    //NOSONAR
             }
 
             return *this;
@@ -474,26 +470,6 @@ namespace bsl
     class skip_test_case
     {
     public:
-        /// Pipe
-        ///
-        /// This function absorbs a test case by returning another
-        /// skip_test_case when given a regular test case.
-        ///
-        /// expects: none
-        /// ensures: none
-        ///
-        /// @param test the test case to absorb
-        /// @return *this
-        /// @throw [checked]: none
-        /// @throw [unchecked]: none
-        ///
-        [[maybe_unused]] constexpr auto
-        operator|(const test_case &test) noexcept -> skip_test_case &
-        {
-            bsl::discard(test);
-            return *this;
-        }
-
         /// Assignment Operator
         ///
         /// If a test case has been absorbed, it is likely that the test
@@ -515,11 +491,35 @@ namespace bsl
         {
             bsl::discard(func);
 
-            details::ut::skipped_test_cases++;
+            ++details::ut::skipped_test_cases;
             return *this;
         }
     };
+}    // namespace bsl
 
+/// Pipe
+///
+/// This function absorbs a test case by returning another
+/// skip_test_case when given a regular test case.
+///
+/// expects: none
+/// ensures: none
+///
+/// @param test the test case to absorb
+/// @return *this
+/// @throw [checked]: none
+/// @throw [unchecked]: none
+///
+[[maybe_unused]] constexpr auto
+operator|(bsl::skip_test_case &s, const bsl::test_case &t) noexcept
+    -> bsl::skip_test_case &
+{
+    bsl::discard(t);
+    return s;
+}
+
+namespace bsl
+{
     /// Skip
     ///
     /// This is the actual object that is used to skip a test case. Use this
@@ -597,16 +597,16 @@ namespace bsl
     ///
     [[maybe_unused]] inline auto
     check(
-        bool test,
-        details::ut::name_type name = "check",
-        details::ut::info_type info = source_location::current()) noexcept
+        const bool test,
+        const details::ut::name_type name = "check",
+        const details::ut::info_type info = source_location::current()) noexcept
         -> bool
     {
-        details::ut::total_assertions++;
+        ++details::ut::total_assertions;
 
         if (!test) {
             details::ut::assertion_failure(name, info, {});
-            details::ut::failed_assertions++;
+            ++details::ut::failed_assertions;
 
             return false;
         }
@@ -644,7 +644,7 @@ namespace bsl
         details::ut::info_type info = source_location::current()) -> bool
     {
         if (!check(test, name, info)) {
-            throw std::runtime_error("x|required failed|x");
+            throw details::ut::required_failed{};
         }
 
         return true;
@@ -790,7 +790,7 @@ namespace bsl
         -> bool
     {
         if (!check_throws(std::forward<F>(func), "require_throws", info)) {
-            throw std::runtime_error("x|required failed|x");
+            throw details::ut::required_failed{};
         }
 
         return true;
@@ -883,7 +883,7 @@ namespace bsl
     {
         if (!check_throws_checked(
                 std::forward<F>(func), "require_throws_checked", info)) {
-            throw std::runtime_error("x|required failed|x");
+            throw details::ut::required_failed{};
         }
 
         return true;
@@ -976,7 +976,7 @@ namespace bsl
     {
         if (!check_throws_unchecked(
                 std::forward<F>(func), "require_throws_unchecked", info)) {
-            throw std::runtime_error("x|required failed|x");
+            throw details::ut::required_failed{};
         }
 
         return true;
@@ -1063,7 +1063,7 @@ namespace bsl
         -> bool
     {
         if (!check_nothrow(std::forward<F>(func), "require_nothrow", info)) {
-            throw std::runtime_error("x|required failed|x");
+            throw details::ut::required_failed{};
         }
 
         return true;
@@ -1157,7 +1157,7 @@ namespace bsl
         -> bool
     {
         if (!check_death(std::forward<F>(func), "require_death", info)) {
-            throw std::runtime_error("x|required failed|x");
+            throw details::ut::required_failed{};
         }
 
         return true;
@@ -1249,7 +1249,7 @@ namespace bsl
         -> bool
     {
         if (!check_nodeath(std::forward<F>(func), "require_nodeath", info)) {
-            throw std::runtime_error("x|required failed|x");
+            throw details::ut::required_failed{};
         }
 
         return true;
