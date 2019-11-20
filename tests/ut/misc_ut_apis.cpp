@@ -24,15 +24,13 @@
 auto
 main() -> int
 {
-    if (bsl::check_results() != EXIT_FAILURE) {
-        std::exit(1);
-    }
+    bsl::check(bsl::check_results() != EXIT_FAILURE);
 
     bsl::skip | bsl::test_case("skip") = [] {
         bsl::check(false);
     };
 
-    bsl::test_case("verify skipped") = [&] {
+    bsl::test_case("verify skipped") = [] {
         bsl::require(bsl::check_results() == EXIT_SUCCESS);
     };
 
@@ -44,38 +42,40 @@ main() -> int
         bsl::check(false);
     };
 
-    bsl::test_case("verify skipped") = [&] {
+    bsl::test_case("verify skipped") = [] {
         bsl::require(bsl::check_results() == EXIT_FAILURE);
     };
 
-    bsl::test_case("uncaught exception") = [&] {
-        throw std::runtime_error("error");
+    bsl::test_case("uncaught exception") = [] {
+        throw bsl::checked_error{};
     };
 
-    bsl::test_case("verify uncaught exception") = [&] {
+    bsl::test_case("verify uncaught exception") = [] {
         bsl::require(bsl::check_results() == EXIT_FAILURE);
     };
 
-    bsl::test_case("uncaught exception") = [&] {
-        throw 42;    // NOLINT
+    bsl::test_case("uncaught exception") = [] {
+        throw 0;    // NOLINT //NOSONAR
     };
 
-    bsl::test_case("verify uncaught exception") = [&] {
+    bsl::test_case("verify uncaught exception") = [] {
         bsl::require(bsl::check_results() == EXIT_FAILURE);
     };
-
-    bsl::check(false);
 
     bsl::scenario("1") = [] {
         bsl::given("2") = [] {
             bsl::when("3") = [] {
-                bsl::then("4") = [] {};
+                bsl::then("4") = [] {
+                    bsl::check(true);
+                };
             };
         };
     };
 
     bsl::test_case("1") = [] {
-        bsl::section("2") = [] {};
+        bsl::section("2") = [] {
+            bsl::check(true);
+        };
     };
 
     return bsl::check_results();
