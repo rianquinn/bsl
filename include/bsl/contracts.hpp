@@ -77,9 +77,6 @@ namespace bsl::details::contracts
 
 // Abort Policy
 //
-// Note that this is for internal use only as this is needed for cleaner
-// unit testing.
-//
 namespace bsl::details::contracts
 {
     [[noreturn]] inline auto

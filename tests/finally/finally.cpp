@@ -22,18 +22,25 @@
 #include "../../include/bsl/finally.hpp"
 #include "../../include/bsl/ut.hpp"
 
+namespace
+{
+    bool ran = false;
+
+    auto
+    test_finally() noexcept -> void
+    {
+        const auto this_is_not_ignored = bsl::finally([] {
+            ran = true;
+        });
+    }
+}    // namespace
+
 auto
 main() -> int
 {
+    test_finally();
+
     bsl::test_case("validate") = [] {
-        bool ran = false;
-
-        {
-            auto this_is_not_ignored = bsl::finally([&] {
-                ran = true;
-            });
-        }
-
         bsl::check(ran);
     };
 

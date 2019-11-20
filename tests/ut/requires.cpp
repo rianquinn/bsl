@@ -24,76 +24,88 @@
 auto
 main() -> int
 {
-    bsl::test_case("checks") = [] {
+    bsl::test_case("require") = [] {
         bsl::check_nodeath([] {
             bsl::require(true);
         });
         bsl::check_death([] {
             bsl::require(false);
         });
+    };
 
+    bsl::test_case("require_false") = [] {
         bsl::check_death([] {
             bsl::require_false(true);
         });
         bsl::check_nodeath([] {
             bsl::require_false(false);
         });
+    };
 
+    bsl::test_case("require_nothrow") = [] {
         bsl::check_nodeath([] {
             bsl::require_nothrow([] {});
         });
         bsl::check_death([] {
             bsl::require_nothrow([] {
-                throw std::runtime_error("error");
+                throw bsl::checked_error{};
             });
         });
         bsl::check_death([] {
             bsl::require_nothrow([] {
-                throw std::logic_error("error");
+                throw bsl::unchecked_error{};
             });
         });
+    };
 
+    bsl::test_case("require_throws") = [] {
         bsl::check_death([] {
             bsl::require_throws([] {});
         });
         bsl::check_nodeath([] {
             bsl::require_throws([] {
-                throw std::runtime_error("error");
+                throw bsl::checked_error{};
             });
         });
+    };
 
+    bsl::test_case("require_throws_checked") = [] {
         bsl::check_death([] {
             bsl::require_throws_checked([] {
-                throw std::logic_error("error");
+                throw bsl::unchecked_error{};
             });
         });
         bsl::check_death([] {
             bsl::require_throws_checked([] {
-                throw std::logic_error("error");
+                throw bsl::unchecked_error{};
             });
         });
         bsl::check_nodeath([] {
             bsl::require_throws_checked([] {
-                throw std::runtime_error("error");
+                throw bsl::checked_error{};
             });
         });
+    };
 
+    bsl::test_case("require_throws_unchecked") = [] {
         bsl::check_nodeath([] {
             bsl::require_throws_unchecked([] {
-                throw std::logic_error("error");
+                throw bsl::unchecked_error{};
             });
         });
         bsl::check_nodeath([] {
             bsl::require_throws_unchecked([] {
-                throw std::logic_error("error");
+                throw bsl::unchecked_error{};
             });
         });
         bsl::check_death([] {
             bsl::require_throws_unchecked([] {
-                throw std::runtime_error("error");
+                throw bsl::checked_error{};
             });
         });
+    };
 
+    bsl::test_case("require_nodeath") = [] {
         bsl::check_nodeath([] {
             bsl::require_nodeath([] {});
         });
@@ -102,7 +114,9 @@ main() -> int
                 std::exit(0);
             });
         });
+    };
 
+    bsl::test_case("require_death") = [] {
         bsl::check_death([] {
             bsl::require_death([] {});
         });

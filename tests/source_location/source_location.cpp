@@ -26,14 +26,14 @@ auto
 main() -> int
 {
     bsl::test_case("default constructor") = [] {
-        auto loc = bsl::source_location{};
+        const auto loc = bsl::source_location{};
         bsl::check(loc.file_name() == nullptr);
         bsl::check(loc.function_name() == nullptr);
         bsl::check(loc.line() == 0);
     };
 
     bsl::test_case("current") = [] {
-        auto loc = bsl::source_location::current();
+        const auto loc = bsl::source_location::current();
         bsl::check(loc.file_name() != nullptr);
         bsl::check(loc.function_name() != nullptr);
         bsl::check(loc.line() == 36);    // NOLINT

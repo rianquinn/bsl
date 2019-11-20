@@ -24,51 +24,65 @@
 auto
 main() -> int
 {
-    bsl::test_case("checks") = [] {
+    bsl::test_case("check") = [] {
         bsl::check(true);
         bsl::check(false);
+    };
 
+    bsl::test_case("check_false") = [] {
         bsl::check_false(true);
         bsl::check_false(false);
+    };
 
+    bsl::test_case("check_nothrow") = [] {
         bsl::check_nothrow([] {});
         bsl::check_nothrow([] {
-            throw std::runtime_error("error");
+            throw bsl::checked_error{};
         });
         bsl::check_nothrow([] {
             throw 42;    // NOLINT
         });
+    };
 
+    bsl::test_case("check_throws") = [] {
         bsl::check_throws([] {});
         bsl::check_throws([] {
-            throw std::runtime_error("error");
+            throw bsl::checked_error{};
         });
+    };
 
+    bsl::test_case("check_throws_checked") = [] {
         bsl::check_throws_checked([] {
-            throw std::logic_error("error");
+            throw bsl::unchecked_error{};
         });
         bsl::check_throws_checked([] {
-            throw std::logic_error("error");
+            throw bsl::unchecked_error{};
         });
         bsl::check_throws_checked([] {
-            throw std::runtime_error("error");
+            throw bsl::checked_error{};
         });
+    };
 
+    bsl::test_case("check_throws_unchecked") = [] {
         bsl::check_throws_unchecked([] {
-            throw std::logic_error("error");
+            throw bsl::unchecked_error{};
         });
         bsl::check_throws_unchecked([] {
-            throw std::logic_error("error");
+            throw bsl::unchecked_error{};
         });
         bsl::check_throws_unchecked([] {
-            throw std::runtime_error("error");
+            throw bsl::checked_error{};
         });
+    };
 
+    bsl::test_case("check_nodeath") = [] {
         bsl::check_nodeath([] {});
         bsl::check_nodeath([] {
             std::exit(0);
         });
+    };
 
+    bsl::test_case("check_death") = [] {
         bsl::check_death([] {});
         bsl::check_death([] {
             std::exit(0);

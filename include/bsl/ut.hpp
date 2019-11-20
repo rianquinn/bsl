@@ -113,22 +113,22 @@ namespace bsl
 {
     namespace details::ut
     {
-        const char invalid_check_msg[] = "invalid_check";
-        const char ut_failed_msg[] = "ut_failed";
-        const char required_failed_msg[] = "required_failed";
+        inline constexpr char invalid_check_msg[] = "invalid check";
+        inline constexpr char ut_failed_msg[] = "ut failed";
+        inline constexpr char required_failed_msg[] = "required failed";
 
         using invalid_check = bsl::checked_error<invalid_check_msg>;
         using ut_failed = bsl::checked_error<ut_failed_msg>;
         using required_failed = bsl::checked_error<required_failed_msg>;
 
-        using name_type = const char *;       ///< Used to store names/labels
-        using info_type = source_location;    ///< Used to store location info
+        using name_type = const char *;
+        using info_type = source_location;
 
-        inline std::uint64_t total_test_cases{};      ///< Total # of tests
-        inline std::uint64_t total_assertions{};      ///< Total # of assertions
-        inline std::uint64_t failed_test_cases{};     ///< Failed tests
-        inline std::uint64_t failed_assertions{};     ///< Failed assertions
-        inline std::uint64_t skipped_test_cases{};    ///< Total # of skipped
+        inline std::uint64_t total_test_cases{};
+        inline std::uint64_t total_assertions{};
+        inline std::uint64_t failed_test_cases{};
+        inline std::uint64_t failed_assertions{};
+        inline std::uint64_t skipped_test_cases{};
 
         constexpr auto red = fmt::fg(fmt::terminal_color::bright_red);
         constexpr auto green = fmt::fg(fmt::terminal_color::bright_green);
@@ -136,7 +136,7 @@ namespace bsl
         constexpr auto magenta = fmt::fg(fmt::terminal_color::bright_magenta);
         constexpr auto cyan = fmt::fg(fmt::terminal_color::bright_cyan);
 
-        inline std::string *failures{};    ///< Stores each assertion's failures
+        inline std::string *failures{};
 
         /// Assertion Failure
         ///
@@ -1108,7 +1108,7 @@ namespace bsl
         if (0 == fork()) {
             std::string().swap(*details::ut::failures);
             func();
-            std::exit(exit_code);   //NOSONAR
+            std::exit(exit_code);    //NOSONAR
         }
         else {
             std::int32_t exit_status;
@@ -1200,7 +1200,7 @@ namespace bsl
         if (0 == fork()) {
             std::string().swap(*details::ut::failures);
             func();
-            std::exit(exit_code);   //NOSONAR
+            std::exit(exit_code);    //NOSONAR
         }
         else {
             std::int32_t exit_status;

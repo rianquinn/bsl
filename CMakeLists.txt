@@ -180,6 +180,7 @@ if(ENABLE_SONARCLOUD AND UNIX)
 
     add_custom_target(
         sonar-upload
+        COMMAND ${CMAKE_COMMAND} --build . --target sonar-build
         COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_SOURCE_DIR} sonar-scanner
         -Dsonar.login=81bb5447bd6ef44979b75e67ab255e7364408418
         -Dproject.settings=.sonarsource

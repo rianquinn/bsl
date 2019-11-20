@@ -26,6 +26,12 @@
 
 namespace bsl
 {
+    namespace details::exception
+    {
+        inline constexpr char checked_error_msg[] = "checked error";
+        inline constexpr char unchecked_error_msg[] = "unchecked error";
+    }    // namespace details::exception
+
     /// Checked Error
     ///
     /// Defines a checked error (exception). These are exceptions that
@@ -39,7 +45,7 @@ namespace bsl
     /// but if something goes bad, this type of exception can be detected and
     /// handled (by returning from the API an error).
     ///
-    template<const char *L>
+    template<const char *L = details::exception::checked_error_msg>
     class checked_error : public std::runtime_error
     {
     public:
@@ -83,7 +89,7 @@ namespace bsl
     /// not attempt to catch these until you hit the entry point, which is the
     /// only place a catch(...) is allowed.
     ///
-    template<const char *L>
+    template<const char *L = details::exception::unchecked_error_msg>
     class unchecked_error : public std::logic_error
     {
     public:
@@ -98,7 +104,7 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        unchecked_error() : std::runtime_error(L)
+        unchecked_error() : std::logic_error(L)
         {}
 
         /// Constructor (const char *)
@@ -114,7 +120,7 @@ namespace bsl
         /// @throw [unchecked]: none
         ///
         explicit unchecked_error(const char *const msg) :
-            std::runtime_error(msg)
+            std::logic_error(msg)
         {}
     };
 }    // namespace bsl
