@@ -50,8 +50,6 @@
 #include <stdexcept>
 #include <functional>
 
-// Configuration Settings
-//
 namespace bsl::details::contracts
 {
 #if !defined(BSL_BUILD_LEVEL)
@@ -73,12 +71,28 @@ namespace bsl::details::contracts
 #else
     constexpr bool continue_on_violation = false;
 #endif
-}    // namespace bsl::details::contracts
 
-// Abort Policy
-//
-namespace bsl::details::contracts
-{
+    /// Halt
+    ///
+    /// By default, contracts should execute std::abort(). If AUTOSAR
+    /// compliance is enabled, an exception is thrown when a violation occurs
+    /// instead as this function is not allowed. If this is disabled, we
+    /// execute std::abort() unless BSL_CONTRACTS_EXIT_INSTEAD_OF_ABORT is
+    /// defined, in which case we execute std::exit(). This is done to support
+    /// unit testing as std::abort() is slow and leaks memory.
+    ///
+    /// NOSONAR
+    /// - By default, we execute std::abort() on a contract violation. This
+    ///   is fine for AUTOSAR/MISRA as this can be disabled.
+    /// - When unit testing, we execute std::exit(). Once again, this is fine
+    ///   for AUTOSAR/MISRA as this can be disabled.
+    ///
+    /// expects: none
+    /// ensures: none
+    ///
+    /// @throw [checked]: none
+    /// @throw [unchecked]: none
+    ///
     [[noreturn]] inline auto
     halt() noexcept -> void
     {
@@ -110,8 +124,8 @@ namespace bsl
     ///
     struct violation_info
     {
-        source_location location;    //NOSONAR
-        const char *comment;         //NOSONAR
+        source_location location{};
+        const char *comment{};
     };
 
     namespace details::contracts
@@ -152,8 +166,7 @@ namespace bsl
             halt();
         }
 
-        using handler_t = std::function<void(const violation_info &)>;
-        inline handler_t handler = default_handler;    // NOLINT
+        inline void(*handler)(const violation_info &) = default_handler;
     }    // namespace details::contracts
 
     /// Set Violation Handler

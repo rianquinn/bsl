@@ -113,13 +113,12 @@ namespace bsl
 {
     namespace details::ut
     {
-        inline constexpr char invalid_check_msg[] = "invalid check";
-        inline constexpr char ut_failed_msg[] = "ut failed";
-        inline constexpr char required_failed_msg[] = "required failed";
-
-        using invalid_check = bsl::checked_error<invalid_check_msg>;
-        using ut_failed = bsl::checked_error<ut_failed_msg>;
-        using required_failed = bsl::checked_error<required_failed_msg>;
+        struct invalid_check : bsl::checked_error
+        {};
+        struct ut_failed : bsl::checked_error
+        {};
+        struct required_failed : bsl::checked_error
+        {};
 
         using name_type = const char *;
         using info_type = source_location;
@@ -505,17 +504,20 @@ namespace bsl
 /// expects: none
 /// ensures: none
 ///
-/// @param test the test case to absorb
+/// @param s "skip" is the only argument for this
+/// @param t the test case to absorb
 /// @return *this
 /// @throw [checked]: none
 /// @throw [unchecked]: none
 ///
 [[maybe_unused]] constexpr auto
-operator|(bsl::skip_test_case &s, const bsl::test_case &t) noexcept
-    -> bsl::skip_test_case &
+operator|(const bsl::skip_test_case s, const bsl::test_case &t) noexcept
+    -> bsl::skip_test_case
 {
+    bsl::discard(s);
     bsl::discard(t);
-    return s;
+
+    return {};
 }
 
 namespace bsl

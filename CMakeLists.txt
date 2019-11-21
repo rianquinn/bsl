@@ -99,8 +99,10 @@ endif()
 
 set(CMAKE_CXX_FLAGS_RELEASE "-Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_RELEASE "-Werror -Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded")
-set(CMAKE_LINKER_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded")
+set(CMAKE_CXX_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables")
+set(CMAKE_LINKER_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables")
+set(CMAKE_CXX_FLAGS_SONARCLOUD "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded")
+set(CMAKE_LINKER_FLAGS_SONARCLOUD "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded")
 set(CMAKE_CXX_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address")
 set(CMAKE_LINKER_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address")
 set(CMAKE_CXX_FLAGS_MSAN "-Og -g -fno-omit-frame-pointer -fsanitize=memory")
@@ -172,7 +174,7 @@ add_custom_target(
     COMMAND find ${CMAKE_SOURCE_DIR}/tests -iname *.hpp -o -iname *.cpp | xargs clang-format -i
 )
 
-if(ENABLE_SONARCLOUD AND UNIX)
+if(CMAKE_BUILD_TYPE STREQUAL "STATIC_ANALYSIS" AND UNIX)
     add_custom_target(
         sonar-build
         COMMAND build-wrapper-linux-x86-64 --out-dir ${CMAKE_BINARY_DIR}/bw_output make clean all
@@ -217,6 +219,7 @@ message(STATUS "${COLOR_G} BSL build types:${COLOR_E}")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=Release            ${COLOR_E}compile in release mode")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=Debug              ${COLOR_E}compile in debug mode")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=STATIC_ANALYSIS    ${COLOR_E}compile with Clang Tidy and CppCheck")
+message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=SONARCLOUD         ${COLOR_E}compile with SonarCloud")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=ASAN               ${COLOR_E}compile with Google's ASAN")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=MSAN               ${COLOR_E}compile with Google's MSAN")
 message(STATUS "${COLOR_Y}   -DCMAKE_BUILD_TYPE=TSAN               ${COLOR_E}compile with Google's TSAN")
@@ -235,3 +238,9 @@ message(STATUS "")
 message(STATUS "${COLOR_G} BSL installation:${COLOR_E}")
 message(STATUS "${COLOR_Y}   make install                          ${COLOR_E}installs BSL on your system")
 message(STATUS "")
+
+# TODO
+# - make sure that UNIX is used where needed
+# - make sure that clang is detected where needed
+# - make sure that fmt is detected
+# - make sure that sonar-source, build wrapper, cppcheck, clang-tidy, clang-format, flexlint, valgrind, lcov, etc... are detected properly with version information.
