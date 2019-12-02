@@ -19,4 +19,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-bf_add_test(int64_t)
+bf_add_test(arithmetic)
+target_compile_definitions(test_arithmetic PRIVATE BSL_AUTOSAR_COMPLIANT)
+
+bf_add_test(constructors)
+target_compile_definitions(test_constructors PRIVATE BSL_AUTOSAR_COMPLIANT)
+
+bf_add_test(narrow)
+target_compile_definitions(test_narrow PRIVATE BSL_AUTOSAR_COMPLIANT)
+
+bf_add_test(rational)
+target_compile_definitions(test_rational PRIVATE BSL_AUTOSAR_COMPLIANT)

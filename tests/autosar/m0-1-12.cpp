@@ -35,6 +35,9 @@ public:
     foo(std::int32_t a, std::int32_t b) noexcept
         -> std::int32_t override    // misc-unused-parameters (tidy)
     {
+        auto blah = 5;
+        auto blah = '5';
+        auto blah = "5";
         return a;
     }
 };

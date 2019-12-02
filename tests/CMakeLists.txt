@@ -32,9 +32,9 @@ endmacro(bf_add_test)
 
 # add_subdirectory(autosar)
 add_subdirectory(contracts)
-add_subdirectory(discard)
+add_subdirectory(debug)
 add_subdirectory(finally)
-# add_subdirectory(int)
+add_subdirectory(int)
 add_subdirectory(source_location)
 add_subdirectory(ut)
 
@@ -66,6 +66,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "COVERAGE")
         COMMAND lcov --remove ${CMAKE_BINARY_DIR}/coverage.info '/usr/*' --output-file ${CMAKE_BINARY_DIR}/coverage.info -q
         COMMAND lcov --remove ${CMAKE_BINARY_DIR}/coverage.info '${CMAKE_BINARY_DIR}/*' --output-file ${CMAKE_BINARY_DIR}/coverage.info -q
         COMMAND lcov --remove ${CMAKE_BINARY_DIR}/coverage.info '${CMAKE_SOURCE_DIR}/tests/*' --output-file ${CMAKE_BINARY_DIR}/coverage.info -q
+        COMMAND lcov --remove ${CMAKE_BINARY_DIR}/coverage.info '${CMAKE_SOURCE_DIR}/include/bsl/autosar.hpp' --output-file ${CMAKE_BINARY_DIR}/coverage.info -q
     )
 
     add_custom_target(

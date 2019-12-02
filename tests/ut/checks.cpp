@@ -21,6 +21,10 @@
 
 #include "../../include/bsl/ut.hpp"
 
+/// NOLINT:
+/// - We must test to make sure we can catch any type of exception, so we turn
+///   of this check.
+
 auto
 main() -> int
 {
@@ -40,7 +44,7 @@ main() -> int
             throw bsl::checked_error{};
         });
         bsl::check_nothrow([] {
-            throw 42;    // NOLINT
+            throw 0;    // NOLINT
         });
     };
 
@@ -89,9 +93,12 @@ main() -> int
         });
     };
 
+    constexpr const std::int32_t total_assertions = 19;
+    constexpr const std::int32_t failed_assertions = 10;
+
     bsl::test_case("verify_checks") = [] {
-        bsl::require(bsl::details::ut::total_assertions == 19);     // NOLINT
-        bsl::require(bsl::details::ut::failed_assertions == 10);    // NOLINT
+        bsl::require(bsl::details::ut::total_assertions == total_assertions);
+        bsl::require(bsl::details::ut::failed_assertions == failed_assertions);
     };
 
     return 0;

@@ -21,6 +21,10 @@
 
 #include "../../include/bsl/ut.hpp"
 
+/// NOSONAR: NOLINT:
+/// - We must test to make sure we can catch any type of exception, so we turn
+///   of this check.
+
 auto
 main() -> int
 {

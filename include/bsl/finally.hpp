@@ -19,8 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BSL_FINALLY
-#define BSL_FINALLY
+#ifndef BSL_FINALLY_HPP
+#define BSL_FINALLY_HPP
 
 #include <utility>
 #include <type_traits>
@@ -30,7 +30,7 @@ namespace bsl
     template<
         typename FUNC,
         std::enable_if_t<std::is_invocable_v<FUNC>> * = nullptr>
-    class finally    //NOSONAR
+    class finally
     {
         FUNC m_func{};
 
@@ -39,15 +39,15 @@ namespace bsl
             m_func(std::move(func))
         {}
 
-        ~finally() noexcept    //NOSONAR
+        ~finally() noexcept
         {
             m_func();
         }
 
-        finally(const finally &) = delete;                            //NOSONAR
-        auto operator=(const finally &) -> finally & = delete;        //NOSONAR
-        finally(finally &&) noexcept = delete;                        //NOSONAR
-        auto operator=(finally &&) noexcept -> finally & = delete;    //NOSONAR
+        finally(const finally &) = delete;
+        auto operator=(const finally &) -> finally & = delete;
+        finally(finally &&) noexcept = delete;
+        auto operator=(finally &&) noexcept -> finally & = delete;
     };
 
     template<typename FUNC>

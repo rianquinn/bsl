@@ -21,14 +21,17 @@
 
 # Exceptions
 #
-# -cppcoreguidelines-owning-memory
-#     We have to turn this off as the BSL is actually providing the same logic
-#     as the std::unique_ptr that this rule is based on so that the user of
-#     this library doesn't have to use new/delete
+# -hicpp-braces-around-statements
+# -readability-braces-around-statements
+# -bugprone-suspicious-semicolon
+#
+#  We disable these as they do not work with constexpr if statements in
+#  template functions.
+#  https://bugs.llvm.org/show_bug.cgi?id=35824
 #
 
-Checks: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-cppcoreguidelines-owning-memory'
-WarningsAsErrors: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-cppcoreguidelines-owning-memory'
+Checks: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon'
+WarningsAsErrors: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon'
 HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false
 CheckOptions:

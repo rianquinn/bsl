@@ -19,8 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BSL_SOURCE_LOCATION_H
-#define BSL_SOURCE_LOCATION_H
+#ifndef BSL_SOURCE_LOCATION_HPP
+#define BSL_SOURCE_LOCATION_HPP
 
 #include <cstdint>
 
@@ -146,6 +146,28 @@ namespace bsl
         func_type m_func{};
         line_type m_line{};
     };
+
+    /// Here
+    ///
+    /// This provides a less verbose version of source_location::current()
+    /// to help reduce how large this code must be. They are equivalent, and
+    /// should not produce any additional overhead in release mode.
+    ///
+    /// expects: none
+    /// ensures: none
+    ///
+    /// @param loc the current source location
+    /// @return the provided loc
+    /// @throw [checked]: none
+    /// @throw [unchecked]: none
+    ///
+    constexpr inline auto
+    here(source_location loc = source_location::current()) noexcept
+        -> source_location
+    {
+        return loc;
+    }
+
 }    // namespace bsl
 
 #endif

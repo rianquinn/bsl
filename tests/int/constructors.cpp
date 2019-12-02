@@ -19,18 +19,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "../../include/bsl/int64_t.hpp"
+#include "../../include/bsl/int.hpp"
 #include "../../include/bsl/ut.hpp"
 
 auto
 main() -> int
 {
     bsl::test_case("default constructor") = [] {
-        bsl::int64_t i1;
-        bsl::int64_t i2{};
+        bsl::int64_t i;
+        bsl::check(i == 0);
+    };
 
-        bsl::check(i1 == 0);
-        bsl::check(i2 == i);
+    bsl::test_case("value_type constructor") = [] {
+        bsl::int64_t i{bsl::magic_42};
+        bsl::check(i == bsl::magic_42);
+    };
+
+    bsl::test_case("template value_type constructor") = [] {
+        bsl::uint64_t i{bsl::magic_42};
+        bsl::check(i == bsl::magic_42);
+    };
+
+    bsl::test_case("copy constructor") = [] {
+        bsl::int64_t i1{bsl::magic_42};
+        bsl::int64_t i2{i1};
+        bsl::check(i1 == bsl::magic_42);
+        bsl::check(i2 == bsl::magic_42);
+    };
+
+    bsl::test_case("template copy constructor") = [] {
+        bsl::int64_t i1{bsl::magic_42};
+        bsl::uint64_t i2{i1};
+        bsl::check(i1 == bsl::magic_42);
+        bsl::check(i2 == bsl::magic_42);
+    };
+
+    bsl::test_case("ptr constructor") = [] {
+        void *ptr{};
+        bsl::uintptr_t i{ptr};
+        bsl::check(i == 0);
     };
 
     return bsl::check_results();

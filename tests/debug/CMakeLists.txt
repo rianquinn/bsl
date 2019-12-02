@@ -19,4 +19,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-bf_add_test(discard)
+bf_add_test(debug)
+target_compile_definitions(test_debug PRIVATE OUTPUT_TID_WHEN_DEBUGGING=1)
+target_compile_definitions(test_debug PRIVATE DEBUG_LEVEL=VVV)
+target_compile_definitions(test_debug PRIVATE BSL_EXIT_INSTEAD_OF_ABORT)
