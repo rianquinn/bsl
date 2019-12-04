@@ -161,13 +161,12 @@ namespace bsl
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///
-    constexpr inline auto
+    constexpr auto
     here(source_location loc = source_location::current()) noexcept
         -> source_location
     {
         return loc;
     }
-
 }    // namespace bsl
 
 #endif

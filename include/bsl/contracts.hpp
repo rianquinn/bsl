@@ -56,6 +56,12 @@ namespace bsl
     struct contract_violation_error : bsl::unchecked_error
     {};
 
+#if defined(BSL_CONTRACTS_THROW_ON_VIOLATION) || defined(BSL_AUTOSAR_COMPLIANT)
+    constexpr bool contracts_throw = true;
+#else
+    constexpr bool contracts_throw = false;
+#endif
+
     /// Violation Information
     ///
     /// Provides information about a contract violation that can be used in a
@@ -86,7 +92,8 @@ namespace bsl
     {
         /// Private Handler Signature
         ///
-        using handler_t = void (*)(const violation_info &);
+        using handler_t =
+            void (*)(const violation_info &) noexcept(!contracts_throw);
 
         /// Default Violation Handler
         ///
@@ -106,10 +113,17 @@ namespace bsl
         /// @throw [unchecked]: possible
         ///
         [[noreturn]] inline auto
-        default_handler(const violation_info &info) -> void
+        default_handler(const violation_info &info) noexcept(!contracts_throw)
+            -> void
         {
-            bsl::fatal<contract_violation_error>(
-                "{} violation\n{}", info.comment, info.location);
+            if constexpr (contracts_throw && !autosar_compliant) {
+                bsl::error("{} violation\n{}", info.comment, info.location);
+                throw contract_violation_error{};
+            }
+            else {
+                bsl::fatal<contract_violation_error>(
+                    "{} violation\n{}", info.comment, info.location);
+            }
         }
 
         /// NOSONAR:
@@ -156,7 +170,8 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    expects(const bool test, const source_location loc = here()) -> void
+    expects(const bool test, const source_location loc = here()) noexcept(
+        !contracts_throw) -> void
     {
         bsl::discard(test);
         bsl::discard(loc);
@@ -189,7 +204,8 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    expects_false(const bool test, const source_location loc = here()) -> void
+    expects_false(const bool test, const source_location loc = here()) noexcept(
+        !contracts_throw) -> void
     {
         expects(!test, loc);
     }
@@ -207,7 +223,8 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    ensures(const bool test, const source_location loc = here()) -> void
+    ensures(const bool test, const source_location loc = here()) noexcept(
+        !contracts_throw) -> void
     {
         bsl::discard(test);
         bsl::discard(loc);
@@ -240,7 +257,8 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    ensures_false(const bool test, const source_location loc = here()) -> void
+    ensures_false(const bool test, const source_location loc = here()) noexcept(
+        !contracts_throw) -> void
     {
         ensures(!test, loc);
     }
@@ -261,7 +279,8 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    confirm(const bool test, const source_location loc = here()) -> void
+    confirm(const bool test, const source_location loc = here()) noexcept(
+        !contracts_throw) -> void
     {
         bsl::discard(test);
         bsl::discard(loc);
@@ -297,7 +316,8 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    confirm_false(const bool test, const source_location loc = here()) -> void
+    confirm_false(const bool test, const source_location loc = here()) noexcept(
+        !contracts_throw) -> void
     {
         confirm(!test, loc);
     }
@@ -315,7 +335,8 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    expects_audit(const bool test, const source_location loc = here()) -> void
+    expects_audit(const bool test, const source_location loc = here()) noexcept(
+        !contracts_throw) -> void
     {
         bsl::discard(test);
         bsl::discard(loc);
@@ -348,8 +369,9 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    expects_audit_false(const bool test, const source_location loc = here())
-        -> void
+    expects_audit_false(
+        const bool test,
+        const source_location loc = here()) noexcept(!contracts_throw) -> void
     {
         expects_audit(!test, loc);
     }
@@ -367,7 +389,8 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    ensures_audit(const bool test, const source_location loc = here()) -> void
+    ensures_audit(const bool test, const source_location loc = here()) noexcept(
+        !contracts_throw) -> void
     {
         bsl::discard(test);
         bsl::discard(loc);
@@ -400,8 +423,9 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    ensures_audit_false(const bool test, const source_location loc = here())
-        -> void
+    ensures_audit_false(
+        const bool test,
+        const source_location loc = here()) noexcept(!contracts_throw) -> void
     {
         ensures_audit(!test, loc);
     }
@@ -422,7 +446,8 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    confirm_audit(const bool test, const source_location loc = here()) -> void
+    confirm_audit(const bool test, const source_location loc = here()) noexcept(
+        !contracts_throw) -> void
     {
         bsl::discard(test);
         bsl::discard(loc);
@@ -458,8 +483,9 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    confirm_audit_false(const bool test, const source_location loc = here())
-        -> void
+    confirm_audit_false(
+        const bool test,
+        const source_location loc = here()) noexcept(!contracts_throw) -> void
     {
         confirm_audit(!test, loc);
     }

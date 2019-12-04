@@ -29,7 +29,7 @@ namespace
     auto
     test_finally() noexcept -> void
     {
-        const auto this_is_not_ignored = bsl::finally([] {
+        bsl::finally([] () noexcept {
             ran = true;
         });
     }

@@ -19,40 +19,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BSL_FINALLY_HPP
-#define BSL_FINALLY_HPP
+#include "../../include/bsl/int.hpp"
+#include "../../include/bsl/ut.hpp"
 
-#include <utility>
-#include <type_traits>
-
-namespace bsl
+auto
+main() -> int
 {
-    template<
-        typename FUNC,
-        std::enable_if_t<std::is_nothrow_invocable_v<FUNC>> * = nullptr>
-    class finally
-    {
-        FUNC m_func{};
-
-    public:
-        explicit constexpr finally(FUNC &&func) noexcept :
-            m_func(std::move(func))
-        {}
-
-        ~finally() noexcept
-        {
-            m_func();
-        }
-
-        finally(const finally &) = delete;
-        auto operator=(const finally &) -> finally & = delete;
-        finally(finally &&) noexcept = delete;
-        auto operator=(finally &&) noexcept -> finally & = delete;
+    bsl::test_case("abs signed negative") = [] {
+        bsl::check(bsl::abs(-bsl::magic_42) == bsl::magic_42);
     };
 
-    template<typename FUNC>
-    finally(FUNC &&func)->finally<FUNC>;
+    bsl::test_case("abs signed positive") = [] {
+        bsl::check(bsl::abs(bsl::magic_42) == bsl::magic_42);
+    };
 
-}    // namespace bsl
+    bsl::test_case("abs unsigned positive") = [] {
+        bsl::check(bsl::abs(bsl::magic_42u) == bsl::magic_42u);
+    };
 
-#endif
+    return bsl::check_results();
+}

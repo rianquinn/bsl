@@ -34,6 +34,11 @@ main() -> int
         bsl::check(i + bsl::magic_42 == bsl::magic_42 + bsl::magic_42);
     };
 
+    bsl::test_case("magic success + int64_t") = [] {
+        bsl::int64_t i{bsl::magic_42};
+        bsl::check(bsl::magic_42 + i == bsl::magic_42 + bsl::magic_42);
+    };
+
     bsl::test_case("int64_t + int64_t success") = [] {
         bsl::int64_t i1{bsl::magic_42};
         bsl::int64_t i2{bsl::magic_42};
@@ -55,7 +60,7 @@ main() -> int
     bsl::test_case("int64_t + int64_t lhs max") = [] {
         bsl::int64_t i1{bsl::int64_t::max()};
         bsl::int64_t i2{bsl::magic_42};
-        bsl::check_throws([&i1, &i2]{
+        bsl::check_throws([&i1, &i2] {
             bsl::discard(i1 + i2);
         });
     };
@@ -63,7 +68,7 @@ main() -> int
     bsl::test_case("int64_t + int64_t rhs max") = [] {
         bsl::int64_t i1{bsl::magic_42};
         bsl::int64_t i2{bsl::int64_t::max()};
-        bsl::check_throws([&i1, &i2]{
+        bsl::check_throws([&i1, &i2] {
             bsl::discard(i1 + i2);
         });
     };
@@ -71,7 +76,7 @@ main() -> int
     bsl::test_case("int64_t + int64_t both max") = [] {
         bsl::int64_t i1{bsl::int64_t::max()};
         bsl::int64_t i2{bsl::int64_t::max()};
-        bsl::check_throws([&i1, &i2]{
+        bsl::check_throws([&i1, &i2] {
             bsl::discard(i1 + i2);
         });
     };
@@ -109,7 +114,7 @@ main() -> int
     bsl::test_case("int64_t - int64_t lhs max both neg") = [] {
         bsl::int64_t i1{-bsl::int64_t::max()};
         bsl::int64_t i2{-bsl::magic_42};
-        bsl::check_throws([&i1, &i2]{
+        bsl::check_throws([&i1, &i2] {
             bsl::discard(i1 + i2);
         });
     };
@@ -129,7 +134,7 @@ main() -> int
     bsl::test_case("int64_t - int64_t rhs max both neg") = [] {
         bsl::int64_t i1{-bsl::magic_42};
         bsl::int64_t i2{-bsl::int64_t::max()};
-        bsl::check_throws([&i1, &i2]{
+        bsl::check_throws([&i1, &i2] {
             bsl::discard(i1 + i2);
         });
     };
@@ -149,7 +154,7 @@ main() -> int
     bsl::test_case("int64_t - int64_t both max both neg") = [] {
         bsl::int64_t i1{-bsl::int64_t::max()};
         bsl::int64_t i2{-bsl::int64_t::max()};
-        bsl::check_throws([&i1, &i2]{
+        bsl::check_throws([&i1, &i2] {
             bsl::discard(i1 + i2);
         });
     };
@@ -161,6 +166,11 @@ main() -> int
     bsl::test_case("uint64_t + magic success") = [] {
         bsl::uint64_t i{bsl::magic_42};
         bsl::check(i + bsl::magic_42u == bsl::magic_42 + bsl::magic_42);
+    };
+
+    bsl::test_case("magic success + uint64_t") = [] {
+        bsl::uint64_t i{bsl::magic_42};
+        bsl::check(bsl::magic_42u + i == bsl::magic_42 + bsl::magic_42);
     };
 
     bsl::test_case("uint64_t + uint64_t success") = [] {
@@ -184,7 +194,7 @@ main() -> int
     bsl::test_case("uint64_t + uint64_t lhs max") = [] {
         bsl::uint64_t i1{bsl::uint64_t::max()};
         bsl::uint64_t i2{bsl::magic_42};
-        bsl::check_throws([&i1, &i2]{
+        bsl::check_throws([&i1, &i2] {
             bsl::discard(i1 + i2);
         });
     };
@@ -192,7 +202,7 @@ main() -> int
     bsl::test_case("uint64_t + uint64_t rhs max") = [] {
         bsl::uint64_t i1{bsl::magic_42};
         bsl::uint64_t i2{bsl::uint64_t::max()};
-        bsl::check_throws([&i1, &i2]{
+        bsl::check_throws([&i1, &i2] {
             bsl::discard(i1 + i2);
         });
     };
@@ -200,7 +210,7 @@ main() -> int
     bsl::test_case("uint64_t + uint64_t both max") = [] {
         bsl::uint64_t i1{bsl::uint64_t::max()};
         bsl::uint64_t i2{bsl::uint64_t::max()};
-        bsl::check_throws([&i1, &i2]{
+        bsl::check_throws([&i1, &i2] {
             bsl::discard(i1 + i2);
         });
     };

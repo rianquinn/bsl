@@ -272,7 +272,7 @@ namespace bsl
     /// Uses fmt to output a fatal statement. Fatal statements are synchronized
     /// with other debug statements using a global mutex. Fatal statements do
     /// not have a debug level, and how a fatal statement is handled depends
-    /// on whether or not AUTOSAR compliance is enabled. WHen this is enabled,
+    /// on whether or not AUTOSAR compliance is enabled. When this is enabled,
     /// an exception is thrown, otherwise, std::abort() is called.
     ///
     /// expects: none
@@ -284,10 +284,10 @@ namespace bsl
     ///
     template<typename ERROR = fatal_error, typename... ARGS>
     [[noreturn]] auto
-    fatal(ARGS &&... args) -> void
+    fatal(ARGS &&... args) noexcept(noexcept(bsl::abort())) -> void
     {
         details::debug::print<debug_level_t::all>(
-            magenta, "FATAL", std::forward<ARGS>(args)...);
+            magenta, "\nFATAL", std::forward<ARGS>(args)...);
 
         bsl::abort<ERROR>();
     }

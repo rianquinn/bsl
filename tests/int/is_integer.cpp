@@ -19,40 +19,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BSL_FINALLY_HPP
-#define BSL_FINALLY_HPP
+#include "../../include/bsl/int.hpp"
+#include "../../include/bsl/ut.hpp"
 
-#include <utility>
-#include <type_traits>
-
-namespace bsl
+auto
+main() -> int
 {
-    template<
-        typename FUNC,
-        std::enable_if_t<std::is_nothrow_invocable_v<FUNC>> * = nullptr>
-    class finally
-    {
-        FUNC m_func{};
-
-    public:
-        explicit constexpr finally(FUNC &&func) noexcept :
-            m_func(std::move(func))
-        {}
-
-        ~finally() noexcept
-        {
-            m_func();
-        }
-
-        finally(const finally &) = delete;
-        auto operator=(const finally &) -> finally & = delete;
-        finally(finally &&) noexcept = delete;
-        auto operator=(finally &&) noexcept -> finally & = delete;
+    bsl::test_case("is_integer std::int32_t") = [] {
+        bsl::check_false(bsl::is_integer_v<std::int32_t>);
     };
 
-    template<typename FUNC>
-    finally(FUNC &&func)->finally<FUNC>;
+    bsl::test_case("is_integer bsl::int32_t") = [] {
+        bsl::check(bsl::is_integer_v<bsl::int32_t>);
+    };
 
-}    // namespace bsl
-
-#endif
+    return bsl::check_results();
+}

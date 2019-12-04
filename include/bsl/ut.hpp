@@ -113,7 +113,7 @@ namespace bsl
         struct required_failed : bsl::checked_error
         {};
 
-        using name_type = const char *const;
+        using name_type = cstr_t;
         using info_type = source_location;
 
         inline std::uint64_t total_test_cases{};
@@ -194,74 +194,76 @@ namespace bsl
     [[nodiscard]] inline auto
     check_results() noexcept -> std::int32_t
     {
-        auto success = bsl::catch_all([] {
-            const auto total_test_cases = details::ut::total_test_cases;
-            const auto total_assertions = details::ut::total_assertions;
-            const auto failed_test_cases = details::ut::failed_test_cases;
-            const auto failed_assertions = details::ut::failed_assertions;
-            const auto skipped_test_cases = details::ut::skipped_test_cases;
+        std::int32_t exit_code = EXIT_SUCCESS;
 
-            details::ut::total_test_cases = {};
-            details::ut::total_assertions = {};
-            details::ut::failed_test_cases = {};
-            details::ut::failed_assertions = {};
-            details::ut::skipped_test_cases = {};
+        bsl::catch_all(
+            [] {
+                const auto total_test_cases = details::ut::total_test_cases;
+                const auto total_assertions = details::ut::total_assertions;
+                const auto failed_test_cases = details::ut::failed_test_cases;
+                const auto failed_assertions = details::ut::failed_assertions;
+                const auto skipped_test_cases = details::ut::skipped_test_cases;
 
-            const auto *const as = total_assertions != 1 ? "s" : "";
-            const auto *const ts = total_test_cases != 1 ? "s" : "";
-            const auto *const ss = skipped_test_cases != 1 ? "s" : "";
+                details::ut::total_test_cases = {};
+                details::ut::total_assertions = {};
+                details::ut::failed_test_cases = {};
+                details::ut::failed_assertions = {};
+                details::ut::skipped_test_cases = {};
 
-            if (0 == total_test_cases) {
-                fmt::print(yellow, "{:=^80}\n", "=");
-                fmt::print(yellow, "No tests ran\n");
+                const cstr_t as = total_assertions != 1 ? "s" : "";
+                const cstr_t ts = total_test_cases != 1 ? "s" : "";
+                const cstr_t ss = skipped_test_cases != 1 ? "s" : "";
 
-                throw details::ut::ut_failed{};
-            }
+                if (0 == total_test_cases) {
+                    fmt::print(yellow, "{:=^80}\n", "=");
+                    fmt::print(yellow, "No tests ran\n");
 
-            if ((total_test_cases > 0) && (failed_test_cases > 0)) {
-                fmt::print(red, "{:=^80}\n", "=");
-                fmt::print("test cases: {:>3}", total_test_cases);
-                fmt::print(" | ");
-                fmt::print(red, "{:>3} ", failed_test_cases);
-                fmt::print(red, "failed");
-
-                if (skipped_test_cases > 0) {
-                    fmt::print(" | ");
-                    fmt::print(yellow, "{:>3} ", skipped_test_cases);
-                    fmt::print(yellow, "skipped");
+                    throw details::ut::ut_failed{};
                 }
 
-                fmt::print("\n");
-                fmt::print("assertions: {:>3}", total_assertions);
-                fmt::print(" | ");
-                fmt::print(red, "{:>3} ", failed_assertions);
-                fmt::print(red, "failed");
-                fmt::print("\n");
+                if ((total_test_cases > 0) && (failed_test_cases > 0)) {
+                    fmt::print(red, "{:=^80}\n", "=");
+                    fmt::print("test cases: {:>3}", total_test_cases);
+                    fmt::print(" | ");
+                    fmt::print(red, "{:>3} ", failed_test_cases);
+                    fmt::print(red, "failed");
 
-                throw details::ut::ut_failed{};
-            }
+                    if (skipped_test_cases > 0) {
+                        fmt::print(" | ");
+                        fmt::print(yellow, "{:>3} ", skipped_test_cases);
+                        fmt::print(yellow, "skipped");
+                    }
 
-            fmt::print(green, "{:=^80}\n", "=");
-            fmt::print(green, "All tests passed ");
-            fmt::print("(");
-            fmt::print("{} assertion{}", total_assertions, as);
-            fmt::print(" in ");
-            fmt::print("{} test case{}", total_test_cases, ts);
+                    fmt::print("\n");
+                    fmt::print("assertions: {:>3}", total_assertions);
+                    fmt::print(" | ");
+                    fmt::print(red, "{:>3} ", failed_assertions);
+                    fmt::print(red, "failed");
+                    fmt::print("\n");
 
-            if (skipped_test_cases > 0) {
-                fmt::print(yellow, " [");
-                fmt::print(yellow, "{} case{}", skipped_test_cases, ss);
-                fmt::print(yellow, " skipped]");
-            }
+                    throw details::ut::ut_failed{};
+                }
 
-            fmt::print(")\n");
-        });
+                fmt::print(green, "{:=^80}\n", "=");
+                fmt::print(green, "All tests passed ");
+                fmt::print("(");
+                fmt::print("{} assertion{}", total_assertions, as);
+                fmt::print(" in ");
+                fmt::print("{} test case{}", total_test_cases, ts);
 
-        if (success) {
-            return EXIT_SUCCESS;
-        }
+                if (skipped_test_cases > 0) {
+                    fmt::print(yellow, " [");
+                    fmt::print(yellow, "{} case{}", skipped_test_cases, ss);
+                    fmt::print(yellow, " skipped]");
+                }
 
-        return EXIT_FAILURE;
+                fmt::print(")\n");
+            },
+            [&exit_code](auto) noexcept {
+                exit_code = EXIT_FAILURE;
+            });
+
+        return exit_code;
     }
 
     /// Test Case
@@ -292,30 +294,30 @@ namespace bsl
         /// @param func the test function to execute
         /// @return false if a required check fails, true otherwise.
         /// @throw [checked]: none
-        /// @throw [unchecked]: possible
+        /// @throw [unchecked]: none
         ///
         template<typename F>
         auto
-        execute_test(F &&func, std::string *const failures) -> bool
+        execute_test(F &&func, std::string *const failures) noexcept-> bool
         {
             bool no_reason_to_exit = true;
 
             auto *const tmp = details::ut::failures;
             details::ut::failures = failures;
 
-            auto caught = !bsl::catch_all([&func, &no_reason_to_exit] {
-                try {
-                    func();
-                }
-                catch (const details::ut::required_failed &e) {
-                    bsl::discard(e);
-                    no_reason_to_exit = false;
-                }
-            });
-
-            if (caught) {
-                details::ut::assertion_failure("unexpected exception", {});
-            }
+            bsl::catch_all(
+                [&func, &no_reason_to_exit] {
+                    try {
+                        func();
+                    }
+                    catch (const details::ut::required_failed &e) {
+                        bsl::discard(e);
+                        no_reason_to_exit = false;
+                    }
+                },
+                [](auto) noexcept {
+                    details::ut::assertion_failure("unexpected exception", {});
+                });
 
             details::ut::failures = tmp;
             return no_reason_to_exit;
@@ -382,9 +384,9 @@ namespace bsl
                     fmt::print("  |\n{}", failures);
 
                     if (!status) {
+                        const cstr_t msg = "REQUIRED FAILED... EXITING !!!";
                         fmt::print(red, "  |   ^^^ \n");
-                        fmt::print(
-                            red, "  |    |  REQUIRED FAILED... EXITING !!! \n");
+                        fmt::print(red, "  |    | {}  \n", msg);
                         fmt::print(red, "  |\n");
                     }
 
@@ -692,11 +694,16 @@ namespace bsl
         const details::ut::name_type &name = "check_throws",
         const details::ut::info_type &info = here()) noexcept -> bool
     {
+        bool caught = false;
         ++details::ut::total_assertions;
 
-        auto caught = !bsl::catch_all([&func] {
-            func();
-        });
+        bsl::catch_all(
+            [&func] {
+                func();
+            },
+            [&caught](auto) noexcept {
+                caught = true;
+            });
 
         if (!caught) {
             details::ut::assertion_failure(name, info);
@@ -782,15 +789,16 @@ namespace bsl
         bool caught = false;
         ++details::ut::total_assertions;
 
-        bsl::catch_all([&func, &caught] {
-            try {
+        bsl::catch_all(
+            [&func] {
                 func();
-            }
-            catch (const std::runtime_error &e) {    //NOSONAR
-                bsl::discard(e);
+            },
+            [&caught](auto) noexcept {
                 caught = true;
-            }
-        });
+            },
+            [&caught](auto) noexcept {
+                caught = false;
+            });
 
         if (!caught) {
             details::ut::assertion_failure(name, info);
@@ -876,16 +884,19 @@ namespace bsl
         const details::ut::name_type &name = "check_throws_unchecked",
         const details::ut::info_type &info = here()) noexcept -> bool
     {
+        bool caught = false;
         ++details::ut::total_assertions;
 
-        auto caught = !bsl::catch_all([&func] {
-            try {
+        bsl::catch_all(
+            [&func] {
                 func();
-            }
-            catch (const std::runtime_error &e) {    //NOSONAR
-                bsl::discard(e);
-            }
-        });
+            },
+            [&caught](auto) noexcept {
+                caught = false;
+            },
+            [&caught](auto) noexcept {
+                caught = true;
+            });
 
         if (!caught) {
             details::ut::assertion_failure(name, info);
@@ -964,11 +975,16 @@ namespace bsl
         const details::ut::name_type &name = "check_nothrow",
         const details::ut::info_type &info = here()) noexcept -> bool
     {
+        bool caught = false;
         ++details::ut::total_assertions;
 
-        auto caught = !bsl::catch_all([&func] {
-            func();
-        });
+        bsl::catch_all(
+            [&func] {
+                func();
+            },
+            [&caught](auto) noexcept {
+                caught = true;
+            });
 
         if (caught) {
             details::ut::assertion_failure(name, info);

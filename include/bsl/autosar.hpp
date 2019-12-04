@@ -25,16 +25,16 @@
 #include <cstdlib>
 #include <stdexcept>
 
+#include <variant>
+#include <memory>
+#include <functional>
+
 namespace bsl
 {
+    using cstr_t = const char *;
+
     namespace details::autosar
     {
-#ifndef BSL_AUTOSAR_COMPLIANT
-        constexpr bool autosar_compliant = false;
-#else
-        constexpr bool autosar_compliant = true;
-#endif
-
 #ifndef BSL_EXIT_INSTEAD_OF_ABORT
         constexpr const bool exit_instead_of_abort = false;
 #else
@@ -42,26 +42,32 @@ namespace bsl
 #endif
     }    // namespace details::autosar
 
+#ifndef BSL_AUTOSAR_COMPLIANT
+    constexpr bool autosar_compliant = false;
+#else
+    constexpr bool autosar_compliant = true;
+#endif
+
     /// Checked Error
     ///
     /// Defines a checked error (exception). These are exceptions that
     /// should be checked. They are errors can could happen, that can be dealt
-    /// with, but should not happen as normal execution. For example, not being
-    /// able to open a file is not a good example of a checked error. That type
-    /// of error can be dealt with, but could happen as normal execution, and
-    /// so this type of error should be checked using an error code, and not
-    /// an exception. A good example of a checked exception would be an error
-    /// with a public API like a vmcall. Normal operation should never throw,
-    /// but if something goes bad, this type of exception can be detected and
-    /// handled (by returning from the API an error).
+    /// with, but should not happen as normal execution.
     ///
-    class checked_error : public std::runtime_error
+    /// NOTE:
+    /// - We do not inherit from std::runtime_error or std::logic_error
+    ///   as these exception types of exceptions add additional memory
+    ///   allocations to the exception type which increase the chances
+    ///   of a bad_alloc.
+    ///
+    class checked_error : public std::exception
     {
+        const char *const m_what;
+
     public:
         /// Default Constructor
         ///
-        /// Creates a default checked error type based on the string the
-        /// checked error was created from.
+        /// Creates a default checked error.
         ///
         /// expects: none
         /// ensures: none
@@ -69,13 +75,12 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        checked_error() : std::runtime_error("checked_error")
+        checked_error() noexcept : m_what{"checked_error"}
         {}
 
         /// Constructor (const char *)
         ///
-        /// Creates a default checked error type based on the string the
-        /// checked error was created from.
+        /// Creates a checked error given a specific error message.
         ///
         /// expects: none
         /// ensures: none
@@ -84,27 +89,56 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        explicit checked_error(const char *const msg) : std::runtime_error(msg)
+        explicit checked_error(const char *const msg) noexcept : m_what{msg}
         {}
+
+        /// What
+        ///
+        /// Returns the message that was provided when the exception was
+        /// constructed.
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @return returns the message provided during construction
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        auto
+        what() const noexcept -> const char *
+        {
+            return m_what;
+        }
     };
 
     /// Unchecked Error
     ///
-    /// Defines an unchecked error (exception). These are exceptions that
-    /// should not be checked. These types of errors should bubble up to the
-    /// main() function (or any other entry point), and then an exit should
-    /// occur. These should not generate a called to std::terminate(), so
-    /// noexcept is not allowed if an unchecked could throw, but you should
-    /// not attempt to catch these until you hit the entry point, which is the
-    /// only place a catch(...) is allowed.
+    /// Defines a unchecked error (exception). These are exceptions that
+    /// should be unchecked. They are errors can could happen, that can be dealt
+    /// with, but should not happen as normal execution.
     ///
-    class unchecked_error : public std::logic_error
+    /// NOTE:
+    /// - We do not inherit from std::runtime_error or std::logic_error
+    ///   as these exception types of exceptions add additional memory
+    ///   allocations to the exception type which increase the chances
+    ///   of a bad_alloc.
+    /// - Technically the AUTOSAR specification states that an unchecked
+    ///   error must come from a specific subset of exception types. This
+    ///   subset does not include inheriting from std::exception directly.
+    ///   Our implementation does not adhere to this specific rule, due to
+    ///   the above note, but we do adhere to the spirit of the rule.
+    ///   This gives us the ability to define our own logic errors, without
+    ///   introducing issues with bad_alloc, which was likely an oversight
+    ///   in the spec.
+    ///
+    class unchecked_error : public std::exception
     {
+        const char *const m_what;
+
     public:
         /// Default Constructor
         ///
-        /// Creates a default unchecked error type based on the string the
-        /// unchecked error was created from.
+        /// Creates a default unchecked error.
         ///
         /// expects: none
         /// ensures: none
@@ -112,24 +146,60 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        unchecked_error() : std::logic_error("unchecked_error")
+        unchecked_error() noexcept : m_what{"unchecked_error"}
         {}
 
         /// Constructor (const char *)
         ///
-        /// Creates a default unchecked error type based on the string the
-        /// unchecked error was created from.
+        /// Creates an unchecked error given a specific error message.
         ///
         /// expects: none
         /// ensures: none
         ///
-        /// @param msg the unchecked error msg to use.
+        /// @param msg the checked error msg to use.
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        explicit unchecked_error(const char *const msg) : std::logic_error(msg)
+        explicit unchecked_error(const char *const msg) noexcept : m_what{msg}
         {}
+
+        /// What
+        ///
+        /// Returns the message that was provided when the exception was
+        /// constructed.
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @return returns the message provided during construction
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        auto
+        what() const noexcept -> const char *
+        {
+            return m_what;
+        }
     };
+
+    /// Discard
+    ///
+    /// The following will silence the compiler as well as static analysis
+    /// checks complaining about unused parameters. This is the only compliant
+    /// way to silence unused variable warnings.
+    ///
+    /// expects:
+    /// ensures:
+    ///
+    /// @throw [checked]: none
+    /// @throw [unchecked]: none
+    ///
+    template<typename T>
+    constexpr auto
+    discard(T &&t) noexcept -> void
+    {
+        static_cast<void>(t);
+    }
 
     /// Abort
     ///
@@ -156,9 +226,11 @@ namespace bsl
     ///
     template<typename ERROR = unchecked_error>
     [[noreturn]] auto
-    abort(int exit_code = EXIT_FAILURE) -> void
+    abort(int exit_code = EXIT_FAILURE) noexcept(!autosar_compliant) -> void
     {
-        if constexpr (details::autosar::autosar_compliant) {
+        discard(exit_code);
+
+        if constexpr (autosar_compliant) {
             throw ERROR{};
         }
 
@@ -169,63 +241,287 @@ namespace bsl
         std::abort();    //NOSONAR
     }
 
-    /// Discard
+    /// Catch Checked Exceptions
     ///
-    /// The following will silence the compiler as well as static analysis
-    /// checks complaining about unused parameters. This is the only compliant
-    /// way to silence unused variable warnings.
+    /// The following function will catch checked exception types, and let
+    /// unchecked exception types pass through. A checked exception type
+    /// is desfiend as follows:
     ///
-    /// expects:
-    /// ensures:
+    /// Used to represent errors that are expected and reasonable
+    /// to recover from, so they are supposed to be declared by functions and
+    /// caught and handled. These are all standard and user-defined exceptions
+    /// that are not classified as “unchecked”, i.e. they are instances or
+    /// subclasses of one of the following standard exception type:
+    /// - std::exception
+    /// - std::runtime_error
+    /// - bsl::checked_error (BSL custom checked exception type)
     ///
-    /// @throw [checked]: none
-    /// @throw [unchecked]: none
-    ///
-    template<typename T>
-    constexpr auto
-    discard(T &&t) noexcept -> void
-    {
-        static_cast<void>(t);
-    }
-
-    /// Catch All
-    ///
-    /// Catch All statements are only allowed from entry points. The AUTOSAR
-    /// spec states this as the main() function. The intent of this rule is
-    /// all checked exceptions are checked using a specific catch handler,
-    /// and all other exceptions (i.e., unchecked) as checked at the entry
-    /// point, using a catch all. This ensures that an error properly unrolls
-    /// the stack and all objects that were created, without propagating
-    /// beyond the entry point (usually the main function). There are other
-    /// entry points however. For example, unit testing, IOCTL handlers,
-    /// VMCall handlers, etc... This function provides a generic catch all
-    /// that should only be used with entry points, and this should not be
-    /// used to catch checked exceptions as those should be caught using
-    /// a specific catch handler.
+    /// NOTE:
+    /// - AUTOSAR (as seen from the description above) states that any
+    ///   exception that inherits from std::exception is a checked exception
+    ///   type. The problem is, all of the unchecked exception types also
+    ///   inherit std::exception, so we DO NOT catch these. To solve this,
+    ///   we provide a custom checked_error exception that can be used
+    ///   instead of std::exception.
     ///
     /// NOSONAR:
-    /// - SonarCloud gets mad about the catch(...), which is required by
-    ///   AUTOSAR for entry points, so we need to disable this here.
+    /// - SonarCloud gets mad about catching a std::runtime_error which is
+    ///   required by AUTOSAR. In general, we do not turn this check off as
+    ///   we don't want this being used.
     ///
     /// expects:
     /// ensures:
     ///
-    /// @return true if no exceptions where thrown, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: none
+    /// @throw [unchecked]: possible
     ///
-    template<typename FUNC>
-    [[maybe_unused]] auto
-    catch_all(FUNC &&func) noexcept -> bool
+    template<
+        typename FUNC,
+        typename HDLR,
+        std::enable_if_t<std::is_invocable_v<FUNC>> * = nullptr,
+        std::enable_if_t<std::is_nothrow_invocable_v<HDLR, const cstr_t>> * =
+            nullptr>
+    auto
+    catch_checked(FUNC &&func, HDLR &&handler) -> void
+    {
+        try {
+            func();
+        }
+        catch (const checked_error &e) {
+            handler(e.what());
+        }
+        catch (const std::runtime_error &e) {    //NOSONAR
+            handler(e.what());
+        }
+    }
+
+    /// Catch Unchecked Exceptions
+    ///
+    /// The following function will catch unchecked exception types, and lets
+    /// checked exception types pass through. An unchecked exception type
+    /// is desfiend as follows:
+    ///
+    /// Used to represent errors that a program can not recover from, so they
+    /// are not supposed to be declared by functions nor caught by caller
+    /// functions. These are all exceptions (either built-in or user-defined)
+    /// that are instances or subclasses of one of the following standard
+    /// exception type:
+    /// - std::logic_error
+    /// – std::bad_typeid
+    /// – std::bad_cast
+    /// – std::bad_weak_ptr
+    /// – std::bad_function_call
+    /// – std::bad_alloc
+    /// – std::bad_exception
+    /// - std::bad_variant_access (missing in current spec)
+    /// - bsl::unchecked_error (BSL custom unchecked exception type)
+    ///
+    /// NOTE:
+    /// - AUTOSAR (as seen from the description above) states that any
+    ///   exception that inherits from std::exception is a checked exception
+    ///   type. The problem is, all of the unchecked exception types also
+    ///   inherit std::exception, so we DO NOT catch these. To solve this,
+    ///   we provide a custom checked_error exception that can be used
+    ///   instead of std::exception.
+    ///
+    /// NOSONAR:
+    /// - SonarCloud gets mad about catching a std::logic_error which is
+    ///   required by AUTOSAR. In general, we do not turn this check off as
+    ///   we don't want this being used.
+    ///
+    /// expects:
+    /// ensures:
+    ///
+    /// @throw [checked]: none
+    /// @throw [unchecked]: possible
+    ///
+    template<
+        typename FUNC,
+        typename HDLR,
+        std::enable_if_t<std::is_invocable_v<FUNC>> * = nullptr,
+        std::enable_if_t<std::is_nothrow_invocable_v<HDLR, const cstr_t>> * =
+            nullptr>
+    auto
+    catch_unchecked(FUNC &&func, HDLR &&handler) -> void
+    {
+        try {
+            func();
+        }
+        catch (const unchecked_error &e) {
+            handler(e.what());
+        }
+        catch (const std::logic_error &e) {    //NOSONAR
+            handler(e.what());
+        }
+        catch (const std::bad_typeid &e) {
+            handler(e.what());
+        }
+        catch (const std::bad_cast &e) {
+            handler(e.what());
+        }
+        catch (const std::bad_weak_ptr &e) {
+            handler(e.what());
+        }
+        catch (const std::bad_function_call &e) {
+            handler(e.what());
+        }
+        catch (const std::bad_alloc &e) {
+            handler(e.what());
+        }
+        catch (const std::bad_exception &e) {
+            handler(e.what());
+        }
+        catch (const std::bad_variant_access &e) {
+            handler(e.what());
+        }
+    }
+
+    /// Catch All Exceptions
+    ///
+    /// The following function will catch unchecked exception types, and lets
+    /// checked exception types pass through. An unchecked exception type
+    /// is desfiend as follows:
+    ///
+    /// Used to represent errors that a program can not recover from, so they
+    /// are not supposed to be declared by functions nor caught by caller
+    /// functions. These are all exceptions (either built-in or user-defined)
+    /// that are instances or subclasses of one of the following standard
+    /// exception type:
+    /// - std::logic_error
+    /// – std::bad_typeid
+    /// – std::bad_cast
+    /// – std::bad_weak_ptr
+    /// – std::bad_function_call
+    /// – std::bad_alloc
+    /// – std::bad_exception
+    /// - std::bad_variant_access (missing in current spec)
+    /// - bsl::unchecked_error (BSL custom unchecked exception type)
+    ///
+    /// NOTE:
+    /// - AUTOSAR (as seen from the description above) states that any
+    ///   exception that inherits from std::exception is a checked exception
+    ///   type. The problem is, all of the unchecked exception types also
+    ///   inherit std::exception, so we DO NOT catch these. To solve this,
+    ///   we provide a custom checked_error exception that can be used
+    ///   instead of std::exception.
+    ///
+    /// NOSONAR:
+    /// - SonarCloud gets mad about catching a std::logic_error,
+    ///   std::runtime_error and ... which are required by AUTOSAR. In
+    ///   general, we do not turn this check off as we don't want these
+    ///   being used.
+    ///
+    /// expects:
+    /// ensures:
+    ///
+    /// @throw [checked]: none
+    /// @throw [unchecked]: possible
+    ///
+    template<
+        typename FUNC,
+        typename HDLR1,
+        typename HDLR2,
+        std::enable_if_t<std::is_invocable_v<FUNC>> * = nullptr,
+        std::enable_if_t<std::is_nothrow_invocable_v<HDLR1, const cstr_t>> * =
+            nullptr,
+        std::enable_if_t<std::is_nothrow_invocable_v<HDLR2, const cstr_t>> * =
+            nullptr>
+    auto
+    catch_all(
+        FUNC &&func,
+        HDLR1 &&checked_handler,
+        HDLR2 &&unchecked_handler) noexcept -> void
+    {
+        try {
+            func();
+        }
+        catch (const checked_error &e) {
+            checked_handler(e.what());
+        }
+        catch (const std::runtime_error &e) {    //NOSONAR
+            checked_handler(e.what());
+        }
+        catch (const unchecked_error &e) {
+            unchecked_handler(e.what());
+        }
+        catch (const std::logic_error &e) {    //NOSONAR
+            unchecked_handler(e.what());
+        }
+        catch (const std::bad_typeid &e) {
+            unchecked_handler(e.what());
+        }
+        catch (const std::bad_cast &e) {
+            unchecked_handler(e.what());
+        }
+        catch (const std::bad_weak_ptr &e) {
+            unchecked_handler(e.what());
+        }
+        catch (const std::bad_function_call &e) {
+            unchecked_handler(e.what());
+        }
+        catch (const std::bad_alloc &e) {
+            unchecked_handler(e.what());
+        }
+        catch (const std::bad_exception &e) {
+            unchecked_handler(e.what());
+        }
+        catch (const std::bad_variant_access &e) {
+            unchecked_handler(e.what());
+        }
+        catch (const std::exception &e) {    //NOSONAR
+            checked_handler(e.what());
+        }
+        catch (...) {    //NOSONAR
+            checked_handler("...");
+        }
+    }
+
+    /// Catch All Exceptions (No Handlers)
+    ///
+    /// Same as:
+    ///     catch_all(
+    ///         std::forward<FUNC>(func),
+    ///         do_nothing,
+    ///         do_nothing);
+    ///
+    template<
+        typename FUNC,
+        std::enable_if_t<std::is_invocable_v<FUNC>> * = nullptr>
+    auto
+    catch_all(FUNC &&func) noexcept -> void
     {
         try {
             func();
         }
         catch (...) {    //NOSONAR
-            return false;
         }
+    }
 
-        return true;
+    /// Catch All Exceptions (One Handler)
+    ///
+    /// Same as:
+    ///     catch_all(
+    ///         std::forward<FUNC>(func),
+    ///         std::forward<FUNC>(handler),
+    ///         std::forward<FUNC>(handler));
+    ///
+    template<
+        typename FUNC,
+        typename HDLR,
+        std::enable_if_t<std::is_invocable_v<FUNC>> * = nullptr,
+        std::enable_if_t<std::is_invocable_v<HDLR, const cstr_t>> * = nullptr>
+    auto
+    catch_all(FUNC &&func, HDLR &&handler) noexcept -> void
+    {
+        try {
+            func();
+        }
+        catch (const std::exception &e) {    //NOSONAR
+            handler(e.what());
+        }
+        catch (...) {    //NOSONAR
+            handler("...");
+        }
     }
 }    // namespace bsl
 
