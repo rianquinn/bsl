@@ -22,6 +22,20 @@
 #include "../../include/bsl/int.hpp"
 #include "../../include/bsl/ut.hpp"
 
+/// NOLINT:
+/// - We want to be able to use "magic numbers" in the construction of a BSL
+///   integer type. The comparison should generate an error though as that is
+///   a legit magic number. We silence this error so that we can test that the
+///   construction does not generate an error, but the comparison does.
+
+constexpr const bsl::uint64_t g_i1{};
+constexpr const bsl::uint64_t g_i2{0xFFFFFFFFFFFFFFE0};
+constexpr const bsl::uint64_t g_i3{g_i2};
+
+static_assert(g_i1 == 0);
+static_assert(g_i2 == 0xFFFFFFFFFFFFFFE0);    // NOLINT
+static_assert(g_i3 == g_i2);
+
 auto
 main() -> int
 {
@@ -31,33 +45,29 @@ main() -> int
     };
 
     bsl::test_case("value_type constructor") = [] {
-        bsl::int64_t i{bsl::magic_42};
+        bsl::int32_t i{bsl::magic_42};
         bsl::check(i == bsl::magic_42);
     };
 
-    bsl::test_case("template value_type constructor") = [] {
-        bsl::uint64_t i{bsl::magic_42};
-        bsl::check(i == bsl::magic_42);
-    };
-
-    bsl::test_case("copy constructor") = [] {
-        bsl::int64_t i1{bsl::magic_42};
-        bsl::int64_t i2{i1};
-        bsl::check(i1 == bsl::magic_42);
-        bsl::check(i2 == bsl::magic_42);
-    };
-
-    bsl::test_case("template copy constructor") = [] {
-        bsl::int64_t i1{bsl::magic_42};
-        bsl::uint64_t i2{i1};
-        bsl::check(i1 == bsl::magic_42);
-        bsl::check(i2 == bsl::magic_42);
-    };
+    // The following should not compile. This is because, the types must
+    // be the same.
+    //
+    // bsl::test_case("value_type constructor") = [] {
+    //     bsl::int64_t i{bsl::magic_42};
+    //     bsl::check(i == bsl::magic_42);
+    // };
 
     bsl::test_case("ptr constructor") = [] {
         void *ptr{};
         bsl::uintptr_t i{ptr};
         bsl::check(i == 0);
+    };
+
+    bsl::test_case("copy constructor") = [] {
+        bsl::int32_t i1{bsl::magic_42};
+        bsl::int32_t i2{i1};
+        bsl::check(i1 == bsl::magic_42);
+        bsl::check(i2 == bsl::magic_42);
     };
 
     return bsl::check_results();

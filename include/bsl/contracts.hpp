@@ -22,7 +22,12 @@
 #ifndef BSL_CONTRACTS_HPP
 #define BSL_CONTRACTS_HPP
 
+#include "autosar.hpp"
+#include "source_location.hpp"
+
+#if BSL_BUILD_LEVEL != 0
 #include "debug.hpp"
+#endif
 
 namespace bsl::details::contracts
 {
@@ -53,21 +58,15 @@ namespace bsl::details::contracts
 
 namespace bsl
 {
-    struct contract_violation_error : bsl::unchecked_error
+    struct contract_violation_error : bsl::unchecked_fatal
     {};
-
-#if defined(BSL_CONTRACTS_THROW_ON_VIOLATION) || defined(BSL_AUTOSAR_COMPLIANT)
-    constexpr bool contracts_throw = true;
-#else
-    constexpr bool contracts_throw = false;
-#endif
 
     /// Violation Information
     ///
     /// Provides information about a contract violation that can be used in a
     /// custom violation handler.
     ///
-    /// NOSONAR
+    /// NOSONAR:
     /// - This structure is defined by the spec for contracts, which dictates
     ///   the use of a struct with publically accessible data members with
     ///   these specific names. SonarCloud is mad about the fact that the
@@ -92,8 +91,7 @@ namespace bsl
     {
         /// Private Handler Signature
         ///
-        using handler_t =
-            void (*)(const violation_info &) noexcept(!contracts_throw);
+        using handler_t = void (*)(const violation_info &);
 
         /// Default Violation Handler
         ///
@@ -112,19 +110,42 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: possible
         ///
+#if BSL_BUILD_LEVEL != 0
         [[noreturn]] inline auto
-        default_handler(const violation_info &info) noexcept(!contracts_throw)
-            -> void
+#else
+        inline auto
+#endif
+        default_handler(const violation_info &info) -> void
         {
-            if constexpr (contracts_throw && !autosar_compliant) {
-                bsl::error("{} violation\n{}", info.comment, info.location);
-                throw contract_violation_error{};
-            }
-            else {
-                bsl::fatal<contract_violation_error>(
-                    "{} violation\n{}", info.comment, info.location);
-            }
+            bsl::discard(info);
+
+#if BSL_BUILD_LEVEL != 0
+            bsl::fatal<contract_violation_error>(
+                "{} violation\n{}", info.comment, info.location);
+#endif
         }
+
+        /// Compile Time Contract Handler Violation Occurred
+        ///
+        /// If you see this function show up in a compilation error, it
+        /// means that a compile-time contract violation has occurred during
+        /// the compilation of a constexpr. This function is not marked as a
+        /// constexpr and is called from the contract functions. If the
+        /// contract functions are used at compile-time, the compiler will
+        /// error out when it attempts to compile this function, resulting
+        /// in an error. This function only serves to provide a human readable
+        /// error message. Without it, you would see an error about not being
+        /// able to compile the handler as it is not marked as a constexpr.
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        inline auto
+        compile_time_contract_violation_occurred() noexcept -> void
+        {}
 
         /// NOSONAR:
         /// - We cannot use a std::function here as this requires a global
@@ -170,19 +191,20 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    expects(const bool test, const source_location loc = here()) noexcept(
-        !contracts_throw) -> void
+    expects(const bool test, const source_location loc = here()) -> void
     {
         bsl::discard(test);
         bsl::discard(loc);
 
         using details::contracts::check_default;
         using details::contracts::continue_on_violation;
+        using details::contracts::compile_time_contract_violation_occurred;
         using details::contracts::handler;
         using details::contracts::default_handler;
 
         if constexpr (check_default) {
             if (!test) {
+                compile_time_contract_violation_occurred();
                 handler({loc, "default precondition"});
                 if constexpr (!continue_on_violation) {
                     default_handler({loc, "[unhandled] default precondition"});
@@ -204,8 +226,7 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    expects_false(const bool test, const source_location loc = here()) noexcept(
-        !contracts_throw) -> void
+    expects_false(const bool test, const source_location loc = here()) -> void
     {
         expects(!test, loc);
     }
@@ -223,19 +244,20 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    ensures(const bool test, const source_location loc = here()) noexcept(
-        !contracts_throw) -> void
+    ensures(const bool test, const source_location loc = here()) -> void
     {
         bsl::discard(test);
         bsl::discard(loc);
 
         using details::contracts::check_default;
         using details::contracts::continue_on_violation;
+        using details::contracts::compile_time_contract_violation_occurred;
         using details::contracts::handler;
         using details::contracts::default_handler;
 
         if constexpr (check_default) {
             if (!test) {
+                compile_time_contract_violation_occurred();
                 handler({loc, "default postcondition"});
                 if constexpr (!continue_on_violation) {
                     default_handler({loc, "[unhandled] default postcondition"});
@@ -257,8 +279,7 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    ensures_false(const bool test, const source_location loc = here()) noexcept(
-        !contracts_throw) -> void
+    ensures_false(const bool test, const source_location loc = here()) -> void
     {
         ensures(!test, loc);
     }
@@ -279,19 +300,20 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    confirm(const bool test, const source_location loc = here()) noexcept(
-        !contracts_throw) -> void
+    confirm(const bool test, const source_location loc = here()) -> void
     {
         bsl::discard(test);
         bsl::discard(loc);
 
         using details::contracts::check_default;
         using details::contracts::continue_on_violation;
+        using details::contracts::compile_time_contract_violation_occurred;
         using details::contracts::handler;
         using details::contracts::default_handler;
 
         if constexpr (check_default) {
             if (!test) {
+                compile_time_contract_violation_occurred();
                 handler({loc, "default assertion"});
                 if constexpr (!continue_on_violation) {
                     default_handler({loc, "[unhandled] default assertion"});
@@ -316,8 +338,7 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    confirm_false(const bool test, const source_location loc = here()) noexcept(
-        !contracts_throw) -> void
+    confirm_false(const bool test, const source_location loc = here()) -> void
     {
         confirm(!test, loc);
     }
@@ -335,19 +356,20 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    expects_audit(const bool test, const source_location loc = here()) noexcept(
-        !contracts_throw) -> void
+    expects_audit(const bool test, const source_location loc = here()) -> void
     {
         bsl::discard(test);
         bsl::discard(loc);
 
         using details::contracts::check_audit;
         using details::contracts::continue_on_violation;
+        using details::contracts::compile_time_contract_violation_occurred;
         using details::contracts::handler;
         using details::contracts::default_handler;
 
         if constexpr (check_audit) {
             if (!test) {
+                compile_time_contract_violation_occurred();
                 handler({loc, "audit precondition"});
                 if constexpr (!continue_on_violation) {
                     default_handler({loc, "[unhandled] audit precondition"});
@@ -369,9 +391,8 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    expects_audit_false(
-        const bool test,
-        const source_location loc = here()) noexcept(!contracts_throw) -> void
+    expects_audit_false(const bool test, const source_location loc = here())
+        -> void
     {
         expects_audit(!test, loc);
     }
@@ -389,19 +410,20 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    ensures_audit(const bool test, const source_location loc = here()) noexcept(
-        !contracts_throw) -> void
+    ensures_audit(const bool test, const source_location loc = here()) -> void
     {
         bsl::discard(test);
         bsl::discard(loc);
 
         using details::contracts::check_audit;
         using details::contracts::continue_on_violation;
+        using details::contracts::compile_time_contract_violation_occurred;
         using details::contracts::handler;
         using details::contracts::default_handler;
 
         if constexpr (check_audit) {
             if (!test) {
+                compile_time_contract_violation_occurred();
                 handler({loc, "audit postcondition"});
                 if constexpr (!continue_on_violation) {
                     default_handler({loc, "[unhandled] audit postcondition"});
@@ -423,9 +445,8 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    ensures_audit_false(
-        const bool test,
-        const source_location loc = here()) noexcept(!contracts_throw) -> void
+    ensures_audit_false(const bool test, const source_location loc = here())
+        -> void
     {
         ensures_audit(!test, loc);
     }
@@ -446,19 +467,20 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    confirm_audit(const bool test, const source_location loc = here()) noexcept(
-        !contracts_throw) -> void
+    confirm_audit(const bool test, const source_location loc = here()) -> void
     {
         bsl::discard(test);
         bsl::discard(loc);
 
         using details::contracts::check_audit;
         using details::contracts::continue_on_violation;
+        using details::contracts::compile_time_contract_violation_occurred;
         using details::contracts::handler;
         using details::contracts::default_handler;
 
         if constexpr (check_audit) {
             if (!test) {
+                compile_time_contract_violation_occurred();
                 handler({loc, "audit assertion"});
                 if constexpr (!continue_on_violation) {
                     default_handler({loc, "[unhandled] audit assertion"});
@@ -483,9 +505,8 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     constexpr auto
-    confirm_audit_false(
-        const bool test,
-        const source_location loc = here()) noexcept(!contracts_throw) -> void
+    confirm_audit_false(const bool test, const source_location loc = here())
+        -> void
     {
         confirm_audit(!test, loc);
     }

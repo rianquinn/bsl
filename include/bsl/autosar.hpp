@@ -22,12 +22,20 @@
 #ifndef BSL_AUTOSAR_HPP
 #define BSL_AUTOSAR_HPP
 
-#include <cstdlib>
+#include <new>
 #include <stdexcept>
 
-#include <variant>
-#include <memory>
+#ifdef BSL_NEEDS_STD_FUNCTIONAL
 #include <functional>
+#endif
+
+#ifdef BSL_NEEDS_STD_MEMORY
+#include <memory>
+#endif
+
+#ifdef BSL_NEEDS_STD_VARIANT
+#include <variant>
+#endif
 
 namespace bsl
 {
@@ -104,8 +112,8 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        auto
-        what() const noexcept -> const char *
+        [[nodiscard]] auto
+        what() const noexcept -> const char * override
         {
             return m_what;
         }
@@ -114,8 +122,8 @@ namespace bsl
     /// Unchecked Error
     ///
     /// Defines a unchecked error (exception). These are exceptions that
-    /// should be unchecked. They are errors can could happen, that can be dealt
-    /// with, but should not happen as normal execution.
+    /// should be unchecked. They are errors that should not happen as normal
+    /// execution.
     ///
     /// NOTE:
     /// - We do not inherit from std::runtime_error or std::logic_error
@@ -175,8 +183,117 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        auto
-        what() const noexcept -> const char *
+        [[nodiscard]] auto
+        what() const noexcept -> const char * override
+        {
+            return m_what;
+        }
+    };
+
+    /// Unchecked Fatal
+    ///
+    /// Defines a unchecked fatal (exception). These are exceptions that
+    /// should be unchecked. They are errors that should not happen as normal
+    /// execution. Unlike an unchecked error, when this exception type is
+    /// created we "fail fast" by calling std::abort(). If AUTOSAR is enabled
+    /// this exception will be thrown instead. The provides a single mechanism
+    /// for handling errors (just throw this exception type, or a subclass
+    /// of it), and the AUTOSAR policy will kick in if needed. Otherwise,
+    /// your application will fail fast.
+    ///
+    /// Note, we also provide the ability to run std::exit() instead of
+    /// std::abort(). This is useful when unit testing as std::abort does not
+    /// run the cleanup functions list atexit() registered destructors, and
+    /// it also generates a core dump which is slow.
+    ///
+    class unchecked_fatal : public unchecked_error
+    {
+        const char *const m_what;
+
+        /// Fail Fast
+        ///
+        /// There are two different ways that you can exit a program in C++
+        /// when something bad happens: throw an exception, or fail fast.
+        /// When you fail fast, you exit immediately, which provides an
+        /// opportunity to debug the application. If you throw, you will have
+        /// the opportunity, instead, to cleanup, ensuing all destructors and
+        /// resources are handled properly. If AUTOSAR is disabled, this
+        /// function will cause a fail fast to occur instead of throwing an
+        /// exception.
+        ///
+        /// NOSONAR:
+        /// - We call std::abort() as this is what the spec states for
+        ///   contracts. If AUTOSAR is enabled, we throw an unchecked
+        ///   exception instead.
+        /// - During unit testings, std::exit can be called instead which will
+        ///   ensure memory is properly deleted, and prevents a core dump from
+        ///   occuring which is really slow. THis is fine for AUTOSAR as this
+        ///   only occurs if AUTOSAR compliance is disabled.
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        static auto
+        fail_fast() noexcept -> void
+        {
+            if constexpr (!autosar_compliant) {
+                if constexpr (details::autosar::exit_instead_of_abort) {
+                    std::exit(1);    //NOSONAR
+                }
+
+                std::abort();    //NOSONAR
+            }
+        }
+
+    public:
+        /// Default Constructor
+        ///
+        /// Creates a default unchecked error.
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        unchecked_fatal() noexcept : m_what{"unchecked_fatal"}
+        {
+            fail_fast();
+        }
+
+        /// Constructor (const char *)
+        ///
+        /// Creates an unchecked error given a specific error message.
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @param msg the checked error msg to use.
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        explicit unchecked_fatal(const char *const msg) noexcept : m_what{msg}
+        {
+            fail_fast();
+        }
+
+        /// What
+        ///
+        /// Returns the message that was provided when the exception was
+        /// constructed.
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @return returns the message provided during construction
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        [[nodiscard]] auto
+        what() const noexcept -> const char * override
         {
             return m_what;
         }
@@ -199,46 +316,6 @@ namespace bsl
     discard(T &&t) noexcept -> void
     {
         static_cast<void>(t);
-    }
-
-    /// Abort
-    ///
-    /// Executes an abort(). Unlike the standard library version, the BSL
-    /// version will throw instead of aborting if AUTOSAR compliance is
-    /// enabled. In addition, this function can be configured to exit with an
-    /// error code instead of aborting, which will ensure atexit() is called
-    /// properly, which is useful when unit testing (no memory leaks).
-    ///
-    /// NOSONAR:
-    /// - We call std::abort() as this is what the spec states for contracts.
-    ///   If AUTOSAR is enabled, we throw an unchecked exception instead.
-    /// - During unit testings, std::exit can be called instead which will
-    ///   ensure memory is properly deleted, and prevents a core dump from
-    ///   occuring which is really slow. THis is fine for AUTOSAR as this only
-    ///   occurs if AUTOSAR compliance is disabled.
-    ///
-    /// expects: none
-    /// ensures: none
-    ///
-    /// @param exit_code the exit code to pass to std::exit()
-    /// @throw [checked]: none
-    /// @throw [unchecked]: possible
-    ///
-    template<typename ERROR = unchecked_error>
-    [[noreturn]] auto
-    abort(int exit_code = EXIT_FAILURE) noexcept(!autosar_compliant) -> void
-    {
-        discard(exit_code);
-
-        if constexpr (autosar_compliant) {
-            throw ERROR{};
-        }
-
-        if constexpr (details::autosar::exit_instead_of_abort) {
-            std::exit(exit_code);    //NOSONAR
-        }
-
-        std::abort();    //NOSONAR
     }
 
     /// Catch Checked Exceptions
@@ -359,21 +436,27 @@ namespace bsl
         catch (const std::bad_cast &e) {
             handler(e.what());
         }
+#ifdef BSL_NEEDS_STD_MEMORY
         catch (const std::bad_weak_ptr &e) {
             handler(e.what());
         }
+#endif
+#ifdef BSL_NEEDS_STD_FUNCTIONAL
         catch (const std::bad_function_call &e) {
             handler(e.what());
         }
+#endif
         catch (const std::bad_alloc &e) {
             handler(e.what());
         }
         catch (const std::bad_exception &e) {
             handler(e.what());
         }
+#ifdef BSL_NEEDS_STD_VARIANT
         catch (const std::bad_variant_access &e) {
             handler(e.what());
         }
+#endif
     }
 
     /// Catch All Exceptions
@@ -453,21 +536,27 @@ namespace bsl
         catch (const std::bad_cast &e) {
             unchecked_handler(e.what());
         }
+#ifdef BSL_NEEDS_STD_MEMORY
         catch (const std::bad_weak_ptr &e) {
             unchecked_handler(e.what());
         }
+#endif
+#ifdef BSL_NEEDS_STD_FUNCTIONAL
         catch (const std::bad_function_call &e) {
             unchecked_handler(e.what());
         }
+#endif
         catch (const std::bad_alloc &e) {
             unchecked_handler(e.what());
         }
         catch (const std::bad_exception &e) {
             unchecked_handler(e.what());
         }
+#ifdef BSL_NEEDS_STD_VARIANT
         catch (const std::bad_variant_access &e) {
             unchecked_handler(e.what());
         }
+#endif
         catch (const std::exception &e) {    //NOSONAR
             checked_handler(e.what());
         }

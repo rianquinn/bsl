@@ -29,7 +29,7 @@ namespace
     auto
     test_finally() noexcept -> void
     {
-        bsl::finally([] () noexcept {
+        bsl::finally([]() noexcept {
             ran = true;
         });
     }

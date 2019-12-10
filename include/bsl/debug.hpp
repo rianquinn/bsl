@@ -28,13 +28,14 @@
 #include <mutex>
 
 #include <fmt/core.h>
+#include <fmt/format.h>
 #include <fmt/color.h>
 
 extern "C" auto thread_id() noexcept -> std::uint64_t;
 
 namespace bsl
 {
-    struct fatal_error : bsl::unchecked_error
+    struct fatal_error : bsl::unchecked_fatal
     {};
 
     enum class debug_level_t { all = 0, none = 0, v = 1, vv = 2, vvv = 3 };
@@ -284,12 +285,12 @@ namespace bsl
     ///
     template<typename ERROR = fatal_error, typename... ARGS>
     [[noreturn]] auto
-    fatal(ARGS &&... args) noexcept(noexcept(bsl::abort())) -> void
+    fatal(ARGS &&... args) -> void
     {
         details::debug::print<debug_level_t::all>(
             magenta, "\nFATAL", std::forward<ARGS>(args)...);
 
-        bsl::abort<ERROR>();
+        throw ERROR{};
     }
 }    // namespace bsl
 

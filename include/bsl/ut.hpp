@@ -259,7 +259,8 @@ namespace bsl
 
                 fmt::print(")\n");
             },
-            [&exit_code](auto) noexcept {
+            [&exit_code](auto what) noexcept {
+                bsl::discard(what);
                 exit_code = EXIT_FAILURE;
             });
 
@@ -298,7 +299,7 @@ namespace bsl
         ///
         template<typename F>
         auto
-        execute_test(F &&func, std::string *const failures) noexcept-> bool
+        execute_test(F &&func, std::string *const failures) noexcept -> bool
         {
             bool no_reason_to_exit = true;
 
@@ -315,7 +316,8 @@ namespace bsl
                         no_reason_to_exit = false;
                     }
                 },
-                [](auto) noexcept {
+                [](auto what) noexcept {
+                    bsl::discard(what);
                     details::ut::assertion_failure("unexpected exception", {});
                 });
 
@@ -701,7 +703,8 @@ namespace bsl
             [&func] {
                 func();
             },
-            [&caught](auto) noexcept {
+            [&caught](auto what) noexcept {
+                bsl::discard(what);
                 caught = true;
             });
 
@@ -793,10 +796,12 @@ namespace bsl
             [&func] {
                 func();
             },
-            [&caught](auto) noexcept {
+            [&caught](auto what) noexcept {
+                bsl::discard(what);
                 caught = true;
             },
-            [&caught](auto) noexcept {
+            [&caught](auto what) noexcept {
+                bsl::discard(what);
                 caught = false;
             });
 
@@ -891,10 +896,12 @@ namespace bsl
             [&func] {
                 func();
             },
-            [&caught](auto) noexcept {
+            [&caught](auto what) noexcept {
+                bsl::discard(what);
                 caught = false;
             },
-            [&caught](auto) noexcept {
+            [&caught](auto what) noexcept {
+                bsl::discard(what);
                 caught = true;
             });
 
@@ -982,7 +989,8 @@ namespace bsl
             [&func] {
                 func();
             },
-            [&caught](auto) noexcept {
+            [&caught](auto what) noexcept {
+                bsl::discard(what);
                 caught = true;
             });
 

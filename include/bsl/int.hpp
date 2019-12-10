@@ -27,8 +27,83 @@
 #include <cstdint>
 #include <type_traits>
 
+/// Integer
+///
+/// Provides a bounded integer type. Unlike the built-in integer types,
+/// this integer type has added checks to make sure the integer type
+/// never overruns, underruns, wraps, loses data, divides by zero,
+/// shifts bits away, or converts integers to pointers and back of the
+/// wrong type.
+///
+/// These are all required by AUTOSAR, and other specs, and a great
+/// description of how to perform this math can be found in the following
+/// SEI CERT rules (we used these to implement this integer header):
+/// https://wiki.sei.cmu.edu/confluence/display/c/INT30-C.+Ensure+that+unsigned+integer+operations+do+not+wrap
+/// https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data
+/// https://wiki.sei.cmu.edu/confluence/display/c/INT32-C.+Ensure+that+operations+on+signed+integers+do+not+result+in+overflow
+/// https://wiki.sei.cmu.edu/confluence/display/c/INT33-C.+Ensure+that+division+and+remainder+operations+do+not+result+in+divide-by-zero+errors
+/// https://wiki.sei.cmu.edu/confluence/display/c/INT34-C.+Do+not+shift+an+expression+by+a+negative+number+of+bits+or+by+greater+than+or+equal+to+the+number+of+bits+that+exist+in+the+operand
+/// https://wiki.sei.cmu.edu/confluence/display/c/INT36-C.+Converting+a+pointer+to+integer+or+integer+to+pointer
+///
+/// If contracts are disabled, this class reverts to a standard integer
+/// type so there is likely no (or minimal) performance hit for using this
+/// class (with optimizations on of course... only tested with GCC). If you
+/// do have contracts on, signed integer types should be avoided whenever
+/// possible as they are far more expensive than unsigned. In addition,
+/// operations like *, / and % should also be avoided as these are also
+/// expensive, and instead, the >> and << operators should be used when
+/// possible. In general, when contracts are enabled, integer manipulation
+/// is expensive. Note that the BSL is intended for kernel, hypervisor, and
+/// embedded use-cases where correctness is critically important. Depending
+/// on your usecase, you might still benefit from the BSL, even if your use
+/// case does not require this specific integer class as the BSL is designed
+/// as a larger alternative to the GSL (not a replacement).
+///
+/// Certain functionally is also disabled based on the type by design. For
+/// example, the intptr_t type is not supported as this type is not allowed
+/// to be used in any scenario by most coding standards. If you wish to
+/// use ptr -> int -> ptr conversions, it must be a uintptr_t. We also do not
+/// support mixed types. If you want to add two integers, both integers must
+/// be of the same type. If they are not, you can explicitly make them the
+/// same type by using the convert() function. This also applies to
+/// construction. We explicitly require that during construction, types are
+/// the same. This means that you cannot create, for example, uint64_t from
+/// a int literal, or even an unsigned literal. It must be the same type
+/// (i.e., in most cases, UL or ULL). Another change to a typical integer type
+/// is the bitwise operators like <<, >>, |, &, ^, and ~ are only supported
+/// on unsigned types (as they make far less sense on signed types). This
+/// specific limitation could be removed in the future if enough people using
+/// the library complain. For now, the main use case is critical systems,
+/// which will likely prefer this limitation in place.
+///
+/// This rule does have some
+/// exceptions. For example, the rational operators, which are capable of
+/// performing comparisons without the risk of overflow, underrun or wrapping,
+/// and return a boolean, and not an integer type, support mixing types, and
+/// the code handles all of these conversions for you, safely. The idea here,
+/// is where a type change is needed, it is explicit, which is required by
+/// AUTOSAR. This also ensures the order of operands in our operators doesn't
+/// matter which is also required by AUTOSAR. If a convert is not needed,
+/// and the order can remain interchangable, we perform the conversion to
+/// provide the maximum possible flexibility without breaking AUTOSAR rules.
+///
+/// Another thing you will notice in this code is our approach to some of
+/// these functions is inline with SEI CERT and AUTOSAR, and not, in some
+/// cases, with what other projects have done. A good example of this
+/// is how the convert function was implemented. Our goal is to ensure the
+/// implementation is consistent with the specifications.
+///
+
 namespace bsl
 {
+#ifndef BSL_PAGE_SHIFT
+    constexpr const std::uint32_t page_size = 0x1000;
+    constexpr const std::uint32_t page_shift = 12;
+#else
+    constexpr const std::uint32_t page_size = (1 << BSL_PAGE_SHIFT);
+    constexpr const std::uint32_t page_shift = BSL_PAGE_SHIFT;
+#endif
+
     template<typename T>
     class integer;
 
@@ -43,129 +118,109 @@ namespace bsl
     template<typename T>
     inline constexpr bool is_integer_v = is_integer<T>::value;
 
-    /// Absolute Value (signed)
+    /// Unsigned
     ///
-    /// Returns the absolute value of a signed number as an unsigned
-    /// integer. Note that the Standard Library version of this function
-    /// returns the same type that it is given. We want everything
-    /// returned as an unsigned type.
+    /// Converts an unsigned value, stored in a signed type as an unsigned
+    /// type. The resulting value is returned as a std::uintmax_t. If you
+    /// need a value smaller than this, use the convert function. This is
+    /// really just a helper for the convert class, which should be used in
+    /// most scenarios instead.
     ///
-    /// expects: none
+    /// expects: val is unsigned
     /// ensures: none
     ///
-    /// @param t the integer to get the absolute value of
-    /// @return the absolute value of t
+    /// @param val the value to unsign
+    /// @return val as a std::uintmax_t
     /// @throw [checked]: none
-    /// @throw [unchecked]: none
+    /// @throw [unchecked]: possible
     ///
-    template<typename T, std::enable_if_t<std::is_signed_v<T>> * = nullptr>
     [[nodiscard]] constexpr auto
-    abs(const T &t) noexcept -> std::uintmax_t
+    unsign(const std::intmax_t &val) -> std::uintmax_t
     {
-        if (t < 0) {
-            return static_cast<std::uintmax_t>(-t);
-        }
-
-        return static_cast<std::uintmax_t>(t);
+        bsl::expects_audit(val >= 0);
+        return static_cast<std::uintmax_t>(val);
     }
 
-    /// Absolute Value (unsigned)
+    /// Convert
     ///
-    /// expects: none
-    /// ensures: none
-    ///
-    /// @param t the number to return
-    /// @return always returns t
-    /// @throw [checked]: none
-    /// @throw [unchecked]: none
-    ///
-    template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
-    [[nodiscard]] constexpr auto
-    abs(const T &t) noexcept -> std::uintmax_t
-    {
-        return t;
-    }
-
-    /// Narrow
-    ///
-    /// Given an integer value, and an integer type you wish to narrow the
+    /// Given an integer value, and an integer type you wish to convert the
     /// integer value to, this function will perform the conversion. For
     /// example, this function will safely convert a std::uint64_t to a
     /// std::int8_t. If an overrun, underrun or wrap occurs in the process
-    /// of the conversion, bsl::ensures will trigger (with the resulting
+    /// of the conversion, bsl::expects_audit will trigger (with the resulting
     /// error being determined by the contracts handler and AUTOSAR policy).
     ///
-    /// NOTE:
-    /// - Like the GSL, this function can also be used to widen as well. We
-    ///   call this a "narrow", as a static_cast() can safely widen without
-    ///   the need for overflow checks. In template code, however, if you are
-    ///   unsure if a narrow or widen is needed, a narrow will safely perform
-    ///   both.
+    /// expects: no overruns underruns or wrapping
+    /// ensures: none
     ///
-    /// - Unlike the GSL, we use a different approach to detecting if a
-    ///   narrow is needed or not. Our implementation is based on the SEI CERT
-    ///   spec (with additions from the comments to handle narrow types):
-    ///   https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data
-    ///
-    ///   When release mode is enabled, this implementation should outperform
-    ///   the implementation provided by the GSL as most conversions will
-    ///   translate to a simple comparison with a single constant number.
-    ///
-    /// - Note that for the narrow checks to enable, you must enable audit
-    ///   contracts.
-    ///
-    /// expects: none
-    /// ensures: no overruns underruns or wrapping
-    ///
-    /// @param t the integer value to narrow
-    /// @param loc the location of the narrow call for debugging.
-    /// @return the narrowed version of t
+    /// @param f the integer value to convert "from"
+    /// @param loc the location of the convert call for debugging.
+    /// @return f converted "from" type F "to" type T
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
     template<
+        typename F,
         typename T,
-        typename U,
-        std::enable_if_t<std::is_integral_v<T>> * = nullptr,
-        std::enable_if_t<std::is_integral_v<U>> * = nullptr>
+        std::enable_if_t<std::is_integral_v<F>> * = nullptr,
+        std::enable_if_t<std::is_integral_v<T>> * = nullptr>
     [[nodiscard]] constexpr auto
-    narrow(const T &t, const source_location &loc = here()) -> U
+    convert(const F &f, const source_location &loc = here()) -> T
     {
-        using limits = std::numeric_limits<U>;
+        using f_limits = std::numeric_limits<F>;
+        using t_limits = std::numeric_limits<T>;
 
-        if constexpr (std::is_same_v<T, U>) {
-            return t;
+        if constexpr (std::is_same_v<F, T>) {
+            return f;
         }
 
-        if constexpr (std::is_signed_v<T>) {
-            if constexpr (std::is_signed_v<U>) {
-                bsl::ensures_audit(t <= limits::max(), loc);
-                bsl::ensures_audit(t >= limits::min(), loc);
+        if constexpr (std::is_signed_v<F>) {
+            if constexpr (std::is_signed_v<T>) {
+                if constexpr (f_limits::max() <= t_limits::max()) {
+                    return static_cast<T>(f);
+                }
+                else {
+                    bsl::expects_audit(f <= t_limits::max(), loc);
+                    bsl::expects_audit(f >= t_limits::min(), loc);
+                    return static_cast<T>(f);
+                }
             }
             else {
-                bsl::ensures_audit(t >= 0, loc);
-                bsl::ensures_audit(abs(t) <= limits::max(), loc);
+                if constexpr (unsign(f_limits::max()) <= t_limits::max()) {
+                    bsl::expects_audit(f >= 0, loc);
+                    return static_cast<T>(f);
+                }
+                else {
+                    bsl::expects_audit(unsign(f) <= t_limits::max(), loc);
+                    return static_cast<T>(f);
+                }
             }
         }
         else {
-            if constexpr (std::is_signed_v<U>) {
-                bsl::ensures_audit(t <= abs(limits::max()), loc);
+            if constexpr (std::is_signed_v<T>) {
+                if constexpr (f_limits::max() <= unsign(t_limits::max())) {
+                    return static_cast<T>(f);
+                }
+                else {
+                    bsl::expects_audit(f <= unsign(t_limits::max()), loc);
+                    return static_cast<T>(f);
+                }
             }
             else {
-                bsl::ensures_audit(t <= limits::max(), loc);
+                if constexpr (f_limits::max() <= t_limits::max()) {
+                    return static_cast<T>(f);
+                }
+                else {
+                    bsl::expects_audit(f <= t_limits::max(), loc);
+                    return static_cast<T>(f);
+                }
             }
         }
-
-        return static_cast<U>(t);
     }
 
     /// Integer
     ///
-    /// Provides a bounded integer type. Unlike the built-in integer types,
-    /// this integer type has added checks to make sure the integer type
-    /// never overruns, underruns or wraps. If contracts are disabled, this
-    /// class reverts to a standard integer type so there is no performance
-    /// hit for using this class if contracts are disabled in release mode.
+    /// Please see the above "file" level description
     ///
     template<typename T>
     class integer
@@ -181,58 +236,56 @@ namespace bsl
 
         constexpr integer() noexcept = default;
 
-        template<
-            typename U,
-            std::enable_if_t<std::is_integral_v<U>> * = nullptr>
-        explicit constexpr integer(const U &val) noexcept :
-            m_val{bsl::narrow<U, T>(val)}
+        template<typename U, std::enable_if_t<std::is_same_v<T, U>> * = nullptr>
+        explicit constexpr integer(const U &val) noexcept : m_val{val}
         {}
 
-        template<
-            typename U,
-            std::enable_if_t<!std::is_same_v<T, U>> * = nullptr>
-        explicit integer(const integer<U> &val) :
-            m_val{bsl::narrow<U, T>(val.get())}
-        {}
+        template<typename U>
+        explicit integer(const U *ptr) noexcept
+        {
+            bsl::discard(ptr);
 
-        explicit integer(const void *ptr) noexcept = delete;
+            static_assert(
+                sizeof(U) == 0, "uintptr_t required for pointer types");
+        }
 
+        template<typename U, std::enable_if_t<std::is_same_v<T, U>> * = nullptr>
         constexpr auto
-        operator=(const value_type &val) noexcept -> integer &
+        operator=(const U &val) noexcept -> integer<T> &
         {
             m_val = val;
             return *this;
         }
 
-        template<
-            typename U,
-            std::enable_if_t<std::is_integral_v<U>> * = nullptr,
-            std::enable_if_t<!std::is_same_v<T, U>> * = nullptr>
-        constexpr auto
-        operator=(const U &val) noexcept -> integer &
-        {
-            m_val = bsl::narrow<U, T>(val);
-            return *this;
-        }
-
-        template<
-            typename U,
-            std::enable_if_t<!std::is_same_v<T, U>> * = nullptr>
+        template<typename U>
         auto
-        operator=(const integer<U> &val) noexcept -> integer &
+        operator=(const U *ptr) noexcept -> integer<T> &
         {
-            m_val = bsl::narrow<U, T>(val.get());
-            return *this;
+            bsl::discard(ptr);
+
+            static_assert(
+                sizeof(U) == 0, "uintptr_t required for pointer types");
         }
 
         [[nodiscard]] constexpr auto
-        get() const noexcept -> value_type
+        get() noexcept -> reference
+        {
+            return m_val;
+        }
+
+        [[nodiscard]] constexpr auto
+        get() const noexcept -> const_reference
         {
             return m_val;
         }
 
         template<typename U>
-        [[nodiscard]] auto to_ptr() const noexcept -> U * = delete;
+        [[nodiscard]] auto
+        to_ptr() const noexcept -> U *
+        {
+            static_assert(
+                sizeof(U) == 0, "uintptr_t required for pointer types");
+        }
 
         [[nodiscard]] static constexpr auto
         is_signed() noexcept -> bool
@@ -241,15 +294,21 @@ namespace bsl
         }
 
         [[nodiscard]] static constexpr auto
+        is_unsigned() noexcept -> bool
+        {
+            return std::is_unsigned_v<T>;
+        }
+
+        [[nodiscard]] static constexpr auto
         digits() noexcept -> std::int32_t
         {
-            return std::numeric_limits<T>::digits();
+            return std::numeric_limits<T>::digits;
         }
 
         [[nodiscard]] static constexpr auto
         digits10() noexcept -> std::int32_t
         {
-            return std::numeric_limits<T>::digits10();
+            return std::numeric_limits<T>::digits10;
         }
 
         [[nodiscard]] static constexpr auto
@@ -265,33 +324,169 @@ namespace bsl
         }
 
         template<typename U, std::enable_if_t<is_integer_v<U>> * = nullptr>
-        [[nodiscard]] auto
-        narrow(const source_location &loc = here()) const -> U
+        [[nodiscard]] constexpr auto
+        convert(const source_location &loc = here()) const -> U
         {
-            return U{bsl::narrow<T, typename U::value_type>(m_val, loc)};
+            return U{bsl::convert<T, typename U::value_type>(m_val, loc)};
         }
 
-        // + - * ^ & | ~ += -= *= ^= &= |= << >> >>= <<= ++ --
-        // / % /= %=
+        [[nodiscard]] constexpr auto
+        operator+=(const integer<T> &rhs) -> integer<T> &
+        {
+            if constexpr (std::is_signed_v<T>) {
+                bsl::expects_audit_false(
+                    ((rhs.get() > 0) &&
+                     (m_val > static_cast<T>(max() - rhs.get()))) ||
+                    ((rhs.get() < 0) &&
+                     (m_val < static_cast<T>(min() - rhs.get()))));
+            }
+            else {
+                bsl::expects_audit_false(
+                    static_cast<T>(max() - m_val) < rhs.get());
+            }
+
+            m_val += rhs.get();
+            return *this;
+        }
+
+        [[nodiscard]] constexpr auto
+        operator-=(const integer<T> &rhs) -> integer<T> &
+        {
+            if constexpr (std::is_signed_v<T>) {
+                bsl::expects_audit_false(
+                    (rhs.get() > 0 &&
+                     m_val < static_cast<T>(min() + rhs.get())) ||
+                    (rhs.get() < 0 &&
+                     m_val > static_cast<T>(max() + rhs.get())));
+            }
+            else {
+                bsl::expects_audit_false(m_val < rhs.get());
+            }
+
+            m_val -= rhs.get();
+            return *this;
+        }
+
+        [[nodiscard]] constexpr auto
+        operator*=(const integer<T> &rhs) -> integer<T> &
+        {
+            if (m_val == 0) {
+                return *this;
+            }
+
+            if (rhs.get() == 0) {
+                m_val = 0;
+                return *this;
+            }
+
+            if constexpr (std::is_signed_v<T>) {
+                bsl::expects_audit_false(
+                    (m_val > 0 && rhs.get() > 0 &&
+                     m_val > static_cast<T>(max() / rhs.get())) ||
+                    (m_val > 0 && rhs.get() < 0 &&
+                     rhs.get() < static_cast<T>(min() / m_val)) ||
+                    (m_val < 0 && rhs.get() > 0 &&
+                     m_val < static_cast<T>(min() / rhs.get())) ||
+                    (m_val < 0 && rhs.get() < 0 &&
+                     rhs.get() < static_cast<T>(max() / m_val)));
+            }
+            else {
+                bsl::expects_audit_false(
+                    m_val > static_cast<T>(max() / rhs.get()));
+            }
+
+            m_val *= rhs.get();
+            return *this;
+        }
+
+        [[nodiscard]] constexpr auto
+        operator/=(const integer<T> &rhs) -> integer<T> &
+        {
+            if constexpr (std::is_signed_v<T>) {
+                bsl::expects_audit_false(
+                    (rhs.get() == 0) ||
+                    ((m_val == min()) && (rhs.get() == -1)));
+            }
+            else {
+                bsl::expects_audit_false(rhs.get() == 0);
+            }
+
+            m_val /= rhs.get();
+            return *this;
+        }
+
+        [[nodiscard]] constexpr auto
+        operator%=(const integer<T> &rhs) -> integer<T> &
+        {
+            if constexpr (std::is_signed_v<T>) {
+                bsl::expects_audit_false(
+                    (rhs.get() == 0) ||
+                    ((m_val == min()) && (rhs.get() == -1)));
+            }
+            else {
+                bsl::expects_audit_false(rhs.get() == 0);
+            }
+
+            m_val %= rhs.get();
+            return *this;
+        }
+
+        [[nodiscard]] constexpr auto
+        operator++() -> integer<T> &
+        {
+            return *this += 1;
+        }
+
+        [[nodiscard]] constexpr auto
+        operator++(int) -> integer<T>
+        {
+            auto old = *this;
+            ++(*this);
+            return old;
+        }
+
+        [[nodiscard]] constexpr auto
+        operator--() -> integer<T> &
+        {
+            return *this -= 1;
+        }
+
+        [[nodiscard]] constexpr auto
+        operator--(int) -> integer<T>
+        {
+            auto old = *this;
+            --(*this);
+            return old;
+        }
 
     private:
         value_type m_val{};
     };
 
+    // -------------------------------------------------------------------------
+    // specializations
+    // -------------------------------------------------------------------------
+
     /// Pointer Constructor (uintptr_t)
     ///
     /// The use of reinterpret_cast is not allowed by pretty much every C++
     /// coding standard out there. In some situations however, it is required.
-    /// When this happens, AUTOSAR states that the only valid type that can
-    /// be used is a uintptr_t. This function provides support for this in a
-    /// sane way, by requring that the only valid type that pointer arithmetic
-    /// can be performed on is a uintptr_t.
+    /// For example, there really is no way to implement a hypervisor, kernel,
+    /// or some embedded systems without having to convert a pointer to and
+    /// from an integer, as they may be required by a specification. Our goal
+    /// is to adhere to "do not use reinterpret_cast" rule as much as possible.
+    /// When reinterpret_cast is needed, we have a second issue we must handle.
+    /// AUTOSAR (and others) state that the only valid integer type that can
+    /// be used is a uintptr_t. The pointer to integer and back functions are
+    /// provided to ensure this second rule is enforced.
+    ///
+    /// It should, however, be noted that the use of these conversion
+    /// functions should be treated as a reinterpret_cast. If these functions
+    /// are used, an exception should be documented the same way any other
+    /// exception would be documented.
     ///
     /// NOLINT:
-    /// - To perform the conversion, we need to use a reinterpret_cast. This
-    ///   is ok as we are only allowing this to be performed on uintptr_t
-    ///   types. It should be noted, however, that this function's use should
-    ///   be limited.
+    /// - To perform the conversion, we need to use a reinterpret_cast.
     ///
     /// expects: none
     /// ensures: none
@@ -301,24 +496,68 @@ namespace bsl
     /// @throw [unchecked]: none
     ///
     template<>
-    inline integer<std::uintptr_t>::integer(const void *ptr) noexcept :
+    template<typename U>
+    inline integer<std::uintptr_t>::integer(const U *ptr) noexcept :
         m_val{reinterpret_cast<std::uintptr_t>(ptr)}    // NOLINT
     {}
+
+    /// Pointer Assignment (uintptr_t)
+    ///
+    /// The use of reinterpret_cast is not allowed by pretty much every C++
+    /// coding standard out there. In some situations however, it is required.
+    /// For example, there really is no way to implement a hypervisor, kernel,
+    /// or some embedded systems without having to convert a pointer to and
+    /// from an integer, as they may be required by a specification. Our goal
+    /// is to adhere to "do not use reinterpret_cast" rule as much as possible.
+    /// When reinterpret_cast is needed, we have a second issue we must handle.
+    /// AUTOSAR (and others) state that the only valid integer type that can
+    /// be used is a uintptr_t. The pointer to integer and back functions are
+    /// provided to ensure this second rule is enforced.
+    ///
+    /// It should, however, be noted that the use of these conversion
+    /// functions should be treated as a reinterpret_cast. If these functions
+    /// are used, an exception should be documented the same way any other
+    /// exception would be documented.
+    ///
+    /// NOLINT:
+    /// - To perform the conversion, we need to use a reinterpret_cast.
+    ///
+    /// expects: none
+    /// ensures: none
+    ///
+    /// @param ptr the pointer to convert to a uintptr_t
+    /// @throw [checked]: none
+    /// @throw [unchecked]: none
+    ///
+    template<>
+    template<typename U>
+    inline auto
+    integer<std::uintptr_t>::operator=(const U *ptr) noexcept -> integer &
+    {
+        m_val = reinterpret_cast<std::uintptr_t>(ptr);    // NOLINT
+        return *this;
+    }
 
     /// To Pointer (uintptr_t)
     ///
     /// The use of reinterpret_cast is not allowed by pretty much every C++
     /// coding standard out there. In some situations however, it is required.
-    /// When this happens, AUTOSAR states that the only valid type that can
-    /// be used is a uintptr_t. This function provides support for this in a
-    /// sane way, by requring that the only valid type that pointer arithmetic
-    /// can be performed on is a uintptr_t.
+    /// For example, there really is no way to implement a hypervisor, kernel,
+    /// or some embedded systems without having to convert a pointer to and
+    /// from an integer, as they may be required by a specification. Our goal
+    /// is to adhere to "do not use reinterpret_cast" rule as much as possible.
+    /// When reinterpret_cast is needed, we have a second issue we must handle.
+    /// AUTOSAR (and others) state that the only valid integer type that can
+    /// be used is a uintptr_t. The pointer to integer and back functions are
+    /// provided to ensure this second rule is enforced.
+    ///
+    /// It should, however, be noted that the use of these conversion
+    /// functions should be treated as a reinterpret_cast. If these functions
+    /// are used, an exception should be documented the same way any other
+    /// exception would be documented.
     ///
     /// NOLINT:
-    /// - To perform the conversion, we need to use a reinterpret_cast. This
-    ///   is ok as we are only allowing this to be performed on uintptr_t
-    ///   types. It should be noted, however, that this function's use should
-    ///   be limited.
+    /// - To perform the conversion, we need to use a reinterpret_cast.
     ///
     /// expects: none
     /// ensures: none
@@ -336,6 +575,688 @@ namespace bsl
         return reinterpret_cast<U *>(m_val);    // NOLINT
     }
 
+    // -------------------------------------------------------------------------
+    // upper/lower
+    // -------------------------------------------------------------------------
+
+    template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+    [[nodiscard]] constexpr auto
+    lower(
+        const bsl::integer<T> &val,
+        const unsigned &bits = bsl::page_shift) noexcept -> integer<T>
+    {
+        return integer<T>{val.get() & ((static_cast<T>(1) << bits) - 1)};
+    }
+
+    template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+    [[nodiscard]] constexpr auto
+    upper(
+        const bsl::integer<T> &val,
+        const unsigned &bits = bsl::page_shift) noexcept -> integer<T>
+    {
+        return integer<T>{val.get() & ~((static_cast<T>(1) << bits) - 1)};
+    }
+}    // namespace bsl
+
+// -------------------------------------------------------------------------
+// integer rational operators
+// -------------------------------------------------------------------------
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator==(const bsl::integer<T1> &lhs, const bsl::integer<T2> &rhs) noexcept
+    -> bool
+{
+    if constexpr (std::is_signed_v<T1>) {
+        if constexpr (std::is_unsigned_v<T2>) {
+            if (lhs.get() < 0) {
+                return false;
+            }
+
+            return static_cast<std::uintmax_t>(lhs.get()) == rhs.get();
+        }
+        else {
+            return lhs.get() == rhs.get();
+        }
+    }
+    else {
+        if constexpr (std::is_unsigned_v<T2>) {
+            return lhs.get() == rhs.get();
+        }
+        else {
+            if (rhs.get() < 0) {
+                return false;
+            }
+
+            return lhs.get() == static_cast<std::uintmax_t>(rhs.get());
+        }
+    }
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator==(const bsl::integer<T1> &lhs, const T2 &rhs) noexcept -> bool
+{
+    return lhs == bsl::integer<T2>{rhs};
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator==(const T1 &lhs, const bsl::integer<T2> &rhs) noexcept -> bool
+{
+    return bsl::integer<T1>{lhs} == rhs;
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator!=(const bsl::integer<T1> &lhs, const bsl::integer<T2> &rhs) noexcept
+    -> bool
+{
+    return !(lhs == rhs);
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator!=(const T1 &lhs, const bsl::integer<T2> &rhs) noexcept -> bool
+{
+    return bsl::integer<T1>{lhs} != rhs;
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator!=(const bsl::integer<T1> &lhs, const T2 &rhs) noexcept -> bool
+{
+    return lhs != bsl::integer<T2>{rhs};
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator>(const bsl::integer<T1> &lhs, const bsl::integer<T2> &rhs) noexcept
+    -> bool
+{
+    if constexpr (std::is_signed_v<T1>) {
+        if constexpr (std::is_unsigned_v<T2>) {
+            if (lhs.get() < 0) {
+                return false;
+            }
+
+            return static_cast<std::uintmax_t>(lhs.get()) > rhs.get();
+        }
+        else {
+            return lhs.get() > rhs.get();
+        }
+    }
+    else {
+        if constexpr (std::is_unsigned_v<T2>) {
+            return lhs.get() > rhs.get();
+        }
+        else {
+            if (rhs.get() < 0) {
+                return true;
+            }
+
+            return lhs.get() > static_cast<std::uintmax_t>(rhs.get());
+        }
+    }
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator>(const bsl::integer<T1> &lhs, const T2 &rhs) noexcept -> bool
+{
+    return lhs > bsl::integer<T2>{rhs};
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator>(const T1 &lhs, const bsl::integer<T2> &rhs) noexcept -> bool
+{
+    return bsl::integer<T1>{lhs} > rhs;
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator>=(const bsl::integer<T1> &lhs, const bsl::integer<T2> &rhs) noexcept
+    -> bool
+{
+    if constexpr (std::is_signed_v<T1>) {
+        if constexpr (std::is_unsigned_v<T2>) {
+            if (lhs.get() < 0) {
+                return false;
+            }
+
+            return static_cast<std::uintmax_t>(lhs.get()) >= rhs.get();
+        }
+        else {
+            return lhs.get() >= rhs.get();
+        }
+    }
+    else {
+        if constexpr (std::is_unsigned_v<T2>) {
+            return lhs.get() >= rhs.get();
+        }
+        else {
+            if (rhs.get() < 0) {
+                return true;
+            }
+
+            return lhs.get() >= static_cast<std::uintmax_t>(rhs.get());
+        }
+    }
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator>=(const bsl::integer<T1> &lhs, const T2 &rhs) noexcept -> bool
+{
+    return lhs >= bsl::integer<T2>{rhs};
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator>=(const T1 &lhs, const bsl::integer<T2> &rhs) noexcept -> bool
+{
+    return bsl::integer<T1>{lhs} >= rhs;
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator<(const bsl::integer<T1> &lhs, const bsl::integer<T2> &rhs) noexcept
+    -> bool
+{
+    if constexpr (std::is_signed_v<T1>) {
+        if constexpr (std::is_unsigned_v<T2>) {
+            if (lhs.get() < 0) {
+                return true;
+            }
+
+            return static_cast<std::uintmax_t>(lhs.get()) < rhs.get();
+        }
+        else {
+            return lhs.get() < rhs.get();
+        }
+    }
+    else {
+        if constexpr (std::is_unsigned_v<T2>) {
+            return lhs.get() < rhs.get();
+        }
+        else {
+            if (rhs.get() < 0) {
+                return false;
+            }
+
+            return lhs.get() < static_cast<std::uintmax_t>(rhs.get());
+        }
+    }
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator<(const bsl::integer<T1> &lhs, const T2 &rhs) noexcept -> bool
+{
+    return lhs < bsl::integer<T2>{rhs};
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator<(const T1 &lhs, const bsl::integer<T2> &rhs) noexcept -> bool
+{
+    return bsl::integer<T1>{lhs} < rhs;
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator<=(const bsl::integer<T1> &lhs, const bsl::integer<T2> &rhs) noexcept
+    -> bool
+{
+    if constexpr (std::is_signed_v<T1>) {
+        if constexpr (std::is_unsigned_v<T2>) {
+            if (lhs.get() < 0) {
+                return true;
+            }
+
+            return static_cast<std::uintmax_t>(lhs.get()) <= rhs.get();
+        }
+        else {
+            return lhs.get() <= rhs.get();
+        }
+    }
+    else {
+        if constexpr (std::is_unsigned_v<T2>) {
+            return lhs.get() <= rhs.get();
+        }
+        else {
+            if (rhs.get() < 0) {
+                return false;
+            }
+
+            return lhs.get() <= static_cast<std::uintmax_t>(rhs.get());
+        }
+    }
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator<=(const bsl::integer<T1> &lhs, const T2 &rhs) noexcept -> bool
+{
+    return lhs <= bsl::integer<T2>{rhs};
+}
+
+template<
+    typename T1,
+    typename T2,
+    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
+    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator<=(const T1 &lhs, const bsl::integer<T2> &rhs) noexcept -> bool
+{
+    return bsl::integer<T1>{lhs} <= rhs;
+}
+
+// -------------------------------------------------------------------------
+// integer arithmetic operators
+// -------------------------------------------------------------------------
+
+template<typename T>
+[[nodiscard]] constexpr auto
+operator+(const bsl::integer<T> &lhs, const bsl::integer<T> &rhs)
+    -> bsl::integer<T>
+{
+    bsl::integer<T> tmp = lhs;
+    return tmp += rhs;
+}
+
+template<typename T>
+[[nodiscard]] constexpr auto
+operator+(const bsl::integer<T> &lhs, const T &rhs) -> bsl::integer<T>
+{
+    return lhs + bsl::integer<T>{rhs};
+}
+
+template<typename T>
+[[nodiscard]] constexpr auto
+operator+(const T &lhs, const bsl::integer<T> &rhs) -> bsl::integer<T>
+{
+    return bsl::integer<T>{lhs} + rhs;
+}
+
+template<typename T>
+[[nodiscard]] constexpr auto
+operator-(const bsl::integer<T> &lhs, const bsl::integer<T> &rhs)
+    -> bsl::integer<T>
+{
+    bsl::integer<T> tmp = lhs;
+    return tmp -= rhs;
+}
+
+template<typename T>
+[[nodiscard]] constexpr auto
+operator-(const bsl::integer<T> &lhs, const T &rhs) -> bsl::integer<T>
+{
+    return lhs - bsl::integer<T>{rhs};
+}
+
+template<typename T>
+[[nodiscard]] constexpr auto
+operator-(const T &lhs, const bsl::integer<T> &rhs) -> bsl::integer<T>
+{
+    return bsl::integer<T>{lhs} - rhs;
+}
+
+template<typename T>
+[[nodiscard]] constexpr auto
+operator*(const bsl::integer<T> &lhs, const bsl::integer<T> &rhs)
+    -> bsl::integer<T>
+{
+    bsl::integer<T> tmp = lhs;
+    return tmp *= rhs;
+}
+
+template<typename T>
+[[nodiscard]] constexpr auto operator*(const bsl::integer<T> &lhs, const T &rhs)
+    -> bsl::integer<T>
+{
+    return lhs * bsl::integer<T>{rhs};
+}
+
+template<typename T>
+[[nodiscard]] constexpr auto operator*(const T &lhs, const bsl::integer<T> &rhs)
+    -> bsl::integer<T>
+{
+    return bsl::integer<T>{lhs} * rhs;
+}
+
+template<typename T>
+[[nodiscard]] constexpr auto
+operator/(const bsl::integer<T> &lhs, const bsl::integer<T> &rhs)
+    -> bsl::integer<T>
+{
+    bsl::integer<T> tmp = lhs;
+    return tmp /= rhs;
+}
+
+template<typename T>
+[[nodiscard]] constexpr auto
+operator/(const bsl::integer<T> &lhs, const T &rhs) -> bsl::integer<T>
+{
+    return lhs / bsl::integer<T>{rhs};
+}
+
+template<typename T>
+[[nodiscard]] constexpr auto
+operator/(const T &lhs, const bsl::integer<T> &rhs) -> bsl::integer<T>
+{
+    return bsl::integer<T>{lhs} / rhs;
+}
+
+template<typename T>
+[[nodiscard]] constexpr auto
+operator%(const bsl::integer<T> &lhs, const bsl::integer<T> &rhs)
+    -> bsl::integer<T>
+{
+    bsl::integer<T> tmp = lhs;
+    return tmp %= rhs;
+}
+
+template<typename T>
+[[nodiscard]] constexpr auto
+operator%(const bsl::integer<T> &lhs, const T &rhs) -> bsl::integer<T>
+{
+    return lhs % bsl::integer<T>{rhs};
+}
+
+template<typename T>
+[[nodiscard]] constexpr auto
+operator%(const T &lhs, const bsl::integer<T> &rhs) -> bsl::integer<T>
+{
+    return bsl::integer<T>{lhs} % rhs;
+}
+
+// -------------------------------------------------------------------------
+// shirt operators
+// -------------------------------------------------------------------------
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator<<=(bsl::integer<T> &lhs, const unsigned &bits) -> bsl::integer<T> &
+{
+    bsl::expects_audit(
+        bsl::upper(lhs, bsl::integer<T>::digits() - bits).get() == 0);
+
+    lhs.get() <<= bits;
+    return lhs;
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator<<(const bsl::integer<T> &lhs, const unsigned &bits) -> bsl::integer<T>
+{
+    bsl::integer<T> tmp = lhs;
+    return tmp <<= bits;
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator>>=(bsl::integer<T> &lhs, const unsigned &bits) noexcept
+    -> bsl::integer<T> &
+{
+    lhs.get() >>= bits;
+    return lhs;
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator>>(const bsl::integer<T> &lhs, const unsigned &bits) noexcept
+    -> bsl::integer<T>
+{
+    bsl::integer<T> tmp = lhs;
+    return tmp >>= bits;
+}
+
+// -------------------------------------------------------------------------
+// bitwise operators
+// -------------------------------------------------------------------------
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator&=(bsl::integer<T> &lhs, const bsl::integer<T> &rhs) noexcept
+    -> bsl::integer<T> &
+{
+    lhs.get() &= rhs.get();
+    return lhs;
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator&(const bsl::integer<T> &lhs, const bsl::integer<T> &rhs) noexcept
+    -> bsl::integer<T>
+{
+    bsl::integer<T> tmp = lhs;
+    return tmp &= rhs;
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator&(const bsl::integer<T> &lhs, const T &rhs) noexcept -> bsl::integer<T>
+{
+    return lhs & bsl::integer<T>{rhs};
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator&(const T &lhs, const bsl::integer<T> &rhs) noexcept -> bsl::integer<T>
+{
+    return bsl::integer<T>{lhs} & rhs;
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator|=(bsl::integer<T> &lhs, const bsl::integer<T> &rhs) noexcept
+    -> bsl::integer<T> &
+{
+    lhs.get() |= rhs.get();
+    return lhs;
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator|(const bsl::integer<T> &lhs, const bsl::integer<T> &rhs) noexcept
+    -> bsl::integer<T>
+{
+    bsl::integer<T> tmp = lhs;
+    return tmp |= rhs;
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator|(const bsl::integer<T> &lhs, const T &rhs) noexcept -> bsl::integer<T>
+{
+    return lhs | bsl::integer<T>{rhs};
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator|(const T &lhs, const bsl::integer<T> &rhs) noexcept -> bsl::integer<T>
+{
+    return bsl::integer<T>{lhs} | rhs;
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator^=(bsl::integer<T> &lhs, const bsl::integer<T> &rhs) noexcept
+    -> bsl::integer<T> &
+{
+    lhs.get() ^= rhs.get();
+    return lhs;
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator^(const bsl::integer<T> &lhs, const bsl::integer<T> &rhs) noexcept
+    -> bsl::integer<T>
+{
+    bsl::integer<T> tmp = lhs;
+    return tmp ^= rhs;
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator^(const bsl::integer<T> &lhs, const T &rhs) noexcept -> bsl::integer<T>
+{
+    return lhs ^ bsl::integer<T>{rhs};
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator^(const T &lhs, const bsl::integer<T> &rhs) noexcept -> bsl::integer<T>
+{
+    return bsl::integer<T>{lhs} ^ rhs;
+}
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator~(const bsl::integer<T> &rhs) noexcept -> bsl::integer<T>
+{
+    return bsl::integer<T>(~rhs.get());
+}
+
+// -------------------------------------------------------------------------
+// unary operators
+// -------------------------------------------------------------------------
+
+template<typename T, std::enable_if_t<std::is_unsigned_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator+(const bsl::integer<T> &rhs) noexcept -> bsl::integer<std::uintmax_t>
+{
+    return bsl::integer<std::uintmax_t>(static_cast<std::uintmax_t>(rhs.get()));
+}
+
+template<typename T, std::enable_if_t<std::is_signed_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator+(const bsl::integer<T> &rhs) noexcept -> bsl::integer<std::intmax_t>
+{
+    return bsl::integer<std::intmax_t>(static_cast<std::intmax_t>(rhs.get()));
+}
+
+template<typename T, std::enable_if_t<std::is_signed_v<T>> * = nullptr>
+[[nodiscard]] constexpr auto
+operator-(const bsl::integer<T> &rhs) -> bsl::integer<T>
+{
+    bsl::expects_audit_false(rhs.get() == bsl::integer<T>::min());
+    return bsl::integer<T>(-rhs.get());
+}
+
+// -------------------------------------------------------------------------
+// i/o
+// -------------------------------------------------------------------------
+
+template<typename T>
+struct fmt::formatter<bsl::integer<T>>
+{
+    static auto
+    parse(format_parse_context &ctx)
+    {
+        return ctx.begin();
+    }
+
+    template<typename FormatContext>
+    auto
+    format(const bsl::integer<T> &i, FormatContext &ctx)
+    {
+        return format_to(ctx.out(), "{}", i.get());
+    }
+};
+
+template<typename T>
+auto
+operator<<(std::ostream &os, const bsl::integer<T> &i) -> std::ostream &
+{
+    os << i.get();
+    return os;
+}
+
+template<typename T>
+auto
+operator>>(std::istream &is, const bsl::integer<T> &i) -> std::istream &
+{
+    is >> i.get();
+    return is;
+}
+
+// -------------------------------------------------------------------------
+// supported integer types
+// -------------------------------------------------------------------------
+
+namespace bsl
+{
     using int8_t = integer<std::int8_t>;
     using int16_t = integer<std::int16_t>;
     using int32_t = integer<std::int32_t>;
@@ -349,7 +1270,7 @@ namespace bsl
     using int_least32_t = integer<std::int_least32_t>;
     using int_least64_t = integer<std::int_least64_t>;
     using intmax_t = integer<std::intmax_t>;
-    using intptr_t = integer<std::intptr_t>;
+    // using intptr_t = integer<std::intptr_t>; not allowed
 
     using uint8_t = integer<std::uint8_t>;
     using uint16_t = integer<std::uint16_t>;
@@ -365,432 +1286,115 @@ namespace bsl
     using uint_least64_t = integer<std::uint_least64_t>;
     using uintmax_t = integer<std::uintmax_t>;
     using uintptr_t = integer<std::uintptr_t>;
+
+    static_assert(sizeof(bsl::int8_t) == sizeof(std::int8_t));
+    static_assert(sizeof(bsl::int16_t) == sizeof(std::int16_t));
+    static_assert(sizeof(bsl::int32_t) == sizeof(std::int32_t));
+    static_assert(sizeof(bsl::int64_t) == sizeof(std::int64_t));
+    static_assert(sizeof(bsl::int_fast8_t) == sizeof(std::int_fast8_t));
+    static_assert(sizeof(bsl::int_fast16_t) == sizeof(std::int_fast16_t));
+    static_assert(sizeof(bsl::int_fast32_t) == sizeof(std::int_fast32_t));
+    static_assert(sizeof(bsl::int_fast64_t) == sizeof(std::int_fast64_t));
+    static_assert(sizeof(bsl::int_least8_t) == sizeof(std::int_least8_t));
+    static_assert(sizeof(bsl::int_least16_t) == sizeof(std::int_least16_t));
+    static_assert(sizeof(bsl::int_least32_t) == sizeof(std::int_least32_t));
+    static_assert(sizeof(bsl::int_least64_t) == sizeof(std::int_least64_t));
+    static_assert(sizeof(bsl::intmax_t) == sizeof(std::intmax_t));
+    // static_assert(sizeof(bsl::intptr_t) == sizeof(std::intptr_t));
+
+    static_assert(sizeof(bsl::uint8_t) == sizeof(std::uint8_t));
+    static_assert(sizeof(bsl::uint16_t) == sizeof(std::uint16_t));
+    static_assert(sizeof(bsl::uint32_t) == sizeof(std::uint32_t));
+    static_assert(sizeof(bsl::uint64_t) == sizeof(std::uint64_t));
+    static_assert(sizeof(bsl::uint_fast8_t) == sizeof(std::uint_fast8_t));
+    static_assert(sizeof(bsl::uint_fast16_t) == sizeof(std::uint_fast16_t));
+    static_assert(sizeof(bsl::uint_fast32_t) == sizeof(std::uint_fast32_t));
+    static_assert(sizeof(bsl::uint_fast64_t) == sizeof(std::uint_fast64_t));
+    static_assert(sizeof(bsl::uint_least8_t) == sizeof(std::uint_least8_t));
+    static_assert(sizeof(bsl::uint_least16_t) == sizeof(std::uint_least16_t));
+    static_assert(sizeof(bsl::uint_least32_t) == sizeof(std::uint_least32_t));
+    static_assert(sizeof(bsl::uint_least64_t) == sizeof(std::uint_least64_t));
+    static_assert(sizeof(bsl::uintmax_t) == sizeof(std::uintmax_t));
+    static_assert(sizeof(bsl::uintptr_t) == sizeof(std::uintptr_t));
 }    // namespace bsl
 
 // -------------------------------------------------------------------------
-// integer rational operators
+// unit testing facilities
 // -------------------------------------------------------------------------
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator==(const bsl::integer<T1> &lhs, const bsl::integer<T2> &rhs) noexcept
-    -> bool
-{
-    if constexpr (std::is_signed_v<T1> && std::is_unsigned_v<T2>) {
-        if (lhs.get() < 0) {
-            return false;
-        }
-
-        return bsl::abs(lhs.get()) == rhs.get();
-    }
-    else if constexpr (std::is_unsigned_v<T1> && std::is_signed_v<T2>) {
-        if (rhs.get() < 0) {
-            return false;
-        }
-
-        return lhs.get() == bsl::abs(rhs.get());
-    }
-    else {
-        return lhs.get() == rhs.get();
-    }
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator!=(const bsl::integer<T1> &lhs, const bsl::integer<T2> &rhs) noexcept
-    -> bool
-{
-    return !(lhs == rhs);
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator>(const bsl::integer<T1> &lhs, const bsl::integer<T2> &rhs) noexcept
-    -> bool
-{
-    if constexpr (std::is_signed_v<T1> && std::is_unsigned_v<T2>) {
-        if (lhs.get() < 0) {
-            return false;
-        }
-
-        return bsl::abs(lhs.get()) > rhs.get();
-    }
-    else if constexpr (std::is_unsigned_v<T1> && std::is_signed_v<T2>) {
-        if (rhs.get() < 0) {
-            return true;
-        }
-
-        return lhs.get() > bsl::abs(rhs.get());
-    }
-    else {
-        return lhs.get() > rhs.get();
-    }
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator>=(const bsl::integer<T1> &lhs, const bsl::integer<T2> &rhs) noexcept
-    -> bool
-{
-    if constexpr (std::is_signed_v<T1> && std::is_unsigned_v<T2>) {
-        if (lhs.get() < 0) {
-            return false;
-        }
-
-        return bsl::abs(lhs.get()) >= rhs.get();
-    }
-    else if constexpr (std::is_unsigned_v<T1> && std::is_signed_v<T2>) {
-        if (rhs.get() < 0) {
-            return true;
-        }
-
-        return lhs.get() >= bsl::abs(rhs.get());
-    }
-    else {
-        return lhs.get() >= rhs.get();
-    }
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator<(const bsl::integer<T1> &lhs, const bsl::integer<T2> &rhs) noexcept
-    -> bool
-{
-    if constexpr (std::is_signed_v<T1> && std::is_unsigned_v<T2>) {
-        if (lhs.get() < 0) {
-            return true;
-        }
-
-        return bsl::abs(lhs.get()) < rhs.get();
-    }
-    else if constexpr (std::is_unsigned_v<T1> && std::is_signed_v<T2>) {
-        if (rhs.get() < 0) {
-            return false;
-        }
-
-        return lhs.get() < bsl::abs(rhs.get());
-    }
-    else {
-        return lhs.get() < rhs.get();
-    }
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator<=(const bsl::integer<T1> &lhs, const bsl::integer<T2> &rhs) noexcept
-    -> bool
-{
-    if constexpr (std::is_signed_v<T1> && std::is_unsigned_v<T2>) {
-        if (lhs.get() < 0) {
-            return true;
-        }
-
-        return bsl::abs(lhs.get()) <= rhs.get();
-    }
-    else if constexpr (std::is_unsigned_v<T1> && std::is_signed_v<T2>) {
-        if (rhs.get() < 0) {
-            return false;
-        }
-
-        return lhs.get() <= bsl::abs(rhs.get());
-    }
-    else {
-        return lhs.get() <= rhs.get();
-    }
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator==(const bsl::integer<T1> &lhs, const T2 &rhs) noexcept -> bool
-{
-    return lhs == bsl::integer<T2>{rhs};
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator!=(const bsl::integer<T1> &lhs, const T2 &rhs) noexcept -> bool
-{
-    return lhs != bsl::integer<T2>{rhs};
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator>(const bsl::integer<T1> &lhs, const T2 &rhs) noexcept -> bool
-{
-    return lhs > bsl::integer<T2>{rhs};
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator>=(const bsl::integer<T1> &lhs, const T2 &rhs) noexcept -> bool
-{
-    return lhs >= bsl::integer<T2>{rhs};
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator<(const bsl::integer<T1> &lhs, const T2 &rhs) noexcept -> bool
-{
-    return lhs < bsl::integer<T2>{rhs};
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator<=(const bsl::integer<T1> &lhs, const T2 &rhs) noexcept -> bool
-{
-    return lhs <= bsl::integer<T2>{rhs};
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator==(const T1 &lhs, const bsl::integer<T2> &rhs) noexcept -> bool
-{
-    return bsl::integer<T1>{lhs} == rhs;
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator!=(const T1 &lhs, const bsl::integer<T2> &rhs) noexcept -> bool
-{
-    return bsl::integer<T1>{lhs} != rhs;
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator>(const T1 &lhs, const bsl::integer<T2> &rhs) noexcept -> bool
-{
-    return bsl::integer<T1>{lhs} > rhs;
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator>=(const T1 &lhs, const bsl::integer<T2> &rhs) noexcept -> bool
-{
-    return bsl::integer<T1>{lhs} >= rhs;
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator<(const T1 &lhs, const bsl::integer<T2> &rhs) noexcept -> bool
-{
-    return bsl::integer<T1>{lhs} < rhs;
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_integral_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_integral_v<T2>> * = nullptr>
-constexpr auto
-operator<=(const T1 &lhs, const bsl::integer<T2> &rhs) noexcept -> bool
-{
-    return bsl::integer<T1>{lhs} <= rhs;
-}
-
-// -------------------------------------------------------------------------
-// integer arithmetic operators
-// -------------------------------------------------------------------------
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_signed_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_signed_v<T2>> * = nullptr>
-[[nodiscard]] auto
-operator+(const bsl::integer<T1> &lhs, const bsl::integer<T2> &rhs)
-    -> bsl::integer<T1>
-{
-    using ret_t = bsl::integer<T1>;
-    auto tmp = rhs.template narrow<ret_t>();
-
-    bsl::ensures_false(
-        ((tmp.get() > 0) && (lhs.get() > ret_t(lhs.max() - tmp.get()))) ||
-        ((tmp.get() < 0) && (lhs.get() < ret_t(lhs.min() - tmp.get()))));
-    return bsl::integer<T1>{lhs.get() + tmp.get()};
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_signed_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_signed_v<T2>> * = nullptr>
-[[nodiscard]] auto
-operator+(const bsl::integer<T1> &lhs, const T2 &rhs) -> bsl::integer<T1>
-{
-    return lhs + bsl::integer<T2>{rhs};
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_signed_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_signed_v<T2>> * = nullptr>
-[[nodiscard]] auto
-operator+(const T1 &lhs, const bsl::integer<T2> &rhs) -> bsl::integer<T1>
-{
-    return bsl::integer<T1>{lhs} + rhs;
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_unsigned_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_unsigned_v<T2>> * = nullptr>
-[[nodiscard]] auto
-operator+(const bsl::integer<T1> &lhs, const bsl::integer<T2> &rhs)
-    -> bsl::integer<T1>
-{
-    using ret_t = bsl::integer<T1>;
-    auto tmp = rhs.template narrow<ret_t>();
-
-    bsl::ensures_false(ret_t(tmp.max() - lhs.get()) < rhs);
-    return bsl::integer<T1>{lhs.get() + tmp.get()};
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_unsigned_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_unsigned_v<T2>> * = nullptr>
-[[nodiscard]] auto
-operator+(const bsl::integer<T1> &lhs, const T2 &rhs) -> bsl::integer<T1>
-{
-    return lhs + bsl::integer<T2>{rhs};
-}
-
-template<
-    typename T1,
-    typename T2,
-    std::enable_if_t<std::is_unsigned_v<T1>> * = nullptr,
-    std::enable_if_t<std::is_unsigned_v<T2>> * = nullptr>
-[[nodiscard]] auto
-operator+(const T2 &lhs, const bsl::integer<T1> &rhs) -> bsl::integer<T1>
-{
-    return bsl::integer<T1>{lhs} + rhs;
-}
-
-// NOTES FOR ME
-//
-// unary is only allowed on signed types
-// no division allowed
-// subtraction from unsigned is allowed... need to think about this
-//
-//
-
-static_assert(sizeof(bsl::int8_t) == sizeof(std::int8_t));
-static_assert(sizeof(bsl::int16_t) == sizeof(std::int16_t));
-static_assert(sizeof(bsl::int32_t) == sizeof(std::int32_t));
-static_assert(sizeof(bsl::int64_t) == sizeof(std::int64_t));
-static_assert(sizeof(bsl::int_fast8_t) == sizeof(std::int_fast8_t));
-static_assert(sizeof(bsl::int_fast16_t) == sizeof(std::int_fast16_t));
-static_assert(sizeof(bsl::int_fast32_t) == sizeof(std::int_fast32_t));
-static_assert(sizeof(bsl::int_fast64_t) == sizeof(std::int_fast64_t));
-static_assert(sizeof(bsl::int_least8_t) == sizeof(std::int_least8_t));
-static_assert(sizeof(bsl::int_least16_t) == sizeof(std::int_least16_t));
-static_assert(sizeof(bsl::int_least32_t) == sizeof(std::int_least32_t));
-static_assert(sizeof(bsl::int_least64_t) == sizeof(std::int_least64_t));
-static_assert(sizeof(bsl::intmax_t) == sizeof(std::intmax_t));
-static_assert(sizeof(bsl::intptr_t) == sizeof(std::intptr_t));
-
-static_assert(sizeof(bsl::uint8_t) == sizeof(std::uint8_t));
-static_assert(sizeof(bsl::uint16_t) == sizeof(std::uint16_t));
-static_assert(sizeof(bsl::uint32_t) == sizeof(std::uint32_t));
-static_assert(sizeof(bsl::uint64_t) == sizeof(std::uint64_t));
-static_assert(sizeof(bsl::uint_fast8_t) == sizeof(std::uint_fast8_t));
-static_assert(sizeof(bsl::uint_fast16_t) == sizeof(std::uint_fast16_t));
-static_assert(sizeof(bsl::uint_fast32_t) == sizeof(std::uint_fast32_t));
-static_assert(sizeof(bsl::uint_fast64_t) == sizeof(std::uint_fast64_t));
-static_assert(sizeof(bsl::uint_least8_t) == sizeof(std::uint_least8_t));
-static_assert(sizeof(bsl::uint_least16_t) == sizeof(std::uint_least16_t));
-static_assert(sizeof(bsl::uint_least32_t) == sizeof(std::uint_least32_t));
-static_assert(sizeof(bsl::uint_least64_t) == sizeof(std::uint_least64_t));
-static_assert(sizeof(bsl::uintmax_t) == sizeof(std::uintmax_t));
-static_assert(sizeof(bsl::uintptr_t) == sizeof(std::uintptr_t));
 
 namespace bsl
 {
-    // #ifndef NDEBUG
+// #ifndef NDEBUG
     constexpr const std::int32_t magic_4 = 4;
     constexpr const std::int32_t magic_8 = 8;
     constexpr const std::int32_t magic_15 = 15;
     constexpr const std::int32_t magic_16 = 16;
     constexpr const std::int32_t magic_23 = 23;
     constexpr const std::int32_t magic_42 = 42;
+
+    constexpr const std::int8_t magic_8b_4 = 4;
+    constexpr const std::int8_t magic_8b_8 = 8;
+    constexpr const std::int8_t magic_8b_15 = 15;
+    constexpr const std::int8_t magic_8b_16 = 16;
+    constexpr const std::int8_t magic_8b_23 = 23;
+    constexpr const std::int8_t magic_8b_42 = 42;
+
+    constexpr const std::int16_t magic_16b_4 = 4;
+    constexpr const std::int16_t magic_16b_8 = 8;
+    constexpr const std::int16_t magic_16b_15 = 15;
+    constexpr const std::int16_t magic_16b_16 = 16;
+    constexpr const std::int16_t magic_16b_23 = 23;
+    constexpr const std::int16_t magic_16b_42 = 42;
+
+    constexpr const std::int32_t magic_32b_4 = 4;
+    constexpr const std::int32_t magic_32b_8 = 8;
+    constexpr const std::int32_t magic_32b_15 = 15;
+    constexpr const std::int32_t magic_32b_16 = 16;
+    constexpr const std::int32_t magic_32b_23 = 23;
+    constexpr const std::int32_t magic_32b_42 = 42;
+
+    constexpr const std::int64_t magic_64b_4 = 4;
+    constexpr const std::int64_t magic_64b_8 = 8;
+    constexpr const std::int64_t magic_64b_15 = 15;
+    constexpr const std::int64_t magic_64b_16 = 16;
+    constexpr const std::int64_t magic_64b_23 = 23;
+    constexpr const std::int64_t magic_64b_42 = 42;
+
     constexpr const std::uint32_t magic_4u = 4;
     constexpr const std::uint32_t magic_8u = 8;
     constexpr const std::uint32_t magic_15u = 15;
     constexpr const std::uint32_t magic_16u = 16;
     constexpr const std::uint32_t magic_23u = 23;
     constexpr const std::uint32_t magic_42u = 42;
-    // #endif
+
+    constexpr const std::uint8_t magic_8b_4u = 4;
+    constexpr const std::uint8_t magic_8b_8u = 8;
+    constexpr const std::uint8_t magic_8b_15u = 15;
+    constexpr const std::uint8_t magic_8b_16u = 16;
+    constexpr const std::uint8_t magic_8b_23u = 23;
+    constexpr const std::uint8_t magic_8b_42u = 42;
+
+    constexpr const std::uint16_t magic_16b_4u = 4;
+    constexpr const std::uint16_t magic_16b_8u = 8;
+    constexpr const std::uint16_t magic_16b_15u = 15;
+    constexpr const std::uint16_t magic_16b_16u = 16;
+    constexpr const std::uint16_t magic_16b_23u = 23;
+    constexpr const std::uint16_t magic_16b_42u = 42;
+
+    constexpr const std::uint32_t magic_32b_4u = 4;
+    constexpr const std::uint32_t magic_32b_8u = 8;
+    constexpr const std::uint32_t magic_32b_15u = 15;
+    constexpr const std::uint32_t magic_32b_16u = 16;
+    constexpr const std::uint32_t magic_32b_23u = 23;
+    constexpr const std::uint32_t magic_32b_42u = 42;
+
+    constexpr const std::uint64_t magic_64b_4u = 4;
+    constexpr const std::uint64_t magic_64b_8u = 8;
+    constexpr const std::uint64_t magic_64b_15u = 15;
+    constexpr const std::uint64_t magic_64b_16u = 16;
+    constexpr const std::uint64_t magic_64b_23u = 23;
+    constexpr const std::uint64_t magic_64b_42u = 42;
+// #endif
 }    // namespace bsl
 
 #endif

@@ -22,174 +22,180 @@
 #include "../../include/bsl/int.hpp"
 #include "../../include/bsl/ut.hpp"
 
+constexpr const bsl::int32_t g_i1{bsl::int32_t::max()};
+constexpr const bsl::int32_t g_i2{bsl::magic_42};
+
+static_assert(g_i1.convert<bsl::int64_t>().get() == bsl::int32_t::max());
+static_assert(g_i2.convert<bsl::int8_t>().get() == bsl::magic_42);
+
 auto
 main() -> int
 {
     bsl::test_case("int64_t max to int32_t") = [] {
         bsl::int64_t i{bsl::int64_t::max()};
         bsl::check_throws([&i] {
-            bsl::discard(i.narrow<bsl::int32_t>());
+            bsl::discard(i.convert<bsl::int32_t>());
         });
     };
 
     bsl::test_case("uint64_t max to uint32_t") = [] {
         bsl::uint64_t i{bsl::uint64_t::max()};
         bsl::check_throws([&i] {
-            bsl::discard(i.narrow<bsl::uint32_t>());
+            bsl::discard(i.convert<bsl::uint32_t>());
         });
     };
 
     bsl::test_case("int64_t min to int32_t") = [] {
         bsl::int64_t i{bsl::int64_t::min()};
         bsl::check_throws([&i] {
-            bsl::discard(i.narrow<bsl::int32_t>());
+            bsl::discard(i.convert<bsl::int32_t>());
         });
     };
 
     bsl::test_case("uint64_t min to uint32_t") = [] {
         bsl::uint64_t i{bsl::uint64_t::min()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::uint32_t>());
+            bsl::discard(i.convert<bsl::uint32_t>());
         });
     };
 
     bsl::test_case("int32_t max to int64_t") = [] {
         bsl::int32_t i{bsl::int32_t::max()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::int64_t>());
+            bsl::discard(i.convert<bsl::int64_t>());
         });
     };
 
     bsl::test_case("uint32_t max to uint64_t") = [] {
         bsl::uint32_t i{bsl::uint32_t::max()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::uint64_t>());
+            bsl::discard(i.convert<bsl::uint64_t>());
         });
     };
 
     bsl::test_case("int32_t min to int64_t") = [] {
         bsl::int32_t i{bsl::int32_t::min()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::int64_t>());
+            bsl::discard(i.convert<bsl::int64_t>());
         });
     };
 
     bsl::test_case("uint32_t min to uint64_t") = [] {
         bsl::uint32_t i{bsl::uint32_t::min()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::uint64_t>());
+            bsl::discard(i.convert<bsl::uint64_t>());
         });
     };
 
     bsl::test_case("int64_t max to uint64_t") = [] {
         bsl::int64_t i{bsl::int64_t::max()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::uint64_t>());
+            bsl::discard(i.convert<bsl::uint64_t>());
         });
     };
 
     bsl::test_case("int64_t min to uint64_t") = [] {
         bsl::int64_t i{bsl::int64_t::min()};
         bsl::check_throws([&i] {
-            bsl::discard(i.narrow<bsl::uint64_t>());
+            bsl::discard(i.convert<bsl::uint64_t>());
         });
     };
 
     bsl::test_case("uint64_t max to int64_t") = [] {
         bsl::uint64_t i{bsl::uint64_t::max()};
         bsl::check_throws([&i] {
-            bsl::discard(i.narrow<bsl::int64_t>());
+            bsl::discard(i.convert<bsl::int64_t>());
         });
     };
 
     bsl::test_case("uint64_t min to int64_t") = [] {
         bsl::uint64_t i{bsl::uint64_t::min()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::int64_t>());
+            bsl::discard(i.convert<bsl::int64_t>());
         });
     };
 
     bsl::test_case("int32_t max to uint64_t") = [] {
         bsl::int32_t i{bsl::int32_t::max()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::uint64_t>());
+            bsl::discard(i.convert<bsl::uint64_t>());
         });
     };
 
     bsl::test_case("int32_t min to uint64_t") = [] {
         bsl::int32_t i{bsl::int32_t::min()};
         bsl::check_throws([&i] {
-            bsl::discard(i.narrow<bsl::uint64_t>());
+            bsl::discard(i.convert<bsl::uint64_t>());
         });
     };
 
     bsl::test_case("uint32_t max to int64_t") = [] {
         bsl::uint32_t i{bsl::uint32_t::max()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::int64_t>());
+            bsl::discard(i.convert<bsl::int64_t>());
         });
     };
 
     bsl::test_case("uint32_t min to int64_t") = [] {
         bsl::uint32_t i{bsl::uint32_t::min()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::int64_t>());
+            bsl::discard(i.convert<bsl::int64_t>());
         });
     };
 
     bsl::test_case("int64_t max to uint32_t") = [] {
         bsl::int64_t i{bsl::int64_t::max()};
         bsl::check_throws([&i] {
-            bsl::discard(i.narrow<bsl::uint32_t>());
+            bsl::discard(i.convert<bsl::uint32_t>());
         });
     };
 
     bsl::test_case("int64_t min to uint32_t") = [] {
         bsl::int64_t i{bsl::int64_t::min()};
         bsl::check_throws([&i] {
-            bsl::discard(i.narrow<bsl::uint32_t>());
+            bsl::discard(i.convert<bsl::uint32_t>());
         });
     };
 
     bsl::test_case("uint64_t max to int32_t") = [] {
         bsl::uint64_t i{bsl::uint64_t::max()};
         bsl::check_throws([&i] {
-            bsl::discard(i.narrow<bsl::int32_t>());
+            bsl::discard(i.convert<bsl::int32_t>());
         });
     };
 
     bsl::test_case("uint64_t min to int32_t") = [] {
         bsl::uint64_t i{bsl::uint64_t::min()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::int32_t>());
+            bsl::discard(i.convert<bsl::int32_t>());
         });
     };
 
     bsl::test_case("int64_t max to int64_t") = [] {
         bsl::int64_t i{bsl::int64_t::max()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::int64_t>());
+            bsl::discard(i.convert<bsl::int64_t>());
         });
     };
 
     bsl::test_case("int64_t min to int64_t") = [] {
         bsl::int64_t i{bsl::int64_t::min()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::int64_t>());
+            bsl::discard(i.convert<bsl::int64_t>());
         });
     };
 
     bsl::test_case("uint64_t max to uint64_t") = [] {
         bsl::uint64_t i{bsl::uint64_t::max()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::uint64_t>());
+            bsl::discard(i.convert<bsl::uint64_t>());
         });
     };
 
     bsl::test_case("uint64_t min to uint64_t") = [] {
         bsl::uint64_t i{bsl::uint64_t::min()};
         bsl::check_nothrow([&i] {
-            bsl::discard(i.narrow<bsl::uint64_t>());
+            bsl::discard(i.convert<bsl::uint64_t>());
         });
     };
 
