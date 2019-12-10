@@ -25,17 +25,9 @@
 #include <new>
 #include <stdexcept>
 
-#ifdef BSL_NEEDS_STD_FUNCTIONAL
 #include <functional>
-#endif
-
-#ifdef BSL_NEEDS_STD_MEMORY
 #include <memory>
-#endif
-
-#ifdef BSL_NEEDS_STD_VARIANT
 #include <variant>
-#endif
 
 namespace bsl
 {
@@ -436,27 +428,21 @@ namespace bsl
         catch (const std::bad_cast &e) {
             handler(e.what());
         }
-#ifdef BSL_NEEDS_STD_MEMORY
         catch (const std::bad_weak_ptr &e) {
             handler(e.what());
         }
-#endif
-#ifdef BSL_NEEDS_STD_FUNCTIONAL
         catch (const std::bad_function_call &e) {
             handler(e.what());
         }
-#endif
         catch (const std::bad_alloc &e) {
             handler(e.what());
         }
         catch (const std::bad_exception &e) {
             handler(e.what());
         }
-#ifdef BSL_NEEDS_STD_VARIANT
         catch (const std::bad_variant_access &e) {
             handler(e.what());
         }
-#endif
     }
 
     /// Catch All Exceptions
@@ -536,27 +522,21 @@ namespace bsl
         catch (const std::bad_cast &e) {
             unchecked_handler(e.what());
         }
-#ifdef BSL_NEEDS_STD_MEMORY
         catch (const std::bad_weak_ptr &e) {
             unchecked_handler(e.what());
         }
-#endif
-#ifdef BSL_NEEDS_STD_FUNCTIONAL
         catch (const std::bad_function_call &e) {
             unchecked_handler(e.what());
         }
-#endif
         catch (const std::bad_alloc &e) {
             unchecked_handler(e.what());
         }
         catch (const std::bad_exception &e) {
             unchecked_handler(e.what());
         }
-#ifdef BSL_NEEDS_STD_VARIANT
         catch (const std::bad_variant_access &e) {
             unchecked_handler(e.what());
         }
-#endif
         catch (const std::exception &e) {    //NOSONAR
             checked_handler(e.what());
         }

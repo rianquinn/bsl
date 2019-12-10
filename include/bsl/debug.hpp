@@ -287,8 +287,8 @@ namespace bsl
     [[noreturn]] auto
     fatal(ARGS &&... args) -> void
     {
-        details::debug::print<debug_level_t::all>(
-            magenta, "\nFATAL", std::forward<ARGS>(args)...);
+        // details::debug::print<debug_level_t::all>(
+        //     magenta, "\nFATAL", std::forward<ARGS>(args)...);
 
         throw ERROR{};
     }

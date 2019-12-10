@@ -42,8 +42,8 @@ static_assert(g_uint32_magic42 / g_uint32_magic42 == 1);    // NOLINT
 static_assert(g_uint32_magic42 % g_uint32_magic42 == 0);    // NOLINT
 static_assert((g_uint32_min_s_1 << 1) == bsl::uint32_t::max() - 1);
 static_assert((g_uint32_min_s_1 >> (bsl::uint32_t::digits() - 1)) == 0);
-static_assert((g_uint32_magic42 & g_uint32_magic42) != 0); // NOLINT
-static_assert((g_uint32_magic42 | g_uint32_magic42) != 0); // NOLINT
+static_assert((g_uint32_magic42 & g_uint32_magic42) != 0);    // NOLINT
+static_assert((g_uint32_magic42 | g_uint32_magic42) != 0);    // NOLINT
 static_assert((g_uint32_magic42 ^ g_uint32_magic42) == 0);    // NOLINT
 static_assert(~g_uint32_magic42 == ~bsl::magic_42u);
 static_assert(+g_uint32_magic42 == bsl::magic_64b_42u);

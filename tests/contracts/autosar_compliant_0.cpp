@@ -34,77 +34,77 @@ main() -> int
         });
     };
 
-    bsl::test_case("ensures") = [] {
-        bsl::check_nodeath([] {
-            bsl::ensures(true);
-        });
-        bsl::check_death([] {
-            bsl::ensures(false);
-        });
-    };
+    // bsl::test_case("ensures") = [] {
+    //     bsl::check_nodeath([] {
+    //         bsl::ensures(true);
+    //     });
+    //     bsl::check_death([] {
+    //         bsl::ensures(false);
+    //     });
+    // };
 
-    bsl::test_case("confirm") = [] {
-        bsl::check_nodeath([] {
-            bsl::confirm(true);
-        });
-        bsl::check_death([] {
-            bsl::confirm(false);
-        });
-    };
+    // bsl::test_case("confirm") = [] {
+    //     bsl::check_nodeath([] {
+    //         bsl::confirm(true);
+    //     });
+    //     bsl::check_death([] {
+    //         bsl::confirm(false);
+    //     });
+    // };
 
-    bsl::test_case("expects_audit") = [] {
-        bsl::check_nodeath([] {
-            bsl::expects_audit(true);
-        });
-        bsl::check_death([] {
-            bsl::expects_audit(false);
-        });
-    };
+    // bsl::test_case("expects_audit") = [] {
+    //     bsl::check_nodeath([] {
+    //         bsl::expects_audit(true);
+    //     });
+    //     bsl::check_death([] {
+    //         bsl::expects_audit(false);
+    //     });
+    // };
 
-    bsl::test_case("ensures_audit") = [] {
-        bsl::check_nodeath([] {
-            bsl::ensures_audit(true);
-        });
-        bsl::check_death([] {
-            bsl::ensures_audit(false);
-        });
-    };
+    // bsl::test_case("ensures_audit") = [] {
+    //     bsl::check_nodeath([] {
+    //         bsl::ensures_audit(true);
+    //     });
+    //     bsl::check_death([] {
+    //         bsl::ensures_audit(false);
+    //     });
+    // };
 
-    bsl::test_case("confirm_audit") = [] {
-        bsl::check_nodeath([] {
-            bsl::confirm_audit(true);
-        });
-        bsl::check_death([] {
-            bsl::confirm_audit(false);
-        });
-    };
+    // bsl::test_case("confirm_audit") = [] {
+    //     bsl::check_nodeath([] {
+    //         bsl::confirm_audit(true);
+    //     });
+    //     bsl::check_death([] {
+    //         bsl::confirm_audit(false);
+    //     });
+    // };
 
-    bsl::test_case("expects_axiom") = [] {
-        bsl::check_nodeath([] {
-            bsl::expects_axiom(true);
-        });
-        bsl::check_nodeath([] {
-            bsl::expects_axiom(false);
-        });
-    };
+    // bsl::test_case("expects_axiom") = [] {
+    //     bsl::check_nodeath([] {
+    //         bsl::expects_axiom(true);
+    //     });
+    //     bsl::check_nodeath([] {
+    //         bsl::expects_axiom(false);
+    //     });
+    // };
 
-    bsl::test_case("ensures_axiom") = [] {
-        bsl::check_nodeath([] {
-            bsl::ensures_axiom(true);
-        });
-        bsl::check_nodeath([] {
-            bsl::ensures_axiom(false);
-        });
-    };
+    // bsl::test_case("ensures_axiom") = [] {
+    //     bsl::check_nodeath([] {
+    //         bsl::ensures_axiom(true);
+    //     });
+    //     bsl::check_nodeath([] {
+    //         bsl::ensures_axiom(false);
+    //     });
+    // };
 
-    bsl::test_case("confirm_axiom") = [] {
-        bsl::check_nodeath([] {
-            bsl::confirm_axiom(true);
-        });
-        bsl::check_nodeath([] {
-            bsl::confirm_axiom(false);
-        });
-    };
+    // bsl::test_case("confirm_axiom") = [] {
+    //     bsl::check_nodeath([] {
+    //         bsl::confirm_axiom(true);
+    //     });
+    //     bsl::check_nodeath([] {
+    //         bsl::confirm_axiom(false);
+    //     });
+    // };
 
     return bsl::check_results();
 }

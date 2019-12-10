@@ -69,7 +69,7 @@ namespace bsl
     /// Does nothing. As a result, the default bsl::owner should compile
     /// away when used, similar to a gsl::owner.
     ///
-    template<typename ...ARGS>
+    template<typename... ARGS>
     struct nodelete
     {
         /// Functor
@@ -94,8 +94,8 @@ namespace bsl
     ///
     /// Please see the above "file" level description
     ///
-    template<typename ...ARGS, typename Deleter = nodelete<ARGS...>>
-    class owner :
+    template<typename... ARGS, typename Deleter = nodelete<ARGS...>>
+    class owner:
     {
         std::tuple<ARGS> m_args;
 
@@ -112,7 +112,7 @@ namespace bsl
         /// @throw [unchecked]: none
         ///
         template<typename FUNC>
-        explicit constexpr owner(ARGS ...args, FUNC &&func) noexcept :
+        explicit constexpr owner(ARGS... args, FUNC &&func) noexcept :
             m_func(std::move(func))
         {}
 

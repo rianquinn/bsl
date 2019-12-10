@@ -1324,7 +1324,7 @@ namespace bsl
 
 namespace bsl
 {
-// #ifndef NDEBUG
+    // #ifndef NDEBUG
     constexpr const std::int32_t magic_4 = 4;
     constexpr const std::int32_t magic_8 = 8;
     constexpr const std::int32_t magic_15 = 15;
@@ -1394,7 +1394,7 @@ namespace bsl
     constexpr const std::uint64_t magic_64b_16u = 16;
     constexpr const std::uint64_t magic_64b_23u = 23;
     constexpr const std::uint64_t magic_64b_42u = 42;
-// #endif
+    // #endif
 }    // namespace bsl
 
 #endif

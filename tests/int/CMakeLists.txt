@@ -19,22 +19,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-bf_add_test(arithmetic)
-target_compile_definitions(test_arithmetic PRIVATE BSL_AUTOSAR_COMPLIANT)
-target_compile_definitions(test_arithmetic PRIVATE BSL_BUILD_LEVEL=2)
+bf_add_test(arithmetic
+    DEFINES BSL_AUTOSAR_COMPLIANT
+    DEFINES BSL_BUILD_LEVEL=2
+)
 
-bf_add_test(constructors)
-target_compile_definitions(test_constructors PRIVATE BSL_AUTOSAR_COMPLIANT)
-target_compile_definitions(test_constructors PRIVATE BSL_BUILD_LEVEL=2)
+bf_add_test(constructors
+    DEFINES BSL_AUTOSAR_COMPLIANT
+    DEFINES BSL_BUILD_LEVEL=2
+)
 
-bf_add_test(is_integer)
-target_compile_definitions(test_is_integer PRIVATE BSL_AUTOSAR_COMPLIANT)
-target_compile_definitions(test_is_integer PRIVATE BSL_BUILD_LEVEL=2)
+bf_add_test(is_integer
+    DEFINES BSL_AUTOSAR_COMPLIANT
+    DEFINES BSL_BUILD_LEVEL=2
+)
 
-bf_add_test(convert)
-target_compile_definitions(test_convert PRIVATE BSL_AUTOSAR_COMPLIANT)
-target_compile_definitions(test_convert PRIVATE BSL_BUILD_LEVEL=2)
+bf_add_test(convert
+    DEFINES BSL_AUTOSAR_COMPLIANT
+    DEFINES BSL_BUILD_LEVEL=2
+)
 
-bf_add_test(rational)
-target_compile_definitions(test_rational PRIVATE BSL_AUTOSAR_COMPLIANT)
-target_compile_definitions(test_rational PRIVATE BSL_BUILD_LEVEL=2)
+bf_add_test(rational
+    DEFINES BSL_AUTOSAR_COMPLIANT
+    DEFINES BSL_BUILD_LEVEL=2
+)

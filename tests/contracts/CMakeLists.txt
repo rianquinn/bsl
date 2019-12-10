@@ -19,27 +19,39 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-bf_add_test(autosar_compliant_0)
-bf_add_test(autosar_compliant_1)
-bf_add_test(build_level_0)
-bf_add_test(build_level_1)
-bf_add_test(build_level_2)
-bf_add_test(continue_option_0)
-bf_add_test(continue_option_1)
+bf_add_test(autosar_compliant_0
+    DEFINES BSL_BUILD_LEVEL=2
+    DEFINES BSL_EXIT_INSTEAD_OF_ABORT
+)
 
-target_compile_definitions(test_autosar_compliant_0 PRIVATE BSL_BUILD_LEVEL=2)
-target_compile_definitions(test_autosar_compliant_0 PRIVATE BSL_EXIT_INSTEAD_OF_ABORT)
-target_compile_definitions(test_autosar_compliant_1 PRIVATE BSL_BUILD_LEVEL=2)
-target_compile_definitions(test_autosar_compliant_1 PRIVATE BSL_AUTOSAR_COMPLIANT)
-target_compile_definitions(test_build_level_0 PRIVATE BSL_BUILD_LEVEL=0)
-target_compile_definitions(test_build_level_0 PRIVATE BSL_CONTRACTS_THROW_ON_VIOLATION)
-target_compile_definitions(test_build_level_1 PRIVATE BSL_BUILD_LEVEL=1)
-target_compile_definitions(test_build_level_1 PRIVATE BSL_CONTRACTS_THROW_ON_VIOLATION)
-target_compile_definitions(test_build_level_2 PRIVATE BSL_BUILD_LEVEL=2)
-target_compile_definitions(test_build_level_2 PRIVATE BSL_CONTRACTS_THROW_ON_VIOLATION)
-target_compile_definitions(test_continue_option_0 PRIVATE BSL_BUILD_LEVEL=2)
-target_compile_definitions(test_continue_option_0 PRIVATE BSL_EXIT_INSTEAD_OF_ABORT)
-target_compile_definitions(test_continue_option_0 PRIVATE BSL_CONTRACTS_THROW_ON_VIOLATION)
-target_compile_definitions(test_continue_option_1 PRIVATE BSL_BUILD_LEVEL=2)
-target_compile_definitions(test_continue_option_1 PRIVATE BSL_CONTINUE_OPTION)
-target_compile_definitions(test_continue_option_1 PRIVATE BSL_CONTRACTS_THROW_ON_VIOLATION)
+bf_add_test(autosar_compliant_1
+    DEFINES BSL_BUILD_LEVEL=2
+    DEFINES BSL_AUTOSAR_COMPLIANT
+)
+
+bf_add_test(build_level_0
+    DEFINES BSL_BUILD_LEVEL=0
+    DEFINES BSL_CONTRACTS_THROW_ON_VIOLATION
+)
+
+bf_add_test(build_level_1
+    DEFINES BSL_BUILD_LEVEL=1
+    DEFINES BSL_CONTRACTS_THROW_ON_VIOLATION
+)
+
+bf_add_test(build_level_2
+    DEFINES BSL_BUILD_LEVEL=2
+    DEFINES BSL_CONTRACTS_THROW_ON_VIOLATION
+)
+
+bf_add_test(continue_option_0
+    DEFINES BSL_BUILD_LEVEL=2
+    DEFINES BSL_EXIT_INSTEAD_OF_ABORT
+    DEFINES BSL_CONTRACTS_THROW_ON_VIOLATION
+)
+
+bf_add_test(continue_option_1
+    DEFINES BSL_BUILD_LEVEL=2
+    DEFINES BSL_CONTINUE_OPTION
+    DEFINES BSL_CONTRACTS_THROW_ON_VIOLATION
+)
