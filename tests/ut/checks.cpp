@@ -48,20 +48,11 @@ main() -> int
         });
     };
 
-    bsl::test_case("check_throws_checked") = [] {
-        bsl::check_throws_checked([] {
+    bsl::test_case("check_throws_as") = [] {
+        bsl::check_throws_as<bsl::unchecked_error>([] {
             throw bsl::unchecked_error{};
         });
-        bsl::check_throws_checked([] {
-            throw bsl::checked_error{};
-        });
-    };
-
-    bsl::test_case("check_throws_unchecked") = [] {
-        bsl::check_throws_unchecked([] {
-            throw bsl::unchecked_error{};
-        });
-        bsl::check_throws_unchecked([] {
+        bsl::check_throws_as<bsl::unchecked_error>([] {
             throw bsl::checked_error{};
         });
     };
@@ -80,10 +71,10 @@ main() -> int
         });
     };
 
-    constexpr const std::int32_t total_assertions = 16;
-    constexpr const std::int32_t failed_assertions = 8;
-
     bsl::test_case("verify_checks") = [] {
+        constexpr const bsl::int32_t total_assertions{14};
+        constexpr const bsl::int32_t failed_assertions{7};
+
         bsl::require(bsl::details::ut::total_assertions == total_assertions);
         bsl::require(bsl::details::ut::failed_assertions == failed_assertions);
     };

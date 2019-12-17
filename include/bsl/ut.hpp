@@ -66,13 +66,16 @@
 // - We do not attempt to be AUTOSAR compliant with any of our unit tests as
 //   this would needlessly limit the use of C++ to make the tests easier to
 //   read and maintain. With that said, we do try to stick to the spec as
-//   much as we can and where it makes sense.
+//   much as we can and where it makes sense. A couple notable exceptions are:
+//   - We are ok using the []{} syntax for lambas, and nested lambdas are also
+//     ok.
+//   - The implementation of this UT library uses make_noexcept in situations
+//     where exceptions could fire, which would result in std::terminate()
+//     being caught. In such cases, the UT would fail, which is the desired
+//     behavior. Since this code is not used in production, that is fine.
 //
-// - We do not support any of the _AS, _WITH and _THAT exception checks that
-//   Catch2 provides as these overspecify your unit tests. With that said, we
-//   do provide versions for checking AUTOSAR checked vs. unchecked exception
-//   types as this is important to ensure that what we document in each
-//   function holds true.
+// - We do not support the _WITH and _THAT exception checks that Catch2
+//   provides as these overspecify your unit tests.
 //
 // - We do not support logging. This is one feature that we do not like about
 //   most unit test libraries as CMake already hides the output of a test.
@@ -85,12 +88,13 @@
 //   need generators that bad, use C++20 Coroutines.
 //
 // - We do not support test suites. Once again, if you really need a test
-//   suite, just define your own added functions. Adding in test suites
-//   would just add another header and more code to this library, making it
-//   more complicated for a feature that is simple to add yourself.
+//   suite, just define your own added functions.
 //
 
+#include "int.hpp"
 #include "debug.hpp"
+
+#include <deque>
 
 #ifdef __linux__
 #include <unistd.h>
@@ -106,68 +110,351 @@ namespace bsl
 {
     namespace details::ut
     {
-        struct invalid_check : bsl::checked_error
-        {};
-        struct ut_failed : bsl::checked_error
-        {};
-        struct required_failed : bsl::checked_error
-        {};
-
         using name_type = cstr_t;
-        using info_type = source_location;
+        using what_type = std::string;
+        using sloc_type = source_location;
 
-        inline std::uint64_t total_test_cases{};
-        inline std::uint64_t total_assertions{};
-        inline std::uint64_t failed_test_cases{};
-        inline std::uint64_t failed_assertions{};
-        inline std::uint64_t skipped_test_cases{};
+        inline ::bsl::uintmax_t total_test_cases{};
+        inline ::bsl::uintmax_t total_assertions{};
+        inline ::bsl::uintmax_t failed_test_cases{};
+        inline ::bsl::uintmax_t failed_assertions{};
+        inline ::bsl::uintmax_t skipped_test_cases{};
 
-        inline std::string *failures{};
-
-        /// Assertion Failure
+        /// Test Case Status
         ///
-        /// This function is used to log an assertion failure. Each test case
-        /// has its own assertion log, and will check the log to see if
-        /// anything was added to determine if the test case passed or not.
-        /// To handle the fact that test cases can be nested, each time a
-        /// test case is executed, it updates the global "failures" string
-        /// with a pointer to the test case's log. This allows the test cases
-        /// to handle nested test cases safely.
+        /// Each time a test case is created with =, a test case status is
+        /// created which is where all of the results of each check is stored.
+        /// We do not store this information in the test case itself because
+        /// if a required check failed, we would end up with a memory leak.
+        ///
+        class test_case_status
+        {
+        public:
+            /// Test Case Status Constructor
+            ///
+            /// Creates a test case status that is used to track the status
+            /// of a test case.
+            ///
+            /// expects: none
+            /// ensures: none
+            ///
+            /// @param name the name of the test case
+            /// @param sloc the location of the test case
+            /// @throw [checked]: none
+            /// @throw [unchecked]: none
+            ///
+            test_case_status(
+                const details::ut::name_type &name,
+                const details::ut::sloc_type &sloc) noexcept :
+                m_name{name}, m_sloc{sloc}
+            {}
+
+            /// Append
+            ///
+            /// Adds failure text to the test case status. Once this occurs,
+            /// the test case has officially failed, so we add a header when
+            /// this occurs as well (on teh first append).
+            ///
+            /// AUTOSAR:
+            /// - A15-3-4: the catch all is used for isolation.
+            ///
+            /// expects: none
+            /// ensures: none
+            ///
+            /// @param str the failure string to add to the test case status.
+            /// @throw [checked]: none
+            /// @throw [unchecked]: none
+            ///
+            inline auto
+            append(const std::string &str) noexcept -> void
+            {
+                using fmt::format;
+
+                try {
+                    if (m_failures.empty()) {
+                        m_failures += format(red, "{:-^80}\n", "-");
+                        m_failures += format(red, "failed: ");
+                        m_failures += format(yellow, "{}\n", m_name);
+                        m_failures += format(red, "{:-^80}\n", "-");
+                        m_failures += format("  | --> ");
+                        m_failures += format(cyan, "{}", m_sloc.file_name());
+                        m_failures += format(": ");
+                        m_failures += format(yellow, "{}", m_sloc.line());
+                        m_failures += format("\n");
+                        m_failures += format("  |\n");
+                    }
+
+                    m_failures += str;
+                }
+                catch(...) {
+                    ::bsl::unexpected_exception(::bsl::here());
+                    ::bsl::fail_fast();
+                }
+            }
+
+            /// Passed
+            ///
+            /// Returns true if the test case passed, false otherwise
+            ///
+            /// expects: none
+            /// ensures: none
+            ///
+            /// @return returns true if the test case passed, false otherwise
+            /// @throw [checked]: none
+            /// @throw [unchecked]: none
+            ///
+            [[nodiscard]] inline auto
+            passed() const noexcept -> bool
+            {
+                return m_failures.empty();
+            }
+
+            /// Failures
+            ///
+            /// Returns all of the failures that were appended to the test
+            /// case as well as a header.
+            ///
+            /// expects: none
+            /// ensures: none
+            ///
+            /// @return the failures that were appended to the test case
+            /// @throw [checked]: none
+            /// @throw [unchecked]: none
+            ///
+            [[nodiscard]] inline auto
+            failures() noexcept -> std::string &
+            {
+                return m_failures;
+            }
+
+        private:
+            std::string m_failures{};
+            details::ut::name_type m_name{};
+            details::ut::sloc_type m_sloc{};
+        };
+
+        /// Test Cases
+        ///
+        /// This contains all of the test case statuses that are created. Each
+        /// time the user creates a test case, a test case status is pushed
+        /// to this stack, and all failures are appended. Once the test case
+        /// is done, the test case status is popped from the stack, and
+        /// checked to see if any failures were registered. If they were, they
+        /// are outputted to the console. The reason we use a stack is the
+        /// test cases can be nested.
+        ///
+        /// AUTOSAR:
+        /// - A15-3-4: the catch all is used for isolation.
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @return a reference to the test cases stack
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        /// Test Case Stack
+        ///
+        [[nodiscard]] inline auto
+        test_cases() noexcept -> std::deque<test_case_status> &
+        {
+            static std::deque<test_case_status> s_test_cases;
+            return s_test_cases;
+        }
+
+        /// Push Test Case
+        ///
+        /// This function is what actually creates a test case. It does this
+        /// by pushing a test case status to the test case stack. Each check
+        /// in the test case appends text to the test case status when a check
+        /// fails.
+        ///
+        /// AUTOSAR:
+        /// - A15-3-4: the catch all is used for isolation.
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @param tcs the test case status to add to the stack
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        inline auto
+        push_test_case(const test_case_status &tcs) noexcept -> void
+        {
+            try {
+                test_cases().push_back(tcs);
+                ++details::ut::total_test_cases;
+            }
+            catch (...) {
+                ::bsl::unexpected_exception(::bsl::here());
+                ::bsl::fail_fast();
+            }
+        }
+
+        /// Pop Test Case
+        ///
+        /// Pops a test case status from the test case stack. If the test
+        /// case didn't pass, we output the failures to the console.
+        ///
+        /// AUTOSAR:
+        /// - A15-3-4: the catch all is used for isolation.
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        inline auto
+        pop_test_case() noexcept -> void
+        {
+            if (test_cases().empty()) {
+                ::bsl::error("invalid call to pop_test_case\n");
+                return;
+            }
+
+            try {
+                if (!test_cases().back().passed()) {
+                    ::bsl::print(test_cases().back().failures());
+                    ::bsl::print("  |\n");
+                    ::bsl::print("\n");
+
+                    ++details::ut::failed_test_cases;
+                }
+
+                details::ut::test_cases().pop_back();
+            }
+            catch (...) {
+                ::bsl::unexpected_exception(::bsl::here());
+                ::bsl::fail_fast();
+            }
+        }
+
+        /// Required Failed
+        ///
+        /// This function is executed whenever a required() check is run and
+        /// fails. When this happens, we need to output all of the logged
+        /// failures before cleaning up and exiting as we cannot execute any
+        /// additional checks or test cases safely.
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        [[noreturn]] inline auto
+        required_failed() noexcept -> void
+        {
+            const cstr_t msg = "REQUIRED FAILED... EXITING !!!";
+
+            if (test_cases().empty()) {
+                ::bsl::alert("orphaned require() failed!!!\n");
+            }
+            else {
+                ::bsl::print(test_cases().back().failures());
+                ::bsl::print(red, "  |   ^^^ \n");
+                ::bsl::print(red, "  |    | {}  \n", msg);
+                ::bsl::print(red, "  |\n");
+                ::bsl::print("  |\n");
+                ::bsl::print("\n");
+            }
+
+            ::bsl::fail_fast();
+        }
+
+        /// Log Assertion Failure
+        ///
+        /// This function is used to log an assertion failure.
+        ///
+        /// AUTOSAR:
+        /// - A15-3-4: the catch all is used for isolation.
         ///
         /// expects: none
         /// ensures: none
         ///
         /// @param name the name of the assertion that failed
-        /// @param info the source location information for the assertion
+        /// @param sloc the source location information for the assertion
+        /// @param what (optional) what() from an exception
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
         inline auto
-        assertion_failure(const name_type &name, const info_type &info) noexcept
-            -> void
+        log_assertion_failure(
+            const name_type &name,
+            const sloc_type &sloc,
+            const what_type &what) noexcept -> void
         {
-            bsl::catch_all([&name, &info] {
-                if (nullptr == failures) {
-                    fmt::print(red, "FATAL ERROR: ");
-                    fmt::print(" check ignored [");
-                    fmt::print(cyan, "{}", info.line());
-                    fmt::print("]: ");
-                    fmt::print(yellow, "{}", info.file_name());
+            if (test_cases().empty()) {
+                ::bsl::alert("check ignored\n{}\n", sloc);
+                return;
+            }
 
-                    throw invalid_check{};
-                }
+            try {
+                auto &tcs = test_cases().back();
 
-                *failures += fmt::format("  | [");
-                *failures += fmt::format(blue, "{}", name);
+                tcs.append(fmt::format("  | ["));
+                tcs.append(fmt::format(blue, "{}", name));
 
-                if (nullptr != info.file_name()) {
-                    *failures += fmt::format("] failed on line: ");
-                    *failures += fmt::format(yellow, "{}\n", info.line());
+                if (nullptr != sloc.file_name()) {
+                    tcs.append(fmt::format("] failed on line: "));
+                    tcs.append(fmt::format(yellow, "{}\n", sloc.line()));
+
+                    ++details::ut::failed_assertions;
                 }
                 else {
-                    *failures += fmt::format("]\n");
+                    tcs.append(fmt::format("]\n"));
                 }
-            });
+
+                if (!what.empty()) {
+                    tcs.append(fmt::format("  | - what: "));
+                    tcs.append(fmt::format(cyan, "{}\n", what));
+                }
+            }
+            catch (...) {
+                ::bsl::unexpected_exception(::bsl::here());
+                ::bsl::fail_fast();
+            }
+        }
+
+        /// Test Assertion
+        ///
+        /// This function is used to test to see if an assertion has passed.
+        /// If it is has not, it will log the assertion.
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @param test the boolean test that is checked.
+        /// @param name the name of the test that is checked.
+        /// @param sloc the location of the test that is checked.
+        /// @param what (optional) the what() information for an exception
+        /// @return none
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        inline auto
+        test_assertion(
+            const bool test,
+            const details::ut::name_type &name,
+            const details::ut::sloc_type &sloc,
+            const details::ut::what_type &what) noexcept -> bool
+        {
+            try {
+                ++details::ut::total_assertions;
+
+                if (!test) {
+                    details::ut::log_assertion_failure(name, sloc, what);
+                    return false;
+                }
+
+                return true;
+            }
+            catch (...) {
+                ::bsl::unexpected_exception(::bsl::here());
+                ::bsl::fail_fast();
+            }
         }
     }    // namespace details::ut
 }    // namespace bsl
@@ -192,79 +479,69 @@ namespace bsl
     /// @throw [unchecked]: possible
     ///
     [[nodiscard]] inline auto
-    check_results() noexcept -> std::int32_t
+    check_results() noexcept -> bsl::int32_t
     {
-        std::int32_t exit_code = EXIT_SUCCESS;
+        const auto total_test_cases = details::ut::total_test_cases;
+        const auto total_assertions = details::ut::total_assertions;
+        const auto failed_test_cases = details::ut::failed_test_cases;
+        const auto failed_assertions = details::ut::failed_assertions;
+        const auto skipped_test_cases = details::ut::skipped_test_cases;
 
-        bsl::catch_all(
-            [] {
-                const auto total_test_cases = details::ut::total_test_cases;
-                const auto total_assertions = details::ut::total_assertions;
-                const auto failed_test_cases = details::ut::failed_test_cases;
-                const auto failed_assertions = details::ut::failed_assertions;
-                const auto skipped_test_cases = details::ut::skipped_test_cases;
+        details::ut::total_test_cases = {};
+        details::ut::total_assertions = {};
+        details::ut::failed_test_cases = {};
+        details::ut::failed_assertions = {};
+        details::ut::skipped_test_cases = {};
 
-                details::ut::total_test_cases = {};
-                details::ut::total_assertions = {};
-                details::ut::failed_test_cases = {};
-                details::ut::failed_assertions = {};
-                details::ut::skipped_test_cases = {};
+        const cstr_t as = total_assertions != 1 ? "s" : "";
+        const cstr_t ts = total_test_cases != 1 ? "s" : "";
+        const cstr_t ss = skipped_test_cases != 1 ? "s" : "";
 
-                const cstr_t as = total_assertions != 1 ? "s" : "";
-                const cstr_t ts = total_test_cases != 1 ? "s" : "";
-                const cstr_t ss = skipped_test_cases != 1 ? "s" : "";
+        if (0 == total_test_cases) {
+            bsl::print(yellow, "{:=^80}\n", "=");
+            bsl::print(yellow, "No tests ran\n");
 
-                if (0 == total_test_cases) {
-                    fmt::print(yellow, "{:=^80}\n", "=");
-                    fmt::print(yellow, "No tests ran\n");
+            return bsl::exit_failure;
+        }
 
-                    throw details::ut::ut_failed{};
-                }
+        if ((total_test_cases > 0) && (failed_test_cases > 0)) {
+            bsl::print(red, "{:=^80}\n", "=");
+            bsl::print("test cases: {:>3}", total_test_cases.to_string());
+            bsl::print(" | ");
+            bsl::print(red, "{:>3} ", failed_test_cases.to_string());
+            bsl::print(red, "failed");
 
-                if ((total_test_cases > 0) && (failed_test_cases > 0)) {
-                    fmt::print(red, "{:=^80}\n", "=");
-                    fmt::print("test cases: {:>3}", total_test_cases);
-                    fmt::print(" | ");
-                    fmt::print(red, "{:>3} ", failed_test_cases);
-                    fmt::print(red, "failed");
+            if (skipped_test_cases > 0) {
+                bsl::print(" | ");
+                bsl::print(yellow, "{:>3} ", skipped_test_cases.to_string());
+                bsl::print(yellow, "skipped");
+            }
 
-                    if (skipped_test_cases > 0) {
-                        fmt::print(" | ");
-                        fmt::print(yellow, "{:>3} ", skipped_test_cases);
-                        fmt::print(yellow, "skipped");
-                    }
+            bsl::print("\n");
+            bsl::print("assertions: {:>3}", total_assertions.to_string());
+            bsl::print(" | ");
+            bsl::print(red, "{:>3} ", failed_assertions.to_string());
+            bsl::print(red, "failed");
+            bsl::print("\n");
 
-                    fmt::print("\n");
-                    fmt::print("assertions: {:>3}", total_assertions);
-                    fmt::print(" | ");
-                    fmt::print(red, "{:>3} ", failed_assertions);
-                    fmt::print(red, "failed");
-                    fmt::print("\n");
+            return bsl::exit_failure;
+        }
 
-                    throw details::ut::ut_failed{};
-                }
+        bsl::print(green, "{:=^80}\n", "=");
+        bsl::print(green, "All tests passed ");
+        bsl::print("(");
+        bsl::print("{} assertion{}", total_assertions, as);
+        bsl::print(" in ");
+        bsl::print("{} test case{}", total_test_cases, ts);
 
-                fmt::print(green, "{:=^80}\n", "=");
-                fmt::print(green, "All tests passed ");
-                fmt::print("(");
-                fmt::print("{} assertion{}", total_assertions, as);
-                fmt::print(" in ");
-                fmt::print("{} test case{}", total_test_cases, ts);
+        if (skipped_test_cases > 0) {
+            bsl::print(yellow, " [");
+            bsl::print(yellow, "{} case{}", skipped_test_cases, ss);
+            bsl::print(yellow, " skipped]");
+        }
 
-                if (skipped_test_cases > 0) {
-                    fmt::print(yellow, " [");
-                    fmt::print(yellow, "{} case{}", skipped_test_cases, ss);
-                    fmt::print(yellow, " skipped]");
-                }
-
-                fmt::print(")\n");
-            },
-            [&exit_code](auto what) noexcept {
-                bsl::discard(what);
-                exit_code = EXIT_FAILURE;
-            });
-
-        return exit_code;
+        bsl::print(")\n");
+        return bsl::exit_success;
     }
 
     /// Test Case
@@ -277,54 +554,11 @@ namespace bsl
     ///
     /// Test cases can be nested, so this class must ensure that the logs
     /// are handled properly and failed assertions are properly attributed
-    /// to the correct test case.
+    /// to the correct test case. To do this, we use a test case status stack
+    /// that is pushed/popped as each nested test case is created.
     ///
     class test_case
     {
-        /// Execute Test
-        ///
-        /// Executes a test function. This function ensures that the test
-        /// function has a failures log, and catches all possible exceptions
-        /// so that they can be handled properly. If a required failure
-        /// occurs, this function will return EXIT_FAILURE so that the unit
-        /// test can be halted.
-        ///
-        /// expects: none
-        /// ensures: none
-        ///
-        /// @param func the test function to execute
-        /// @return false if a required check fails, true otherwise.
-        /// @throw [checked]: none
-        /// @throw [unchecked]: none
-        ///
-        template<typename F>
-        auto
-        execute_test(F &&func, std::string *const failures) noexcept -> bool
-        {
-            bool no_reason_to_exit = true;
-
-            auto *const tmp = details::ut::failures;
-            details::ut::failures = failures;
-
-            bsl::catch_all(
-                [&func, &no_reason_to_exit] {
-                    try {
-                        func();
-                    }
-                    catch (const details::ut::required_failed &e) {
-                        bsl::discard(e);
-                        no_reason_to_exit = false;
-                    }
-                },
-                [](auto what) noexcept {
-                    bsl::discard(what);
-                    details::ut::assertion_failure("unexpected exception", {});
-                });
-
-            details::ut::failures = tmp;
-            return no_reason_to_exit;
-        }
-
     public:
         /// Test Case Constructor
         ///
@@ -334,17 +568,15 @@ namespace bsl
         /// ensures:
         ///
         /// @param name the name of the test case
-        /// @param info information about the test case
+        /// @param sloc the location of the test case
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
         explicit constexpr test_case(
-            const details::ut::name_type name = "",
-            const details::ut::info_type info = here()) noexcept :
-            m_name{name}, m_info{info}
-        {
-            ++details::ut::total_test_cases;
-        }
+            const details::ut::name_type &name = "",
+            const details::ut::sloc_type &sloc = here()) noexcept :
+            m_name{name}, m_sloc{sloc}
+        {}
 
         /// Execute Test Case
         ///
@@ -353,9 +585,9 @@ namespace bsl
         /// this function will catch all exceptions to ensure the rest of the
         /// unit test is not alterred by other test cases.
         ///
-        /// NOSONAR:
-        /// - We call std::exit() in this function to handle required() checks.
-        ///   This is fine since we are just unit testing.
+        /// AUTOSAR:
+        /// - A15-3-4: the catch all and catch std::exception are used for
+        ///   isolation.
         ///
         /// expects:
         /// ensures:
@@ -365,50 +597,32 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: possible
         ///
-        template<typename F>
+        template<
+            typename FUNC,
+            std::enable_if_t<std::is_invocable_v<FUNC>> * = nullptr>
         [[maybe_unused]] auto
-        operator=(F &&func) noexcept -> test_case &
+        operator=(FUNC &&func) noexcept -> test_case &
         {
-            bsl::catch_all([&func, this] {
-                std::string failures{};
-                auto status = execute_test(std::forward<F>(func), &failures);
+            try {
+                details::ut::push_test_case({m_name, m_sloc});
+                std::forward<FUNC>(func)();
+            }
+            catch(const std::exception &e) {
+                details::ut::log_assertion_failure(
+                    "unexpected exception", {}, e.what());
+            }
+            catch(...) {
+                details::ut::log_assertion_failure(
+                    "unexpected exception", {}, "...");
+            }
 
-                if (!failures.empty()) {
-                    fmt::print(red, "{:-^80}\n", "-");
-                    fmt::print(red, "failed: ");
-                    fmt::print(yellow, "{}\n", m_name);
-                    fmt::print(red, "{:-^80}\n", "-");
-                    fmt::print("  | --> ");
-                    fmt::print(cyan, "{}", m_info.file_name());
-                    fmt::print(": ");
-                    fmt::print(yellow, "{}", m_info.line());
-                    fmt::print("\n");
-                    fmt::print("  |\n{}", failures);
-
-                    if (!status) {
-                        const cstr_t msg = "REQUIRED FAILED... EXITING !!!";
-                        fmt::print(red, "  |   ^^^ \n");
-                        fmt::print(red, "  |    | {}  \n", msg);
-                        fmt::print(red, "  |\n");
-                    }
-
-                    fmt::print("  |\n");
-                    fmt::print("\n");
-
-                    ++details::ut::failed_test_cases;
-                }
-
-                if (!status) {
-                    std::exit(EXIT_FAILURE);    //NOSONAR
-                }
-            });
-
+            details::ut::pop_test_case();
             return *this;
         }
 
     private:
         details::ut::name_type m_name{};
-        details::ut::info_type m_info{};
+        details::ut::sloc_type m_sloc{};
     };
 
     /// Skip Test Case
@@ -428,6 +642,9 @@ namespace bsl
         /// to handle, which it does by ignoring it, which ultimately is what
         /// causes the test case to be skipped.
         ///
+        /// AUTOSAR:
+        /// - A15-3-4: the catch all is used for isolation.
+        ///
         /// expects: none
         /// ensures: none
         ///
@@ -436,13 +653,23 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        template<typename F>
-        [[maybe_unused]] constexpr auto
-        operator=(F &&func) noexcept -> skip_test_case &
+        template<
+            typename FUNC,
+            std::enable_if_t<std::is_invocable_v<FUNC>> * = nullptr>
+        [[maybe_unused]] auto
+        operator=(FUNC &&func) noexcept -> skip_test_case &
         {
             bsl::discard(func);
 
-            ++details::ut::skipped_test_cases;
+            try {
+                ++details::ut::total_test_cases;
+                ++details::ut::skipped_test_cases;
+            }
+            catch (...) {
+                ::bsl::unexpected_exception(::bsl::here());
+                ::bsl::fail_fast();
+            }
+
             return *this;
         }
     };
@@ -547,24 +774,15 @@ namespace bsl
     /// @param test the boolean test that is checked.
     /// @return true if the check passed, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: possible
+    /// @throw [unchecked]: none
     ///
     [[maybe_unused]] inline auto
     check(
         const bool test,
         const details::ut::name_type &name = "check",
-        const details::ut::info_type &info = here()) noexcept -> bool
+        const details::ut::sloc_type &sloc = here()) noexcept -> bool
     {
-        ++details::ut::total_assertions;
-
-        if (!test) {
-            details::ut::assertion_failure(name, info);
-            ++details::ut::failed_assertions;
-
-            return false;
-        }
-
-        return true;
+        return details::ut::test_assertion(test, name, sloc, {});
     }
 
     /// Require
@@ -588,16 +806,16 @@ namespace bsl
     /// @param test the boolean test that is checked.
     /// @return true if the check passed, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: possible
+    /// @throw [unchecked]: none
     ///
     [[maybe_unused]] inline auto
     require(
         const bool test,
         const details::ut::name_type &name = "require",
-        const details::ut::info_type &info = here()) -> bool
+        const details::ut::sloc_type &sloc = here()) noexcept -> bool
     {
-        if (!check(test, name, info)) {
-            throw details::ut::required_failed{};
+        if (!check(test, name, sloc)) {
+            details::ut::required_failed();
         }
 
         return true;
@@ -621,15 +839,15 @@ namespace bsl
     /// @param test the boolean test that is checked.
     /// @return true if the check passed, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: possible
+    /// @throw [unchecked]: none
     ///
     [[maybe_unused]] inline auto
     check_false(
         const bool test,
         const details::ut::name_type &name = "check_false",
-        const details::ut::info_type &info = here()) noexcept -> bool
+        const details::ut::sloc_type &sloc = here()) noexcept -> bool
     {
-        return check(!test, name, info);
+        return check(!test, name, sloc);
     }
 
     /// Require (False)
@@ -653,15 +871,15 @@ namespace bsl
     /// @param test the boolean test that is checked.
     /// @return true if the check passed, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: possible
+    /// @throw [unchecked]: none
     ///
     [[maybe_unused]] inline auto
     require_false(
         const bool test,
         const details::ut::name_type &name = "require_false",
-        const details::ut::info_type &info = here()) -> bool
+        const details::ut::sloc_type &sloc = here()) noexcept -> bool
     {
-        return require(!test, name, info);
+        return require(!test, name, sloc);
     }
 
     /// Check Throws
@@ -670,9 +888,9 @@ namespace bsl
     /// throw an exception, the check will fail and eventually be reported
     /// to the user.
     ///
-    /// NOSONAR:
-    /// - This specific check needs to detect if any exception is thrown, which
-    ///   can only be done if we catch all exceptions.
+    /// AUTOSAR:
+    /// - A15-3-4: the catch all and catch std::exception are used for
+    ///   isolation.
     ///
     /// Notes:
     /// - The default arguments should not be used manually. These are
@@ -687,35 +905,32 @@ namespace bsl
     /// @param func the function to run to see if an exception throws
     /// @return true if the check passed, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: possible
+    /// @throw [unchecked]: none
     ///
-    template<typename F>
+    template<typename FUNC>
     [[maybe_unused]] auto
     check_throws(
-        F &&func,
+        FUNC &&func,
         const details::ut::name_type &name = "check_throws",
-        const details::ut::info_type &info = here()) noexcept -> bool
+        const details::ut::sloc_type &sloc = here()) noexcept
+        -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
-        bool caught = false;
-        ++details::ut::total_assertions;
+        bool caught{};
+        std::string caught_what{};
 
-        bsl::catch_all(
-            [&func] {
-                func();
-            },
-            [&caught](auto what) noexcept {
-                bsl::discard(what);
-                caught = true;
-            });
-
-        if (!caught) {
-            details::ut::assertion_failure(name, info);
-            ++details::ut::failed_assertions;
-
-            return false;
+        try {
+            std::forward<FUNC>(func)();
+        }
+        catch(const std::exception &e) {
+            caught = true;
+            caught_what = e.what();
+        }
+        catch(...) {
+            caught = true;
+            caught_what = "...";
         }
 
-        return true;
+        return details::ut::test_assertion(caught, name, sloc, caught_what);
     }
 
     /// Require Throws
@@ -740,32 +955,33 @@ namespace bsl
     /// @param func the function to run to see if an exception throws
     /// @return true if the check passed, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: possible
+    /// @throw [unchecked]: none
     ///
-    template<typename F>
+    template<typename FUNC>
     [[maybe_unused]] auto
     require_throws(
-        F &&func,
+        FUNC &&func,
         const details::ut::name_type &name = "require_throws",
-        const details::ut::info_type &info = here()) -> bool
+        const details::ut::sloc_type &sloc = here()) noexcept
+        -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
-        if (!check_throws(std::forward<F>(func), name, info)) {
-            throw details::ut::required_failed{};
+        if (!check_throws(std::forward<FUNC>(func), name, sloc)) {
+            details::ut::required_failed();
         }
 
         return true;
     }
 
-    /// Check Throws (std::runtime_error)
+    /// Check Throws As
     ///
     /// Checks whether a function throws an exception. If the function does not
     /// throw an exception, the check will fail and eventually be reported
     /// to the user. This specific version checks that the exception thrown
-    /// inherits from std::runtime_error.
+    /// has a type of E
     ///
-    /// NOSONAR:
-    /// - This specific check needs to detect if a std::runtime_error is
-    ///   thrown, which can only be done if we catch this type of exception
+    /// AUTOSAR:
+    /// - A15-3-4: the catch all and catch std::exception are used for
+    ///   isolation.
     ///
     /// Notes:
     /// - The default arguments should not be used manually. These are
@@ -780,47 +996,44 @@ namespace bsl
     /// @param func the function to run to see if an exception throws
     /// @return true if the check passed, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: possible
+    /// @throw [unchecked]: none
     ///
-    template<typename F>
+    template<typename E, typename FUNC>
     [[maybe_unused]] auto
-    check_throws_checked(
-        F &&func,
-        const details::ut::name_type &name = "check_throws_checked",
-        const details::ut::info_type &info = here()) noexcept -> bool
+    check_throws_as(
+        FUNC &&func,
+        const details::ut::name_type &name = "check_throws",
+        const details::ut::sloc_type &sloc = here()) noexcept
+        -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
-        bool caught = false;
-        ++details::ut::total_assertions;
+        bool caught{};
+        std::string caught_what{};
 
-        bsl::catch_all(
-            [&func] {
-                func();
-            },
-            [&caught](auto what) noexcept {
-                bsl::discard(what);
-                caught = true;
-            },
-            [&caught](auto what) noexcept {
-                bsl::discard(what);
-                caught = false;
-            });
-
-        if (!caught) {
-            details::ut::assertion_failure(name, info);
-            ++details::ut::failed_assertions;
-
-            return false;
+        try {
+            std::forward<FUNC>(func)();
+        }
+        catch(const E &e) {
+            caught = true;
+            caught_what = e.what();
+        }
+        catch(const std::exception &e) {
+            caught = false;
+            caught_what = e.what();
+        }
+        catch(...) {
+            caught = false;
+            caught_what = "...";
         }
 
-        return true;
+        return details::ut::test_assertion(caught, name, sloc, caught_what);
     }
 
-    /// Require Throws (std::runtime_error)
+    /// Check Throws As
     ///
     /// Checks whether a function throws an exception. If the function does not
     /// throw an exception, the check will fail and eventually be reported
     /// to the user. This specific version checks that the exception thrown
-    /// inherits from std::runtime_error.
+    /// has a type of E
     ///
     /// Unlike the check version, if the test fails, this unit test will
     /// exit immediately.
@@ -838,117 +1051,18 @@ namespace bsl
     /// @param func the function to run to see if an exception throws
     /// @return true if the check passed, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: possible
+    /// @throw [unchecked]: none
     ///
-    template<typename F>
+    template<typename E, typename FUNC>
     [[maybe_unused]] auto
-    require_throws_checked(
-        F &&func,
+    require_throws_as(
+        FUNC &&func,
         const details::ut::name_type &name = "require_throws_checked",
-        const details::ut::info_type &info = here()) -> bool
+        const details::ut::sloc_type &sloc = here()) noexcept
+        -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
-        if (!check_throws_checked(std::forward<F>(func), name, info)) {
-            throw details::ut::required_failed{};
-        }
-
-        return true;
-    }
-
-    /// Check Throws (!std::runtime_error)
-    ///
-    /// Checks whether a function throws an exception. If the function does not
-    /// throw an exception, the check will fail and eventually be reported
-    /// to the user. This specific version checks that the exception thrown
-    /// _does not_ inherit from std::runtime_error.
-    ///
-    /// NOSONAR:
-    /// - This specific check needs to detect if anything other than a
-    ///   std::runtime_error is thrown, which can only be done if we catch
-    ///   a std::runtime_error as well as all exceptions, both of which
-    ///   SonarCloud gets mad about.
-    ///
-    /// Notes:
-    /// - The default arguments should not be used manually. These are
-    ///   automatically set as needed by the library.
-    /// - The assertion can only be executed from the context of a test_case.
-    ///   Attempting to execute an assertion outside of a test_case is
-    ///   undefined.
-    ///
-    /// expects: executed from a test_case()
-    /// ensures: none
-    ///
-    /// @param func the function to run to see if an exception throws
-    /// @return true if the check passed, false otherwise.
-    /// @throw [checked]: none
-    /// @throw [unchecked]: possible
-    ///
-    template<typename F>
-    [[maybe_unused]] auto
-    check_throws_unchecked(
-        F &&func,
-        const details::ut::name_type &name = "check_throws_unchecked",
-        const details::ut::info_type &info = here()) noexcept -> bool
-    {
-        bool caught = false;
-        ++details::ut::total_assertions;
-
-        bsl::catch_all(
-            [&func] {
-                func();
-            },
-            [&caught](auto what) noexcept {
-                bsl::discard(what);
-                caught = false;
-            },
-            [&caught](auto what) noexcept {
-                bsl::discard(what);
-                caught = true;
-            });
-
-        if (!caught) {
-            details::ut::assertion_failure(name, info);
-            ++details::ut::failed_assertions;
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /// Require Throws (!std::runtime_error)
-    ///
-    /// Checks whether a function throws an exception. If the function does not
-    /// throw an exception, the check will fail and eventually be reported
-    /// to the user. This specific version checks that the exception thrown
-    /// _does not_ inherit from std::runtime_error.
-    ///
-    /// Unlike the check version, if the test fails, this unit test will
-    /// exit immediately.
-    ///
-    /// Notes:
-    /// - The default arguments should not be used manually. These are
-    ///   automatically set as needed by the library.
-    /// - The assertion can only be executed from the context of a test_case.
-    ///   Attempting to execute an assertion outside of a test_case is
-    ///   undefined.
-    ///
-    /// expects: executed from a test_case()
-    /// ensures: none
-    ///
-    /// @param func the function to run to see if an exception throws
-    /// @return true if the check passed, false otherwise.
-    /// @throw [checked]: none
-    /// @throw [unchecked]: possible
-    ///
-    template<typename F>
-    [[maybe_unused]] auto
-    require_throws_unchecked(
-        F &&func,
-        const details::ut::name_type &name = "require_throws_unchecked",
-        const details::ut::info_type &info = here()) -> bool
-    {
-        if (!check_throws_unchecked(std::forward<F>(func), name, info)) {
-            throw details::ut::required_failed{};
+        if (!check_throws_as<E>(std::forward<FUNC>(func), name, sloc)) {
+            details::ut::required_failed();
         }
 
         return true;
@@ -960,6 +1074,10 @@ namespace bsl
     /// throws an exception, the check will fail and eventually be reported
     /// to the user.
     ///
+    /// AUTOSAR:
+    /// - A15-3-4: the catch all and catch std::exception are used for
+    ///   isolation.
+    ///
     /// Notes:
     /// - The default arguments should not be used manually. These are
     ///   automatically set as needed by the library.
@@ -973,35 +1091,32 @@ namespace bsl
     /// @param func the function to run to see if an exception throws
     /// @return true if the check passed, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: possible
+    /// @throw [unchecked]: none
     ///
-    template<typename F>
+    template<typename FUNC>
     [[maybe_unused]] auto
     check_nothrow(
-        F &&func,
+        FUNC &&func,
         const details::ut::name_type &name = "check_nothrow",
-        const details::ut::info_type &info = here()) noexcept -> bool
+        const details::ut::sloc_type &sloc = here()) noexcept
+        -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
-        bool caught = false;
-        ++details::ut::total_assertions;
+        bool caught{};
+        std::string caught_what{};
 
-        bsl::catch_all(
-            [&func] {
-                func();
-            },
-            [&caught](auto what) noexcept {
-                bsl::discard(what);
-                caught = true;
-            });
-
-        if (caught) {
-            details::ut::assertion_failure(name, info);
-            ++details::ut::failed_assertions;
-
-            return false;
+        try {
+            std::forward<FUNC>(func)();
+        }
+        catch(const std::exception &e) {
+            caught = true;
+            caught_what = e.what();
+        }
+        catch(...) {
+            caught = true;
+            caught_what = "...";
         }
 
-        return true;
+        return details::ut::test_assertion(!caught, name, sloc, caught_what);
     }
 
     /// Require Does Not Throw
@@ -1026,17 +1141,18 @@ namespace bsl
     /// @param func the function to run to see if an exception throws
     /// @return true if the check passed, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: possible
+    /// @throw [unchecked]: none
     ///
-    template<typename F>
+    template<typename FUNC>
     [[maybe_unused]] auto
     require_nothrow(
-        F &&func,
+        FUNC &&func,
         const details::ut::name_type &name = "require_nothrow",
-        const details::ut::info_type &info = here()) -> bool
+        const details::ut::sloc_type &sloc = here()) noexcept
+        -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
-        if (!check_nothrow(std::forward<F>(func), name, info)) {
-            throw details::ut::required_failed{};
+        if (!check_nothrow(std::forward<FUNC>(func), name, sloc)) {
+            details::ut::required_failed();
         }
 
         return true;
@@ -1044,6 +1160,35 @@ namespace bsl
 
 #ifdef __linux__
 
+    namespace details::ut
+    {
+        /// Wait
+        ///
+        /// Waits for a process to finish. This is used by the death tests
+        /// to wait for a forked process to complete
+        ///
+        /// NOLINT:
+        /// - We have no choice but to use UNIX APIs here as we must fork a
+        ///   process. These APIs trigger clang-tidy, which we silence.
+        ///   C++ really needs process management APIs to resolve this problem.
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @return the exit code from the process
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        inline auto
+        wait() noexcept -> bsl::int32_t
+        {
+            bsl::int32_t exit_status;
+
+            ::wait(&exit_status.get());
+            return bsl::int32_t{WEXITSTATUS(exit_status.get())};    // NOLINT
+        }
+    }    // namespace details::ut
+
     /// Check Death
     ///
     /// Checks whether a function calls std::terminate and friends (anything
@@ -1051,16 +1196,9 @@ namespace bsl
     /// does not exit, the check fails and the results is eventually given
     /// to the user.
     ///
-    /// NOSONAR:
-    /// - To check for a death, we need to fork a process, and that process
-    ///   must exit without continuing as that would cause a bunch of
-    ///   unit test logic to execute without in our child process, which is
-    ///   why we must call std::exit.
-    ///
-    /// NOLINT:
-    /// - We have no choice but to use UNIX APIs here as we must fork a
-    ///   process. These APIs trigger clang-tidy, which we silence. C++ really
-    ///   needs process management APIs to resolve this problem.
+    /// AUTOSAR:
+    /// - A15-3-4: the catch all and catch std::exception are used for
+    ///   isolation.
     ///
     /// Notes:
     /// - The default arguments should not be used manually. These are
@@ -1075,37 +1213,31 @@ namespace bsl
     /// @param func the function to run to see if it exits
     /// @return true if the check passed, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: possible
+    /// @throw [unchecked]: none
     ///
-    template<typename F>
+    template<typename FUNC>
     [[maybe_unused]] auto
     check_death(
-        F &&func,
+        FUNC &&func,
         const details::ut::name_type &name = "check_death",
-        const details::ut::info_type &info = here()) -> bool
+        const details::ut::sloc_type &sloc = here()) noexcept
+        -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
-        constexpr std::int32_t exit_code = 191;
-
+        constexpr bsl::int32_t exit_code{191};
         fflush(stdout);
-        ++details::ut::total_assertions;
 
         if (0 == fork()) {
-            std::string().swap(*details::ut::failures);
-            func();
-            std::exit(exit_code);    //NOSONAR
-        }
-        else {
-            std::int32_t exit_status;
-            wait(&exit_status);
-
-            if (WEXITSTATUS(exit_status) == exit_code) {    // NOLINT
-                details::ut::assertion_failure(name, info);
-                ++details::ut::failed_assertions;
-
-                return false;
+            try {
+                std::forward<FUNC>(func)();
+            }
+            catch(...) {
             }
 
-            return true;
+            bsl::fail_fast(exit_code.get());
+        }
+        else {
+            return details::ut::test_assertion(
+                details::ut::wait() != exit_code, name, sloc, {});
         }
     }
 
@@ -1132,17 +1264,18 @@ namespace bsl
     /// @param func the function to run to see if it exits
     /// @return true if the check passed, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: possible
+    /// @throw [unchecked]: none
     ///
-    template<typename F>
+    template<typename FUNC>
     [[maybe_unused]] auto
     require_death(
-        F &&func,
+        FUNC &&func,
         const details::ut::name_type &name = "require_death",
-        const details::ut::info_type &info = here()) -> bool
+        const details::ut::sloc_type &sloc = here()) noexcept
+        -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
-        if (!check_death(std::forward<F>(func), name, info)) {
-            throw details::ut::required_failed{};
+        if (!check_death(std::forward<FUNC>(func), name, sloc)) {
+            details::ut::required_failed();
         }
 
         return true;
@@ -1155,16 +1288,9 @@ namespace bsl
     /// exits, the check fails and the results is eventually given
     /// to the user.
     ///
-    /// NOSONAR:
-    /// - To check for a death, we need to fork a process, and that process
-    ///   must exit without continuing as that would cause a bunch of
-    ///   unit test logic to execute without in our child process, which is
-    ///   why we must call std::exit.
-    ///
-    /// NOLINT:
-    /// - We have no choice but to use UNIX APIs here as we must fork a
-    ///   process. These APIs trigger clang-tidy, which we silence. C++ really
-    ///   needs process management APIs to resolve this problem.
+    /// AUTOSAR:
+    /// - A15-3-4: the catch all and catch std::exception are used for
+    ///   isolation.
     ///
     /// Notes:
     /// - The default arguments should not be used manually. These are
@@ -1179,37 +1305,31 @@ namespace bsl
     /// @param func the function to run to see if it exits
     /// @return true if the check passed, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: possible
+    /// @throw [unchecked]: none
     ///
-    template<typename F>
+    template<typename FUNC>
     [[maybe_unused]] auto
     check_nodeath(
-        F &&func,
+        FUNC &&func,
         const details::ut::name_type &name = "check_nodeath",
-        const details::ut::info_type &info = here()) -> bool
+        const details::ut::sloc_type &sloc = here()) noexcept
+        -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
-        constexpr std::int32_t exit_code = 191;
-
+        constexpr bsl::int32_t exit_code{191};
         fflush(stdout);
-        ++details::ut::total_assertions;
 
         if (0 == fork()) {
-            std::string().swap(*details::ut::failures);
-            func();
-            std::exit(exit_code);    //NOSONAR
-        }
-        else {
-            std::int32_t exit_status;
-            wait(&exit_status);
-
-            if (WEXITSTATUS(exit_status) != exit_code) {    // NOLINT
-                details::ut::assertion_failure(name, info);
-                ++details::ut::failed_assertions;
-
-                return false;
+            try {
+                std::forward<FUNC>(func)();
+            }
+            catch(...) {
             }
 
-            return true;
+            bsl::fail_fast(exit_code.get());
+        }
+        else {
+            return details::ut::test_assertion(
+                details::ut::wait() == exit_code, name, sloc, {});
         }
     }
 
@@ -1236,17 +1356,18 @@ namespace bsl
     /// @param func the function to run to see if it exits
     /// @return true if the check passed, false otherwise.
     /// @throw [checked]: none
-    /// @throw [unchecked]: possible
+    /// @throw [unchecked]: none
     ///
-    template<typename F>
+    template<typename FUNC>
     [[maybe_unused]] auto
     require_nodeath(
-        F &&func,
+        FUNC &&func,
         const details::ut::name_type &name = "require_nodeath",
-        const details::ut::info_type &info = here()) -> bool
+        const details::ut::sloc_type &sloc = here()) noexcept
+        -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
-        if (!check_nodeath(std::forward<F>(func), name, info)) {
-            throw details::ut::required_failed{};
+        if (!check_nodeath(std::forward<FUNC>(func), name, sloc)) {
+            details::ut::required_failed();
         }
 
         return true;

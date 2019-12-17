@@ -21,12 +21,12 @@
 
 bf_add_test(autosar_compliant_0
     DEFINES BSL_BUILD_LEVEL=2
-    DEFINES BSL_EXIT_INSTEAD_OF_ABORT
+    DEFINES BSL_EXIT_INSTEAD_OF_ABORT=true
 )
 
 bf_add_test(autosar_compliant_1
     DEFINES BSL_BUILD_LEVEL=2
-    DEFINES BSL_AUTOSAR_COMPLIANT
+    DEFINES BSL_AUTOSAR_COMPLIANT=true
 )
 
 bf_add_test(build_level_0
@@ -46,7 +46,7 @@ bf_add_test(build_level_2
 
 bf_add_test(continue_option_0
     DEFINES BSL_BUILD_LEVEL=2
-    DEFINES BSL_EXIT_INSTEAD_OF_ABORT
+    DEFINES BSL_EXIT_INSTEAD_OF_ABORT=true
     DEFINES BSL_CONTRACTS_THROW_ON_VIOLATION
 )
 

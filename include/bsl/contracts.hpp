@@ -24,10 +24,7 @@
 
 #include "autosar.hpp"
 #include "source_location.hpp"
-
-#if BSL_BUILD_LEVEL != 0
 #include "debug.hpp"
-#endif
 
 namespace bsl::details::contracts
 {
@@ -58,8 +55,12 @@ namespace bsl::details::contracts
 
 namespace bsl
 {
-    struct contract_violation_error : bsl::unchecked_fatal
-    {};
+    struct contract_violation_error : bsl::unchecked_error
+    {
+        contract_violation_error() :
+            bsl::unchecked_error{"contract_violation_error"}
+        {}
+    };
 
     /// Violation Information
     ///
@@ -110,19 +111,11 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: possible
         ///
-#if BSL_BUILD_LEVEL != 0
         [[noreturn]] inline auto
-#else
-        inline auto
-#endif
         default_handler(const violation_info &info) -> void
         {
-            bsl::discard(info);
-
-#if BSL_BUILD_LEVEL != 0
             bsl::fatal<contract_violation_error>(
-                "{} violation\n{}", info.comment, info.location);
-#endif
+                "{} violation\n{}\n", info.comment, info.location);
         }
 
         /// Compile Time Contract Handler Violation Occurred

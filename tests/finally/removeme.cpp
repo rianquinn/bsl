@@ -19,29 +19,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "../../include/bsl/source_location.hpp"
-#include "../../include/bsl/ut.hpp"
+#include "../../include/bsl/debug.hpp"
 
 auto
-main() -> int
+main() -> std::int32_t
 {
-    bsl::test_case("default constructor") = [] {
-        const auto loc = bsl::source_location{};
-        bsl::check(loc.file_name() == nullptr);
-        bsl::check(loc.function_name() == nullptr);
-        bsl::check(loc.line() == 0);
-    };
-
-    bsl::test_case("current") = [] {
-        const auto loc = bsl::source_location::current();
-        bsl::check(loc.file_name() != nullptr);
-        bsl::check(loc.function_name() != nullptr);
-        bsl::check(loc.line() == 36);    // NOLINT
-    };
-
-    bsl::test_case("column") = [] {
-        bsl::check(bsl::source_location::column() == 0);
-    };
-
-    return bsl::check_results().get();
+    try {
+        fmt::print("Hello World{}\n", bsl::here());
+    }
+    catch(...) {
+        return 0;
+    }
 }

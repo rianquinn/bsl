@@ -33,5 +33,5 @@ main() -> int
         bsl::check(bsl::is_integer_v<bsl::int32_t>);
     };
 
-    return bsl::check_results();
+    return bsl::check_results().get();
 }

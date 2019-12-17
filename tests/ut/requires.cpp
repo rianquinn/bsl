@@ -69,37 +69,14 @@ main() -> int
         });
     };
 
-    bsl::test_case("require_throws_checked") = [] {
-        bsl::check_death([] {
-            bsl::require_throws_checked([] {
-                throw bsl::unchecked_error{};
-            });
-        });
-        bsl::check_death([] {
-            bsl::require_throws_checked([] {
-                throw bsl::unchecked_error{};
-            });
-        });
+    bsl::test_case("require_throws_as") = [] {
         bsl::check_nodeath([] {
-            bsl::require_throws_checked([] {
-                throw bsl::checked_error{};
-            });
-        });
-    };
-
-    bsl::test_case("require_throws_unchecked") = [] {
-        bsl::check_nodeath([] {
-            bsl::require_throws_unchecked([] {
-                throw bsl::unchecked_error{};
-            });
-        });
-        bsl::check_nodeath([] {
-            bsl::require_throws_unchecked([] {
+            bsl::require_throws_as<bsl::unchecked_error>([] {
                 throw bsl::unchecked_error{};
             });
         });
         bsl::check_death([] {
-            bsl::require_throws_unchecked([] {
+            bsl::require_throws_as<bsl::unchecked_error>([] {
                 throw bsl::checked_error{};
             });
         });
@@ -127,6 +104,22 @@ main() -> int
         });
     };
 
+    bsl::test_case("require nested level 1") = [] {
+        bsl::test_case("require nested level 2") = [] {
+            bsl::test_case("require nested level 3") = [] {
+                bsl::check_nodeath([] {
+                    bsl::require(true);
+                });
+            };
+        };
+    };
+
+    bsl::test_case("throw from death test") = [] {
+        bsl::check_nodeath([] {
+            throw bsl::unchecked_error{};
+        });
+    };
+
     // Note
     //
     // - The magic here is that each death test is its own process, so
@@ -137,5 +130,5 @@ main() -> int
     //   unit test library using our unit test library.
     //
 
-    return bsl::check_results();
+    return bsl::check_results().get();
 }

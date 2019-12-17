@@ -250,7 +250,7 @@ namespace bsl
         }
 
         template<typename U, std::enable_if_t<std::is_same_v<T, U>> * = nullptr>
-        constexpr auto
+        [[maybe_unused]] constexpr auto
         operator=(const U &val) noexcept -> integer<T> &
         {
             m_val = val;
@@ -258,7 +258,7 @@ namespace bsl
         }
 
         template<typename U>
-        auto
+        [[maybe_unused]] auto
         operator=(const U *ptr) noexcept -> integer<T> &
         {
             bsl::discard(ptr);
@@ -330,7 +330,7 @@ namespace bsl
             return U{bsl::convert<T, typename U::value_type>(m_val, loc)};
         }
 
-        [[nodiscard]] constexpr auto
+        [[maybe_unused]] constexpr auto
         operator+=(const integer<T> &rhs) -> integer<T> &
         {
             if constexpr (std::is_signed_v<T>) {
@@ -349,7 +349,13 @@ namespace bsl
             return *this;
         }
 
-        [[nodiscard]] constexpr auto
+        [[maybe_unused]] constexpr auto
+        operator+=(const T &rhs) -> integer<T> &
+        {
+            return *this += integer<T>{rhs};
+        }
+
+        [[maybe_unused]] constexpr auto
         operator-=(const integer<T> &rhs) -> integer<T> &
         {
             if constexpr (std::is_signed_v<T>) {
@@ -367,7 +373,13 @@ namespace bsl
             return *this;
         }
 
-        [[nodiscard]] constexpr auto
+        [[maybe_unused]] constexpr auto
+        operator-=(const T &rhs) -> integer<T> &
+        {
+            return *this -= integer<T>{rhs};
+        }
+
+        [[maybe_unused]] constexpr auto
         operator*=(const integer<T> &rhs) -> integer<T> &
         {
             if (m_val == 0) {
@@ -399,7 +411,13 @@ namespace bsl
             return *this;
         }
 
-        [[nodiscard]] constexpr auto
+        [[maybe_unused]] constexpr auto
+        operator*=(const T &rhs) -> integer<T> &
+        {
+            return *this *= integer<T>{rhs};
+        }
+
+        [[maybe_unused]] constexpr auto
         operator/=(const integer<T> &rhs) -> integer<T> &
         {
             if constexpr (std::is_signed_v<T>) {
@@ -415,7 +433,13 @@ namespace bsl
             return *this;
         }
 
-        [[nodiscard]] constexpr auto
+        [[maybe_unused]] constexpr auto
+        operator/=(const T &rhs) -> integer<T> &
+        {
+            return *this /= integer<T>{rhs};
+        }
+
+        [[maybe_unused]] constexpr auto
         operator%=(const integer<T> &rhs) -> integer<T> &
         {
             if constexpr (std::is_signed_v<T>) {
@@ -431,13 +455,19 @@ namespace bsl
             return *this;
         }
 
-        [[nodiscard]] constexpr auto
-        operator++() -> integer<T> &
+        [[maybe_unused]] constexpr auto
+        operator%=(const T &rhs) -> integer<T> &
         {
-            return *this += 1;
+            return *this %= integer<T>{rhs};
         }
 
-        [[nodiscard]] constexpr auto
+        [[maybe_unused]] constexpr auto
+        operator++() -> integer<T> &
+        {
+            return *this += static_cast<T>(1);
+        }
+
+        [[maybe_unused]] constexpr auto
         operator++(int) -> integer<T>
         {
             auto old = *this;
@@ -445,18 +475,30 @@ namespace bsl
             return old;
         }
 
-        [[nodiscard]] constexpr auto
+        [[maybe_unused]] constexpr auto
         operator--() -> integer<T> &
         {
-            return *this -= 1;
+            return *this -= static_cast<T>(1);
         }
 
-        [[nodiscard]] constexpr auto
+        [[maybe_unused]] constexpr auto
         operator--(int) -> integer<T>
         {
             auto old = *this;
             --(*this);
             return old;
+        }
+
+        [[nodiscard]] auto
+        to_string() const -> std::string
+        {
+            return fmt::format("{0:d}", m_val);
+        }
+
+        [[nodiscard]] auto
+        to_hex_string() const -> std::string
+        {
+            return fmt::format("{:#018x}", m_val);
         }
 
     private:
@@ -531,7 +573,7 @@ namespace bsl
     ///
     template<>
     template<typename U>
-    inline auto
+    [[maybe_unused]] inline auto
     integer<std::uintptr_t>::operator=(const U *ptr) noexcept -> integer &
     {
         m_val = reinterpret_cast<std::uintptr_t>(ptr);    // NOLINT
@@ -1235,22 +1277,6 @@ struct fmt::formatter<bsl::integer<T>>
     }
 };
 
-template<typename T>
-auto
-operator<<(std::ostream &os, const bsl::integer<T> &i) -> std::ostream &
-{
-    os << i.get();
-    return os;
-}
-
-template<typename T>
-auto
-operator>>(std::istream &is, const bsl::integer<T> &i) -> std::istream &
-{
-    is >> i.get();
-    return is;
-}
-
 // -------------------------------------------------------------------------
 // supported integer types
 // -------------------------------------------------------------------------
@@ -1317,6 +1343,16 @@ namespace bsl
     static_assert(sizeof(bsl::uintmax_t) == sizeof(std::uintmax_t));
     static_assert(sizeof(bsl::uintptr_t) == sizeof(std::uintptr_t));
 }    // namespace bsl
+
+// -------------------------------------------------------------------------
+// supported magic numbers
+// -------------------------------------------------------------------------
+
+namespace bsl
+{
+    constexpr bsl::int32_t exit_success{0};
+    constexpr bsl::int32_t exit_failure{1};
+}
 
 // -------------------------------------------------------------------------
 // unit testing facilities

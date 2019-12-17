@@ -360,5 +360,5 @@ main() -> int
         bsl::check(i1 - i2 == 0);
     };
 
-    return bsl::check_results();
+    return bsl::check_results().get();
 }

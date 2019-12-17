@@ -215,23 +215,23 @@ if(BUILD_TESTS)
     if(CMAKE_BUILD_TYPE STREQUAL COVERAGE)
         add_custom_target(
             unittest
+            COMMAND lcov --zerocounters --directory . -q
             COMMAND ctest --output-on-failure
         )
 
         add_custom_target(
             memcheck
+            COMMAND lcov --zerocounters --directory . -q
             COMMAND ctest --output-on-failure -T memcheck
         )
     else()
         add_custom_target(
             unittest
-            COMMAND lcov --zerocounters --directory . -q
             COMMAND ctest --output-on-failure
         )
 
         add_custom_target(
             memcheck
-            COMMAND lcov --zerocounters --directory . -q
             COMMAND ctest --output-on-failure -T memcheck
         )
     endif()
@@ -510,8 +510,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_RELEASE "-O3 -DNDEBUG -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_DEBUG "-Og -g -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_DEBUG "-Og -g -Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables -Wno-missing-noreturn")
-set(CMAKE_LINKER_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables -Wno-missing-noreturn")
+set(CMAKE_CXX_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables -Wno-missing-noreturn -Wno-exit-time-destructors")
+set(CMAKE_LINKER_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables -Wno-missing-noreturn -Wno-exit-time-destructors")
 set(CMAKE_CXX_FLAGS_SONARCLOUD "-Og -g -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_SONARCLOUD "-Og -g -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address -Wall -Wextra -Wpedantic")
@@ -543,6 +543,85 @@ add_custom_command(TARGET info
 )
 
 # ------------------------------------------------------------------------------
+# default definitions
+# ------------------------------------------------------------------------------
+
+if(NOT DEFINED BSL_AUTOSAR_COMPLIANT)
+    set(BSL_AUTOSAR_COMPLIANT false)
+endif()
+
+list(APPEND BSL_DEFAULT_DEFINES
+    BSL_AUTOSAR_COMPLIANT=${BSL_AUTOSAR_COMPLIANT}
+)
+
+# ------------------------------------------------------------------------------
+# bf_generate_defines
+# ------------------------------------------------------------------------------
+
+# Generate Defines
+#
+# This function takes the default defines and merges it with any defines that
+# that are provided for a target. This is capable of handling defines that
+# include a value or simply are defined, as well as defines that are similar
+# in name. If a target provides a define that is also in the defaults list,
+# the target's define wins.
+#
+# NAME the name of of the target to set the merged defines.
+# DEFINES the defines to provide the target that either override a default
+#    or provide above and beyond the defaults.
+#
+function(bf_generate_defines NAME)
+    set(multiValueArgs DEFINES)
+    cmake_parse_arguments(ARGS "" "" "${multiValueArgs}" ${ARGN})
+
+    foreach(d ${BSL_DEFAULT_DEFINES})
+        string(REPLACE "=" ";" d "${d}")
+        list(GET d 0 FIELD_NAME)
+        list(APPEND BSL_DEFAULT_DEFINES_FIELDS ${FIELD_NAME})
+    endforeach(d)
+
+    foreach(d ${ARGS_DEFINES})
+        string(REPLACE "=" ";" d "${d}")
+        list(GET d 0 FIELD_NAME)
+        list(APPEND ARGS_DEFINES_FIELDS ${FIELD_NAME})
+    endforeach(d)
+
+    list(APPEND ALL_FIELDS ${ARGS_DEFINES_FIELDS} ${BSL_DEFAULT_DEFINES_FIELDS})
+    list(REMOVE_DUPLICATES ALL_FIELDS)
+
+    foreach(f ${ALL_FIELDS})
+        set(FOUND 0)
+
+        foreach(d ${ARGS_DEFINES})
+            set(fd "${d}=")
+            string(REPLACE "=" ";" fd "${fd}")
+            list(GET fd 0 fd)
+            if(f STREQUAL fd)
+                list(APPEND GENERATED_DEFINED ${d})
+                set(FOUND 1)
+                break()
+            endif()
+        endforeach(d)
+
+        if(FOUND)
+            continue()
+        endif()
+
+        foreach(d ${BSL_DEFAULT_DEFINES})
+            set(fd "${d}=")
+            string(REPLACE "=" ";" fd "${fd}")
+            list(GET fd 0 fd)
+            if(f STREQUAL fd)
+                list(APPEND GENERATED_DEFINED ${d})
+                set(FOUND 1)
+                break()
+            endif()
+        endforeach(d)
+    endforeach(f)
+    target_compile_definitions(${NAME} PRIVATE ${GENERATED_DEFINED})
+endfunction(bf_generate_defines)
+
+# ------------------------------------------------------------------------------
 # bf_add_example
 # ------------------------------------------------------------------------------
 
@@ -560,8 +639,8 @@ function(bf_add_example NAME SOURCE)
 
     add_executable(${NAME} ${SOURCE})
     target_link_libraries(${NAME} PRIVATE fmt::fmt)
-    target_compile_definitions(test_${NAME} PRIVATE ${ARGS_DEFINES})
     target_include_directories(test_${NAME} ${CMAKE_SOURCE_DIR}/include)
+    bf_generate_defines(${NAME} ${ARGN})
 endfunction(bf_add_example)
 
 # ------------------------------------------------------------------------------
@@ -582,6 +661,6 @@ macro(bf_add_test NAME)
     add_executable(test_${NAME} ${NAME}.cpp)
     target_link_libraries(test_${NAME} PRIVATE fmt::fmt)
     target_compile_options(test_${NAME} PRIVATE -fno-access-control)
-    target_compile_definitions(test_${NAME} PRIVATE ${ARGS_DEFINES})
     add_test(test_${NAME} test_${NAME})
+    bf_generate_defines(test_${NAME} ${ARGN})
 endmacro(bf_add_test)
