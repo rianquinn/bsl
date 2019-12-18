@@ -19,15 +19,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "../../include/bsl/contracts.hpp"
+#include "../../include/bsl/unique_owner.hpp"
+#include "../../include/bsl/ut.hpp"
 
 auto
 main() -> int
 {
-    try {
-        bsl::error("Hello World{}\n", bsl::here());
-    }
-    catch(...) {
-        return 0;
-    }
+    bsl::test_case("") = [] {
+        bsl::unique_owner(42, std::string("hello world"));
+    };
+
+    return bsl::check_results().get();
 }

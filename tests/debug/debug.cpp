@@ -39,30 +39,30 @@ main() -> int
 
     bsl::test_case("print") = [] {
         bsl::print("Hello {}", "World");
-        bsl::print<V>("Hello {}", "World");
-        bsl::print<VV>("Hello {}", "World");
-        bsl::print<VVV>("Hello {}", "World");
+        bsl::print<bsl::V>("Hello {}", "World");
+        bsl::print<bsl::VV>("Hello {}", "World");
+        bsl::print<bsl::VVV>("Hello {}", "World");
     };
 
     bsl::test_case("debug") = [] {
         bsl::debug("Hello {}", "World");
-        bsl::debug<V>("Hello {}", "World");
-        bsl::debug<VV>("Hello {}", "World");
-        bsl::debug<VVV>("Hello {}", "World");
+        bsl::debug<bsl::V>("Hello {}", "World");
+        bsl::debug<bsl::VV>("Hello {}", "World");
+        bsl::debug<bsl::VVV>("Hello {}", "World");
     };
 
     bsl::test_case("alert") = [] {
         bsl::alert("Hello {}", "World");
-        bsl::alert<V>("Hello {}", "World");
-        bsl::alert<VV>("Hello {}", "World");
-        bsl::alert<VVV>("Hello {}", "World");
+        bsl::alert<bsl::V>("Hello {}", "World");
+        bsl::alert<bsl::VV>("Hello {}", "World");
+        bsl::alert<bsl::VVV>("Hello {}", "World");
     };
 
     bsl::test_case("error") = [] {
         bsl::error("Hello {}", "World");
-        bsl::error<V>("Hello {}", "World");
-        bsl::error<VV>("Hello {}", "World");
-        bsl::error<VVV>("Hello {}", "World");
+        bsl::error<bsl::V>("Hello {}", "World");
+        bsl::error<bsl::VV>("Hello {}", "World");
+        bsl::error<bsl::VVV>("Hello {}", "World");
     };
 
     struct my_error : bsl::unchecked_error

@@ -22,6 +22,7 @@
 #ifndef BSL_UNIQUE_OWNER_HPP
 #define BSL_UNIQUE_OWNER_HPP
 
+#include "int.hpp"
 #include <tuple>
 
 /// Owner
@@ -58,9 +59,6 @@
 /// standards are the std::unique_ptr has no idea what the bounds of the
 /// array is.
 ///
-/// TODO:
-/// - Currently we only implement a unique_owner, but a shared_owner makes
-///   sense as well.
 
 namespace bsl
 {
@@ -69,7 +67,6 @@ namespace bsl
     /// Does nothing. As a result, the default bsl::owner should compile
     /// away when used, similar to a gsl::owner.
     ///
-    template<typename... ARGS>
     struct nodelete
     {
         /// Functor
@@ -83,10 +80,11 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
+        template<typename... ARGS>
         constexpr auto
-        operator()(const std::tuple<ARGS> &args) noexcept -> void
+        operator()(const std::tuple<ARGS...> &args) noexcept -> void
         {
-            bsl::unused(args);
+            bsl::discard(args);
         }
     };
 
@@ -94,16 +92,16 @@ namespace bsl
     ///
     /// Please see the above "file" level description
     ///
-    template<typename... ARGS, typename Deleter = nodelete<ARGS...>>
-    class owner:
+    template<typename Deleter = nodelete, typename... ARGS>
+    class unique_owner : public Deleter
     {
-        std::tuple<ARGS> m_args;
-
     public:
+
+        using index_type = bsl::uintmax_t;
+
         /// Constructor
         ///
-        /// Creates the bsl::finally class in place. Then ths class loses
-        /// scope, the provided function will be called.
+        /// Creates a unique_owner.
         ///
         /// expects: none
         /// ensures: none
@@ -111,9 +109,8 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        template<typename FUNC>
-        explicit constexpr owner(ARGS... args, FUNC &&func) noexcept :
-            m_func(std::move(func))
+        explicit constexpr unique_owner(ARGS &&... args) noexcept :
+            m_args{std::forward<ARGS>(args)...}
         {}
 
         /// Destructor
@@ -126,24 +123,51 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        ~finally() noexcept
+        ~unique_owner() noexcept
         {
-            m_func();
+            Deleter::operator()(m_args);
         }
 
-        /// @cond
+        constexpr auto
+        swap(unique_owner& other) noexcept -> void
+        {
+            m_args.swap(other.m_args);
+        }
 
-        finally(const finally &) = delete;
-        auto operator=(const finally &) -> finally & = delete;
-        finally(finally &&) noexcept = delete;
-        auto operator=(finally &&) noexcept -> finally & = delete;
+        template<index_type::value_type I = 0>
+        constexpr auto
+        get() const noexcept -> auto
+        {
+            return std::get<I>(m_args);
+        }
 
-        /// @endcond
+        unique_owner(const unique_owner &) = delete;
+        auto operator=(const unique_owner &) -> unique_owner & = delete;
+        unique_owner(unique_owner &&) noexcept = default;
+        auto operator=(unique_owner &&) noexcept -> unique_owner & = default;
+
+    private:
+
+        std::tuple<ARGS...> m_args;
     };
-
-    template<typename FUNC>
-    finally(FUNC &&func)->finally<FUNC>;
-
 }    // namespace bsl
+
+
+
+
+// template<class T1, class D1, class T2, class D2>
+// bool operator==(const unique_ptr<T1, D1>& x, const unique_ptr<T2, D2>& y);
+// 	(1) 	(since C++11)
+// template<class T1, class D1, class T2, class D2>
+// bool operator!=(const unique_ptr<T1, D1>& x, const unique_ptr<T2, D2>& y);
+// 	(2) 	(since C++11)
+
+
+
+
+// template <class CharT, class Traits, class Y, class D>
+
+// std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os,
+//                                               const std::unique_ptr<Y, D>& p);
 
 #endif

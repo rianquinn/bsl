@@ -31,10 +31,7 @@
 #include <fmt/format.h>
 #include <fmt/color.h>
 
-// extern "C" auto thread_id() noexcept -> std::uint64_t
-// {
-
-// }
+extern "C" auto thread_id() noexcept -> std::uint64_t;
 
 namespace bsl
 {
@@ -45,9 +42,9 @@ namespace bsl
     };
 
     enum class debug_level_t { all = 0, none = 0, v = 1, vv = 2, vvv = 3 };
-    constexpr const auto V = bsl::debug_level_t::v;
-    constexpr const auto VV = bsl::debug_level_t::vv;
-    constexpr const auto VVV = bsl::debug_level_t::vvv;
+    constexpr const auto V = debug_level_t::v;
+    constexpr const auto VV = debug_level_t::vv;
+    constexpr const auto VVV = debug_level_t::vvv;
 
     constexpr const auto black = fmt::fg(fmt::terminal_color::bright_black);
     constexpr const auto red = fmt::fg(fmt::terminal_color::bright_red);
@@ -163,7 +160,7 @@ namespace bsl
                     if (label != nullptr) {
                         if constexpr (show_tid) {
                             fmt::print(color, label);
-                            // fmt::print(yellow, " [{}]", thread_id());
+                            fmt::print(yellow, " [{}]", thread_id());
                             fmt::print(": ");
                         }
                         else {
