@@ -19,13 +19,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "../../include/bsl/debug.hpp"
+#include "../../include/bsl/contracts.hpp"
 
 auto
-main() -> std::int32_t
+main() -> int
 {
     try {
-        fmt::print("Hello World{}\n", bsl::here());
+        bsl::error("Hello World{}\n", bsl::here());
     }
     catch(...) {
         return 0;

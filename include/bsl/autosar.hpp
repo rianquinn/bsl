@@ -73,7 +73,7 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: possible
         ///
-        explicit checked_error(cstr_t msg) : std::runtime_error(msg)
+        explicit checked_error(const cstr_t msg) : std::runtime_error(msg)
         {}
     };
 
@@ -110,7 +110,7 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: possible
         ///
-        explicit unchecked_error(cstr_t msg) : std::logic_error(msg)
+        explicit unchecked_error(const cstr_t msg) : std::logic_error(msg)
         {}
     };
 
@@ -133,7 +133,7 @@ namespace bsl
     /// @throw [unchecked]: none
     ///
     [[noreturn]] inline auto
-    fail_fast(int exit_code = EXIT_FAILURE) noexcept -> void
+    fail_fast(const int exit_code = EXIT_FAILURE) noexcept -> void
     {
         std::exit(exit_code); //NOSONAR
     }
