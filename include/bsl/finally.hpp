@@ -27,34 +27,25 @@
 
 namespace bsl
 {
-    /// Finally
+    /// Final Act
     ///
-    /// The bsl::finally class is different than the gsl::finally class in
-    /// that, we do not support moves or copies. It is a non-move, non-copy
-    /// type. This removes the need for a boolean type, providing the compiler
-    /// with more options for optimizing away to class completely. We also
-    /// leverage C++17 so there is no need for the function wrappers, and
-    /// we can ensure the function is marked as noexcept, so that static
-    /// analysis engines can determine if you are accidentally calling a
-    /// function that is not marked as noexcept from the finally function.
+    ///
     ///
     /// It should be noted that this should not be used globally. Most static
     /// analysis tools will detect the use of global destructors, but just
     /// in case, do not use this globally as it requires a destructor which
     /// may not be called on exit.
     ///
-    template<
-        typename FUNC,
-        std::enable_if_t<std::is_nothrow_invocable_v<FUNC>> * = nullptr>
-    class finally
+    template<typename FUNC, std::enable_if_t<std::is_nothrow_invocable_v<FUNC>> * = nullptr>
+    class final_act final
     {
         FUNC m_func{};
+        bool m_invoked{};
 
     public:
         /// Default Constructor
         ///
-        /// Creates the bsl::finally class in place. Then ths class loses
-        /// scope, the provided function will be called.
+        /// Creates the bsl::final_act class. When this class
         ///
         /// expects: none
         /// ensures: none
@@ -62,9 +53,28 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        explicit constexpr finally(FUNC &&func) noexcept :
-            m_func(std::move(func))
+        explicit constexpr final_act(FUNC &&func) noexcept : m_func(std::move(func))
         {}
+
+        final_act(final_act &&other) noexcept : m_invoked{std::exchange(other.m_invoked, true)}
+        {}
+
+        final_act &
+            operator=(final_act &&other) &
+            noexcept
+        {
+            if (this != &other) {
+                m_invoked = std::exchange(other.m_invoked, true);
+            }
+
+            return *this;
+        }
+
+        inline void
+        ignore() noexcept
+        {
+            m_invoked = true;
+        }
 
         /// Destructor
         ///
@@ -76,23 +86,23 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        ~finally() noexcept
+        ~final_act() noexcept
         {
-            m_func();
+            if (!m_invoked) {
+                m_func();
+            }
         }
 
-        /// @cond
-
-        finally(const finally &) = delete;
-        auto operator=(const finally &) -> finally & = delete;
-        finally(finally &&) noexcept = delete;
-        auto operator=(finally &&) noexcept -> finally & = delete;
-
-        /// @endcond
+        final_act(const final_act &) = delete;               ///< S
+        final_act &operator=(const final_act &) = delete;    ///< S
     };
 
-    template<typename FUNC>
-    finally(FUNC &&func)->finally<FUNC>;
+    template<typename FUNC, std::enable_if_t<std::is_nothrow_invocable_v<FUNC>> * = nullptr>
+    [[nodiscard]] inline auto
+    finally(FUNC &&func) noexcept -> final_act<FUNC>
+    {
+        return final_act<FUNC>(std::forward<FUNC>(func));
+    }
 
 }    // namespace bsl
 

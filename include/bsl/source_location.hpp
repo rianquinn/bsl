@@ -22,34 +22,46 @@
 #ifndef BSL_SOURCE_LOCATION_HPP
 #define BSL_SOURCE_LOCATION_HPP
 
-#include <cstdint>
+#include "fmt.hpp"
 
 namespace bsl
 {
-    /// Source Location
+    /// @class source_location
     ///
     /// The following implements the source_location specification that will
-    /// eventually be included in C++20. For more information on how this
-    /// works, please see the following:
+    /// eventually be included in C++20. We make some changes to the
+    /// specification to support AUTOSAR, but these changes should not change
+    /// how the code is compiled or used.
     ///
-    /// https://en.cppreference.com/w/cpp/utility/source_location
-    ///
-    class source_location
+    class source_location final
     {
-        using file_type = const char *;
-        using func_type = const char *;
+        /// @brief defines the file name type
+        using file_type = cstr_type;
+        /// @brief defines the function name type
+        using func_type = cstr_type;
+        /// @brief defines the line location type
         using line_type = std::int_least32_t;
-        using column_type = std::int_least32_t;
 
+        /// @brief private constructor
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @param current_file the file name of the source
+        /// @param current_func the function name of the source
+        /// @param current_line the line location of the source
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
         constexpr source_location(
-            const file_type file,
-            const func_type func,
-            const line_type line) noexcept :
-            m_file{file}, m_func{func}, m_line{line}
+            file_type const current_file,
+            func_type const current_func,
+            line_type const current_line) noexcept
+            : m_file{current_file}, m_func{current_func}, m_line{current_line}
         {}
 
     public:
-        /// Default Constructor
+        /// @brief default constructor
         ///
         /// expects: none
         /// ensures: none
@@ -57,32 +69,33 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        constexpr source_location() noexcept = default;
+        constexpr source_location() noexcept : m_file{"unknown"}, m_func{"unknown"}, m_line{-1}
+        {}
 
-        /// Current
+        /// @brief current
         ///
         /// Returns the current source location
         ///
         /// expects: none
         /// ensures: none
         ///
-        /// @param file defaults to the current file
-        /// @param func defaults to the current function
-        /// @param line defaults to the current line
+        /// @param current_file defaults to the current file
+        /// @param current_func defaults to the current function
+        /// @param current_line defaults to the current line
         /// @return current source location
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        static constexpr auto
+        static constexpr source_location
         current(
-            file_type file = __builtin_FILE(),
-            func_type func = __builtin_FUNCTION(),
-            line_type line = __builtin_LINE()) noexcept -> source_location
+            file_type const current_file = BSL_BUILTIN_FILE,
+            func_type const current_func = BSL_BUILTIN_FUNCTION,
+            line_type const current_line = BSL_BUILTIN_LINE) noexcept
         {
-            return {file, func, line};
+            return {current_file, current_func, current_line};
         }
 
-        /// File Name
+        /// @brief file_name
         ///
         /// expects: none
         /// ensures: none
@@ -91,13 +104,13 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        [[nodiscard]] constexpr auto
-        file_name() const noexcept -> file_type
+        [[nodiscard]] constexpr file_type
+        file_name() const noexcept
         {
             return m_file;
         }
 
-        /// Function Name
+        /// @brief function_name
         ///
         /// expects: none
         /// ensures: none
@@ -105,13 +118,13 @@ namespace bsl
         /// @return source location function name
         /// @throw none
         ///
-        [[nodiscard]] constexpr auto
-        function_name() const noexcept -> func_type
+        [[nodiscard]] constexpr func_type
+        function_name() const noexcept
         {
             return m_func;
         }
 
-        /// Line
+        /// @brief line
         ///
         /// expects: none
         /// ensures: none
@@ -120,34 +133,22 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        [[nodiscard]] constexpr auto
-        line() const noexcept -> line_type
+        [[nodiscard]] constexpr line_type
+        line() const noexcept
         {
             return m_line;
         }
 
-        /// Column
-        ///
-        /// expects: none
-        /// ensures: none
-        ///
-        /// @return always 0 as the column is not supported
-        /// @throw [checked]: none
-        /// @throw [unchecked]: none
-        ///
-        [[nodiscard]] static constexpr auto
-        column() noexcept -> column_type
-        {
-            return 0;
-        }
-
     private:
-        file_type m_file{};
-        func_type m_func{};
-        line_type m_line{};
+        /// @brief stores the file name of the source
+        file_type m_file;
+        /// @brief stores the function name of the source
+        func_type m_func;
+        /// @brief stores the line location of the source
+        line_type m_line;
     };
 
-    /// Here
+    /// @brief here
     ///
     /// This provides a less verbose version of source_location::current()
     /// to help reduce how large this code must be. They are equivalent, and
@@ -161,12 +162,39 @@ namespace bsl
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///
-    constexpr auto
-    here(source_location loc = source_location::current()) noexcept
-        -> source_location
+    constexpr source_location
+    here(source_location const &loc = source_location::current()) noexcept
     {
         return loc;
     }
+
+    /// @brief operator <<
+    ///
+    /// Provides support for outputing a bsl::source_location.
+    ///
+    /// expects: none
+    /// ensures: none
+    ///
+    /// @param os the stream to output the source location to
+    /// @param sloc the source location to output
+    /// @return a reference to the output stream provided
+    /// @throw [checked]: none
+    /// @throw [unchecked]: possible
+    ///
+    inline std::ostream &
+    operator<<(std::ostream &os, source_location const &sloc)
+    {
+        os << fmt::format("{}   here{}", magenta, reset_color);
+        os << fmt::format(" --> ");
+        os << fmt::format("{}{}{}", yellow, sloc.file_name(), reset_color);
+        os << fmt::format(": ");
+        os << fmt::format("{}{}{}", cyan, sloc.line(), reset_color);
+
+        return os;
+    }
+
+    /// @brief defines a source location
+    using sloc_type = source_location;
 }    // namespace bsl
 
 #endif

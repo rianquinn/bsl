@@ -19,29 +19,108 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "../../include/bsl/source_location.hpp"
-#include "../../include/bsl/ut.hpp"
+#include "../../include/bsl/checked_error.hpp"
+#include "../../include/bsl/unique_owner.hpp"
+#include "../../include/bsl/contracts.hpp"
+#include "../../include/bsl/convert.hpp"
+#include "../../include/bsl/integer.hpp"
+#include <iostream>
 
-auto
-main() -> int
+// verify copy does not compile
+// verify doxygen errors on all examples in 2025
+// file:///home/rianquinn/perforce/Helix-QAC-2019.2/components/qacpp-4.5.0/doc-en_US/messages/2025.html
+// verify that 0xFFFFFFFF on a 16 bit constexpr causes a compiler error.
+
+namespace
 {
-    bsl::test_case("default constructor") = [] {
-        const auto loc = bsl::source_location{};
-        bsl::check(loc.file_name() == nullptr);
-        bsl::check(loc.function_name() == nullptr);
-        bsl::check(loc.line() == 0);
-    };
+    constexpr bsl::uint64_t g_i1{bsl::to_uint64(42)};
+    constexpr bsl::uint64_t g_i2{bsl::to_uint64(23)};
 
-    bsl::test_case("current") = [] {
-        const auto loc = bsl::source_location::current();
-        bsl::check(loc.file_name() != nullptr);
-        bsl::check(loc.function_name() != nullptr);
-        bsl::check(loc.line() == 36);    // NOLINT
-    };
+    static_assert(!(g_i1 == g_i2));
+    static_assert(g_i1 != g_i2);
+    static_assert(g_i1 > g_i2);
+    static_assert(g_i1 >= g_i2);
+    static_assert(!(g_i1 < g_i2));
+    static_assert(!(g_i1 <= g_i2));
+}
 
-    bsl::test_case("column") = [] {
-        bsl::check(bsl::source_location::column() == 0);
-    };
+/// Unit Test Entry Point
+///
+/// expects: none
+/// ensures: none
+///
+/// @return EXIT_SUCCESS on UT success, EXIT_FAILURE otherwise
+/// @throw [checked]: none
+/// @throw [unchecked]: none
+///
+std::int32_t
+main()
+{
+    try {
+        bsl::expects(true);
+        bsl::ensures(true);
+        bsl::confirm(true);
+        bsl::expects_false(false);
+        bsl::ensures_false(false);
+        bsl::confirm_false(false);
+        bsl::expects_audit(true);
+        bsl::ensures_audit(true);
+        bsl::confirm_audit(true);
+        bsl::expects_audit_false(false);
+        bsl::ensures_audit_false(false);
+        bsl::confirm_audit_false(false);
 
-    return bsl::check_results().get();
+        bsl::unique_owner<std::int32_t> const g_yourmom{0};
+        std::cout << g_yourmom.get() << "\n";
+        std::cout << bsl::unsign(1) << "\n";
+        std::cout << bsl::convert<std::uintmax_t>(1) << "\n";
+
+        constexpr bsl::int32_t blah1{1};
+        std::cout << blah1 << "\n";
+
+        throw bsl::checked_error{"checked_error", "hello world", bsl::here()};
+    }
+    catch (bsl::checked_error const &e) {
+        try {
+            std::cout << e << "\n";
+        }
+        catch (...) {
+        }
+    }
+    catch (...) {
+    }
+
+    try {
+        throw bsl::unchecked_error{"unchecked_error", "hello world", bsl::here()};
+    }
+    catch (bsl::unchecked_error const &e) {
+        try {
+            std::cout << e << "\n";
+        }
+        catch (...) {
+        }
+    }
+    catch (...) {
+    }
+
+    try {
+        std::cout << bsl::here() << "\n";
+    }
+    catch (...) {
+    }
+
+    try {
+        bsl::fail();
+    }
+    catch (bsl::unchecked_error const &e) {
+        try {
+            std::cout << e << "\n";
+        }
+        catch (...) {
+        }
+    }
+    catch (...) {
+    }
+
+    return 0;
 }

@@ -22,86 +22,67 @@
 #ifndef BSL_UNIQUE_OWNER_HPP
 #define BSL_UNIQUE_OWNER_HPP
 
-#include "int.hpp"
-#include <tuple>
-
-/// Owner
-///
-/// Unlike the gsl::owner, ths bsl::owner is not a decoration, but instead
-/// provides the facilities for actually owning a resource. Specifically,
-/// if you "own" a resource, you are responsible for releasing or freeing
-/// the resource when you lose scope. The gsl::owner goes completely
-/// against the C++ Core Guidelines as it encourages the use of an owner
-/// whose lifetime is not tied to the lifetime of the owner. The BSL owner
-/// address this issue. For a bsl::unique_owner, we use EBO, such that, we
-/// are capable of re-creating the gsl use case with no impact on the size of
-/// the code or its performance when no lifetime function is needed.
-///
-/// It should be noted, however, that to make this work, we mimic the
-/// std::unique_ptr APIs, which means that the bsl::owner is not a drop in
-/// replacement for a gsl::owner as you must execute get() to get access to
-/// the resource(s) that it owns.
-///
-/// It should also be noted that we do not 100% mimic the std::unique_ptr, as
-/// it has some functionality that is really never used, and just
-/// overcomplicates things. For example, we require that the deleter is
-/// default constructable, and we do not provide constructor overloads for
-/// providing deleters with non-default construction. This feature is likely
-/// never used, evidence by the fact that make_unique doesn't even support it
-/// either. We also simplify some of the member functions as a lot of those
-/// functions are also overly complicated.
-///
-/// Another big change (which is why we don't just rename a unique_ptr),
-/// is we support multiple resources. One of the biggest issues with
-/// std::unique_ptr is that it doesn't store the size of the ptr, which in
-/// some ways make the class pointless. For example, all of the array
-/// functions are meaningless as they cannot be used under most coding
-/// standards are the std::unique_ptr has no idea what the bounds of the
-/// array is.
-///
+#include "nodelete.hpp"
+#include "fmt.hpp"
 
 namespace bsl
 {
-    /// No Delete
-    ///
-    /// Does nothing. As a result, the default bsl::owner should compile
-    /// away when used, similar to a gsl::owner.
-    ///
-    struct nodelete
-    {
-        /// Functor
-        ///
-        /// Deletes memory allocated using new T[].
-        ///
-        /// expects: none
-        /// ensures: none
-        ///
-        /// @param args the resources owned by the bsl::owner
-        /// @throw [checked]: none
-        /// @throw [unchecked]: none
-        ///
-        template<typename... ARGS>
-        constexpr auto
-        operator()(const std::tuple<ARGS...> &args) noexcept -> void
-        {
-            bsl::discard(args);
-        }
-    };
 
-    /// Owner
+    /// @class unique_owner
     ///
-    /// Please see the above "file" level description
+    /// Unlike the gsl::owner, ths bsl::unique_owner is not a decoration, but
+    /// instead provides the facilities for actually owning a resource.
+    /// Specifically, if you "own" a resource, you are responsible for
+    /// releasing or freeing the resource when you lose scope. The gsl::owner
+    /// goes against the C++ Core Guidelines as it encourages the use of an
+    /// owner whose lifetime is not tied to the lifetime of the owner. The
+    /// bsl::unique_owner addresses this issue by mimicing the std::unique_ptr
+    /// APIs, which means that the bsl::unique_owner is not a drop in
+    /// replacement for a gsl::owner as you must execute get() to get access
+    /// to the resource that it owns. Some other issues with the gsl::owner
+    /// include the following:
+    /// - you can copy a gsl::owner
+    /// - the gsl::owner does not require a move on construction, resulting
+    ///   in a copy.
+    /// - a move of a gsl::owner does not properly initialize the object being
+    ///   moved from, resulting in a copy
     ///
-    template<typename Deleter = nodelete, typename... ARGS>
-    class unique_owner : public Deleter
+    /// It should be noted that we do not 100% mimic the std::unique_ptr, as
+    /// it has some functionality that is really never used, and just
+    /// overcomplicates things. For example, we require that the deleter is
+    /// default constructable, and we do not provide constructor overloads for
+    /// providing deleters with non-default construction. This feature is
+    /// likely never used, evidence by the fact that make_unique doesn't even
+    /// support it either. We also require that a default constructed T
+    /// denotes the "invalid" state. If get() == T{}, the deleter is not called
+    /// on destruction.
+    ///
+    /// EXPECTS: --
+    /// - T is trivial
+    /// - If get() == T{}, D() is not called on destruction
+    ///
+    template<typename T, typename D = bsl::nodelete<T>>
+    class unique_owner final : public D
     {
+        static_assert(std::is_trivial<T>::value);
+
     public:
+        // ---------------------------------------------------------------------
+        // Member Types
 
-        using index_type = bsl::uintmax_t;
+        /// @brief the type of resource being owned
+        using value_type = T;
+        /// @brief a reference to the type of resource being owned
+        using reference = T &;
+        /// @brief a const reference to the type of resource being owned
+        using const_reference = T const &;
+        /// @brief the type of Deleter used by this class
+        using deleter_type = D;
 
-        /// Constructor
-        ///
-        /// Creates a unique_owner.
+        // ---------------------------------------------------------------------
+        // Constructors/Destructors/Assignment
+
+        /// @brief constructor
         ///
         /// expects: none
         /// ensures: none
@@ -109,13 +90,135 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        explicit constexpr unique_owner(ARGS &&... args) noexcept :
-            m_args{std::forward<ARGS>(args)...}
+        constexpr unique_owner() noexcept    // --
+            : D{}, m_val{}
         {}
 
-        /// Destructor
+        /// @brief constructor
         ///
-        /// Calls the function provided during construction.
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @param o the object to be copied
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        constexpr unique_owner(unique_owner const &o) noexcept = delete;
+
+        /// @brief constructor
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @param val the value of type T to be copied
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        explicit constexpr unique_owner(value_type const &val) noexcept = delete;
+
+        /// @brief constructor
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @param other the object to be moved
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        constexpr unique_owner(unique_owner &&other) noexcept    // --
+            : D{}, m_val{std::forward<value_type>(other.m_val)}
+        {
+            other.m_val = {};
+        }
+
+        /// @brief constructor
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @param val the value of type T to be moved
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        explicit constexpr unique_owner(value_type &&val) noexcept    // --
+            : D{}, m_val{std::forward<value_type>(val)}
+        {
+            val = {};
+        }
+
+        /// @brief operator =
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @param o the object to be copied
+        /// @return a reference to the newly copied object
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        constexpr unique_owner &operator=(unique_owner const &o) &noexcept = delete;
+
+        /// @brief operator =
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @param val the value of type T to be copied
+        /// @return a reference to the newly copied object
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        constexpr unique_owner &operator=(value_type const &val) &noexcept = delete;
+
+        // clang-format off
+
+        /// @brief operator =
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @param other the object to be moved
+        /// @return a reference to the newly moved object
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        [[maybe_unused]] constexpr unique_owner &
+        operator=(unique_owner &&other) &noexcept
+        {
+            if (*this == other) {
+                return *this;
+            }
+
+            m_val = std::move(other.m_val);
+            other.m_val = {};
+
+            return *this;
+        }
+
+        /// @brief operator =
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @param val the value of type T to be moved
+        /// @return a reference to the newly moved object
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        [[maybe_unused]] constexpr unique_owner &
+        operator=(value_type &&val) &noexcept
+        {
+            m_val = std::move(val);
+            val = {};
+
+            return *this;
+        }
+
+        // clang-format on
+
+        /// @brief destructor
+        ///
+        /// Destroys the resource owned by the owner by calling the Deleter
         ///
         /// expects: none
         /// ensures: none
@@ -125,49 +228,107 @@ namespace bsl
         ///
         ~unique_owner() noexcept
         {
-            Deleter::operator()(m_args);
+            if constexpr (!std::is_same<D, nodelete<T>>::value) {
+                if (m_val != T{}) {
+                    D::operator()(std::move(m_val));
+                }
+            }
         }
 
-        constexpr auto
-        swap(unique_owner& other) noexcept -> void
+        // ---------------------------------------------------------------------
+        // Modifiers
+
+        /// @brief swap
+        ///
+        /// Swaps the contents of two unique_owner objects
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @param other the unique_owner to swap with
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        constexpr void
+        swap(T &other) noexcept
         {
-            m_args.swap(other.m_args);
+            std::swap(m_val, other.m_val);
         }
 
-        template<index_type::value_type I = 0>
-        constexpr auto
-        get() const noexcept -> auto
+        // ---------------------------------------------------------------------
+        // Observers
+
+        /// @brief get
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @return returns the contents of the resourece owned by the
+        ///     unique_owner
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        [[nodiscard]] constexpr const_reference
+        get() const noexcept
         {
-            return std::get<I>(m_args);
+            return m_val;
         }
 
-        unique_owner(const unique_owner &) = delete;
-        auto operator=(const unique_owner &) -> unique_owner & = delete;
-        unique_owner(unique_owner &&) noexcept = default;
-        auto operator=(unique_owner &&) noexcept -> unique_owner & = default;
+        /// @brief operator bool
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @return returns true if the bsl::unique_owner owns a valid resource,
+        ///     false otherwise
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        [[nodiscard]] explicit constexpr operator bool() const noexcept
+        {
+            return m_val != T{};
+        }
 
     private:
-
-        std::tuple<ARGS...> m_args;
+        /// @brief store the resource owned by the unique_owner
+        value_type m_val;
     };
+
+    /// @brief comparison ==
+    ///
+    /// expects: none
+    /// ensures: none
+    ///
+    /// @param lhs the left-hand side of the comparison
+    /// @param rhs the right-hand side of the comparison
+    /// @return true if the lhs and rhs are equal, false otherwise
+    /// @throw [checked]: none
+    /// @throw [unchecked]: none
+    ///
+    template<typename T1, typename D1, typename T2, typename D2>
+    [[nodiscard]] constexpr bool
+    operator==(unique_owner<T1, D1> const &lhs, unique_owner<T2, D2> const &rhs) noexcept
+    {
+        return lhs.get() == rhs.get();
+    }
+
+    /// @brief comparison !=
+    ///
+    /// expects: none
+    /// ensures: none
+    ///
+    /// @param lhs the left-hand side of the comparison
+    /// @param rhs the right-hand side of the comparison
+    /// @return false if the lhs and rhs are equal, true otherwise
+    /// @throw [checked]: none
+    /// @throw [unchecked]: none
+    ///
+    template<typename T1, typename D1, typename T2, typename D2>
+    [[nodiscard]] constexpr bool
+    operator!=(unique_owner<T1, D1> const &lhs, unique_owner<T2, D2> const &rhs) noexcept
+    {
+        return lhs.get() != rhs.get();
+    }
 }    // namespace bsl
-
-
-
-
-// template<class T1, class D1, class T2, class D2>
-// bool operator==(const unique_ptr<T1, D1>& x, const unique_ptr<T2, D2>& y);
-// 	(1) 	(since C++11)
-// template<class T1, class D1, class T2, class D2>
-// bool operator!=(const unique_ptr<T1, D1>& x, const unique_ptr<T2, D2>& y);
-// 	(2) 	(since C++11)
-
-
-
-
-// template <class CharT, class Traits, class Y, class D>
-
-// std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os,
-//                                               const std::unique_ptr<Y, D>& p);
 
 #endif

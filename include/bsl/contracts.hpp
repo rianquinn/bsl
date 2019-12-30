@@ -22,87 +22,23 @@
 #ifndef BSL_CONTRACTS_HPP
 #define BSL_CONTRACTS_HPP
 
-#include "autosar.hpp"
-#include "source_location.hpp"
+#include "violation_info.hpp"
 #include "debug.hpp"
-
-namespace bsl::details::contracts
-{
-#if !defined(BSL_BUILD_LEVEL)
-    constexpr bool check_default = true;
-    constexpr bool check_audit = false;
-#elif BSL_BUILD_LEVEL == 1
-    constexpr bool check_default = true;
-    constexpr bool check_audit = false;
-#elif BSL_BUILD_LEVEL == 2
-    constexpr bool check_default = true;
-    constexpr bool check_audit = true;
-#else
-    constexpr bool check_default = false;
-    constexpr bool check_audit = false;
-#endif
-
-#ifdef BSL_CONTINUE_OPTION
-    constexpr bool continue_on_violation = true;
-#else
-    constexpr bool continue_on_violation = false;
-#endif
-}    // namespace bsl::details::contracts
-
-// -----------------------------------------------------------------------------
-// Definition
-// -----------------------------------------------------------------------------
 
 namespace bsl
 {
-    struct contract_violation_error : bsl::unchecked_error
+    namespace details
     {
-        contract_violation_error() :
-            bsl::unchecked_error{"contract_violation_error"}
-        {}
-    };
+        /// @brief the type used to define a violation handler
+        using violation_handler_t = void (*)(violation_info const &);
 
-    /// Violation Information
-    ///
-    /// Provides information about a contract violation that can be used in a
-    /// custom violation handler.
-    ///
-    /// NOSONAR:
-    /// - This structure is defined by the spec for contracts, which dictates
-    ///   the use of a struct with publically accessible data members with
-    ///   these specific names. SonarCloud is mad about the fact that the
-    ///   member names do not begin with m_, which is fine since we did not
-    ///   write the spec, and someday, C++ will have native support for
-    ///   contracts.
-    ///
-    /// @var violation_info::location
-    ///     the location of the violation.
-    /// @var violation_info::comment
-    ///     a comment about the violation (our version of contracts does not
-    ///     include a stringified version of the contract itself as that
-    ///     could require macros, which we do not want to support).
-    ///
-    struct violation_info
-    {
-        source_location location{};    //NOSONAR
-        const char *comment{};         //NOSONAR
-    };
-
-    namespace details::contracts
-    {
-        /// Private Handler Signature
-        ///
-        using handler_t = void (*)(const violation_info &);
-
-        /// Default Violation Handler
+        /// @brief default_handler
         ///
         /// This function implements the default violation handler that is
         /// executed when a contract violation occurs. You can override this
         /// handler by calling set_violation_handler(). By default, this
-        /// handler will output a message and call std::abort() as defined in
-        /// the contracts spec. The use of std::abort() is not allowed with
-        /// AUTOSAR, so if you enable AUTOSAR compliance, this function will
-        /// throw instead.
+        /// handler will output a message and call std::exit(). If AUTOSAR
+        /// compliance is enabled, it will throw a contract_violation_error.
         ///
         /// expects: none
         /// ensures: none
@@ -111,14 +47,30 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: possible
         ///
-        [[noreturn]] inline auto
-        default_handler(const violation_info &info) -> void
+        [[noreturn]] constexpr void
+        default_handler(violation_info const &info)
         {
-            bsl::fatal<contract_violation_error>(
-                "{} violation\n{}\n", info.comment, info.location);
+            bsl::fatal(info.location(), "{} violation", info.comment());
         }
 
-        /// Compile Time Contract Handler Violation Occurred
+        /// @brief handler
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @return returns a reference to the global violation handler
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        template<typename T = void>
+        [[nodiscard]] violation_handler_t &
+        handler() noexcept
+        {
+            static violation_handler_t s_handler{&default_handler};
+            return s_handler;
+        }
+
+        /// @brief compile_time_contract_violation_occurred
         ///
         /// If you see this function show up in a compilation error, it
         /// means that a compile-time contract violation has occurred during
@@ -133,45 +85,38 @@ namespace bsl
         /// expects: none
         /// ensures: none
         ///
+        /// @return always returns false to silence side effect warnings.
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        inline auto
-        compile_time_contract_violation_occurred() noexcept -> void
-        {}
+        template<typename T = void>
+        [[maybe_unused]] bool
+        compile_time_contract_violation_occurred() noexcept
+        {
+            return false;
+        }
+    }    // namespace details
 
-        /// NOSONAR:
-        /// - We cannot use a std::function here as this requires a global
-        ///   constructor/destructor.
-        ///
-        inline handler_t handler = default_handler;    //NOSONAR
-    }    // namespace details::contracts
-
-    /// Set Violation Handler
+    /// @brief set_violation_handler
     ///
     /// Sets the global violation handler that is called when a contract
     /// violation occurs.
     ///
-    /// NOSONAR:
-    /// - We cannot store a std::function globally, so therefore we cannot
-    ///   accept a std::function here.
-    ///
     /// expects: none
     /// ensures: none
     ///
-    /// @param handler the handler to call when a contract violation occurs
+    /// @param hdlr the handler to call when a contract violation occurs
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///
-    constexpr auto
-    set_violation_handler(
-        const details::contracts::handler_t handler)    //NOSONAR
-        noexcept -> void
+    template<typename T = void>
+    void
+    set_violation_handler(details::violation_handler_t const &hdlr) noexcept
     {
-        details::contracts::handler = handler;
+        details::handler() = hdlr;
     }
 
-    /// Expects
+    /// @brief expects
     ///
     /// A precondition to check. If this check evaluates to false, the
     /// violation handler is called.
@@ -180,33 +125,28 @@ namespace bsl
     /// ensures: none
     ///
     /// @param test the precondition to check
+    /// @param sloc the location of the contract being checked
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
-    constexpr auto
-    expects(const bool test, const source_location loc = here()) -> void
+    constexpr void
+    expects(bool const test, sloc_type const &sloc = here())
     {
-        bsl::discard(test);
-        bsl::discard(loc);
+        static_cast<void>(test);
+        static_cast<void>(sloc);
 
-        using details::contracts::check_default;
-        using details::contracts::continue_on_violation;
-        using details::contracts::compile_time_contract_violation_occurred;
-        using details::contracts::handler;
-        using details::contracts::default_handler;
-
-        if constexpr (check_default) {
+        if constexpr (BSL_CONTRACTS_CHECK_DEFAULT) {
             if (!test) {
-                compile_time_contract_violation_occurred();
-                handler({loc, "default precondition"});
-                if constexpr (!continue_on_violation) {
-                    default_handler({loc, "[unhandled] default precondition"});
+                details::compile_time_contract_violation_occurred();
+                details::handler()({sloc, "default precondition"});
+                if constexpr (!BSL_CONTINUE_ON_VIOLATION) {
+                    bsl::fail(sloc);
                 }
             }
         }
     }
 
-    /// Expects False
+    /// @brief expects_false
     ///
     /// A precondition to check. If this check evaluates to true, the
     /// violation handler is called.
@@ -215,16 +155,17 @@ namespace bsl
     /// ensures: none
     ///
     /// @param test the precondition to check
+    /// @param sloc the location of the contract being checked
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
-    constexpr auto
-    expects_false(const bool test, const source_location loc = here()) -> void
+    constexpr void
+    expects_false(bool const test, sloc_type const &sloc = here())
     {
-        expects(!test, loc);
+        expects(!test, sloc);
     }
 
-    /// Ensures
+    /// @brief ensures
     ///
     /// A postcondition to check. If this check evaluates to false, the
     /// violation handler is called.
@@ -233,33 +174,28 @@ namespace bsl
     /// ensures: none
     ///
     /// @param test the precondition to check
+    /// @param sloc the location of the contract being checked
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
-    constexpr auto
-    ensures(const bool test, const source_location loc = here()) -> void
+    constexpr void
+    ensures(bool const test, sloc_type const &sloc = here())
     {
-        bsl::discard(test);
-        bsl::discard(loc);
+        static_cast<void>(test);
+        static_cast<void>(sloc);
 
-        using details::contracts::check_default;
-        using details::contracts::continue_on_violation;
-        using details::contracts::compile_time_contract_violation_occurred;
-        using details::contracts::handler;
-        using details::contracts::default_handler;
-
-        if constexpr (check_default) {
+        if constexpr (BSL_CONTRACTS_CHECK_DEFAULT) {
             if (!test) {
-                compile_time_contract_violation_occurred();
-                handler({loc, "default postcondition"});
-                if constexpr (!continue_on_violation) {
-                    default_handler({loc, "[unhandled] default postcondition"});
+                details::compile_time_contract_violation_occurred();
+                details::handler()({sloc, "default postcondition"});
+                if constexpr (!BSL_CONTINUE_ON_VIOLATION) {
+                    bsl::fail(sloc);
                 }
             }
         }
     }
 
-    /// Ensures False
+    /// @brief ensures_false
     ///
     /// A postcondition to check. If this check evaluates to true, the
     /// violation handler is called.
@@ -268,75 +204,66 @@ namespace bsl
     /// ensures: none
     ///
     /// @param test the precondition to check
+    /// @param sloc the location of the contract being checked
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
-    constexpr auto
-    ensures_false(const bool test, const source_location loc = here()) -> void
+    constexpr void
+    ensures_false(bool const test, sloc_type const &sloc = here())
     {
-        ensures(!test, loc);
+        ensures(!test, sloc);
     }
 
-    /// Confirm (Assert)
+    /// @brief confirm
     ///
     /// An assertion to check. If this check evaluates to false, the
     /// violation handler is called.
-    ///
-    /// NOTE: We use confirm instead of assert as assert is a reserved
-    ///     symbol that we cannot use.
     ///
     /// expects: none
     /// ensures: none
     ///
     /// @param test the precondition to check
+    /// @param sloc the location of the contract being checked
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
-    constexpr auto
-    confirm(const bool test, const source_location loc = here()) -> void
+    constexpr void
+    confirm(bool const test, sloc_type const &sloc = here())
     {
-        bsl::discard(test);
-        bsl::discard(loc);
+        static_cast<void>(test);
+        static_cast<void>(sloc);
 
-        using details::contracts::check_default;
-        using details::contracts::continue_on_violation;
-        using details::contracts::compile_time_contract_violation_occurred;
-        using details::contracts::handler;
-        using details::contracts::default_handler;
-
-        if constexpr (check_default) {
+        if constexpr (BSL_CONTRACTS_CHECK_DEFAULT) {
             if (!test) {
-                compile_time_contract_violation_occurred();
-                handler({loc, "default assertion"});
-                if constexpr (!continue_on_violation) {
-                    default_handler({loc, "[unhandled] default assertion"});
+                details::compile_time_contract_violation_occurred();
+                details::handler()({sloc, "default assertion"});
+                if constexpr (!BSL_CONTINUE_ON_VIOLATION) {
+                    bsl::fail(sloc);
                 }
             }
         }
     }
 
-    /// Confirm False (Assert)
+    /// @brief confirm_false
     ///
     /// An assertion to check. If this check evaluates to true, the
     /// violation handler is called.
-    ///
-    /// NOTE: We use confirm instead of assert as assert is a reserved
-    ///     symbol that we cannot use.
     ///
     /// expects: none
     /// ensures: none
     ///
     /// @param test the precondition to check
+    /// @param sloc the location of the contract being checked
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
-    constexpr auto
-    confirm_false(const bool test, const source_location loc = here()) -> void
+    constexpr void
+    confirm_false(bool const test, sloc_type const &sloc = here())
     {
-        confirm(!test, loc);
+        confirm(!test, sloc);
     }
 
-    /// Expects (Audit)
+    /// @brief expects_audit
     ///
     /// A precondition to check. If this check evaluates to false, the
     /// violation handler is called.
@@ -345,33 +272,28 @@ namespace bsl
     /// ensures: none
     ///
     /// @param test the precondition to check
+    /// @param sloc the location of the contract being checked
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
-    constexpr auto
-    expects_audit(const bool test, const source_location loc = here()) -> void
+    constexpr void
+    expects_audit(bool const test, sloc_type const &sloc = here())
     {
-        bsl::discard(test);
-        bsl::discard(loc);
+        static_cast<void>(test);
+        static_cast<void>(sloc);
 
-        using details::contracts::check_audit;
-        using details::contracts::continue_on_violation;
-        using details::contracts::compile_time_contract_violation_occurred;
-        using details::contracts::handler;
-        using details::contracts::default_handler;
-
-        if constexpr (check_audit) {
+        if constexpr (BSL_CONTRACTS_CHECK_AUDIT) {
             if (!test) {
-                compile_time_contract_violation_occurred();
-                handler({loc, "audit precondition"});
-                if constexpr (!continue_on_violation) {
-                    default_handler({loc, "[unhandled] audit precondition"});
+                details::compile_time_contract_violation_occurred();
+                details::handler()({sloc, "audit precondition"});
+                if constexpr (!BSL_CONTINUE_ON_VIOLATION) {
+                    bsl::fail(sloc);
                 }
             }
         }
     }
 
-    /// Expects False (Audit)
+    /// @brief expects_audit_false
     ///
     /// A precondition to check. If this check evaluates to true, the
     /// violation handler is called.
@@ -380,17 +302,17 @@ namespace bsl
     /// ensures: none
     ///
     /// @param test the precondition to check
+    /// @param sloc the location of the contract being checked
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
-    constexpr auto
-    expects_audit_false(const bool test, const source_location loc = here())
-        -> void
+    constexpr void
+    expects_audit_false(bool const test, sloc_type const &sloc = here())
     {
-        expects_audit(!test, loc);
+        expects_audit(!test, sloc);
     }
 
-    /// Ensures (Audit)
+    /// @brief ensures_audit
     ///
     /// A postcondition to check. If this check evaluates to false, the
     /// violation handler is called.
@@ -399,33 +321,28 @@ namespace bsl
     /// ensures: none
     ///
     /// @param test the precondition to check
+    /// @param sloc the location of the contract being checked
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
-    constexpr auto
-    ensures_audit(const bool test, const source_location loc = here()) -> void
+    constexpr void
+    ensures_audit(bool const test, sloc_type const &sloc = here())
     {
-        bsl::discard(test);
-        bsl::discard(loc);
+        static_cast<void>(test);
+        static_cast<void>(sloc);
 
-        using details::contracts::check_audit;
-        using details::contracts::continue_on_violation;
-        using details::contracts::compile_time_contract_violation_occurred;
-        using details::contracts::handler;
-        using details::contracts::default_handler;
-
-        if constexpr (check_audit) {
+        if constexpr (BSL_CONTRACTS_CHECK_AUDIT) {
             if (!test) {
-                compile_time_contract_violation_occurred();
-                handler({loc, "audit postcondition"});
-                if constexpr (!continue_on_violation) {
-                    default_handler({loc, "[unhandled] audit postcondition"});
+                details::compile_time_contract_violation_occurred();
+                details::handler()({sloc, "audit postcondition"});
+                if constexpr (!BSL_CONTINUE_ON_VIOLATION) {
+                    bsl::fail(sloc);
                 }
             }
         }
     }
 
-    /// Ensures False (Audit)
+    /// @brief ensures_audit_false
     ///
     /// A postcondition to check. If this check evaluates to true, the
     /// violation handler is called.
@@ -434,77 +351,66 @@ namespace bsl
     /// ensures: none
     ///
     /// @param test the precondition to check
+    /// @param sloc the location of the contract being checked
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
-    constexpr auto
-    ensures_audit_false(const bool test, const source_location loc = here())
-        -> void
+    constexpr void
+    ensures_audit_false(bool const test, sloc_type const &sloc = here())
     {
-        ensures_audit(!test, loc);
+        ensures_audit(!test, sloc);
     }
 
-    /// Confirm (Assert Audit)
+    /// @brief confirm_audit
     ///
     /// An assertion to check. If this check evaluates to false, the
     /// violation handler is called.
-    ///
-    /// NOTE: We use confirm instead of assert as assert is a reserved
-    ///     symbol that we cannot use.
     ///
     /// expects: none
     /// ensures: none
     ///
     /// @param test the precondition to check
+    /// @param sloc the location of the contract being checked
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
-    constexpr auto
-    confirm_audit(const bool test, const source_location loc = here()) -> void
+    constexpr void
+    confirm_audit(bool const test, sloc_type const &sloc = here())
     {
-        bsl::discard(test);
-        bsl::discard(loc);
+        static_cast<void>(test);
+        static_cast<void>(sloc);
 
-        using details::contracts::check_audit;
-        using details::contracts::continue_on_violation;
-        using details::contracts::compile_time_contract_violation_occurred;
-        using details::contracts::handler;
-        using details::contracts::default_handler;
-
-        if constexpr (check_audit) {
+        if constexpr (BSL_CONTRACTS_CHECK_AUDIT) {
             if (!test) {
-                compile_time_contract_violation_occurred();
-                handler({loc, "audit assertion"});
-                if constexpr (!continue_on_violation) {
-                    default_handler({loc, "[unhandled] audit assertion"});
+                details::compile_time_contract_violation_occurred();
+                details::handler()({sloc, "audit assertion"});
+                if constexpr (!BSL_CONTINUE_ON_VIOLATION) {
+                    bsl::fail(sloc);
                 }
             }
         }
     }
 
-    /// Confirm False (Assert Audit)
+    /// @brief confirm_audit_false
     ///
     /// An assertion to check. If this check evaluates to true, the
     /// violation handler is called.
-    ///
-    /// NOTE: We use confirm instead of assert as assert is a reserved
-    ///     symbol that we cannot use.
     ///
     /// expects: none
     /// ensures: none
     ///
     /// @param test the precondition to check
+    /// @param sloc the location of the contract being checked
     /// @throw [checked]: none
     /// @throw [unchecked]: possible
     ///
-    constexpr auto
-    confirm_audit_false(const bool test, const source_location loc = here())
-        -> void
+    constexpr void
+    confirm_audit_false(bool const test, sloc_type const &sloc = here())
     {
-        confirm_audit(!test, loc);
+        confirm_audit(!test, sloc);
     }
 
-    /// Expects (Axiom)
+    /// @brief expects_axiom
     ///
     /// A precondition to check. If this check evaluates to false, the
     /// violation will be ignored. This exists for documentation only. Note
@@ -517,13 +423,15 @@ namespace bsl
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///
-    constexpr auto
-    expects_axiom(const bool test) noexcept -> void
+    template<typename T = void>
+    constexpr void
+    expects_axiom(bool const test) noexcept
     {
-        bsl::discard(test);
+        static_cast<void>(test);
+        static_assert(std::is_same<T, void>::value && !BSL_AUTOSAR_COMPLIANT);
     }
 
-    /// Expects False (Axiom)
+    /// @brief expects_axiom_false
     ///
     /// A precondition to check. If this check evaluates to true, the
     /// violation will be ignored. This exists for documentation only. Note
@@ -536,13 +444,15 @@ namespace bsl
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///
-    constexpr auto
-    expects_axiom_false(const bool test) noexcept -> void
+    template<typename T = void>
+    constexpr void
+    expects_axiom_false(bool const test) noexcept
     {
-        bsl::discard(test);
+        static_cast<void>(test);
+        static_assert(std::is_same<T, void>::value && !BSL_AUTOSAR_COMPLIANT);
     }
 
-    /// Ensures (Axiom)
+    /// @brief ensures_axiom
     ///
     /// A postcondition to check. If this check evaluates to false, the
     /// violation will be ignored. This exists for documentation only. Note
@@ -555,13 +465,15 @@ namespace bsl
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///
-    constexpr auto
-    ensures_axiom(const bool test) noexcept -> void
+    template<typename T = void>
+    constexpr void
+    ensures_axiom(bool const test) noexcept
     {
-        bsl::discard(test);
+        static_cast<void>(test);
+        static_assert(std::is_same<T, void>::value && !BSL_AUTOSAR_COMPLIANT);
     }
 
-    /// Ensures False (Axiom)
+    /// @brief ensures_axiom_false
     ///
     /// A postcondition to check. If this check evaluates to true, the
     /// violation will be ignored. This exists for documentation only. Note
@@ -574,21 +486,20 @@ namespace bsl
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///
-    constexpr auto
-    ensures_axiom_false(const bool test) noexcept -> void
+    template<typename T = void>
+    constexpr void
+    ensures_axiom_false(bool const test) noexcept
     {
-        bsl::discard(test);
+        static_cast<void>(test);
+        static_assert(std::is_same<T, void>::value && !BSL_AUTOSAR_COMPLIANT);
     }
 
-    /// Confirm (Assert Axiom)
+    /// @brief confirm_axiom
     ///
     /// An assertion to check. If this check evaluates to false, the
     /// violation will be ignored. This exists for documentation only. Note
     /// that this is not compatible with AUTOSAR.
     ///
-    /// NOTE: We use confirm instead of assert as assert is a reserved
-    ///     symbol that we cannot use.
-    ///
     /// expects: none
     /// ensures: none
     ///
@@ -596,21 +507,20 @@ namespace bsl
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///
-    constexpr auto
-    confirm_axiom(const bool test) noexcept -> void
+    template<typename T = void>
+    constexpr void
+    confirm_axiom(bool const test) noexcept
     {
-        bsl::discard(test);
+        static_cast<void>(test);
+        static_assert(std::is_same<T, void>::value && !BSL_AUTOSAR_COMPLIANT);
     }
 
-    /// Confirm False (Assert Axiom)
+    /// @brief confirm_axiom_false
     ///
     /// An assertion to check. If this check evaluates to true, the
     /// violation will be ignored. This exists for documentation only. Note
     /// that this is not compatible with AUTOSAR.
     ///
-    /// NOTE: We use confirm instead of assert as assert is a reserved
-    ///     symbol that we cannot use.
-    ///
     /// expects: none
     /// ensures: none
     ///
@@ -618,10 +528,12 @@ namespace bsl
     /// @throw [checked]: none
     /// @throw [unchecked]: none
     ///
-    constexpr auto
-    confirm_axiom_false(const bool test) noexcept -> void
+    template<typename T = void>
+    constexpr void
+    confirm_axiom_false(bool const test) noexcept
     {
-        bsl::discard(test);
+        static_cast<void>(test);
+        static_assert(std::is_same<T, void>::value && !BSL_AUTOSAR_COMPLIANT);
     }
 }    // namespace bsl
 

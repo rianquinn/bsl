@@ -19,10 +19,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-add_subdirectory(contracts)
-add_subdirectory(debug)
-add_subdirectory(finally)
-add_subdirectory(int)
+# add_subdirectory(contracts)
+# add_subdirectory(debug)
+# add_subdirectory(finally)
+# add_subdirectory(int)
 add_subdirectory(source_location)
-add_subdirectory(unique_owner)
-add_subdirectory(ut)
+# add_subdirectory(unique_owner)
+# add_subdirectory(ut)

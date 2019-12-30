@@ -23,6 +23,9 @@
 # function "internally". These are not intended to be exposed to the user.
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # ------------------------------------------------------------------------------
 # Required
@@ -114,7 +117,7 @@ endmacro(bf_find_program)
 # ------------------------------------------------------------------------------
 
 if(NOT UNIX)
-    set(CMAKE_BUILD_TYPE RELEASE)   # we only support Release in Windows
+    set(CMAKE_BUILD_TYPE RELEASE)   # we only support RELEASE in Windows
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -123,7 +126,8 @@ endif()
 
 if(NOT CMAKE_BUILD_TYPE STREQUAL RELEASE AND
    NOT CMAKE_BUILD_TYPE STREQUAL DEBUG AND
-   NOT CMAKE_BUILD_TYPE STREQUAL STATIC_ANALYSIS AND
+   NOT CMAKE_BUILD_TYPE STREQUAL CLANG_TIDY AND
+   NOT CMAKE_BUILD_TYPE STREQUAL PERFORCE AND
    NOT CMAKE_BUILD_TYPE STREQUAL SONARCLOUD AND
    NOT CMAKE_BUILD_TYPE STREQUAL ASAN AND
    NOT CMAKE_BUILD_TYPE STREQUAL TSAN AND
@@ -144,7 +148,8 @@ else()
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --green   " Supported CMake Build Types:"
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=RELEASE            compile in release mode"
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=DEBUG              compile in debug mode"
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=STATIC_ANALYSIS    compile with static analysis checks"
+        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=CLANG_TIDY         compile with Clang Tidy checks"
+        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=PERFORCE           compile with Perforce checks"
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=SONARCLOUD         compile with SonarCloud"
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=ASAN               compile with Google ASAN"
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=TSAN               compile with Google TSAN"
@@ -176,7 +181,8 @@ add_custom_command(TARGET info
 # ------------------------------------------------------------------------------
 
 if(CMAKE_BUILD_TYPE STREQUAL DEBUG OR
-   CMAKE_BUILD_TYPE STREQUAL STATIC_ANALYSIS OR
+   CMAKE_BUILD_TYPE STREQUAL CLANG_TIDY OR
+   CMAKE_BUILD_TYPE STREQUAL PERFORCE OR
    CMAKE_BUILD_TYPE STREQUAL SONARCLOUD OR
    CMAKE_BUILD_TYPE STREQUAL ASAN OR
    CMAKE_BUILD_TYPE STREQUAL TSAN OR
@@ -197,7 +203,8 @@ endif()
 # ------------------------------------------------------------------------------
 
 if(CMAKE_BUILD_TYPE STREQUAL DEBUG OR
-   CMAKE_BUILD_TYPE STREQUAL STATIC_ANALYSIS OR
+   CMAKE_BUILD_TYPE STREQUAL CLANG_TIDY OR
+   CMAKE_BUILD_TYPE STREQUAL PERFORCE OR
    CMAKE_BUILD_TYPE STREQUAL SONARCLOUD OR
    CMAKE_BUILD_TYPE STREQUAL ASAN OR
    CMAKE_BUILD_TYPE STREQUAL TSAN OR
@@ -250,7 +257,7 @@ endif()
 # compiler
 # ------------------------------------------------------------------------------
 
-if(CMAKE_BUILD_TYPE STREQUAL STATIC_ANALYSIS)
+if(CMAKE_BUILD_TYPE STREQUAL CLANG_TIDY)
     if(NOT CMAKE_CXX_COMPILER MATCHES "clang")
         bf_configuration_error("Static analysis requires clang++")
     endif()
@@ -266,7 +273,7 @@ endif()
 # clang tidy
 # ------------------------------------------------------------------------------
 
-if(CMAKE_BUILD_TYPE STREQUAL STATIC_ANALYSIS)
+if(CMAKE_BUILD_TYPE STREQUAL CLANG_TIDY)
     if(NOT DEFINED ENABLE_CLANG_TIDY)
         set(ENABLE_CLANG_TIDY ON)
     endif()
@@ -292,7 +299,7 @@ FILE(GLOB_RECURSE BF_SOURCES_TESTS ${CMAKE_SOURCE_DIR}/tests/*.cpp)
 FILE(GLOB_RECURSE BF_HEADERS_SRC ${CMAKE_SOURCE_DIR}/src/*.hpp)
 FILE(GLOB_RECURSE BF_SOURCES_SRC ${CMAKE_SOURCE_DIR}/src/*.cpp)
 
-if(NOT CMAKE_BUILD_TYPE STREQUAL Release)
+if(NOT CMAKE_BUILD_TYPE STREQUAL RELEASE)
     if(NOT DEFINED ENABLE_CLANG_FORMAT)
         set(ENABLE_CLANG_FORMAT ON)
     endif()
@@ -315,36 +322,6 @@ if(ENABLE_CLANG_FORMAT AND UNIX)
     message(STATUS "Tool [Clang Format]: ${BF_ENABLED} - ${BF_CLANG_FORMAT}")
 else()
     message(STATUS "Tool [Clang Format]: ${BF_DISABLED}")
-endif()
-
-# ------------------------------------------------------------------------------
-# cppcheck
-# ------------------------------------------------------------------------------
-
-if(CMAKE_BUILD_TYPE STREQUAL STATIC_ANALYSIS)
-    if(NOT DEFINED ENABLE_CPPCHECK)
-        set(ENABLE_CPPCHECK ON)
-    endif()
-endif()
-
-if(ENABLE_CPPCHECK AND UNIX)
-    bf_find_program(BF_CPPCHECK "cppcheck" "http://cppcheck.sourceforge.net/")
-    list(APPEND CMAKE_CXX_CPPCHECK
-        ${BF_CPPCHECK}
-        --enable=all
-        --error-exitcode=1
-        --quiet
-        --inline-suppr
-        --suppress=unmatchedSuppression             # Handle different versions of CppCheck
-        --suppress=missingInclude                   # Noisy warning
-        --suppress=operatorEq                       # Mutually exclusive with Clang Tidy
-        --suppress=throwInNoexceptFunction          # False positive, and duplicate with Clang Tidy
-        --suppress=identicalConditionAfterEarlyExit # False positive with constexpr
-        --template="{file}:{line}: {severity}: {id}: {message}"
-    )
-    message(STATUS "Tool [CppCheck]: ${BF_ENABLED} - ${BF_CPPCHECK}")
-else()
-    message(STATUS "Tool [CppCheck]: ${BF_DISABLED}")
 endif()
 
 # ------------------------------------------------------------------------------
@@ -457,8 +434,7 @@ endif()
 # asan
 # ------------------------------------------------------------------------------
 
-if(CMAKE_BUILD_TYPE STREQUAL ASAN OR
-   CMAKE_BUILD_TYPE STREQUAL STATIC_ANALYSIS)
+if(CMAKE_BUILD_TYPE STREQUAL ASAN)
     if(NOT DEFINED ENABLE_ASAN)
         set(ENABLE_ASAN ON)
     endif()
@@ -510,8 +486,10 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_RELEASE "-O3 -DNDEBUG -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_DEBUG "-Og -g -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_DEBUG "-Og -g -Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables -Wno-missing-noreturn -Wno-exit-time-destructors")
-set(CMAKE_LINKER_FLAGS_STATIC_ANALYSIS "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables -Wno-missing-noreturn -Wno-exit-time-destructors")
+set(CMAKE_CXX_FLAGS_CLANG_TIDY "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables -Wno-missing-noreturn -Wno-exit-time-destructors")
+set(CMAKE_LINKER_FLAGS_CLANG_TIDY "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables -Wno-missing-noreturn -Wno-exit-time-destructors")
+set(CMAKE_CXX_FLAGS_PERFORCE "-Og -g -Werror -Wall -Wextra -Wpedantic")
+set(CMAKE_LINKER_FLAGS_PERFORCE "-Og -g -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_SONARCLOUD "-Og -g -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_SONARCLOUD "-Og -g -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address -Wall -Wextra -Wpedantic")
@@ -546,12 +524,75 @@ add_custom_command(TARGET info
 # default definitions
 # ------------------------------------------------------------------------------
 
+if(CMAKE_BUILD_TYPE STREQUAL PERFORCE)
+    set(BSL_AUTOSAR_COMPLIANT true)
+    set(BSL_CONTRACTS_CHECK_DEFAULT true)
+    set(BSL_CONTRACTS_CHECK_AUDIT true)
+endif()
+
 if(NOT DEFINED BSL_AUTOSAR_COMPLIANT)
     set(BSL_AUTOSAR_COMPLIANT false)
 endif()
 
+if(BSL_AUTOSAR_COMPLIANT)
+    set(BSL_EXIT_FUNCTION "std::exit(exit_code)")
+else()
+    set(BSL_EXIT_FUNCTION "std::abort()")
+endif()
+
+if(NOT DEFINED BSL_CONTRACTS_CHECK_DEFAULT)
+    set(BSL_CONTRACTS_CHECK_DEFAULT true)
+endif()
+
+if(NOT DEFINED BSL_CONTRACTS_CHECK_AUDIT)
+    set(BSL_CONTRACTS_CHECK_AUDIT false)
+endif()
+
+if(NOT DEFINED BSL_CONTINUE_ON_VIOLATION)
+    set(BSL_CONTINUE_ON_VIOLATION false)
+endif()
+
+if(NOT DEFINED BSL_OUTPUT_TID_WHEN_DEBUGGING)
+    set(BSL_OUTPUT_TID_WHEN_DEBUGGING false)
+endif()
+
+if(NOT DEFINED BSL_THREAD_ID)
+    set(BSL_THREAD_ID "")
+endif()
+
+if(NOT DEFINED BSL_DEBUG_LEVEL)
+    set(BSL_DEBUG_LEVEL "debug_level_t::verbosity_level_0")
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL RELEASE)
+    set(BSL_DISABLE_DEBUGGING true)
+else()
+    set(BSL_DISABLE_DEBUGGING false)
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL PERFORCE)
+    set(BSL_BUILTIN_FILE "\"file\"")
+    set(BSL_BUILTIN_FUNCTION "\"function\"")
+    set(BSL_BUILTIN_LINE "0")
+else()
+    set(BSL_BUILTIN_FILE "__builtin_FILE()")
+    set(BSL_BUILTIN_FUNCTION "__builtin_FUNCTION()")
+    set(BSL_BUILTIN_LINE "__builtin_LINE()")
+endif()
+
 list(APPEND BSL_DEFAULT_DEFINES
     BSL_AUTOSAR_COMPLIANT=${BSL_AUTOSAR_COMPLIANT}
+    BSL_EXIT_FUNCTION=${BSL_EXIT_FUNCTION}
+    BSL_CONTRACTS_CHECK_DEFAULT=${BSL_CONTRACTS_CHECK_DEFAULT}
+    BSL_CONTRACTS_CHECK_AUDIT=${BSL_CONTRACTS_CHECK_AUDIT}
+    BSL_CONTINUE_ON_VIOLATION=${BSL_CONTINUE_ON_VIOLATION}
+    BSL_OUTPUT_TID_WHEN_DEBUGGING=${BSL_OUTPUT_TID_WHEN_DEBUGGING}
+    BSL_THREAD_ID=${BSL_THREAD_ID}
+    BSL_DEBUG_LEVEL=${BSL_DEBUG_LEVEL}
+    BSL_DISABLE_DEBUGGING=${BSL_DISABLE_DEBUGGING}
+    BSL_BUILTIN_FILE=${BSL_BUILTIN_FILE}
+    BSL_BUILTIN_FUNCTION=${BSL_BUILTIN_FUNCTION}
+    BSL_BUILTIN_LINE=${BSL_BUILTIN_LINE}
 )
 
 # ------------------------------------------------------------------------------

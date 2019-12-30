@@ -73,8 +73,7 @@ namespace bsl
 
         random_access_iterator() = default;
 
-        random_access_iterator(const Array *a, difference_type i) noexcept :
-            m_a{a}, m_i{i}
+        random_access_iterator(const Array *a, difference_type i) noexcept : m_a{a}, m_i{i}
         {}
 
         constexpr auto operator*() const -> reference
@@ -160,56 +159,43 @@ namespace bsl
         }
 
         constexpr auto
-        operator-(const random_access_iterator &rhs) const noexcept
-            -> difference_type
+        operator-(const random_access_iterator &rhs) const noexcept -> difference_type
         {
             return m_i - rhs.m_i;
         }
 
         friend constexpr auto
-        operator==(
-            random_access_iterator lhs, random_access_iterator rhs) noexcept
-            -> bool
+        operator==(random_access_iterator lhs, random_access_iterator rhs) noexcept -> bool
         {
             return lhs.m_a == rhs.m_a && lhs.m_i == rhs.m_i;
         }
 
         friend constexpr auto
-        operator!=(
-            random_access_iterator lhs, random_access_iterator rhs) noexcept
-            -> bool
+        operator!=(random_access_iterator lhs, random_access_iterator rhs) noexcept -> bool
         {
             return !(lhs == rhs);
         }
 
         friend constexpr auto
-        operator<(
-            random_access_iterator lhs, random_access_iterator rhs) noexcept
-            -> bool
+        operator<(random_access_iterator lhs, random_access_iterator rhs) noexcept -> bool
         {
             return lhs.m_i < rhs.m_i;
         }
 
         friend constexpr auto
-        operator<=(
-            random_access_iterator lhs, random_access_iterator rhs) noexcept
-            -> bool
+        operator<=(random_access_iterator lhs, random_access_iterator rhs) noexcept -> bool
         {
             return lhs.m_i <= rhs.m_i;
         }
 
         friend constexpr auto
-        operator>(
-            random_access_iterator lhs, random_access_iterator rhs) noexcept
-            -> bool
+        operator>(random_access_iterator lhs, random_access_iterator rhs) noexcept -> bool
         {
             return lhs.m_i > rhs.m_i;
         }
 
         friend constexpr auto
-        operator>=(
-            random_access_iterator lhs, random_access_iterator rhs) noexcept
-            -> bool
+        operator>=(random_access_iterator lhs, random_access_iterator rhs) noexcept -> bool
         {
             return lhs.m_i >= rhs.m_i;
         }

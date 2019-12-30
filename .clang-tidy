@@ -29,9 +29,26 @@
 #  template functions.
 #  https://bugs.llvm.org/show_bug.cgi?id=35824
 #
+#
+# -modernize-use-trailing-return-type
+#
+#  We disable this as AUTOSAR does not allow for non-template trailing return
+#  types, and this check does not have this sort of granularity.
+#
+# -readability-redundant-member-init
+#
+#  We disable this as AUTOSAR requires the use of redundant member
+#  initializers to ensure explicit initialization.
+#
+# -cert-dcl21-cpp
+#
+#  We disable this as AUTOSAR does not require this, and it is mutually
+#  exclusive with readability-const-return-type, which identifies a known
+#  performance issue.
+#
 
-Checks: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon'
-WarningsAsErrors: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon'
+Checks: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon,-modernize-use-trailing-return-type,-readability-redundant-member-init,-cert-dcl21-cpp'
+WarningsAsErrors: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon,-modernize-use-trailing-return-type,-readability-redundant-member-init,-cert-dcl21-cpp'
 HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false
 CheckOptions:

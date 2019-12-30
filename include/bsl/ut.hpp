@@ -93,6 +93,7 @@
 
 #include "int.hpp"
 #include "debug.hpp"
+#include "finally.hpp"
 
 #include <deque>
 
@@ -108,17 +109,44 @@
 
 namespace bsl
 {
-    namespace details::ut
+    namespace details
     {
-        using name_type = cstr_t;
-        using what_type = std::string;
-        using sloc_type = source_location;
+        using name_type = cstr_t;             ///< UT name internal type
+        using what_type = std::string;        ///< UT what internal type
+        using sloc_type = source_location;    ///< UT location internal type
 
-        inline ::bsl::uintmax_t total_test_cases{};
-        inline ::bsl::uintmax_t total_assertions{};
-        inline ::bsl::uintmax_t failed_test_cases{};
-        inline ::bsl::uintmax_t failed_assertions{};
-        inline ::bsl::uintmax_t skipped_test_cases{};
+        /// Stats Type
+        ///
+        /// The following stores the stats for the unit test which will be
+        /// given to the user at the end of the unit test.
+        ///
+        struct stats_t
+        {
+            ::bsl::uintmax_t m_tc{};    ///< Total test cases
+            ::bsl::uintmax_t m_ta{};    ///< Total assertions
+            ::bsl::uintmax_t m_fc{};    ///< Failed test cases
+            ::bsl::uintmax_t m_fa{};    ///< Failed assertions
+            ::bsl::uintmax_t m_st{};    ///< Skiped test cases
+        };
+
+        /// Stats
+        ///
+        /// The following returns a reference to the global instance of
+        /// the stats for the unit test.
+        ///
+        /// expects: none
+        /// ensures: none
+        ///
+        /// @return a reference to the global ut stats
+        /// @throw [checked]: none
+        /// @throw [unchecked]: none
+        ///
+        [[nodiscard]] inline auto
+        stats() noexcept -> stats_t &
+        {
+            static stats_t s_stats{};
+            return s_stats;
+        }
 
         /// Test Case Status
         ///
@@ -144,9 +172,8 @@ namespace bsl
             /// @throw [unchecked]: none
             ///
             test_case_status(
-                const details::ut::name_type &name,
-                const details::ut::sloc_type &sloc) noexcept :
-                m_name{name}, m_sloc{sloc}
+                details::name_type const &name, details::sloc_type const &sloc) noexcept
+                : m_name{name}, m_sloc{sloc}
             {}
 
             /// Append
@@ -154,9 +181,6 @@ namespace bsl
             /// Adds failure text to the test case status. Once this occurs,
             /// the test case has officially failed, so we add a header when
             /// this occurs as well (on teh first append).
-            ///
-            /// AUTOSAR:
-            /// - A15-3-4: the catch all is used for isolation.
             ///
             /// expects: none
             /// ensures: none
@@ -186,7 +210,7 @@ namespace bsl
 
                     m_failures += str;
                 }
-                catch(...) {
+                catch (...) {
                     ::bsl::unexpected_exception(::bsl::here());
                     ::bsl::fail_fast();
                 }
@@ -229,8 +253,8 @@ namespace bsl
 
         private:
             std::string m_failures{};
-            details::ut::name_type m_name{};
-            details::ut::sloc_type m_sloc{};
+            details::name_type m_name{};
+            details::sloc_type m_sloc{};
         };
 
         /// Test Cases
@@ -242,9 +266,6 @@ namespace bsl
         /// checked to see if any failures were registered. If they were, they
         /// are outputted to the console. The reason we use a stack is the
         /// test cases can be nested.
-        ///
-        /// AUTOSAR:
-        /// - A15-3-4: the catch all is used for isolation.
         ///
         /// expects: none
         /// ensures: none
@@ -284,7 +305,7 @@ namespace bsl
         {
             try {
                 test_cases().push_back(tcs);
-                ++details::ut::total_test_cases;
+                ++details::stats().m_tc;
             }
             catch (...) {
                 ::bsl::unexpected_exception(::bsl::here());
@@ -296,9 +317,6 @@ namespace bsl
         ///
         /// Pops a test case status from the test case stack. If the test
         /// case didn't pass, we output the failures to the console.
-        ///
-        /// AUTOSAR:
-        /// - A15-3-4: the catch all is used for isolation.
         ///
         /// expects: none
         /// ensures: none
@@ -320,10 +338,10 @@ namespace bsl
                     ::bsl::print("  |\n");
                     ::bsl::print("\n");
 
-                    ++details::ut::failed_test_cases;
+                    ++details::stats().m_fc;
                 }
 
-                details::ut::test_cases().pop_back();
+                details::test_cases().pop_back();
             }
             catch (...) {
                 ::bsl::unexpected_exception(::bsl::here());
@@ -366,10 +384,10 @@ namespace bsl
 
         /// Log Assertion Failure
         ///
-        /// This function is used to log an assertion failure.
-        ///
-        /// AUTOSAR:
-        /// - A15-3-4: the catch all is used for isolation.
+        /// This function is used to log an assertion failure. It is also
+        /// capable of detecting when the user executes a check outside of
+        /// a test case, which is ignored (since there is not test case to
+        /// log the assertion to).
         ///
         /// expects: none
         /// ensures: none
@@ -382,9 +400,7 @@ namespace bsl
         ///
         inline auto
         log_assertion_failure(
-            const name_type &name,
-            const sloc_type &sloc,
-            const what_type &what) noexcept -> void
+            const name_type &name, const sloc_type &sloc, const what_type &what) noexcept -> void
         {
             if (test_cases().empty()) {
                 ::bsl::alert("check ignored\n{}\n", sloc);
@@ -401,7 +417,7 @@ namespace bsl
                     tcs.append(fmt::format("] failed on line: "));
                     tcs.append(fmt::format(yellow, "{}\n", sloc.line()));
 
-                    ++details::ut::failed_assertions;
+                    ++details::stats().m_fa;
                 }
                 else {
                     tcs.append(fmt::format("]\n"));
@@ -437,15 +453,15 @@ namespace bsl
         inline auto
         test_assertion(
             const bool test,
-            const details::ut::name_type &name,
-            const details::ut::sloc_type &sloc,
-            const details::ut::what_type &what) noexcept -> bool
+            details::name_type const &name,
+            details::sloc_type const &sloc,
+            const details::what_type &what) noexcept -> bool
         {
             try {
-                ++details::ut::total_assertions;
+                ++details::stats().m_ta;
 
                 if (!test) {
-                    details::ut::log_assertion_failure(name, sloc, what);
+                    details::log_assertion_failure(name, sloc, what);
                     return false;
                 }
 
@@ -456,7 +472,73 @@ namespace bsl
                 ::bsl::fail_fast();
             }
         }
-    }    // namespace details::ut
+
+        [[nodiscard]] inline auto
+        ut_notrun() noexcept -> bool
+        {
+            if (0 == stats().m_tc) {
+                bsl::print(yellow, "{:=^80}\n", "=");
+                bsl::print(yellow, "No tests ran\n");
+
+                return true;
+            }
+
+            return false;
+        }
+
+        [[nodiscard]] inline auto
+        ut_failed() noexcept -> bool
+        {
+            if (stats().m_fc > 0) {
+                bsl::print(red, "{:=^80}\n", "=");
+                bsl::print("test cases: {:>3}", stats().m_tc.to_string());
+                bsl::print(" | ");
+                bsl::print(red, "{:>3} ", stats().m_fc.to_string());
+                bsl::print(red, "failed");
+
+                if (stats().m_st > 0) {
+                    bsl::print(" | ");
+                    bsl::print(yellow, "{:>3} ", stats().m_st.to_string());
+                    bsl::print(yellow, "skipped");
+                }
+
+                bsl::print("\n");
+                bsl::print("assertions: {:>3}", stats().m_ta.to_string());
+                bsl::print(" | ");
+                bsl::print(red, "{:>3} ", stats().m_fa.to_string());
+                bsl::print(red, "failed");
+                bsl::print("\n");
+
+                return true;
+            }
+
+            return false;
+        }
+
+        inline auto
+        ut_passed() noexcept -> bsl::int32_t
+        {
+            cstr_t const ts = stats().m_tc != 1 ? "s" : "";
+            cstr_t const as = stats().m_ta != 1 ? "s" : "";
+            cstr_t const ss = stats().m_st != 1 ? "s" : "";
+
+            bsl::print(green, "{:=^80}\n", "=");
+            bsl::print(green, "All tests passed ");
+            bsl::print("(");
+            bsl::print("{} assertion{}", stats().m_ta, as);
+            bsl::print(" in ");
+            bsl::print("{} test case{}", stats().m_tc, ts);
+
+            if (stats().m_st > 0) {
+                bsl::print(yellow, " [");
+                bsl::print(yellow, "{} case{}", stats().m_st, ss);
+                bsl::print(yellow, " skipped]");
+            }
+
+            bsl::print(")\n");
+            return bsl::exit_success;
+        }
+    }    // namespace details
 }    // namespace bsl
 
 // -----------------------------------------------------------------------------
@@ -481,67 +563,19 @@ namespace bsl
     [[nodiscard]] inline auto
     check_results() noexcept -> bsl::int32_t
     {
-        const auto total_test_cases = details::ut::total_test_cases;
-        const auto total_assertions = details::ut::total_assertions;
-        const auto failed_test_cases = details::ut::failed_test_cases;
-        const auto failed_assertions = details::ut::failed_assertions;
-        const auto skipped_test_cases = details::ut::skipped_test_cases;
+        auto reset_stats = bsl::finally([]() noexcept {
+            details::stats() = {};
+        });
 
-        details::ut::total_test_cases = {};
-        details::ut::total_assertions = {};
-        details::ut::failed_test_cases = {};
-        details::ut::failed_assertions = {};
-        details::ut::skipped_test_cases = {};
-
-        const cstr_t as = total_assertions != 1 ? "s" : "";
-        const cstr_t ts = total_test_cases != 1 ? "s" : "";
-        const cstr_t ss = skipped_test_cases != 1 ? "s" : "";
-
-        if (0 == total_test_cases) {
-            bsl::print(yellow, "{:=^80}\n", "=");
-            bsl::print(yellow, "No tests ran\n");
-
+        if (details::ut_notrun()) {
             return bsl::exit_failure;
         }
 
-        if ((total_test_cases > 0) && (failed_test_cases > 0)) {
-            bsl::print(red, "{:=^80}\n", "=");
-            bsl::print("test cases: {:>3}", total_test_cases.to_string());
-            bsl::print(" | ");
-            bsl::print(red, "{:>3} ", failed_test_cases.to_string());
-            bsl::print(red, "failed");
-
-            if (skipped_test_cases > 0) {
-                bsl::print(" | ");
-                bsl::print(yellow, "{:>3} ", skipped_test_cases.to_string());
-                bsl::print(yellow, "skipped");
-            }
-
-            bsl::print("\n");
-            bsl::print("assertions: {:>3}", total_assertions.to_string());
-            bsl::print(" | ");
-            bsl::print(red, "{:>3} ", failed_assertions.to_string());
-            bsl::print(red, "failed");
-            bsl::print("\n");
-
+        if (details::ut_failed()) {
             return bsl::exit_failure;
         }
 
-        bsl::print(green, "{:=^80}\n", "=");
-        bsl::print(green, "All tests passed ");
-        bsl::print("(");
-        bsl::print("{} assertion{}", total_assertions, as);
-        bsl::print(" in ");
-        bsl::print("{} test case{}", total_test_cases, ts);
-
-        if (skipped_test_cases > 0) {
-            bsl::print(yellow, " [");
-            bsl::print(yellow, "{} case{}", skipped_test_cases, ss);
-            bsl::print(yellow, " skipped]");
-        }
-
-        bsl::print(")\n");
-        return bsl::exit_success;
+        return details::ut_passed();
     }
 
     /// Test Case
@@ -573,9 +607,8 @@ namespace bsl
         /// @throw [unchecked]: none
         ///
         explicit constexpr test_case(
-            const details::ut::name_type &name = "",
-            const details::ut::sloc_type &sloc = here()) noexcept :
-            m_name{name}, m_sloc{sloc}
+            details::name_type const &name = "", details::sloc_type const &sloc = here()) noexcept
+            : m_name{name}, m_sloc{sloc}
         {}
 
         /// Execute Test Case
@@ -597,32 +630,28 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: possible
         ///
-        template<
-            typename FUNC,
-            std::enable_if_t<std::is_invocable_v<FUNC>> * = nullptr>
+        template<typename FUNC, std::enable_if_t<std::is_invocable_v<FUNC>> * = nullptr>
         [[maybe_unused]] auto
         operator=(FUNC &&func) noexcept -> test_case &
         {
             try {
-                details::ut::push_test_case({m_name, m_sloc});
+                details::push_test_case({m_name, m_sloc});
                 std::forward<FUNC>(func)();
             }
-            catch(const std::exception &e) {
-                details::ut::log_assertion_failure(
-                    "unexpected exception", {}, e.what());
+            catch (const std::exception &e) {
+                details::log_assertion_failure("unexpected exception", {}, e.what());
             }
-            catch(...) {
-                details::ut::log_assertion_failure(
-                    "unexpected exception", {}, "...");
+            catch (...) {
+                details::log_assertion_failure("unexpected exception", {}, "...");
             }
 
-            details::ut::pop_test_case();
+            details::pop_test_case();
             return *this;
         }
 
     private:
-        details::ut::name_type m_name{};
-        details::ut::sloc_type m_sloc{};
+        details::name_type m_name{};
+        details::sloc_type m_sloc{};
     };
 
     /// Skip Test Case
@@ -653,17 +682,15 @@ namespace bsl
         /// @throw [checked]: none
         /// @throw [unchecked]: none
         ///
-        template<
-            typename FUNC,
-            std::enable_if_t<std::is_invocable_v<FUNC>> * = nullptr>
+        template<typename FUNC, std::enable_if_t<std::is_invocable_v<FUNC>> * = nullptr>
         [[maybe_unused]] auto
         operator=(FUNC &&func) noexcept -> skip_test_case &
         {
             bsl::discard(func);
 
             try {
-                ++details::ut::total_test_cases;
-                ++details::ut::skipped_test_cases;
+                ++details::stats().m_tc;
+                ++details::stats().m_st;
             }
             catch (...) {
                 ::bsl::unexpected_exception(::bsl::here());
@@ -690,8 +717,7 @@ namespace bsl
 /// @throw [unchecked]: none
 ///
 [[maybe_unused]] constexpr auto
-operator|(const bsl::skip_test_case &s, const bsl::test_case &t) noexcept
-    -> bsl::skip_test_case
+operator|(const bsl::skip_test_case &s, const bsl::test_case &t) noexcept -> bsl::skip_test_case
 {
     bsl::discard(s);
     bsl::discard(t);
@@ -779,10 +805,10 @@ namespace bsl
     [[maybe_unused]] inline auto
     check(
         const bool test,
-        const details::ut::name_type &name = "check",
-        const details::ut::sloc_type &sloc = here()) noexcept -> bool
+        details::name_type const &name = "check",
+        details::sloc_type const &sloc = here()) noexcept -> bool
     {
-        return details::ut::test_assertion(test, name, sloc, {});
+        return details::test_assertion(test, name, sloc, {});
     }
 
     /// Require
@@ -811,11 +837,11 @@ namespace bsl
     [[maybe_unused]] inline auto
     require(
         const bool test,
-        const details::ut::name_type &name = "require",
-        const details::ut::sloc_type &sloc = here()) noexcept -> bool
+        details::name_type const &name = "require",
+        details::sloc_type const &sloc = here()) noexcept -> bool
     {
         if (!check(test, name, sloc)) {
-            details::ut::required_failed();
+            details::required_failed();
         }
 
         return true;
@@ -844,8 +870,8 @@ namespace bsl
     [[maybe_unused]] inline auto
     check_false(
         const bool test,
-        const details::ut::name_type &name = "check_false",
-        const details::ut::sloc_type &sloc = here()) noexcept -> bool
+        details::name_type const &name = "check_false",
+        details::sloc_type const &sloc = here()) noexcept -> bool
     {
         return check(!test, name, sloc);
     }
@@ -876,8 +902,8 @@ namespace bsl
     [[maybe_unused]] inline auto
     require_false(
         const bool test,
-        const details::ut::name_type &name = "require_false",
-        const details::ut::sloc_type &sloc = here()) noexcept -> bool
+        details::name_type const &name = "require_false",
+        details::sloc_type const &sloc = here()) noexcept -> bool
     {
         return require(!test, name, sloc);
     }
@@ -911,8 +937,8 @@ namespace bsl
     [[maybe_unused]] auto
     check_throws(
         FUNC &&func,
-        const details::ut::name_type &name = "check_throws",
-        const details::ut::sloc_type &sloc = here()) noexcept
+        details::name_type const &name = "check_throws",
+        details::sloc_type const &sloc = here()) noexcept
         -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
         bool caught{};
@@ -921,16 +947,16 @@ namespace bsl
         try {
             std::forward<FUNC>(func)();
         }
-        catch(const std::exception &e) {
+        catch (const std::exception &e) {
             caught = true;
             caught_what = e.what();
         }
-        catch(...) {
+        catch (...) {
             caught = true;
             caught_what = "...";
         }
 
-        return details::ut::test_assertion(caught, name, sloc, caught_what);
+        return details::test_assertion(caught, name, sloc, caught_what);
     }
 
     /// Require Throws
@@ -961,12 +987,12 @@ namespace bsl
     [[maybe_unused]] auto
     require_throws(
         FUNC &&func,
-        const details::ut::name_type &name = "require_throws",
-        const details::ut::sloc_type &sloc = here()) noexcept
+        details::name_type const &name = "require_throws",
+        details::sloc_type const &sloc = here()) noexcept
         -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
         if (!check_throws(std::forward<FUNC>(func), name, sloc)) {
-            details::ut::required_failed();
+            details::required_failed();
         }
 
         return true;
@@ -1002,8 +1028,8 @@ namespace bsl
     [[maybe_unused]] auto
     check_throws_as(
         FUNC &&func,
-        const details::ut::name_type &name = "check_throws",
-        const details::ut::sloc_type &sloc = here()) noexcept
+        details::name_type const &name = "check_throws",
+        details::sloc_type const &sloc = here()) noexcept
         -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
         bool caught{};
@@ -1012,20 +1038,20 @@ namespace bsl
         try {
             std::forward<FUNC>(func)();
         }
-        catch(const E &e) {
+        catch (const E &e) {
             caught = true;
             caught_what = e.what();
         }
-        catch(const std::exception &e) {
+        catch (const std::exception &e) {
             caught = false;
             caught_what = e.what();
         }
-        catch(...) {
+        catch (...) {
             caught = false;
             caught_what = "...";
         }
 
-        return details::ut::test_assertion(caught, name, sloc, caught_what);
+        return details::test_assertion(caught, name, sloc, caught_what);
     }
 
     /// Check Throws As
@@ -1057,12 +1083,12 @@ namespace bsl
     [[maybe_unused]] auto
     require_throws_as(
         FUNC &&func,
-        const details::ut::name_type &name = "require_throws_checked",
-        const details::ut::sloc_type &sloc = here()) noexcept
+        details::name_type const &name = "require_throws_checked",
+        details::sloc_type const &sloc = here()) noexcept
         -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
         if (!check_throws_as<E>(std::forward<FUNC>(func), name, sloc)) {
-            details::ut::required_failed();
+            details::required_failed();
         }
 
         return true;
@@ -1097,8 +1123,8 @@ namespace bsl
     [[maybe_unused]] auto
     check_nothrow(
         FUNC &&func,
-        const details::ut::name_type &name = "check_nothrow",
-        const details::ut::sloc_type &sloc = here()) noexcept
+        details::name_type const &name = "check_nothrow",
+        details::sloc_type const &sloc = here()) noexcept
         -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
         bool caught{};
@@ -1107,16 +1133,16 @@ namespace bsl
         try {
             std::forward<FUNC>(func)();
         }
-        catch(const std::exception &e) {
+        catch (const std::exception &e) {
             caught = true;
             caught_what = e.what();
         }
-        catch(...) {
+        catch (...) {
             caught = true;
             caught_what = "...";
         }
 
-        return details::ut::test_assertion(!caught, name, sloc, caught_what);
+        return details::test_assertion(!caught, name, sloc, caught_what);
     }
 
     /// Require Does Not Throw
@@ -1147,12 +1173,12 @@ namespace bsl
     [[maybe_unused]] auto
     require_nothrow(
         FUNC &&func,
-        const details::ut::name_type &name = "require_nothrow",
-        const details::ut::sloc_type &sloc = here()) noexcept
+        details::name_type const &name = "require_nothrow",
+        details::sloc_type const &sloc = here()) noexcept
         -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
         if (!check_nothrow(std::forward<FUNC>(func), name, sloc)) {
-            details::ut::required_failed();
+            details::required_failed();
         }
 
         return true;
@@ -1160,7 +1186,7 @@ namespace bsl
 
 #ifdef __linux__
 
-    namespace details::ut
+    namespace details
     {
         /// Wait
         ///
@@ -1187,7 +1213,7 @@ namespace bsl
             ::wait(&exit_status.get());
             return bsl::int32_t{WEXITSTATUS(exit_status.get())};    // NOLINT
         }
-    }    // namespace details::ut
+    }    // namespace details
 
     /// Check Death
     ///
@@ -1219,8 +1245,8 @@ namespace bsl
     [[maybe_unused]] auto
     check_death(
         FUNC &&func,
-        const details::ut::name_type &name = "check_death",
-        const details::ut::sloc_type &sloc = here()) noexcept
+        details::name_type const &name = "check_death",
+        details::sloc_type const &sloc = here()) noexcept
         -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
         constexpr bsl::int32_t exit_code{191};
@@ -1230,14 +1256,13 @@ namespace bsl
             try {
                 std::forward<FUNC>(func)();
             }
-            catch(...) {
+            catch (...) {
             }
 
             bsl::fail_fast(exit_code.get());
         }
         else {
-            return details::ut::test_assertion(
-                details::ut::wait() != exit_code, name, sloc, {});
+            return details::test_assertion(details::wait() != exit_code, name, sloc, {});
         }
     }
 
@@ -1270,12 +1295,12 @@ namespace bsl
     [[maybe_unused]] auto
     require_death(
         FUNC &&func,
-        const details::ut::name_type &name = "require_death",
-        const details::ut::sloc_type &sloc = here()) noexcept
+        details::name_type const &name = "require_death",
+        details::sloc_type const &sloc = here()) noexcept
         -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
         if (!check_death(std::forward<FUNC>(func), name, sloc)) {
-            details::ut::required_failed();
+            details::required_failed();
         }
 
         return true;
@@ -1311,8 +1336,8 @@ namespace bsl
     [[maybe_unused]] auto
     check_nodeath(
         FUNC &&func,
-        const details::ut::name_type &name = "check_nodeath",
-        const details::ut::sloc_type &sloc = here()) noexcept
+        details::name_type const &name = "check_nodeath",
+        details::sloc_type const &sloc = here()) noexcept
         -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
         constexpr bsl::int32_t exit_code{191};
@@ -1322,14 +1347,13 @@ namespace bsl
             try {
                 std::forward<FUNC>(func)();
             }
-            catch(...) {
+            catch (...) {
             }
 
             bsl::fail_fast(exit_code.get());
         }
         else {
-            return details::ut::test_assertion(
-                details::ut::wait() == exit_code, name, sloc, {});
+            return details::test_assertion(details::wait() == exit_code, name, sloc, {});
         }
     }
 
@@ -1362,12 +1386,12 @@ namespace bsl
     [[maybe_unused]] auto
     require_nodeath(
         FUNC &&func,
-        const details::ut::name_type &name = "require_nodeath",
-        const details::ut::sloc_type &sloc = here()) noexcept
+        details::name_type const &name = "require_nodeath",
+        details::sloc_type const &sloc = here()) noexcept
         -> std::enable_if_t<std::is_invocable_v<FUNC>, bool>
     {
         if (!check_nodeath(std::forward<FUNC>(func), name, sloc)) {
-            details::ut::required_failed();
+            details::required_failed();
         }
 
         return true;
