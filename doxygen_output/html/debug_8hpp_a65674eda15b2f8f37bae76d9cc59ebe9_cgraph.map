@@ -1,0 +1,6 @@
+<map id="bsl::fatal" name="bsl::fatal">
+<area shape="rect" id="node1" title=" " alt="" coords="5,59,77,85"/>
+<area shape="rect" id="node2" href="$failure_8hpp.html#a0da818f8bd1562befc1f6d701484e0c9" title="Used to issue a run&#45;time failure. Note that this function should be called using bsl::fatal() instead..." alt="" coords="167,29,231,56"/>
+<area shape="rect" id="node3" href="$classbsl_1_1debug__resources.html#a86303d4ae18d9c23f06f61f1927375f4" title="print" alt="" coords="125,81,272,122"/>
+<area shape="rect" id="node4" href="$classbsl_1_1debug__resources.html#acf6d00d38a5dfed5983cf54cb8340fc5" title="print exception" alt="" coords="320,81,467,122"/>
+</map>

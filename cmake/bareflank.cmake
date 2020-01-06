@@ -486,26 +486,26 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_RELEASE "-O3 -DNDEBUG -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_DEBUG "-Og -g -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_DEBUG "-Og -g -Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_CLANG_TIDY "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables -Wno-missing-noreturn -Wno-exit-time-destructors")
-set(CMAKE_LINKER_FLAGS_CLANG_TIDY "-Og -g -Werror -Weverything -Wno-c++98-compat -Wno-padded -Wno-weak-vtables -Wno-missing-noreturn -Wno-exit-time-destructors")
-set(CMAKE_CXX_FLAGS_PERFORCE "-Og -g -Werror -Wall -Wextra -Wpedantic")
-set(CMAKE_LINKER_FLAGS_PERFORCE "-Og -g -Werror -Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_SONARCLOUD "-Og -g -Werror -Wall -Wextra -Wpedantic")
-set(CMAKE_LINKER_FLAGS_SONARCLOUD "-Og -g -Werror -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS_CLANG_TIDY "-O0 -Werror -Weverything -fcomment-block-commands=include -Wno-c++98-compat -Wno-padded -Wno-weak-vtables")
+set(CMAKE_LINKER_FLAGS_CLANG_TIDY "-O0 -Werror -Weverything -fcomment-block-commands=include -Wno-c++98-compat -Wno-padded -Wno-weak-vtables")
+set(CMAKE_CXX_FLAGS_PERFORCE "-O0 -Werror -Wall -Wextra -Wpedantic")
+set(CMAKE_LINKER_FLAGS_PERFORCE "-O0 -Werror -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS_SONARCLOUD "-O0 -Werror -Wall -Wextra -Wpedantic")
+set(CMAKE_LINKER_FLAGS_SONARCLOUD "-O0 -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_TSAN "-Og -g -fsanitize=thread -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_TSAN "-Og -g -fsanitize=thread -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_UBSAN "-Og -g -fsanitize=undefined -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_UBSAN "-Og -g -fsanitize=undefined -Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_COVERAGE "-O0 -g --coverage -fprofile-arcs -ftest-coverage -Wall -Wextra -Wpedantic")
-set(CMAKE_LINKER_FLAGS_COVERAGE "-O0 -g --coverage -fprofile-arcs -ftest-coverage -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS_COVERAGE "-O0 --coverage -fprofile-arcs -ftest-coverage -Wall -Wextra -Wpedantic")
+set(CMAKE_LINKER_FLAGS_COVERAGE "-O0 --coverage -fprofile-arcs -ftest-coverage -Wall -Wextra -Wpedantic")
 
 if(UNIX)
     if(NOT DEFINED CMAKE_CXX_FLAGS OR CMAKE_CXX_FLAGS STREQUAL "")
-        set(CMAKE_CXX_FLAGS "-fdiagnostics-color=auto")
+        set(CMAKE_CXX_FLAGS "-fdiagnostics-color=auto -ffreestanding -fno-exceptions -fno-rtti")
     else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=auto")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=auto -ffreestanding -fno-exceptions -fno-rtti")
     endif()
 endif()
 
@@ -524,10 +524,20 @@ add_custom_command(TARGET info
 # default definitions
 # ------------------------------------------------------------------------------
 
+add_custom_target(doxygen
+    COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_SOURCE_DIR} doxygen .doxygen
+    VERBATIM
+)
+
+# ------------------------------------------------------------------------------
+# default definitions
+# ------------------------------------------------------------------------------
+
 if(CMAKE_BUILD_TYPE STREQUAL PERFORCE)
     set(BSL_AUTOSAR_COMPLIANT true)
     set(BSL_CONTRACTS_CHECK_DEFAULT true)
     set(BSL_CONTRACTS_CHECK_AUDIT true)
+    set(BSL_DEBUG_LEVEL "debug_level_t::verbosity_level_3")
 endif()
 
 if(NOT DEFINED BSL_AUTOSAR_COMPLIANT)
@@ -666,23 +676,26 @@ endfunction(bf_generate_defines)
 # bf_add_example
 # ------------------------------------------------------------------------------
 
-# Add Executable
+# Add Test
 #
-# Adds an executable that includes any dependencies that the BSL has. This
-# is not needed if you link against the BSL interface library. In general,
-# this is only needed internally to the BSL
+# Adds a test case given a name. Note that this will disable C++ access
+# controls, assisting in unit testing.
 #
-# NAME: The name of the executable to add
+# NAME: The name of the test case to add
 #
-function(bf_add_example NAME SOURCE)
+macro(bf_add_example NAME)
     set(multiValueArgs DEFINES)
     cmake_parse_arguments(ARGS "" "" "${multiValueArgs}" ${ARGN})
 
-    add_executable(${NAME} ${SOURCE})
-    target_link_libraries(${NAME} PRIVATE fmt::fmt)
-    target_include_directories(test_${NAME} ${CMAKE_SOURCE_DIR}/include)
-    bf_generate_defines(${NAME} ${ARGN})
-endfunction(bf_add_example)
+    file(RELATIVE_PATH REL_NAME ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_LIST_DIR})
+    file(TO_CMAKE_PATH "${REL_NAME}" REL_NAME)
+    string(REPLACE "/" "_" REL_NAME ${REL_NAME})
+
+    add_executable(${REL_NAME}_${NAME} ${NAME}.cpp)
+    target_link_libraries(${REL_NAME}_${NAME} PRIVATE fmt::fmt)
+    target_include_directories(${REL_NAME}_${NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+    bf_generate_defines(${REL_NAME}_${NAME} ${ARGN})
+endmacro(bf_add_example)
 
 # ------------------------------------------------------------------------------
 # bf_add_test
@@ -701,6 +714,7 @@ macro(bf_add_test NAME)
 
     add_executable(test_${NAME} ${NAME}.cpp)
     target_link_libraries(test_${NAME} PRIVATE fmt::fmt)
+    target_include_directories(test_${NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
     target_compile_options(test_${NAME} PRIVATE -fno-access-control)
     add_test(test_${NAME} test_${NAME})
     bf_generate_defines(test_${NAME} ${ARGN})

@@ -225,5 +225,9 @@ includes  = ["**/*.hpp", "**/*.cpp"]
 # do not allow std::int types
 # check for [](){}
 # NULL is not allowed
-# *** not allowed. Array types are not allowed so there is not need to detect that
-# to_ptr() should contains a NOFLEXLINT comment to pass
+# remove unneeded cheks
+# detect nested ternary operators (look for ? ? before :)
+# make sure that hex constants are all uppercase
+# make sure a do statement is not allowed
+# detect #include without c or .hpp
+# do not dynamic_cast

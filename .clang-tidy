@@ -29,7 +29,6 @@
 #  template functions.
 #  https://bugs.llvm.org/show_bug.cgi?id=35824
 #
-#
 # -modernize-use-trailing-return-type
 #
 #  We disable this as AUTOSAR does not allow for non-template trailing return
@@ -113,7 +112,7 @@ CheckOptions:
   - key:             cppcoreguidelines-avoid-magic-numbers.IgnoredFloatingPointValues
     value:           '1.0;100.0;'
   - key:             cppcoreguidelines-avoid-magic-numbers.IgnoredIntegerValues
-    value:           '1;2;3;4;'
+    value:           '1;2;3;4;8;15;16;23;42'
   - key:             cppcoreguidelines-macro-usage.AllowedRegexp
     value:           '^BAREFLANK*|^bf*|^BF*|^CHECK*'
   - key:             cppcoreguidelines-macro-usage.CheckCapsOnly
@@ -329,7 +328,7 @@ CheckOptions:
   - key:             readability-magic-numbers.IgnoredFloatingPointValues
     value:           '1.0;100.0;'
   - key:             readability-magic-numbers.IgnoredIntegerValues
-    value:           '1;2;3;4;'
+    value:           '1;2;3;4;8;15;16;23;42'
   - key:             readability-redundant-smartptr-get.IgnoreMacros
     value:           '1'
   - key:             readability-simplify-boolean-expr.ChainedConditionalAssignment

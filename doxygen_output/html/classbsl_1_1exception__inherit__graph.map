@@ -1,0 +1,7 @@
+<map id="bsl::exception" name="bsl::exception">
+<area shape="rect" id="node1" title="This class provides the base type for all exceptions types used by Bareflank." alt="" coords="98,80,201,107"/>
+<area shape="rect" id="node3" href="$classbsl_1_1checked__error.html" title="This class provides the base type for all checked exceptions types defined by the AUTOSAR specificati..." alt="" coords="5,155,133,181"/>
+<area shape="rect" id="node4" href="$classbsl_1_1unchecked__error.html" title="This class provides the base type for all unchecked exceptions types defined by the AUTOSAR specifica..." alt="" coords="158,155,301,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="98,5,201,32"/>
+<area shape="rect" id="node5" href="$classbsl_1_1fatal__error.html" title=" " alt="" coords="177,229,282,256"/>
+</map>

@@ -19,5 +19,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# add_subdirectory(contracts)
-# add_subdirectory(utility)
+add_subdirectory(checked_error)
+add_subdirectory(discard)
+add_subdirectory(exception)
+add_subdirectory(failure)
+add_subdirectory(integer)
+add_subdirectory(source_location)
+add_subdirectory(unchecked_error)
+add_subdirectory(unique_owner)

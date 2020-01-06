@@ -1,0 +1,6 @@
+<map id="bsl::unsign" name="bsl::unsign">
+<area shape="rect" id="node1" title="unsign" alt="" coords="5,67,91,93"/>
+<area shape="rect" id="node2" href="$contracts_8hpp.html#a5860a63e57fd38649b962d491e91cdda" title="expects_audit" alt="" coords="139,67,267,93"/>
+<area shape="rect" id="node3" href="$failure_8hpp.html#a0da818f8bd1562befc1f6d701484e0c9" title="Used to issue a run&#45;time failure. Note that this function should be called using bsl::fatal() instead..." alt="" coords="319,29,383,56"/>
+<area shape="rect" id="node4" href="$source__location_8hpp.html#ac1eb6fafedd79a63b6a389913b4e0111" title="This provides a less verbose version of bsl::source_location::current() to help reduce how large this..." alt="" coords="315,104,387,131"/>
+</map>

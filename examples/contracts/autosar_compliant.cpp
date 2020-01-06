@@ -1,3 +1,5 @@
+
+/// [example]
 #define BSL_AUTOSAR_COMPLIANT 1
 #include <bsl/contracts.hpp>
 
@@ -17,5 +19,4 @@ main() -> int
         std::cerr << "unchecked exception: " << e.what() << '\n';
     }
 }
-
-// unchecked exception: FATAL ERROR: default precondition violation [7]: ...
+/// [example]

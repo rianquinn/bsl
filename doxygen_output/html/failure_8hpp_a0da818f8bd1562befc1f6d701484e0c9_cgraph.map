@@ -1,0 +1,3 @@
+<map id="bsl::fail" name="bsl::fail">
+<area shape="rect" id="node1" title="Used to issue a run&#45;time failure. Note that this function should be called using bsl::fatal() instead..." alt="" coords="5,29,69,56"/>
+</map>
