@@ -22,34 +22,28 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file types.hpp
+/// @file exit_code.hpp
 ///
 
 #ifndef BSL_EXIT_CODE_HPP
 #define BSL_EXIT_CODE_HPP
-
-#include "cstdint.hpp"
 
 namespace bsl
 {
     /// @enum bsl::exit_code
     ///
     /// <!-- description -->
-    ///   @brief Defines the supported exit code that are passed to bsl::exit
-    ///     or returned from bsl_main().
-    ///   @include
+    ///   @brief Defines the supported exit codes that are passed to bsl::exit
+    ///     or returned from bsl_main(). These are similar to EXIT_SUCCESS
+    ///     and EXIT_FAILURE without the use of macros.
     ///
-    /// <!-- notes -->
-    ///   @note
-    ///
-    /// <!-- template parameters -->
-    ///   @tparam
-    ///
-    enum class exit_code : bsl::int32_t
+    enum class exit_code : bsl::int32
     {
+        /// @brief represents a successful exit
         exit_success = 0,
+        /// @brief represents a failed exit
         exit_failure = 1
     };
-}    // namespace bsl
+}
 
 #endif

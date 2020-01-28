@@ -21,29 +21,27 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
-///
-/// @file xxx.hpp
-///
 
-#include <bsl/cstdint.hpp>
-#include <bsl/is_same.hpp>
+#include <bsl/discard.hpp>
+#include <bsl/main.hpp>
 
-/// <!-- description -->
-///   @brief example
-///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
-///
-/// <!-- inputs/outputs -->
-///   @return EXIT_SUCCESS
-///
-/// <!-- exceptions -->
-///   @throw [checked] none
-///   @throw [unchecked] none
-///
-bsl::int32_t
-main() noexcept
+namespace bsl
 {
-    return bsl::is_same<bool, bool>::value ? 0 : 1;
+    /// <!-- description -->
+    ///   @brief Provides the example's main function
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @param args the arguments passed to the application
+    ///   @return exit_success on success, exit_failure otherwise
+    ///
+    bsl::exit_code
+    entry(bsl::arguments const &args) noexcept
+    {
+        bsl::discard(args);
+        return bsl::exit_code::exit_success;
+    }
 }

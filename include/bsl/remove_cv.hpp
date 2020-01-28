@@ -21,35 +21,32 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
-///
-/// @file remove_cv.hpp
-///
 
 #ifndef BSL_REMOVE_CV_HPP
 #define BSL_REMOVE_CV_HPP
 
-#include "remove_const.hpp"
-#include "remove_volatile.hpp"
+#include "type_identity.hpp"
 
-namespace bsl
+namespace std
 {
-    /// @class bsl::remove_cv
-    ///
-    /// <!-- description -->
-    ///   @brief Provides the member typedef type which is the same as T,
-    ///     except that its topmost cv-qualifiers are removed.
-    ///   @include remove_cv/overview.cpp
-    ///
-    /// <!-- template parameters -->
-    ///   @tparam T the type to remove the CV qualifer from
-    ///
-    template<class T>
-    struct remove_cv : enable_if<true, remove_const_t<remove_volatile_t<T>>>
+    // NOTE:
+    // - These APIs should not be used directly. This is only needed for
+    //   some compilers that rely on this existing. In general, volatile is
+    //   not supported, and instead bsl::remove_const should be used as it
+    //   accurately self-documents that volatile is not being removed.
+    //
+
+    /// @cond
+
+    template<typename T>
+    class remove_cv final : public bsl::type_identity<T>
     {};
 
-    /// @brief a helper that reduces the verbosity of std::remove_cv
     template<typename T>
-    using remove_cv_t = typename remove_cv<T>::type;
-}    // namespace bsl
+    struct remove_cv<T const> final : public bsl::type_identity<T>
+    {};
+
+    /// @endcond
+}
 
 #endif

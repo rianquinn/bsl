@@ -1,5 +1,0 @@
-<map id="bsl::unchecked_error" name="bsl::unchecked_error">
-<area shape="rect" id="node1" title="This class provides the base type for all unchecked exceptions types defined by the AUTOSAR specifica..." alt="" coords="5,155,148,181"/>
-<area shape="rect" id="node2" href="$classbsl_1_1exception.html" title="This class provides the base type for all exceptions types used by Bareflank." alt="" coords="25,80,128,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="25,5,128,32"/>
-</map>

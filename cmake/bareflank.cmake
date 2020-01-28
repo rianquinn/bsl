@@ -28,12 +28,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # ------------------------------------------------------------------------------
-# Required
-# ------------------------------------------------------------------------------
-
-find_package(fmt REQUIRED)
-
-# ------------------------------------------------------------------------------
 # Color
 # ------------------------------------------------------------------------------
 
@@ -116,8 +110,12 @@ endmacro(bf_find_program)
 # default build type
 # ------------------------------------------------------------------------------
 
-if(NOT UNIX)
-    set(CMAKE_BUILD_TYPE RELEASE)   # we only support RELEASE in Windows
+if(CMAKE_BUILD_TYPE STREQUAL Release)
+    set(CMAKE_BUILD_TYPE RELEASE)
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
+    set(CMAKE_BUILD_TYPE DEBUG)
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -130,35 +128,24 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL RELEASE AND
    NOT CMAKE_BUILD_TYPE STREQUAL PERFORCE AND
    NOT CMAKE_BUILD_TYPE STREQUAL SONARCLOUD AND
    NOT CMAKE_BUILD_TYPE STREQUAL ASAN AND
-   NOT CMAKE_BUILD_TYPE STREQUAL TSAN AND
    NOT CMAKE_BUILD_TYPE STREQUAL UBSAN AND
    NOT CMAKE_BUILD_TYPE STREQUAL COVERAGE)
     bf_error("Unknown CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 endif()
 
-if(NOT UNIX)
-    add_custom_command(TARGET info
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --green   " Supported CMake Build Types:"
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=RELEASE            compile in release mode"
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color " "
-        VERBATIM
-    )
-else()
-    add_custom_command(TARGET info
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --green   " Supported CMake Build Types:"
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=RELEASE            compile in release mode"
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=DEBUG              compile in debug mode"
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=CLANG_TIDY         compile with Clang Tidy checks"
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=PERFORCE           compile with Perforce checks"
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=SONARCLOUD         compile with SonarCloud"
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=ASAN               compile with Google ASAN"
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=TSAN               compile with Google TSAN"
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=UBSAN              compile with Google UBSAN"
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=COVERAGE           compile with LCOV coverage"
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color " "
-        VERBATIM
-    )
-endif()
+add_custom_command(TARGET info
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --green   " Supported CMake Build Types:"
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=RELEASE            compile in release mode"
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=DEBUG              compile in debug mode"
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=CLANG_TIDY         compile with Clang Tidy checks"
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=PERFORCE           compile with Perforce checks"
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=SONARCLOUD         compile with SonarCloud"
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=ASAN               compile with Google ASAN"
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=UBSAN              compile with Google UBSAN"
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   -DCMAKE_BUILD_TYPE=COVERAGE           compile with LCOV coverage"
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color " "
+    VERBATIM
+)
 
 message(STATUS "Build type: ${BF_CYAN}${CMAKE_BUILD_TYPE}${BF_RESET}")
 
@@ -180,12 +167,12 @@ add_custom_command(TARGET info
 # examples
 # ------------------------------------------------------------------------------
 
-if(CMAKE_BUILD_TYPE STREQUAL DEBUG OR
+if(CMAKE_BUILD_TYPE STREQUAL RELEASE OR
+   CMAKE_BUILD_TYPE STREQUAL DEBUG OR
    CMAKE_BUILD_TYPE STREQUAL CLANG_TIDY OR
    CMAKE_BUILD_TYPE STREQUAL PERFORCE OR
    CMAKE_BUILD_TYPE STREQUAL SONARCLOUD OR
    CMAKE_BUILD_TYPE STREQUAL ASAN OR
-   CMAKE_BUILD_TYPE STREQUAL TSAN OR
    CMAKE_BUILD_TYPE STREQUAL UBSAN)
     if(NOT DEFINED BUILD_EXAMPLES)
         set(BUILD_EXAMPLES ON)
@@ -207,7 +194,6 @@ if(CMAKE_BUILD_TYPE STREQUAL DEBUG OR
    CMAKE_BUILD_TYPE STREQUAL PERFORCE OR
    CMAKE_BUILD_TYPE STREQUAL SONARCLOUD OR
    CMAKE_BUILD_TYPE STREQUAL ASAN OR
-   CMAKE_BUILD_TYPE STREQUAL TSAN OR
    CMAKE_BUILD_TYPE STREQUAL UBSAN OR
    CMAKE_BUILD_TYPE STREQUAL COVERAGE)
     if(NOT DEFINED BUILD_TESTS)
@@ -217,35 +203,21 @@ endif()
 
 if(BUILD_TESTS)
     include(CTest)
-    bf_find_program(VALGRIND "valgrind" "https://valgrind.org/")
-    bf_find_program(FLEXLINT "flexlint" "https://github.com/dalance/flexlint")
     if(CMAKE_BUILD_TYPE STREQUAL COVERAGE)
         add_custom_target(
             unittest
             COMMAND lcov --zerocounters --directory . -q
             COMMAND ctest --output-on-failure
         )
-
-        add_custom_target(
-            memcheck
-            COMMAND lcov --zerocounters --directory . -q
-            COMMAND ctest --output-on-failure -T memcheck
-        )
     else()
         add_custom_target(
             unittest
             COMMAND ctest --output-on-failure
         )
-
-        add_custom_target(
-            memcheck
-            COMMAND ctest --output-on-failure -T memcheck
-        )
     endif()
     add_custom_command(TARGET info
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   make unittest                         run the project's unit tests"
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   make memcheck                         run the project's unit tests under valgrind"
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   make flexlint                         static analyze the project using flexlint"
         VERBATIM
     )
     message(STATUS "Build tests: ${BF_ENABLED}")
@@ -279,11 +251,9 @@ if(CMAKE_BUILD_TYPE STREQUAL CLANG_TIDY)
     endif()
 endif()
 
-if(ENABLE_CLANG_TIDY AND UNIX)
+if(ENABLE_CLANG_TIDY)
     bf_find_program(CMAKE_CXX_CLANG_TIDY "clang-tidy" "https://clang.llvm.org/extra/clang-tidy/")
     message(STATUS "Tool [Clang Tidy]: ${BF_ENABLED} - ${CMAKE_CXX_CLANG_TIDY}")
-else()
-    message(STATUS "Tool [Clang Tidy]: ${BF_DISABLED}")
 endif()
 
 # ------------------------------------------------------------------------------
@@ -305,7 +275,7 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL RELEASE)
     endif()
 endif()
 
-if(ENABLE_CLANG_FORMAT AND UNIX)
+if(ENABLE_CLANG_FORMAT)
     bf_find_program(BF_CLANG_FORMAT "clang-format" "https://clang.llvm.org/docs/ClangFormat.html")
     add_custom_target(
         format
@@ -334,7 +304,7 @@ if(CMAKE_BUILD_TYPE STREQUAL SONARCLOUD)
     endif()
 endif()
 
-if(ENABLE_SONAR_BUILD_WRAPPER AND UNIX)
+if(ENABLE_SONAR_BUILD_WRAPPER)
     bf_find_program(BF_SONAR_BUILD_WRAPPER "build-wrapper-linux-x86-64" "https://docs.sonarqube.org/latest/analysis/languages/cfamily/")
     add_custom_target(
         sonar-build
@@ -359,7 +329,7 @@ if(CMAKE_BUILD_TYPE STREQUAL SONARCLOUD)
     endif()
 endif()
 
-if(ENABLE_SONAR_SCANNER AND UNIX)
+if(ENABLE_SONAR_SCANNER)
     bf_find_program(BF_SONAR_SCANNER "sonar-scanner" "https://docs.sonarqube.org/latest/analysis/languages/cfamily/")
     add_custom_target(
         sonar-upload
@@ -388,7 +358,7 @@ if(CMAKE_BUILD_TYPE STREQUAL COVERAGE)
     endif()
 endif()
 
-if(ENABLE_COVERAGE AND UNIX)
+if(ENABLE_COVERAGE)
     bf_find_program(BF_COVERAGE "lcov" "http://ltp.sourceforge.net/coverage/lcov.php")
     add_custom_command(TARGET info
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   make coverage                         generates a code coverage report"
@@ -434,45 +404,29 @@ endif()
 # asan
 # ------------------------------------------------------------------------------
 
-if(CMAKE_BUILD_TYPE STREQUAL ASAN)
+if(CMAKE_BUILD_TYPE STREQUAL ASAN AND UNIX)
     if(NOT DEFINED ENABLE_ASAN)
         set(ENABLE_ASAN ON)
     endif()
 endif()
 
-if(ENABLE_ASAN AND UNIX)
+if(ENABLE_ASAN)
     message(STATUS "Tool [Google's ASAN]: ${BF_ENABLED}")
 else()
     message(STATUS "Tool [Google's ASAN]: ${BF_DISABLED}")
 endif()
 
 # ------------------------------------------------------------------------------
-# tsan
-# ------------------------------------------------------------------------------
-
-if(CMAKE_BUILD_TYPE STREQUAL TSAN)
-    if(NOT DEFINED ENABLE_TSAN)
-        set(ENABLE_TSAN ON)
-    endif()
-endif()
-
-if(ENABLE_TSAN AND UNIX)
-    message(STATUS "Tool [Google's TSAN]: ${BF_ENABLED}")
-else()
-    message(STATUS "Tool [Google's TSAN]: ${BF_DISABLED}")
-endif()
-
-# ------------------------------------------------------------------------------
 # ubsan
 # ------------------------------------------------------------------------------
 
-if(CMAKE_BUILD_TYPE STREQUAL UBSAN)
+if(CMAKE_BUILD_TYPE STREQUAL UBSAN AND UNIX)
     if(NOT DEFINED ENABLE_UBSAN)
         set(ENABLE_UBSAN ON)
     endif()
 endif()
 
-if(ENABLE_UBSAN AND UNIX)
+if(ENABLE_UBSAN)
     message(STATUS "Tool [Google's UBSAN]: ${BF_ENABLED}")
 else()
     message(STATUS "Tool [Google's UBSAN]: ${BF_DISABLED}")
@@ -494,19 +448,15 @@ set(CMAKE_CXX_FLAGS_SONARCLOUD "-O0 -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_SONARCLOUD "-O0 -Werror -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address -Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_TSAN "-Og -g -fsanitize=thread -Wall -Wextra -Wpedantic")
-set(CMAKE_LINKER_FLAGS_TSAN "-Og -g -fsanitize=thread -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_UBSAN "-Og -g -fsanitize=undefined -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_UBSAN "-Og -g -fsanitize=undefined -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_COVERAGE "-O0 --coverage -fprofile-arcs -ftest-coverage -Wall -Wextra -Wpedantic")
 set(CMAKE_LINKER_FLAGS_COVERAGE "-O0 --coverage -fprofile-arcs -ftest-coverage -Wall -Wextra -Wpedantic")
 
-if(UNIX)
-    if(NOT DEFINED CMAKE_CXX_FLAGS OR CMAKE_CXX_FLAGS STREQUAL "")
-        set(CMAKE_CXX_FLAGS "-fdiagnostics-color=auto -ffreestanding -fno-exceptions -fno-rtti")
-    else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=auto -ffreestanding -fno-exceptions -fno-rtti")
-    endif()
+if(NOT DEFINED CMAKE_CXX_FLAGS OR CMAKE_CXX_FLAGS STREQUAL "")
+    set(CMAKE_CXX_FLAGS "-ffreestanding -fno-exceptions -fno-rtti")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}=-ffreestanding -fno-exceptions -fno-rtti")
 endif()
 
 message(STATUS "CXX Flags: ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}}")
@@ -692,8 +642,10 @@ macro(bf_add_example NAME)
     string(REPLACE "/" "_" REL_NAME ${REL_NAME})
 
     add_executable(${REL_NAME}_${NAME} ${NAME}.cpp)
-    target_link_libraries(${REL_NAME}_${NAME} PRIVATE fmt::fmt)
     target_include_directories(${REL_NAME}_${NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+    if(WIN32)
+        target_link_libraries(${REL_NAME}_${NAME} libcmt.lib)
+    endif()
     bf_generate_defines(${REL_NAME}_${NAME} ${ARGN})
 endmacro(bf_add_example)
 
@@ -713,9 +665,14 @@ macro(bf_add_test NAME)
     cmake_parse_arguments(ARGS "" "" "${multiValueArgs}" ${ARGN})
 
     add_executable(test_${NAME} ${NAME}.cpp)
-    target_link_libraries(test_${NAME} PRIVATE fmt::fmt)
     target_include_directories(test_${NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+    if(WIN32)
+        target_link_libraries(test_${NAME} libcmt.lib)
+    endif()
     target_compile_options(test_${NAME} PRIVATE -fno-access-control)
     add_test(test_${NAME} test_${NAME})
     bf_generate_defines(test_${NAME} ${ARGN})
 endmacro(bf_add_test)
+
+#locate dot
+#locate doxygen

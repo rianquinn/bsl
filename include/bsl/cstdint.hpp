@@ -22,6 +22,8 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
+/// @file cstdint.hpp
+///
 
 #ifndef BSL_CSTDINT_HPP
 #define BSL_CSTDINT_HPP
@@ -31,68 +33,68 @@
 namespace bsl
 {
     /// @brief defines an 8bit signed integer
-    using ::int8_t;
+    using int8 = ::int8_t;
     /// @brief defines an 16bit signed integer
-    using ::int16_t;
+    using int16 = ::int16_t;
     /// @brief defines an 32bit signed integer
-    using ::int32_t;
+    using int32 = ::int32_t;
     /// @brief defines an 64bit signed integer
-    using ::int64_t;
+    using int64 = ::int64_t;
 
     /// @brief defines an 8bit unsigned integer
-    using ::uint8_t;
+    using uint8 = ::uint8_t;
     /// @brief defines an 16bit unsigned integer
-    using ::uint16_t;
+    using uint16 = ::uint16_t;
     /// @brief defines an 32bit unsigned integer
-    using ::uint32_t;
+    using uint32 = ::uint32_t;
     /// @brief defines an 64bit unsigned integer
-    using ::uint64_t;
+    using uint64 = ::uint64_t;
 
     /// @brief defines at least an 8bit signed integer
-    using ::int_least8_t;
+    using int_least8 = ::int_least8_t;
     /// @brief defines at least an 16bit signed integer
-    using ::int_least16_t;
+    using int_least16 = ::int_least16_t;
     /// @brief defines at least an 32bit signed integer
-    using ::int_least32_t;
+    using int_least32 = ::int_least32_t;
     /// @brief defines at least an 64bit signed integer
-    using ::int_least64_t;
+    using int_least64 = ::int_least64_t;
 
     /// @brief defines at least an 8bit unsigned integer
-    using ::uint_least8_t;
+    using uint_least8 = ::uint_least8_t;
     /// @brief defines at least an 16bit unsigned integer
-    using ::uint_least16_t;
+    using uint_least16 = ::uint_least16_t;
     /// @brief defines at least an 32bit unsigned integer
-    using ::uint_least32_t;
+    using uint_least32 = ::uint_least32_t;
     /// @brief defines at least an 64bit unsigned integer
-    using ::uint_least64_t;
+    using uint_least64 = ::uint_least64_t;
 
     /// @brief defines at least an 8bit signed integer with optimizations
-    using ::int_fast8_t;
+    using int_fast8 = ::int_fast8_t;
     /// @brief defines at least an 16bit signed integer with optimizations
-    using ::int_fast16_t;
+    using int_fast16 = ::int_fast16_t;
     /// @brief defines at least an 32bit signed integer with optimizations
-    using ::int_fast32_t;
+    using int_fast32 = ::int_fast32_t;
     /// @brief defines at least an 64bit signed integer with optimizations
-    using ::int_fast64_t;
+    using int_fast64 = ::int_fast64_t;
 
     /// @brief defines at least an 8bit unsigned integer with optimizations
-    using ::uint_fast8_t;
+    using uint_fast8 = ::uint_fast8_t;
     /// @brief defines at least an 16bit unsigned integer with optimizations
-    using ::uint_fast16_t;
+    using uint_fast16 = ::uint_fast16_t;
     /// @brief defines at least an 32bit unsigned integer with optimizations
-    using ::uint_fast32_t;
+    using uint_fast32 = ::uint_fast32_t;
     /// @brief defines at least an 64bit unsigned integer with optimizations
-    using ::uint_fast64_t;
+    using uint_fast64 = ::uint_fast64_t;
 
     /// @brief defines a signed integer the size of a void *
-    using ::intptr_t;
+    using intptr = ::intptr_t;
     /// @brief defines a unsigned integer the size of a void *
-    using ::uintptr_t;
+    using uintptr = ::uintptr_t;
 
     /// @brief defines a signed integer with the maximum possible size
-    using ::intmax_t;
+    using intmax = ::intmax_t;
     /// @brief defines a unsigned integer with the maximum possible size
-    using ::uintmax_t;
-}    // namespace bsl
+    using uintmax = ::uintmax_t;
+}
 
 #endif

@@ -1,4 +1,0 @@
-<map id="bsl::to_intmax" name="bsl::to_intmax">
-<area shape="rect" id="node1" title="to_intmax" alt="" coords="5,29,111,56"/>
-<area shape="rect" id="node2" href="$source__location_8hpp.html#ac1eb6fafedd79a63b6a389913b4e0111" title="This provides a less verbose version of bsl::source_location::current() to help reduce how large this..." alt="" coords="159,29,231,56"/>
-</map>

@@ -28,6 +28,8 @@
 #ifndef BSL_ENABLE_IF_HPP
 #define BSL_ENABLE_IF_HPP
 
+#include "type_identity.hpp"
+
 namespace bsl
 {
     /// @class bsl::enable_if
@@ -50,29 +52,20 @@ namespace bsl
     ///   @tparam T the type of typedef that is defined if B is true
     ///
     template<bool B, typename T = bool>
-    struct enable_if
+    class enable_if final
     {};
 
-    /// @class enable_if<true, T>
-    ///
-    /// <!-- description -->
-    ///   @brief A specialization of bsl::enable_if that provides the typedef
-    ///     T when B is true.
-    ///   @include enable_if/overview.cpp
-    ///
-    /// <!-- template parameters -->
-    ///   @tparam T the type of typedef that is defined if B is true
-    ///
-    template<typename T>
-    struct enable_if<true, T>
-    {
-        /// @brief the typedef that is defined when B is true
-        using type = T;
-    };
-
-    /// @brief a helper that reduces the verbosity of std::enable_if
+    /// @brief a helper that reduces the verbosity of bsl::enable_if
     template<bool B, typename T = bool>
     using enable_if_t = typename enable_if<B, T>::type;
-}    // namespace bsl
+
+    /// @cond
+
+    template<typename T>
+    class enable_if<true, T> final : public type_identity<T>
+    {};
+
+    /// @endcond
+}
 
 #endif

@@ -22,7 +22,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file types.hpp
+/// @file cstr_type.hpp
 ///
 
 #ifndef BSL_CSTR_TYPE_HPP
@@ -31,8 +31,12 @@
 namespace bsl
 {
     /// @brief C-style string type
-    // using cstr_type = typename std::decay_t<decltype("c-style string type")>;
-    using cstr_type = const char *;
-}    // namespace bsl
+    ///
+    /// SUPPRESSION: PRQA 2428 - false positive
+    /// - We suppress this because A3-9-1 is referring to integer types, not
+    ///   c-style strings.
+    ///
+    using cstr_type = const char *;    // PRQA S 2428
+}
 
 #endif

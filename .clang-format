@@ -42,7 +42,7 @@ BinPackParameters: false
 BraceWrapping:
     AfterClass: true
     AfterControlStatement: false
-    AfterEnum: false
+    AfterEnum: true
     AfterFunction: true
     AfterNamespace: true
     # AfterObjCDeclaration
@@ -62,7 +62,7 @@ BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: AfterColon
 BreakStringLiterals: true
-ColumnLimit: 100
+ColumnLimit: 120
 # CommentPragmas
 CompactNamespaces: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
@@ -72,7 +72,7 @@ Cpp11BracedListStyle: true
 DerivePointerAlignment: false
 # DisableFormat
 # ExperimentalAutoDetectBinPacking
-FixNamespaceComments: true
+FixNamespaceComments: false
 # ForEachMacros
 # IncludeBlocks
 # IncludeCategories

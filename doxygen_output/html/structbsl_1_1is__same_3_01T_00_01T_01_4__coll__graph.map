@@ -1,4 +1,0 @@
-<map id="bsl::is_same&lt; T, T &gt;" name="bsl::is_same&lt; T, T &gt;">
-<area shape="rect" id="node1" title="A specialization of bsl::is_same that provides a member constant value of true when the LHS and RHS a..." alt="" coords="5,80,148,107"/>
-<area shape="rect" id="node2" href="$structbsl_1_1integral__constant.html" title="Wraps a static constant of type T. It is the base class for the C++ type traits used for SFINAE." alt="" coords="39,5,115,32"/>
-</map>

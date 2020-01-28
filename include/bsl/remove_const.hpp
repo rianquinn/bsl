@@ -28,7 +28,7 @@
 #ifndef BSL_REMOVE_CONST_HPP
 #define BSL_REMOVE_CONST_HPP
 
-#include "enable_if.hpp"
+#include "type_identity.hpp"
 
 namespace bsl
 {
@@ -40,29 +40,23 @@ namespace bsl
     ///   @include remove_const/overview.cpp
     ///
     /// <!-- template parameters -->
-    ///   @tparam T the type to remove the const qualifer from
+    ///   @tparam T the type to remove the const qualifier from
     ///
     template<typename T>
-    struct remove_const : enable_if<true, T>
+    class remove_const final : public type_identity<T>
     {};
 
-    /// @class bsl::remove_const<const T>
-    ///
-    /// <!-- description -->
-    ///   @brief Provides the member typedef type which is the same as T,
-    ///     except that its topmost const qualifier is removed.
-    ///   @include remove_const/overview.cpp
-    ///
-    /// <!-- template parameters -->
-    ///   @tparam T the type to remove the const qualifer from
-    ///
-    template<typename T>
-    struct remove_const<const T> : enable_if<true, T>
-    {};
-
-    /// @brief a helper that reduces the verbosity of std::remove_const
+    /// @brief a helper that reduces the verbosity of bsl::remove_const
     template<typename T>
     using remove_const_t = typename remove_const<T>::type;
-}    // namespace bsl
+
+    /// @cond
+
+    template<typename T>
+    struct remove_const<T const> final : public type_identity<T>
+    {};
+
+    /// @endcond
+}
 
 #endif

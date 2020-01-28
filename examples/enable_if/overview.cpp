@@ -22,25 +22,50 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/cstdint.hpp>
+#include <bsl/discard.hpp>
+#include <bsl/main.hpp>
 
-/// <!-- description -->
-///   @brief example
-///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
-///
-/// <!-- inputs/outputs -->
-///   @return EXIT_SUCCESS
-///
-bsl::exit_code
-bsl_main(bsl::arguments const &args) noexcept
+#include <bsl/enable_if.hpp>
+#include <bsl/is_bool.hpp>
+
+namespace
 {
-    try {
+    /// <!-- description -->
+    ///   @brief Returns success when the provided type is a bool.
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the type to query
+    ///   @return success
+    ///
+    template<typename T, bsl::enable_if_t<bsl::is_bool<T>::value> = true>
+    constexpr bsl::exit_code
+    foo() noexcept
+    {
+        return bsl::exit_code::exit_success;
     }
-    catch (...) {
-    }
+}
 
-    return bsl::exit_success;
+namespace bsl
+{
+    /// <!-- description -->
+    ///   @brief Provides the example's main function
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @param args the arguments passed to the application
+    ///   @return exit_success on success, exit_failure otherwise
+    ///
+    bsl::exit_code
+    entry(bsl::arguments const &args) noexcept
+    {
+        bsl::discard(args);
+        return foo<bool>();
+    }
 }

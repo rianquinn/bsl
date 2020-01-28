@@ -39,14 +39,12 @@ namespace bsl
     ///     as a template parameter, which cannot be done with a static cast.
     ///   @include discard/overview.cpp
     ///
-    ///   SUPPRESSION: PRQA 4649 - false positive
-    ///   - We suppress this because M0-1-8 states that a function returning
-    ///     void should have side-effects, which this function doesn't. This is
-    ///     because this function is a wrapper for a static cast, which also,
-    ///     does not have side effects, but is allowed under A0-1-2
-    ///
-    /// <!-- notes -->
-    ///   @note There is no need to call this function, or
+    ///   SUPPRESSION: PRQA 4050 - exception required
+    ///   - We suppress this because M0-1-8 states that all functions marked
+    ///     as returning void must have external side effects, which this
+    ///     function does not. AUTOSAR allows the use of static_cast<void>
+    ///     to mark a parameter or return as unused which is all that this
+    ///     is doing in a less verbose, more self-documenting way.
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -55,18 +53,13 @@ namespace bsl
     /// <!-- inputs/outputs -->
     ///   @tparam T the type that defines the parameter being discarded
     ///   @param param the parameter being discarded
-    ///   @return none
-    ///
-    /// <!-- exceptions -->
-    ///   @throw [checked] none
-    ///   @throw [unchecked] none
     ///
     template<typename T>
     constexpr void
-    discard(T &&param) noexcept    // PRQA S 4649
+    discard(T &&param) noexcept // PRQA S 4649
     {
         static_cast<void>(param);
     }
-}    // namespace bsl
+}
 
 #endif

@@ -1,7 +1,0 @@
-<map id="bsl::source_location::operator&lt;&lt;" name="bsl::source_location::operator&lt;&lt;">
-<area shape="rect" id="node1" title="Inserts the value of the source location sloc into the output stream os." alt="" coords="5,71,144,112"/>
-<area shape="rect" id="node2" href="$classbsl_1_1source__location.html#a86f59681e27bd8f9f4d58409f2ea0c83" title="Returns the file name associated with the bsl::source_location." alt="" coords="192,5,331,47"/>
-<area shape="rect" id="node3" href="$classbsl_1_1source__location.html#a8049d124de42a68ccc9abda623d9d2fb" title="Returns the line location associated with the bsl::source_location." alt="" coords="192,71,331,112"/>
-<area shape="rect" id="node4" href="$integer_8hpp.html#acc01046754d5379e73ad32859023ba04" title="operator &lt;&lt;" alt="" coords="206,161,317,187"/>
-<area shape="rect" id="node5" href="$classbsl_1_1integer.html#a566c777a643ac67104115ba31c5d9b7a" title="get" alt="" coords="379,161,491,187"/>
-</map>

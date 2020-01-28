@@ -1,8 +1,0 @@
-<map id="bsl::integer::operator%=" name="bsl::integer::operator%=">
-<area shape="rect" id="node1" title="operator %=" alt="" coords="5,108,167,135"/>
-<area shape="rect" id="node2" href="$contracts_8hpp.html#aeb5972a252aa2ef07424cd3bacb79d3a" title="expects_audit_false" alt="" coords="215,71,343,113"/>
-<area shape="rect" id="node6" href="$classbsl_1_1integer.html#a4cf74cb2227e356b10a62756e3787f0c" title="min" alt="" coords="221,137,336,164"/>
-<area shape="rect" id="node3" href="$contracts_8hpp.html#a5860a63e57fd38649b962d491e91cdda" title="expects_audit" alt="" coords="391,53,519,80"/>
-<area shape="rect" id="node5" href="$source__location_8hpp.html#ac1eb6fafedd79a63b6a389913b4e0111" title="This provides a less verbose version of bsl::source_location::current() to help reduce how large this..." alt="" coords="567,104,639,131"/>
-<area shape="rect" id="node4" href="$failure_8hpp.html#a0da818f8bd1562befc1f6d701484e0c9" title="Used to issue a run&#45;time failure. Note that this function should be called using bsl::fatal() instead..." alt="" coords="571,29,635,56"/>
-</map>

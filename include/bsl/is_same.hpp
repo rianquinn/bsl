@@ -28,9 +28,6 @@
 #ifndef BSL_IS_SAME_HPP
 #define BSL_IS_SAME_HPP
 
-#include "true_type.hpp"
-#include "false_type.hpp"
-
 namespace bsl
 {
     /// @class bsl::is_same
@@ -46,22 +43,21 @@ namespace bsl
     ///   @tparam RHS the right hand side of the comparison
     ///
     template<typename LHS, typename RHS>
-    struct is_same : false_type
-    {};
+    struct is_same final
+    {
+        /// @brief the boolean that answers the type trait query
+        static constexpr bool value{false};
+    };
 
-    /// @class bsl::is_same<T, T>
-    ///
-    /// <!-- description -->
-    ///   @brief A specialization of bsl::is_same that provides a member
-    ///     constant value of true when the LHS and RHS are the same type.
-    ///   @include is_same/overview.cpp
-    ///
-    /// <!-- template parameters -->
-    ///   @tparam T the type being compared
-    ///
+    /// @cond
+
     template<typename T>
-    struct is_same<T, T> : true_type
-    {};
-}    // namespace bsl
+    struct is_same<T, T> final
+    {
+        static constexpr bool value{true};
+    };
+
+    /// @endcond
+}
 
 #endif

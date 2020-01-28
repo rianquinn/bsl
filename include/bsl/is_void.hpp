@@ -28,26 +28,41 @@
 #ifndef BSL_IS_VOID_HPP
 #define BSL_IS_VOID_HPP
 
-#include "is_same.hpp"
-#include "remove_cv.hpp"
-
 namespace bsl
 {
     /// @class bsl::is_void
     ///
     /// <!-- description -->
-    ///   @brief If LHS and RHS name the same type (taking into account
-    ///     const/volatile qualifications), provides the member constant value
+    ///   @brief If the provided type is a void type (taking into account
+    ///     const qualifications), provides the member constant value
     ///     equal to true. Otherwise the member constant value is false.
-    ///   @include is_same/overview.cpp
+    ///   @include is_void/overview.cpp
     ///
     /// <!-- template parameters -->
-    ///   @tparam LHS the left hand side of the comparison
-    ///   @tparam RHS the right hand side of the comparison
+    ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_void : is_same<void, typename remove_cv_t<T>>
-    {};
-}    // namespace bsl
+    struct is_void final
+    {
+        /// @brief the boolean that answers the type trait query
+        static constexpr bool value{false};
+    };
+
+    /// @cond
+
+    template<>
+    struct is_void<void> final
+    {
+        static constexpr bool value{true};
+    };
+
+    template<>
+    struct is_void<void const> final
+    {
+        static constexpr bool value{true};
+    };
+
+    /// @endcond
+}
 
 #endif

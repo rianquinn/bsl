@@ -231,3 +231,8 @@ includes  = ["**/*.hpp", "**/*.cpp"]
 # make sure a do statement is not allowed
 # detect #include without c or .hpp
 # do not dynamic_cast
+# do not allow std::
+# do not allow virtual
+# look for noexcept const and swap with const noexcept
+# look for constexpr explicit and swap with explicit constexpr
+# do not allow the arithmetic operators like +, - ++, etc..
