@@ -165,6 +165,12 @@ namespace bsl
         bsl::discard(test10);
         bsl::discard(test11);
 
+        bsl::result<bsl::int32> const test20{bsl::errc_failure};
+        bsl::result<bsl::int64> const test21{test20};
+
+        bsl::discard(test10);
+        bsl::discard(test11);
+
         static_assert(bsl::is_const<bsl::add_const_t<bool>>::value);
         static_assert(bsl::is_const<bsl::add_const_t<bool const>>::value);
         static_assert(!bsl::is_const<bsl::remove_const_t<bool>>::value);

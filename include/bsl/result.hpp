@@ -30,6 +30,7 @@
 #include "in_place_t.hpp"
 #include "move.hpp"
 #include "new.hpp"
+#include "source_location.hpp"
 #include "swap.hpp"
 
 #include "is_same.hpp"
@@ -39,6 +40,16 @@
 
 namespace bsl
 {
+    namespace details
+    {
+        /// @brief defines what type the union stores
+        enum class result_type : bsl::uint8
+        {
+            contains_t,
+            contains_e
+        };
+    }
+
     /// @class bsl::details::result
     ///
     /// <!-- description -->
@@ -83,7 +94,7 @@ namespace bsl
         ///   @throw throws if T's copy constructor throws
         ///
         explicit constexpr result(T const &t)    // PRQA S 2023
-            : m_which{result_type::contains_t}, m_t{t}
+            : m_which{details::result_type::contains_t}, m_t{t}
         {}
 
         /// <!-- description -->
@@ -107,7 +118,7 @@ namespace bsl
         ///   @param t the value being moved
         ///
         explicit constexpr result(T &&t) noexcept    // PRQA S 2023
-            : m_which{result_type::contains_t}, m_t{bsl::move(t)}
+            : m_which{details::result_type::contains_t}, m_t{bsl::move(t)}
         {}
 
         /// <!-- description -->
@@ -133,7 +144,7 @@ namespace bsl
         ///
         template<typename... ARGS>
         explicit constexpr result(in_place_t const ip, ARGS &&... args) noexcept // PRQA S 2023
-            : m_which{result_type::contains_t}, m_t{bsl::forward<ARGS>(args)...}
+            : m_which{details::result_type::contains_t}, m_t{bsl::forward<ARGS>(args)...}
         {
             bsl::discard(ip);
         }
@@ -162,7 +173,7 @@ namespace bsl
         ///   @throw throws if E's copy constructor throws
         ///
         explicit constexpr result(E const &e)    // PRQA S 2023
-            : m_which{result_type::contains_e}, m_e{e}
+            : m_which{details::result_type::contains_e}, m_e{e}
         {}
 
         /// <!-- description -->
@@ -186,7 +197,7 @@ namespace bsl
         ///   @param e the error code being moved
         ///
         explicit constexpr result(E &&e) noexcept    // PRQA S 2023
-            : m_which{result_type::contains_e}, m_e{bsl::move(e)}
+            : m_which{details::result_type::contains_e}, m_e{bsl::move(e)}
         {}
 
         /// <!-- description -->
@@ -229,7 +240,56 @@ namespace bsl
         constexpr result(result const &o)    // PRQA S 4285 // PRQA S 2023
             : m_which{o.m_which}             // PRQA S 4050
         {
-            if (result_type::contains_t == m_which) {
+            if (details::result_type::contains_t == m_which) {
+                details::initialize<T>(&m_t, o.m_t);
+            }
+            else {
+                details::initialize<E>(&m_e, o.m_e);
+            }
+        }
+
+        /// <!-- description -->
+        ///   @brief copy constructor
+        ///   @include result/constructor_copy.cpp
+        ///
+        ///   SUPPRESSION: PRQA 2023 - exception required
+        ///   - We suppress this because A13-3-1 states a you should not
+        ///     overload any function that implements a forwarding reference.
+        ///     Normally, we would make a new function, but since this is a
+        ///     constructor, we have no choice but to overload. The use of
+        ///     bsl::in_place_t specifically addresses the complaint in the
+        ///     rule, and is the accepted solution in C++17
+        ///
+        ///   SUPPRESSION: PRQA 4285 - false positive
+        ///   - We suppress this because A12-8-1 states a copy/move should
+        ///     not have a side effect other than the copy/move itself.
+        ///     This is a false positive because there are not side effects
+        ///     in this code below. PRQA is not properly handling
+        ///     the union as allowed by AUTOSAR.
+        ///
+        ///   SUPPRESSION: PRQA 4050 - false positive
+        ///   - We suppress this because A12-1-1 states that all member
+        ///     variables should be explicitly initialized. It does not
+        ///     state that they must be in the initializer list.
+        ///     Furthermore, it is impossible to initialize union members
+        ///     in an initializer list in a copy/move constructor, which
+        ///     PRQA should be capable of detecting.
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param o the object being copied
+        ///
+        /// <!-- exceptions -->
+        ///   @throw throws if T or E's copy constructor throws
+        ///
+        template<typename U>
+        explicit constexpr result(result<U, E> const &o)    // PRQA S 4285 // PRQA S 2023
+            : m_which{o.m_which}                   // PRQA S 4050
+        {
+            if (details::result_type::contains_t == m_which) {
                 details::initialize<T>(&m_t, o.m_t);
             }
             else {
@@ -274,14 +334,62 @@ namespace bsl
         constexpr result(result &&o) noexcept    // PRQA S 4285 // PRQA S 2023
             : m_which{o.m_which}                 // PRQA S 4050
         {
-            if (result_type::contains_t == m_which) {
+            if (details::result_type::contains_t == m_which) {
                 details::initialize<T>(&m_t, bsl::move(o.m_t));
             }
             else {
                 details::initialize<E>(&m_e, bsl::move(o.m_e));
             }
 
-            o.m_which = result_type::contains_e;
+            o.m_which = details::result_type::contains_e;
+        }
+
+        /// <!-- description -->
+        ///   @brief move constructor
+        ///   @include result/constructor_move.cpp
+        ///
+        ///   SUPPRESSION: PRQA 2023 - exception required
+        ///   - We suppress this because A13-3-1 states a you should not
+        ///     overload any function that implements a forwarding reference.
+        ///     Normally, we would make a new function, but since this is a
+        ///     constructor, we have no choice but to overload. The use of
+        ///     bsl::in_place_t specifically addresses the complaint in the
+        ///     rule, and is the accepted solution in C++17
+        ///
+        ///   SUPPRESSION: PRQA 4285 - false positive
+        ///   - We suppress this because A12-8-1 states a copy/move should
+        ///     not have a side effect other than the copy/move itself.
+        ///     This is a false positive because the only side effect is
+        ///     the copy/move as required. PRQA is not properly handling
+        ///     the union as allows by AUTOSAR.
+        ///
+        ///   SUPPRESSION: PRQA 4050 - false positive
+        ///   - We suppress this because A12-1-1 states that all member
+        ///     variables should be explicitly initialized. It does not
+        ///     state that they must be in the initializer list.
+        ///     Furthermore, it is impossible to initialize union members
+        ///     in an initializer list in a copy/move constructor, which
+        ///     PRQA should be capable of detecting.
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param o the object being moved
+        ///
+        template<typename U>
+        explicit constexpr result(result<U,E> &&o) noexcept    // PRQA S 4285 // PRQA S 2023
+            : m_which{o.m_which}                      // PRQA S 4050
+        {
+            if (details::result_type::contains_t == m_which) {
+                details::initialize<T>(&m_t, bsl::move(o.m_t));
+            }
+            else {
+                details::initialize<E>(&m_e, bsl::move(o.m_e));
+            }
+
+            o.m_which = details::result_type::contains_e;
         }
 
         /// <!-- description -->
@@ -295,7 +403,7 @@ namespace bsl
         ///
         ~result() noexcept
         {
-            if (result_type::contains_t == m_which) {
+            if (details::result_type::contains_t == m_which) {
                 m_t.T::~T();
             }
         }
@@ -360,8 +468,8 @@ namespace bsl
         static constexpr void
         exchange(result &lhs, result &rhs) noexcept
         {
-            if (result_type::contains_t == lhs.m_which) {
-                if (result_type::contains_t == rhs.m_which) {
+            if (details::result_type::contains_t == lhs.m_which) {
+                if (details::result_type::contains_t == rhs.m_which) {
                     bsl::swap(lhs.m_t, rhs.m_t);
                 }
                 else {
@@ -372,7 +480,7 @@ namespace bsl
                 }
             }
             else {
-                if (result_type::contains_t == rhs.m_which) {
+                if (details::result_type::contains_t == rhs.m_which) {
                     E tmp_e{bsl::move(lhs.m_e)};
                     T tmp_t{bsl::move(rhs.m_t)};
                     details::initialize<T>(&lhs.m_t, bsl::move(tmp_t));
@@ -411,7 +519,7 @@ namespace bsl
         constexpr T *
         get_if() noexcept
         {
-            if (result_type::contains_t == m_which) {
+            if (details::result_type::contains_t == m_which) {
                 return &m_t;    // PRQA S 4024
             }
 
@@ -434,7 +542,7 @@ namespace bsl
         constexpr T const *
         get_if() const noexcept
         {
-            if (result_type::contains_t == m_which) {
+            if (details::result_type::contains_t == m_which) {
                 return &m_t;
             }
 
@@ -458,7 +566,7 @@ namespace bsl
         constexpr E
         errc(E const &fallback = E{}) const noexcept
         {
-            if (result_type::contains_e == m_which) {
+            if (details::result_type::contains_e == m_which) {
                 return m_e;
             }
 
@@ -479,7 +587,7 @@ namespace bsl
         [[nodiscard]] constexpr bool
         success() const noexcept
         {
-            return result_type::contains_t == m_which;
+            return details::result_type::contains_t == m_which;
         }
 
         /// <!-- description -->
@@ -496,19 +604,12 @@ namespace bsl
         [[nodiscard]] constexpr bool
         failure() const noexcept
         {
-            return result_type::contains_e == m_which;
+            return details::result_type::contains_e == m_which;
         }
 
     private:
-        /// @brief defines what type the union stores
-        enum class result_type : bsl::uint8
-        {
-            contains_t,
-            contains_e
-        };
-
         /// @brief stores which type the union stores
-        result_type m_which;
+        details::result_type m_which;
 
         /// @brief Provides access to T or an error code
         ///
@@ -526,6 +627,17 @@ namespace bsl
             /// @brief stores an error code when not storing T
             E m_e;
         };
+
+        /// @brief ensures the converting constructors are supported
+        ///
+        ///   SUPPRESSION: PRQA 2176 - exception required
+        ///   - We suppress this because A11-3-1 states that the use of
+        ///     "friend" is not allowed. We are not providing another type
+        ///     with private access, we are ensuring bsl::result can access
+        ///     private members of itself.
+        ///
+        template<typename UT, typename UE>
+        friend class result; // PRQA S 2107
     };
 }
 
