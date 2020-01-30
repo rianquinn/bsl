@@ -56,7 +56,7 @@ namespace bsl
     ///
     template<typename T>
     constexpr void
-    discard(T &&param) noexcept // PRQA S 4649
+    discard(T &&param) noexcept    // PRQA S 4649
     {
         static_cast<void>(param);
     }

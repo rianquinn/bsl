@@ -30,7 +30,6 @@
 
 #include "cstdint.hpp"
 #include "discard.hpp"
-#include "forward.hpp"
 
 /// <!-- description -->
 ///   @brief This function implements the placement new operator. Note that
@@ -57,38 +56,6 @@ operator new(bsl::uintmax count, void *const ptr) noexcept    // PRQA S 2000
 {
     bsl::discard(count);
     return ptr;
-}
-
-namespace bsl
-{
-    namespace details
-    {
-        /// <!-- description -->
-        ///   @brief Used to initialize a union-like class such as nullable
-        ///     objects and bsl::result
-        ///
-        ///   SUPPRESSION: PRQA 5217 - false positive
-        ///   - We suppress this because A18-5-2 states that non-placement
-        ///     new and delete expressions are not allowed. This is a false
-        ///     positive because this uses a placement new, which is allowed.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @tparam T the type of object to initialize
-        ///   @tparam ARGS the types of args to initialize T with
-        ///   @param ptr a pointer to the object to initialize
-        ///   @param args the args to initialize T with
-        ///
-        template<typename T, typename ... ARGS>
-        constexpr void
-        initialize(T *const ptr, ARGS &&...args) noexcept
-        {
-            bsl::discard(new (ptr) T{bsl::forward<ARGS>(args)...});    // PRQA S 5217
-        }
-    }
 }
 
 #endif
