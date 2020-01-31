@@ -317,6 +317,54 @@ namespace bsl
             bsl::ut_check(2 == test_result_monitor_destructor());
         });
 
+        bsl::ut_scenario{"move assignment with t/e"} = ([]() {
+            bsl::ut_given{} = ([]() {
+                result<test_result_monitor> test1{result<test_result_monitor>::make_in_place()};
+                result<test_result_monitor> test2{result<test_result_monitor>::make_errc(bsl::errc_failure)};
+
+                bsl::ut_when{} = ([&test1, &test2]() {
+                    test2 = bsl::move(test1);
+
+                    bsl::ut_then{} = ([&test1, &test2]() {
+                        bsl::ut_check(1 == test_result_monitor_constructor());
+                        bsl::ut_check(0 == test_result_monitor_copy_constructor());
+                        bsl::ut_check(2 == test_result_monitor_move_constructor());
+                        bsl::ut_check(0 == test_result_monitor_copy_assignment());
+                        bsl::ut_check(0 == test_result_monitor_move_assignment());
+                        bsl::ut_check(1 == test_result_monitor_destructor());
+                        bsl::ut_check(test1.success());
+                        bsl::ut_check(test2.success());
+                    });
+                });
+            });
+
+            bsl::ut_check(3 == test_result_monitor_destructor());
+        });
+
+        bsl::ut_scenario{"move assignment with e/t"} = ([]() {
+            bsl::ut_given{} = ([]() {
+                result<test_result_monitor> test1{result<test_result_monitor>::make_errc(bsl::errc_failure)};
+                result<test_result_monitor> test2{result<test_result_monitor>::make_in_place()};
+
+                bsl::ut_when{} = ([&test1, &test2]() {
+                    test2 = bsl::move(test1);
+
+                    bsl::ut_then{} = ([&test1, &test2]() {
+                        bsl::ut_check(1 == test_result_monitor_constructor());
+                        bsl::ut_check(0 == test_result_monitor_copy_constructor());
+                        bsl::ut_check(1 == test_result_monitor_move_constructor());
+                        bsl::ut_check(0 == test_result_monitor_copy_assignment());
+                        bsl::ut_check(0 == test_result_monitor_move_assignment());
+                        bsl::ut_check(2 == test_result_monitor_destructor());
+                        bsl::ut_check(test1.failure());
+                        bsl::ut_check(test2.failure());
+                    });
+                });
+            });
+
+            bsl::ut_check(2 == test_result_monitor_destructor());
+        });
+
         return bsl::ut_success();
     }
 }
