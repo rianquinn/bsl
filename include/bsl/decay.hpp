@@ -22,48 +22,45 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file remove_all_extents.hpp
+/// @file decay.hpp
 ///
 
-#ifndef BSL_REMOVE_ALL_EXTENTS_HPP
-#define BSL_REMOVE_ALL_EXTENTS_HPP
+#ifndef BSL_DECAY_HPP
+#define BSL_DECAY_HPP
 
-#include "cstdint.hpp"
+#include "add_pointer.hpp"
+#include "conditional.hpp"
+#include "is_array.hpp"
+#include "is_function.hpp"
+#include "remove_const.hpp"
+#include "remove_extent.hpp"
+#include "remove_reference.hpp"
 #include "type_identity.hpp"
 
 namespace bsl
 {
-    /// @class bsl::remove_all_extents
+    /// @class bsl::decay
     ///
     /// <!-- description -->
-    ///   @brief Provides the member typedef type which is the same as T,
-    ///     except that its topmost extent is removed.
-    ///   @include remove_all_extents/overview.cpp
+    ///   @brief Applies lvalue-to-rvalue, array-to-pointer, and
+    ///     function-to-pointer implicit conversions to the type T,
+    ///     removes cv-qualifiers, and defines the resulting type as the
+    ///     member typedef type
+    ///   @include decay/overview.cpp
     ///
     /// <!-- template parameters -->
-    ///   @tparam T the type to remove the extent from
+    ///   @tparam T the type to add a const qualifier to
     ///
     template<typename T>
-    class remove_all_extents final : public type_identity<T>
+    class decay final :
+        public type_identity<typename conditional<
+            is_array<typename remove_reference<T>::type>::value,
+            typename remove_extent<typename remove_reference<T>::type>::type *,
+            typename conditional<
+                is_function<typename remove_reference<T>::type>::value,
+                typename add_pointer<typename remove_reference<T>::type>::type,
+                typename remove_const<typename remove_reference<T>::type>::type>::type>::type>
     {};
-
-    /// @brief a helper that reduces the verbosity of bsl::remove_all_extents
-    template<typename T>
-    using remove_all_extents_t = typename remove_all_extents<T>::type;
-
-    /// @cond
-
-    template<typename T>
-    struct remove_all_extents<T[]> final :
-        public type_identity<typename remove_all_extents<T>::type>
-    {};
-
-    template<typename T, bsl::uintmax N>
-    struct remove_all_extents<T[N]> final :
-        public type_identity<typename remove_all_extents<T>::type>
-    {};
-
-    /// @endcond
 }
 
 #endif

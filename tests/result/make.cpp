@@ -43,22 +43,15 @@ namespace bsl
     bsl::exit_code
     entry(bsl::arguments const &args) noexcept
     {
-        // printf("%d\n", test_result_monitor_constructor());
-        // printf("%d\n", test_result_monitor_copy_constructor());
-        // printf("%d\n", test_result_monitor_move_constructor());
-        // printf("%d\n", test_result_monitor_copy_assignment());
-        // printf("%d\n", test_result_monitor_move_assignment());
-        // printf("%d\n", test_result_monitor_destructor());
-
         bsl::discard(args);
         bsl::set_ut_reset_handler(&test_result_monitor_reset);
 
-        bsl::ut_scenario{"make copy t"} = ([]() {
-            bsl::ut_given{} = ([]() {
+        bsl::ut_scenario{"make copy t"} = []() {
+            bsl::ut_given{} = []() {
                 test_result_monitor const t{};
-                result<test_result_monitor> const test{result<test_result_monitor>::make(t)};
+                result<test_result_monitor> const test{t};
 
-                bsl::ut_then{} = ([&test]() {
+                bsl::ut_then{} = [&test]() {
                     bsl::ut_check(1 == test_result_monitor_constructor());
                     bsl::ut_check(1 == test_result_monitor_copy_constructor());
                     bsl::ut_check(0 == test_result_monitor_move_constructor());
@@ -66,18 +59,18 @@ namespace bsl
                     bsl::ut_check(0 == test_result_monitor_move_assignment());
                     bsl::ut_check(test.success());
                     bsl::ut_check(test.errc() == bsl::errc_success);
-                });
-            });
+                };
+            };
 
             bsl::ut_check(2 == test_result_monitor_destructor());
-        });
+        };
 
-        bsl::ut_scenario{"make move t"} = ([]() {
-            bsl::ut_given{} = ([]() {
+        bsl::ut_scenario{"make move t"} = []() {
+            bsl::ut_given{} = []() {
                 test_result_monitor t{};
-                result<test_result_monitor> const test{result<test_result_monitor>::make(bsl::move(t))};
+                result<test_result_monitor> const test{bsl::move(t)};
 
-                bsl::ut_then{} = ([&test]() {
+                bsl::ut_then{} = [&test]() {
                     bsl::ut_check(1 == test_result_monitor_constructor());
                     bsl::ut_check(0 == test_result_monitor_copy_constructor());
                     bsl::ut_check(1 == test_result_monitor_move_constructor());
@@ -85,17 +78,17 @@ namespace bsl
                     bsl::ut_check(0 == test_result_monitor_move_assignment());
                     bsl::ut_check(test.success());
                     bsl::ut_check(test.errc() == bsl::errc_success);
-                });
-            });
+                };
+            };
 
             bsl::ut_check(2 == test_result_monitor_destructor());
-        });
+        };
 
-        bsl::ut_scenario{"make in place"} = ([]() {
-            bsl::ut_given{} = ([]() {
-                result<test_result_monitor> const test{result<test_result_monitor>::make_in_place()};
+        bsl::ut_scenario{"make in place"} = []() {
+            bsl::ut_given{} = []() {
+                result<test_result_monitor> const test{bsl::in_place};
 
-                bsl::ut_then{} = ([&test]() {
+                bsl::ut_then{} = [&test]() {
                     bsl::ut_check(1 == test_result_monitor_constructor());
                     bsl::ut_check(0 == test_result_monitor_copy_constructor());
                     bsl::ut_check(0 == test_result_monitor_move_constructor());
@@ -103,18 +96,18 @@ namespace bsl
                     bsl::ut_check(0 == test_result_monitor_move_assignment());
                     bsl::ut_check(test.success());
                     bsl::ut_check(test.errc() == bsl::errc_success);
-                });
-            });
+                };
+            };
 
             bsl::ut_check(1 == test_result_monitor_destructor());
-        });
+        };
 
-        bsl::ut_scenario{"make errc"} = ([]() {
-            bsl::ut_given{} = ([]() {
+        bsl::ut_scenario{"make errc"} = []() {
+            bsl::ut_given{} = []() {
                 bsl::errc_type<> const myerror{42};
-                result<test_result_monitor> const test{result<test_result_monitor>::make_errc(myerror)};
+                result<test_result_monitor> const test{myerror, bsl::here()};
 
-                bsl::ut_then{} = ([&test, &myerror]() {
+                bsl::ut_then{} = [&test, &myerror]() {
                     bsl::ut_check(0 == test_result_monitor_constructor());
                     bsl::ut_check(0 == test_result_monitor_copy_constructor());
                     bsl::ut_check(0 == test_result_monitor_move_constructor());
@@ -122,18 +115,18 @@ namespace bsl
                     bsl::ut_check(0 == test_result_monitor_move_assignment());
                     bsl::ut_check(test.failure());
                     bsl::ut_check(test.errc() == myerror);
-                });
-            });
+                };
+            };
 
             bsl::ut_check(0 == test_result_monitor_destructor());
-        });
+        };
 
-        bsl::ut_scenario{"make move"} = ([]() {
-            bsl::ut_given{} = ([]() {
+        bsl::ut_scenario{"make move"} = []() {
+            bsl::ut_given{} = []() {
                 bsl::errc_type<> myerror{42};
-                result<test_result_monitor> const test{result<test_result_monitor>::make_errc(bsl::move(myerror))};
+                result<test_result_monitor> const test{bsl::move(myerror), bsl::here()};
 
-                bsl::ut_then{} = ([&test, &myerror]() {
+                bsl::ut_then{} = [&test, &myerror]() {
                     bsl::ut_check(0 == test_result_monitor_constructor());
                     bsl::ut_check(0 == test_result_monitor_copy_constructor());
                     bsl::ut_check(0 == test_result_monitor_move_constructor());
@@ -141,18 +134,18 @@ namespace bsl
                     bsl::ut_check(0 == test_result_monitor_move_assignment());
                     bsl::ut_check(test.failure());
                     bsl::ut_check(test.errc() == myerror);
-                });
-            });
+                };
+            };
 
             bsl::ut_check(0 == test_result_monitor_destructor());
-        });
+        };
 
-        bsl::ut_scenario{"copy with t"} = ([]() {
-            bsl::ut_given{} = ([]() {
-                result<test_result_monitor> const test1{result<test_result_monitor>::make_in_place()};
+        bsl::ut_scenario{"copy with t"} = []() {
+            bsl::ut_given{} = []() {
+                result<test_result_monitor> const test1{bsl::in_place};
                 result<test_result_monitor> const test2{test1};
 
-                bsl::ut_then{} = ([&test1, &test2]() {
+                bsl::ut_then{} = [&test1, &test2]() {
                     bsl::ut_check(1 == test_result_monitor_constructor());
                     bsl::ut_check(1 == test_result_monitor_copy_constructor());
                     bsl::ut_check(0 == test_result_monitor_move_constructor());
@@ -160,18 +153,18 @@ namespace bsl
                     bsl::ut_check(0 == test_result_monitor_move_assignment());
                     bsl::ut_check(test1.success());
                     bsl::ut_check(test2.success());
-                });
-            });
+                };
+            };
 
             bsl::ut_check(2 == test_result_monitor_destructor());
-        });
+        };
 
-        bsl::ut_scenario{"copy with errc"} = ([]() {
-            bsl::ut_given{} = ([]() {
-                result<test_result_monitor> const test1{result<test_result_monitor>::make_errc(bsl::errc_failure)};
+        bsl::ut_scenario{"copy with errc"} = []() {
+            bsl::ut_given{} = []() {
+                result<test_result_monitor> const test1{bsl::errc_failure, bsl::here()};
                 result<test_result_monitor> const test2{test1};
 
-                bsl::ut_then{} = ([&test1, &test2]() {
+                bsl::ut_then{} = [&test1, &test2]() {
                     bsl::ut_check(0 == test_result_monitor_constructor());
                     bsl::ut_check(0 == test_result_monitor_copy_constructor());
                     bsl::ut_check(0 == test_result_monitor_move_constructor());
@@ -179,57 +172,57 @@ namespace bsl
                     bsl::ut_check(0 == test_result_monitor_move_assignment());
                     bsl::ut_check(test1.failure());
                     bsl::ut_check(test2.failure());
-                });
-            });
+                };
+            };
 
             bsl::ut_check(0 == test_result_monitor_destructor());
-        });
+        };
 
-        bsl::ut_scenario{"move with t"} = ([]() {
-            bsl::ut_given{} = ([]() {
-                result<test_result_monitor> test1{result<test_result_monitor>::make_in_place()};
+        bsl::ut_scenario{"move with t"} = []() {
+            bsl::ut_given{} = []() {
+                result<test_result_monitor> test1{bsl::in_place};
                 result<test_result_monitor> const test2{bsl::move(test1)};
 
-                bsl::ut_then{} = ([&test2]() {
+                bsl::ut_then{} = [&test2]() {
                     bsl::ut_check(1 == test_result_monitor_constructor());
                     bsl::ut_check(0 == test_result_monitor_copy_constructor());
                     bsl::ut_check(1 == test_result_monitor_move_constructor());
                     bsl::ut_check(0 == test_result_monitor_copy_assignment());
                     bsl::ut_check(0 == test_result_monitor_move_assignment());
                     bsl::ut_check(test2.success());
-                });
-            });
+                };
+            };
 
             bsl::ut_check(2 == test_result_monitor_destructor());
-        });
+        };
 
-        bsl::ut_scenario{"move with errc"} = ([]() {
-            bsl::ut_given{} = ([]() {
-                result<test_result_monitor> test1{result<test_result_monitor>::make_errc(bsl::errc_failure)};
+        bsl::ut_scenario{"move with errc"} = []() {
+            bsl::ut_given{} = []() {
+                result<test_result_monitor> test1{bsl::errc_failure, bsl::here()};
                 result<test_result_monitor> const test2{bsl::move(test1)};
 
-                bsl::ut_then{} = ([&test2]() {
+                bsl::ut_then{} = [&test2]() {
                     bsl::ut_check(0 == test_result_monitor_constructor());
                     bsl::ut_check(0 == test_result_monitor_copy_constructor());
                     bsl::ut_check(0 == test_result_monitor_move_constructor());
                     bsl::ut_check(0 == test_result_monitor_copy_assignment());
                     bsl::ut_check(0 == test_result_monitor_move_assignment());
                     bsl::ut_check(test2.failure());
-                });
-            });
+                };
+            };
 
             bsl::ut_check(0 == test_result_monitor_destructor());
-        });
+        };
 
-        bsl::ut_scenario{"copy assignment with t"} = ([]() {
-            bsl::ut_given{} = ([]() {
-                result<test_result_monitor> const test1{result<test_result_monitor>::make_in_place()};
-                result<test_result_monitor> test2{result<test_result_monitor>::make_in_place()};
+        bsl::ut_scenario{"copy assignment with t"} = []() {
+            bsl::ut_given{} = []() {
+                result<test_result_monitor> const test1{bsl::in_place};
+                result<test_result_monitor> test2{bsl::in_place};
 
-                bsl::ut_when{} = ([&test1, &test2]() {
+                bsl::ut_when{} = [&test1, &test2]() {
                     test2 = test1;
 
-                    bsl::ut_then{} = ([&test1, &test2]() {
+                    bsl::ut_then{} = [&test1, &test2]() {
                         bsl::ut_check(2 == test_result_monitor_constructor());
                         bsl::ut_check(1 == test_result_monitor_copy_constructor());
                         bsl::ut_check(1 == test_result_monitor_move_constructor());
@@ -238,22 +231,22 @@ namespace bsl
                         bsl::ut_check(2 == test_result_monitor_destructor());
                         bsl::ut_check(test1.success());
                         bsl::ut_check(test2.success());
-                    });
-                });
-            });
+                    };
+                };
+            };
 
             bsl::ut_check(4 == test_result_monitor_destructor());
-        });
+        };
 
-        bsl::ut_scenario{"move assignment with t"} = ([]() {
-            bsl::ut_given{} = ([]() {
-                result<test_result_monitor> test1{result<test_result_monitor>::make_in_place()};
-                result<test_result_monitor> test2{result<test_result_monitor>::make_in_place()};
+        bsl::ut_scenario{"move assignment with t"} = []() {
+            bsl::ut_given{} = []() {
+                result<test_result_monitor> test1{bsl::in_place};
+                result<test_result_monitor> test2{bsl::in_place};
 
-                bsl::ut_when{} = ([&test1, &test2]() {
+                bsl::ut_when{} = [&test1, &test2]() {
                     test2 = bsl::move(test1);
 
-                    bsl::ut_then{} = ([&test1, &test2]() {
+                    bsl::ut_then{} = [&test1, &test2]() {
                         bsl::ut_check(2 == test_result_monitor_constructor());
                         bsl::ut_check(0 == test_result_monitor_copy_constructor());
                         bsl::ut_check(2 == test_result_monitor_move_constructor());
@@ -262,22 +255,22 @@ namespace bsl
                         bsl::ut_check(2 == test_result_monitor_destructor());
                         bsl::ut_check(test1.success());
                         bsl::ut_check(test2.success());
-                    });
-                });
-            });
+                    };
+                };
+            };
 
             bsl::ut_check(4 == test_result_monitor_destructor());
-        });
+        };
 
-        bsl::ut_scenario{"copy assignment with t/e"} = ([]() {
-            bsl::ut_given{} = ([]() {
-                result<test_result_monitor> const test1{result<test_result_monitor>::make_in_place()};
-                result<test_result_monitor> test2{result<test_result_monitor>::make_errc(bsl::errc_failure)};
+        bsl::ut_scenario{"copy assignment with t/e"} = []() {
+            bsl::ut_given{} = []() {
+                result<test_result_monitor> const test1{bsl::in_place};
+                result<test_result_monitor> test2{bsl::errc_failure, bsl::here()};
 
-                bsl::ut_when{} = ([&test1, &test2]() {
+                bsl::ut_when{} = [&test1, &test2]() {
                     test2 = test1;
 
-                    bsl::ut_then{} = ([&test1, &test2]() {
+                    bsl::ut_then{} = [&test1, &test2]() {
                         bsl::ut_check(1 == test_result_monitor_constructor());
                         bsl::ut_check(1 == test_result_monitor_copy_constructor());
                         bsl::ut_check(1 == test_result_monitor_move_constructor());
@@ -286,22 +279,22 @@ namespace bsl
                         bsl::ut_check(1 == test_result_monitor_destructor());
                         bsl::ut_check(test1.success());
                         bsl::ut_check(test2.success());
-                    });
-                });
-            });
+                    };
+                };
+            };
 
             bsl::ut_check(3 == test_result_monitor_destructor());
-        });
+        };
 
-        bsl::ut_scenario{"copy assignment with e/t"} = ([]() {
-            bsl::ut_given{} = ([]() {
-                result<test_result_monitor> const test1{result<test_result_monitor>::make_errc(bsl::errc_failure)};
-                result<test_result_monitor> test2{result<test_result_monitor>::make_in_place()};
+        bsl::ut_scenario{"copy assignment with e/t"} = []() {
+            bsl::ut_given{} = []() {
+                result<test_result_monitor> const test1{bsl::errc_failure, bsl::here()};
+                result<test_result_monitor> test2{bsl::in_place};
 
-                bsl::ut_when{} = ([&test1, &test2]() {
+                bsl::ut_when{} = [&test1, &test2]() {
                     test2 = test1;
 
-                    bsl::ut_then{} = ([&test1, &test2]() {
+                    bsl::ut_then{} = [&test1, &test2]() {
                         bsl::ut_check(1 == test_result_monitor_constructor());
                         bsl::ut_check(0 == test_result_monitor_copy_constructor());
                         bsl::ut_check(1 == test_result_monitor_move_constructor());
@@ -310,22 +303,22 @@ namespace bsl
                         bsl::ut_check(2 == test_result_monitor_destructor());
                         bsl::ut_check(test1.failure());
                         bsl::ut_check(test2.failure());
-                    });
-                });
-            });
+                    };
+                };
+            };
 
             bsl::ut_check(2 == test_result_monitor_destructor());
-        });
+        };
 
-        bsl::ut_scenario{"move assignment with t/e"} = ([]() {
-            bsl::ut_given{} = ([]() {
-                result<test_result_monitor> test1{result<test_result_monitor>::make_in_place()};
-                result<test_result_monitor> test2{result<test_result_monitor>::make_errc(bsl::errc_failure)};
+        bsl::ut_scenario{"move assignment with t/e"} = []() {
+            bsl::ut_given{} = []() {
+                result<test_result_monitor> test1{bsl::in_place};
+                result<test_result_monitor> test2{bsl::errc_failure, bsl::here()};
 
-                bsl::ut_when{} = ([&test1, &test2]() {
+                bsl::ut_when{} = [&test1, &test2]() {
                     test2 = bsl::move(test1);
 
-                    bsl::ut_then{} = ([&test1, &test2]() {
+                    bsl::ut_then{} = [&test1, &test2]() {
                         bsl::ut_check(1 == test_result_monitor_constructor());
                         bsl::ut_check(0 == test_result_monitor_copy_constructor());
                         bsl::ut_check(2 == test_result_monitor_move_constructor());
@@ -334,22 +327,22 @@ namespace bsl
                         bsl::ut_check(1 == test_result_monitor_destructor());
                         bsl::ut_check(test1.success());
                         bsl::ut_check(test2.success());
-                    });
-                });
-            });
+                    };
+                };
+            };
 
             bsl::ut_check(3 == test_result_monitor_destructor());
-        });
+        };
 
-        bsl::ut_scenario{"move assignment with e/t"} = ([]() {
-            bsl::ut_given{} = ([]() {
-                result<test_result_monitor> test1{result<test_result_monitor>::make_errc(bsl::errc_failure)};
-                result<test_result_monitor> test2{result<test_result_monitor>::make_in_place()};
+        bsl::ut_scenario{"move assignment with e/t"} = []() {
+            bsl::ut_given{} = []() {
+                result<test_result_monitor> test1{bsl::errc_failure, bsl::here()};
+                result<test_result_monitor> test2{bsl::in_place};
 
-                bsl::ut_when{} = ([&test1, &test2]() {
+                bsl::ut_when{} = [&test1, &test2]() {
                     test2 = bsl::move(test1);
 
-                    bsl::ut_then{} = ([&test1, &test2]() {
+                    bsl::ut_then{} = [&test1, &test2]() {
                         bsl::ut_check(1 == test_result_monitor_constructor());
                         bsl::ut_check(0 == test_result_monitor_copy_constructor());
                         bsl::ut_check(1 == test_result_monitor_move_constructor());
@@ -358,13 +351,18 @@ namespace bsl
                         bsl::ut_check(2 == test_result_monitor_destructor());
                         bsl::ut_check(test1.failure());
                         bsl::ut_check(test2.failure());
-                    });
-                });
-            });
+                    };
+                };
+            };
 
             bsl::ut_check(2 == test_result_monitor_destructor());
-        });
+        };
 
         return bsl::ut_success();
     }
 }
+
+// test a void type
+// test a l-value reference type
+// test a const type
+// test a const reference type

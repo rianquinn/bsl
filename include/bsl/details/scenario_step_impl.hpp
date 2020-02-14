@@ -34,19 +34,23 @@ namespace bsl
         class scenario_step_impl final
         {
         public:
+            constexpr scenario_step_impl() noexcept = default;
+
             template<typename FUNC>
             [[maybe_unused]] constexpr scenario_step_impl &
             operator=(FUNC &&func) noexcept
             {
                 bsl::forward<FUNC>(func)();
-                return *this;
+                return *this;    // PRQA S 2880
             }
 
             constexpr scenario_step_impl(scenario_step_impl const &o) noexcept = delete;
             constexpr scenario_step_impl(scenario_step_impl &&o) noexcept = delete;
 
-            [[maybe_unused]] constexpr scenario_step_impl &operator=(scenario_step_impl const &o) &noexcept = delete;
-            [[maybe_unused]] constexpr scenario_step_impl &operator=(scenario_step_impl &&o) &noexcept = delete;
+            [[maybe_unused]] constexpr scenario_step_impl &
+            operator=(scenario_step_impl const &o) &noexcept = delete;
+            [[maybe_unused]] constexpr scenario_step_impl &
+            operator=(scenario_step_impl &&o) &noexcept = delete;
 
             ~scenario_step_impl() noexcept = default;
         };

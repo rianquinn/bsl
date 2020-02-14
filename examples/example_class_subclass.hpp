@@ -103,7 +103,8 @@ namespace bsl
         ///   @param o the object being copied
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] example_class_subclass &operator=(example_class_subclass const &o) &noexcept = default;
+        [[maybe_unused]] example_class_subclass &
+        operator=(example_class_subclass const &o) &noexcept = default;
 
         /// <!-- description -->
         ///   @brief copy constructor
@@ -116,7 +117,8 @@ namespace bsl
         ///   @param o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] example_class_subclass &operator=(example_class_subclass &&o) &noexcept = default;
+        [[maybe_unused]] example_class_subclass &
+        operator=(example_class_subclass &&o) &noexcept = default;
 
     private:
         /// @brief dummy data #1

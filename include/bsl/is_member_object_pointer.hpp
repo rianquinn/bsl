@@ -48,7 +48,8 @@ namespace bsl
     struct is_member_object_pointer final
     {
         /// @brief the boolean that answers the type trait query
-        static constexpr bool value{(is_member_pointer<T>::value) && (!is_member_function_pointer<T>::value)};
+        static constexpr bool value{(is_member_pointer<T>::value) &&
+                                    (!is_member_function_pointer<T>::value)};
     };
 }
 

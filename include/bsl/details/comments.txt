@@ -1,0 +1,35 @@
+Class Comment Block (also used for structs, enums, etc...)
+/// @class
+///
+/// <!-- description -->
+///   @brief
+///   @include
+///
+/// <!-- notes -->
+///   @note
+///
+/// <!-- template parameters -->
+///   @tparam
+///
+
+Function Comment Block (used for all function types)
+/// <!-- description -->
+///   @brief
+///   @include
+///   @related
+///
+/// <!-- notes -->
+///   @note
+///
+/// <!-- contracts -->
+///   @pre none
+///   @post none
+///
+/// <!-- inputs/outputs -->
+///   @tparam
+///   @param
+///   @return
+///
+
+Variable Comment Block (single line, also used for typedefs, etc...)
+/// @brief

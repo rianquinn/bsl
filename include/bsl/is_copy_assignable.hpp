@@ -48,7 +48,8 @@ namespace bsl
     struct is_copy_assignable final
     {
         /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_assignable(add_lvalue_reference_t<T>, add_lvalue_reference_t<add_const_t<T>>)};
+        static constexpr bool value{
+            __is_assignable(add_lvalue_reference_t<T>, add_lvalue_reference_t<add_const_t<T>>)};
     };
 }
 

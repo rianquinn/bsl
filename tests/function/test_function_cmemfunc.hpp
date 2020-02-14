@@ -22,42 +22,45 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef BSL_DETAILS_INITIALIZE_HPP
-#define BSL_DETAILS_INITIALIZE_HPP
+#ifndef BSL_TEST_FUNCTION_CMEMFUNC_HPP
+#define BSL_TEST_FUNCTION_CMEMFUNC_HPP
 
-#include "../new.hpp"
-#include "../forward.hpp"
+#include <bsl/cstdint.hpp>
 
 namespace bsl
 {
-    namespace details
+    /// @class bsl::test_function_cmemfunc
+    ///
+    /// <!-- description -->
+    ///   @brief A simple class for testing bsl::function
+    ///
+    class test_function_cmemfunc final
     {
+        /// @brief the answer to all questions.
+        bsl::int32 m_answer{42};
+
+    public:
         /// <!-- description -->
-        ///   @brief Used to initialize a union-like class such as nullable
-        ///     objects and bsl::result
-        ///
-        ///   SUPPRESSION: PRQA 5217 - false positive
-        ///   - We suppress this because A18-5-2 states that non-placement
-        ///     new and delete expressions are not allowed. This is a false
-        ///     positive because this uses a placement new, which is allowed.
+        ///   @brief Test function for bsl::function
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
-        ///   @tparam T the type of object to initialize
-        ///   @tparam ARGS the types of args to initialize T with
-        ///   @param ptr a pointer to the object to initialize
-        ///   @param args the args to initialize T with
+        ///   @param answer the answer to all questions
+        ///   @return true if answer is the answer to all questions
         ///
-        template<typename T, typename... ARGS>
-        constexpr void
-        initialize(T *const ptr, ARGS &&... args) noexcept
+        [[nodiscard]] constexpr bool
+        is_answer(bsl::int32 const &answer) const noexcept
         {
-            bsl::discard(new (ptr) T{bsl::forward<ARGS>(args)...});    // PRQA S 5217
+            if (answer == m_answer) {
+                return true;
+            }
+
+            return false;
         }
-    }
+    };
 }
 
 #endif

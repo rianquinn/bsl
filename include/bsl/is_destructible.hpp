@@ -64,7 +64,8 @@ namespace bsl
     struct is_destructible final
     {
         /// @brief the boolean that answers the type trait query
-        static constexpr bool value{is_detected<details::destructor_type, remove_all_extents_t<T>>::value};
+        static constexpr bool value{
+            is_detected<details::destructor_type, remove_all_extents_t<T>>::value};
     };
 
     /// @cond

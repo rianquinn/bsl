@@ -79,6 +79,30 @@ namespace bsl
     }
 
     /// <!-- description -->
+    ///   @brief Outputs a message and returns bsl::exit_code::exit_success
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @param sloc used to identify the location in the unit test that a
+    ///     check failed.
+    ///
+    template<typename T = void>
+    void
+    ut_failure(sloc_type const &sloc = here()) noexcept
+    {
+        printf("%s%s%s ", red, "[UNIT TEST FAILED]", reset_color);
+        printf("in test case \"");
+        printf("%s%s%s", magenta, details::ut_current_test_case(), reset_color);
+        printf("\"\n");
+        details::ut_output_here(sloc);
+
+        std::exit(EXIT_FAILURE);    // PRQA S 5024
+    }
+
+    /// <!-- description -->
     ///   @brief Checks to see if "test" is true. If test is false, this
     ///     function will exit fast with a failure code.
     ///

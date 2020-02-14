@@ -21,49 +21,47 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
-///
-/// @file remove_all_extents.hpp
-///
 
-#ifndef BSL_REMOVE_ALL_EXTENTS_HPP
-#define BSL_REMOVE_ALL_EXTENTS_HPP
+#ifndef BSL_TEST_FUNCTION_MEMFUNC_HPP
+#define BSL_TEST_FUNCTION_MEMFUNC_HPP
 
-#include "cstdint.hpp"
-#include "type_identity.hpp"
+#include <bsl/cstdint.hpp>
 
 namespace bsl
 {
-    /// @class bsl::remove_all_extents
+    /// @class bsl::test_function_memfunc
     ///
     /// <!-- description -->
-    ///   @brief Provides the member typedef type which is the same as T,
-    ///     except that its topmost extent is removed.
-    ///   @include remove_all_extents/overview.cpp
+    ///   @brief A simple class for testing bsl::function
     ///
-    /// <!-- template parameters -->
-    ///   @tparam T the type to remove the extent from
-    ///
-    template<typename T>
-    class remove_all_extents final : public type_identity<T>
-    {};
+    class test_function_memfunc final
+    {
+        /// @brief the answer to all questions.
+        bsl::int32 m_answer{42};
 
-    /// @brief a helper that reduces the verbosity of bsl::remove_all_extents
-    template<typename T>
-    using remove_all_extents_t = typename remove_all_extents<T>::type;
+    public:
+        /// <!-- description -->
+        ///   @brief Test function for bsl::function
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param answer the answer to all questions
+        ///   @return true if answer is the answer to all questions
+        ///
+        [[nodiscard]] constexpr bool
+        is_answer(bsl::int32 const &answer) noexcept
+        {
+            if (answer == m_answer) {
+                m_answer = answer;
+                return true;
+            }
 
-    /// @cond
-
-    template<typename T>
-    struct remove_all_extents<T[]> final :
-        public type_identity<typename remove_all_extents<T>::type>
-    {};
-
-    template<typename T, bsl::uintmax N>
-    struct remove_all_extents<T[N]> final :
-        public type_identity<typename remove_all_extents<T>::type>
-    {};
-
-    /// @endcond
+            return false;
+        }
+    };
 }
 
 #endif

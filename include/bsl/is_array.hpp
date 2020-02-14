@@ -22,46 +22,47 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file remove_all_extents.hpp
+/// @file is_array.hpp
 ///
 
-#ifndef BSL_REMOVE_ALL_EXTENTS_HPP
-#define BSL_REMOVE_ALL_EXTENTS_HPP
+#ifndef BSL_IS_ARRAY_HPP
+#define BSL_IS_ARRAY_HPP
 
 #include "cstdint.hpp"
-#include "type_identity.hpp"
 
 namespace bsl
 {
-    /// @class bsl::remove_all_extents
+    /// @class bsl::is_array
     ///
     /// <!-- description -->
-    ///   @brief Provides the member typedef type which is the same as T,
-    ///     except that its topmost extent is removed.
-    ///   @include remove_all_extents/overview.cpp
+    ///   @brief If the provided type is an array type (taking into account
+    ///     const qualifications), provides the member constant value
+    ///     equal to true. Otherwise the member constant value is false.
+    ///   @include is_array/overview.cpp
     ///
     /// <!-- template parameters -->
-    ///   @tparam T the type to remove the extent from
+    ///   @tparam T the type to query
     ///
     template<typename T>
-    class remove_all_extents final : public type_identity<T>
-    {};
-
-    /// @brief a helper that reduces the verbosity of bsl::remove_all_extents
-    template<typename T>
-    using remove_all_extents_t = typename remove_all_extents<T>::type;
+    struct is_array final
+    {
+        /// @brief the boolean that answers the type trait query
+        static constexpr bool value{false};
+    };
 
     /// @cond
 
     template<typename T>
-    struct remove_all_extents<T[]> final :
-        public type_identity<typename remove_all_extents<T>::type>
-    {};
+    struct is_array<T[]> final
+    {
+        static constexpr bool value{true};
+    };
 
     template<typename T, bsl::uintmax N>
-    struct remove_all_extents<T[N]> final :
-        public type_identity<typename remove_all_extents<T>::type>
-    {};
+    struct is_array<T[N]> final
+    {
+        static constexpr bool value{true};
+    };
 
     /// @endcond
 }

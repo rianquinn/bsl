@@ -21,49 +21,42 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
-///
-/// @file remove_all_extents.hpp
-///
 
-#ifndef BSL_REMOVE_ALL_EXTENTS_HPP
-#define BSL_REMOVE_ALL_EXTENTS_HPP
-
-#include "cstdint.hpp"
-#include "type_identity.hpp"
+#include <bsl/ut.hpp>
+#include <bsl/numeric_limits.hpp>
 
 namespace bsl
 {
-    /// @class bsl::remove_all_extents
-    ///
+    /// @brief used to define a custom type
+    enum class myenum : bsl::int32
+    {
+    };
+
     /// <!-- description -->
-    ///   @brief Provides the member typedef type which is the same as T,
-    ///     except that its topmost extent is removed.
-    ///   @include remove_all_extents/overview.cpp
+    ///   @brief Provides the example's main function
     ///
-    /// <!-- template parameters -->
-    ///   @tparam T the type to remove the extent from
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
     ///
-    template<typename T>
-    class remove_all_extents final : public type_identity<T>
-    {};
+    /// <!-- inputs/outputs -->
+    ///   @param args the arguments passed to the application
+    ///   @return exit_success on success, exit_failure otherwise
+    ///
+    bsl::exit_code
+    entry(bsl::arguments const &args) noexcept
+    {
+        bsl::discard(args);
 
-    /// @brief a helper that reduces the verbosity of bsl::remove_all_extents
-    template<typename T>
-    using remove_all_extents_t = typename remove_all_extents<T>::type;
+        bsl::ut_scenario{"general numeric_limits"} = []() {
+            bsl::ut_then{} = []() {
+                bsl::ut_check(false == bsl::numeric_limits<myenum>::is_specialized);
+                bsl::ut_check(false == bsl::numeric_limits<myenum>::is_signed);
+                bsl::ut_check(myenum{} == bsl::numeric_limits<myenum>::min);
+                bsl::ut_check(myenum{} == bsl::numeric_limits<myenum>::max);
+            };
+        };
 
-    /// @cond
-
-    template<typename T>
-    struct remove_all_extents<T[]> final :
-        public type_identity<typename remove_all_extents<T>::type>
-    {};
-
-    template<typename T, bsl::uintmax N>
-    struct remove_all_extents<T[N]> final :
-        public type_identity<typename remove_all_extents<T>::type>
-    {};
-
-    /// @endcond
+        return bsl::ut_success();
+    }
 }
-
-#endif

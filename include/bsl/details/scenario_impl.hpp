@@ -34,8 +34,7 @@ namespace bsl
         class scenario_impl final
         {
         public:
-            explicit constexpr scenario_impl(cstr_type const &name) noexcept
-                : m_name{name}
+            explicit constexpr scenario_impl(cstr_type const &name) noexcept : m_name{name}
             {
                 bsl::discard(m_name);
             }
@@ -58,8 +57,10 @@ namespace bsl
             constexpr scenario_impl(scenario_impl const &o) noexcept = delete;
             constexpr scenario_impl(scenario_impl &&o) noexcept = delete;
 
-            [[maybe_unused]] constexpr scenario_impl &operator=(scenario_impl const &o) &noexcept = delete;
-            [[maybe_unused]] constexpr scenario_impl &operator=(scenario_impl &&o) &noexcept = delete;
+            [[maybe_unused]] constexpr scenario_impl &
+            operator=(scenario_impl const &o) &noexcept = delete;
+            [[maybe_unused]] constexpr scenario_impl &
+            operator=(scenario_impl &&o) &noexcept = delete;
 
             ~scenario_impl() noexcept = default;
 

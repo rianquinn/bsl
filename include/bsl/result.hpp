@@ -21,18 +21,23 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
+///
+/// @file result.hpp
+///
 
-#ifndef BSL_DETAILS_RESULT_HPP
-#define BSL_DETAILS_RESULT_HPP
+#ifndef BSL_RESULT_HPP
+#define BSL_RESULT_HPP
 
-#include "details/initialize.hpp"
 #include "details/result_type.hpp"
 
+#include "construct_at.hpp"
 #include "errc_type.hpp"
+#include "in_place.hpp"
 #include "move.hpp"
 #include "source_location.hpp"
 #include "swap.hpp"
 
+#include "enable_if.hpp"
 #include "is_same.hpp"
 #include "is_move_constructible.hpp"
 #include "is_nothrow_move_constructible.hpp"
@@ -55,38 +60,29 @@ namespace bsl
     class result final
     {
         static_assert(!is_same<T, E>::value);
-        static_assert(is_trivially_destructible<E>::value);
+        static_assert(!is_same<T, void>::value);
         static_assert(!is_move_constructible<T>::value || is_nothrow_move_constructible<T>::value);
         static_assert(!is_move_constructible<E>::value || is_nothrow_move_constructible<E>::value);
-
-        /// <!-- description -->
-        ///   @brief Constructs a default bsl::result. This is private as
-        ///     the bsl::result::make() should be used instead.
-        ///
-        ///   SUPPRESSION: PRQA 4050 - false positive
-        ///   - We suppress this because A12-1-1 states that all member
-        ///     variables should be explicitly initialized. It does not
-        ///     state that they must be in the initializer list.
-        ///     Furthermore, it is impossible to initialize union members
-        ///     in an initializer list in a copy/move constructor, which
-        ///     PRQA should be capable of detecting, and it doesn't.
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param which determines whether T or E is stored
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        explicit constexpr result(details::result_type const which) noexcept    // --
-            : m_which{which}                                                    // PRQA S 4050
-        {}
+        static_assert(is_trivially_destructible<E>::value);
 
     public:
         /// <!-- description -->
         ///   @brief Constructs a bsl::result that contains T,
-        ///     my copying of "t"
-        ///   @include result/make_copy.cpp
+        ///     by copying "t"
+        ///   @include result/constructor_copy.cpp
+        ///
+        ///   SUPPRESSION: PRQA 2023 - exception required
+        ///   - We suppress this because A13-3-1 states that you should not
+        ///     overload functions that contain a forwarding reference because
+        ///     it is confusing to the user. PRQA is detecting the presence of
+        ///     the in place constructor. In this case, there is nothing
+        ///     ambiguous about this situation as the user has to explicitly
+        ///     state bsl::in_place, which disambiguated which constructor the
+        ///     user is intending to use. It should be noted that objects like
+        ///     std::pair, std::tuple and std::variant, which are all encouraged
+        ///     by the spec have the same issue with this rule, so it is clear
+        ///     it needs a better definition to ensure the library the spec
+        ///     demands can actually be compliant with the spec itself.
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -99,19 +95,27 @@ namespace bsl
         /// <!-- exceptions -->
         ///   @throw throws if T's copy constructor throws
         ///
-        static constexpr result<T, E>
-        make(T const &t)
-        {
-            result<T, E> res{details::result_type::contains_t};
-            details::initialize<T>(&res.m_t, t);
-
-            return res;
-        }
+        explicit constexpr result(T const &t) noexcept    // PRQA S 2023
+            : m_which{details::result_type::contains_t}, m_t{t}
+        {}
 
         /// <!-- description -->
         ///   @brief Constructs a bsl::result that contains T,
-        ///     my moving "t"
-        ///   @include result/make_move.cpp
+        ///     by moving "t"
+        ///   @include result/constructor_move.cpp
+        ///
+        ///   SUPPRESSION: PRQA 2023 - exception required
+        ///   - We suppress this because A13-3-1 states that you should not
+        ///     overload functions that contain a forwarding reference because
+        ///     it is confusing to the user. PRQA is detecting the presence of
+        ///     the in place constructor. In this case, there is nothing
+        ///     ambiguous about this situation as the user has to explicitly
+        ///     state bsl::in_place, which disambiguated which constructor the
+        ///     user is intending to use. It should be noted that objects like
+        ///     std::pair, std::tuple and std::variant, which are all encouraged
+        ///     by the spec have the same issue with this rule, so it is clear
+        ///     it needs a better definition to ensure the library the spec
+        ///     demands can actually be compliant with the spec itself.
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -121,25 +125,37 @@ namespace bsl
         ///   @param t the value being moved
         ///   @return a new bsl::result
         ///
-        static constexpr result<T, E>
-        make(T &&t) noexcept
-        {
-            result<T, E> res{details::result_type::contains_t};
-            details::initialize<T>(&res.m_t, bsl::move(t));
-
-            return res;
-        }
+        /// <!-- exceptions -->
+        ///   @throw throws if T's copy constructor throws
+        ///
+        explicit constexpr result(T &&t) noexcept    // PRQA S 2023
+            : m_which{details::result_type::contains_t}, m_t{bsl::move(t)}
+        {}
 
         /// <!-- description -->
-        ///   @brief Constructs a bsl::result that contains T,
-        ///     my moving "t"
-        ///   @include result/make_in_place.cpp
+        ///   @brief Constructs a bsl::result that contains T by constructing
+        ///     T in place.
+        ///   @include result/constructor_in_place.cpp
+        ///
+        ///   SUPPRESSION: PRQA 2023 - exception required
+        ///   - We suppress this because A13-3-1 states that you should not
+        ///     overload functions that contain a forwarding reference because
+        ///     it is confusing to the user. PRQA is detecting the presence of
+        ///     the in place constructor. In this case, there is nothing
+        ///     ambiguous about this situation as the user has to explicitly
+        ///     state bsl::in_place, which disambiguated which constructor the
+        ///     user is intending to use. It should be noted that objects like
+        ///     std::pair, std::tuple and std::variant, which are all encouraged
+        ///     by the spec have the same issue with this rule, so it is clear
+        ///     it needs a better definition to ensure the library the spec
+        ///     demands can actually be compliant with the spec itself.
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
+        ///   @param ip provide bsl::in_place to construct in place
         ///   @param args the arguments to create T with
         ///   @return a new bsl::result
         ///
@@ -147,19 +163,29 @@ namespace bsl
         ///   @throw throws if T's constructor throws
         ///
         template<typename... ARGS>
-        static constexpr result<T, E>
-        make_in_place(ARGS &&... args)
+        constexpr result(bsl::in_place_t ip, ARGS &&... args) noexcept    // PRQA S 2023
+            : m_which{details::result_type::contains_t}, m_t{bsl::forward<ARGS>(args)...}
         {
-            result<T, E> res{details::result_type::contains_t};
-            details::initialize<T>(&res.m_t, bsl::forward<ARGS>(args)...);
-
-            return res;
+            bsl::discard(ip);
         }
 
         /// <!-- description -->
         ///   @brief Constructs a bsl::result that contains E,
-        ///     my copying of "e"
-        ///   @include result/make_errc_copy.cpp
+        ///     by copying "e"
+        ///   @include result/constructor_errc_copy.cpp
+        ///
+        ///   SUPPRESSION: PRQA 2023 - exception required
+        ///   - We suppress this because A13-3-1 states that you should not
+        ///     overload functions that contain a forwarding reference because
+        ///     it is confusing to the user. PRQA is detecting the presence of
+        ///     the in place constructor. In this case, there is nothing
+        ///     ambiguous about this situation as the user has to explicitly
+        ///     state bsl::in_place, which disambiguated which constructor the
+        ///     user is intending to use. It should be noted that objects like
+        ///     std::pair, std::tuple and std::variant, which are all encouraged
+        ///     by the spec have the same issue with this rule, so it is clear
+        ///     it needs a better definition to ensure the library the spec
+        ///     demands can actually be compliant with the spec itself.
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -173,21 +199,29 @@ namespace bsl
         /// <!-- exceptions -->
         ///   @throw throws if E's copy constructor throws
         ///
-        static constexpr result<T, E>
-        make_errc(E const &e, sloc_type const &sloc = here())
+        constexpr result(E const &e, sloc_type const &sloc) noexcept    // PRQA S 2023
+            : m_which{details::result_type::contains_e}, m_e{e}
         {
             bsl::discard(sloc);
-
-            result<T, E> res{details::result_type::contains_e};
-            details::initialize<E>(&res.m_e, e);
-
-            return res;
         }
 
         /// <!-- description -->
         ///   @brief Constructs a bsl::result that contains E,
-        ///     my moving "e"
-        ///   @include result/make_errc_move.cpp
+        ///     by moving "e"
+        ///   @include result/constructor_errc_move.cpp
+        ///
+        ///   SUPPRESSION: PRQA 2023 - exception required
+        ///   - We suppress this because A13-3-1 states that you should not
+        ///     overload functions that contain a forwarding reference because
+        ///     it is confusing to the user. PRQA is detecting the presence of
+        ///     the in place constructor. In this case, there is nothing
+        ///     ambiguous about this situation as the user has to explicitly
+        ///     state bsl::in_place, which disambiguated which constructor the
+        ///     user is intending to use. It should be noted that objects like
+        ///     std::pair, std::tuple and std::variant, which are all encouraged
+        ///     by the spec have the same issue with this rule, so it is clear
+        ///     it needs a better definition to ensure the library the spec
+        ///     demands can actually be compliant with the spec itself.
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -201,15 +235,10 @@ namespace bsl
         /// <!-- exceptions -->
         ///   @throw throws if E's copy constructor throws
         ///
-        static constexpr result<T, E>
-        make_errc(E &&e, sloc_type const &sloc = here()) noexcept
+        constexpr result(E &&e, sloc_type const &sloc) noexcept    // PRQA S 2023
+            : m_which{details::result_type::contains_e}, m_e{bsl::move(e)}
         {
             bsl::discard(sloc);
-
-            result<T, E> res{details::result_type::contains_e};
-            details::initialize<E>(&res.m_e, bsl::move(e));
-
-            return res;
         }
 
         /// <!-- description -->
@@ -223,6 +252,27 @@ namespace bsl
         ///     in this code below. PRQA is not properly handling
         ///     the union as allowed by AUTOSAR.
         ///
+        ///   SUPPRESSION: PRQA 2023 - exception required
+        ///   - We suppress this because A13-3-1 states that you should not
+        ///     overload functions that contain a forwarding reference because
+        ///     it is confusing to the user. PRQA is detecting the presence of
+        ///     the in place constructor. In this case, there is nothing
+        ///     ambiguous about this situation as the user has to explicitly
+        ///     state bsl::in_place, which disambiguated which constructor the
+        ///     user is intending to use. It should be noted that objects like
+        ///     std::pair, std::tuple and std::variant, which are all encouraged
+        ///     by the spec have the same issue with this rule, so it is clear
+        ///     it needs a better definition to ensure the library the spec
+        ///     demands can actually be compliant with the spec itself.
+        ///
+        ///   SUPPRESSION: PRQA 4050 - false positive
+        ///   - We suppress this because A12-1-1 states that all member
+        ///     variables should be explicitly initialized. It does not
+        ///     state that they must be in the initializer list.
+        ///     Furthermore, it is impossible to initialize union members
+        ///     in an initializer list in a copy/move constructor, which
+        ///     PRQA should be capable of detecting, and it doesn't.
+        ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
@@ -233,14 +283,14 @@ namespace bsl
         /// <!-- exceptions -->
         ///   @throw throws if T or E's copy constructor throws
         ///
-        constexpr result(result const &o)    // PRQA S 4285
-            : result{o.m_which}
+        constexpr result(result const &o)    // PRQA S 4285, 2023
+            : m_which{o.m_which}             // PRQA S 4050
         {
             if (details::result_type::contains_t == m_which) {
-                details::initialize<T>(&m_t, o.m_t);
+                construct_at<T>(&m_t, o.m_t);
             }
             else {
-                details::initialize<E>(&m_e, o.m_e);
+                construct_at<E>(&m_e, o.m_e);
             }
         }
 
@@ -255,6 +305,27 @@ namespace bsl
         ///     the copy/move as required. PRQA is not properly handling
         ///     the union as allows by AUTOSAR.
         ///
+        ///   SUPPRESSION: PRQA 2023 - exception required
+        ///   - We suppress this because A13-3-1 states that you should not
+        ///     overload functions that contain a forwarding reference because
+        ///     it is confusing to the user. PRQA is detecting the presence of
+        ///     the in place constructor. In this case, there is nothing
+        ///     ambiguous about this situation as the user has to explicitly
+        ///     state bsl::in_place, which disambiguated which constructor the
+        ///     user is intending to use. It should be noted that objects like
+        ///     std::pair, std::tuple and std::variant, which are all encouraged
+        ///     by the spec have the same issue with this rule, so it is clear
+        ///     it needs a better definition to ensure the library the spec
+        ///     demands can actually be compliant with the spec itself.
+        ///
+        ///   SUPPRESSION: PRQA 4050 - false positive
+        ///   - We suppress this because A12-1-1 states that all member
+        ///     variables should be explicitly initialized. It does not
+        ///     state that they must be in the initializer list.
+        ///     Furthermore, it is impossible to initialize union members
+        ///     in an initializer list in a copy/move constructor, which
+        ///     PRQA should be capable of detecting, and it doesn't.
+        ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
@@ -262,14 +333,14 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///
-        constexpr result(result &&o) noexcept    // PRQA S 4285
-            : result{o.m_which}
+        constexpr result(result &&o) noexcept    // PRQA S 4285, 2023
+            : m_which{o.m_which}                 // PRQA S 4050
         {
             if (details::result_type::contains_t == m_which) {
-                details::initialize<T>(&m_t, bsl::move(o.m_t));
+                construct_at<T>(&m_t, bsl::move(o.m_t));
             }
             else {
-                details::initialize<E>(&m_e, bsl::move(o.m_e));
+                construct_at<E>(&m_e, bsl::move(o.m_e));
             }
         }
 
@@ -356,18 +427,18 @@ namespace bsl
                 else {
                     E tmp_e{bsl::move(rhs.m_e)};
                     rhs.m_e.E::~E();
-                    details::initialize<T>(&rhs.m_t, bsl::move(lhs.m_t));
+                    construct_at<T>(&rhs.m_t, bsl::move(lhs.m_t));
                     lhs.m_t.T::~T();
-                    details::initialize<E>(&lhs.m_e, bsl::move(tmp_e));
+                    construct_at<E>(&lhs.m_e, bsl::move(tmp_e));
                 }
             }
             else {
                 if (details::result_type::contains_t == rhs.m_which) {
                     E tmp_e{bsl::move(lhs.m_e)};
                     lhs.m_e.E::~E();
-                    details::initialize<T>(&lhs.m_t, bsl::move(rhs.m_t));
+                    construct_at<T>(&lhs.m_t, bsl::move(rhs.m_t));
                     rhs.m_t.T::~T();
-                    details::initialize<E>(&rhs.m_e, bsl::move(tmp_e));
+                    construct_at<E>(&rhs.m_e, bsl::move(tmp_e));
                 }
                 else {
                     bsl::swap(lhs.m_e, rhs.m_e);

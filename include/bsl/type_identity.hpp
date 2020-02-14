@@ -101,7 +101,8 @@ namespace bsl
         ///   @param o the object being copied
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr type_identity &operator=(type_identity const &o) &noexcept = default;
+        [[maybe_unused]] constexpr type_identity &
+        operator=(type_identity const &o) &noexcept = default;
 
         /// <!-- description -->
         ///   @brief move assignment

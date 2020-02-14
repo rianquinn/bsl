@@ -22,58 +22,98 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef BSL_EXAMPLE_CLASS_BASE_HPP
-#define BSL_EXAMPLE_CLASS_BASE_HPP
+#ifndef BSL_TEST_BIND_APIS_APIS_HPP
+#define BSL_TEST_BIND_APIS_APIS_HPP
+
+#include <bsl/cstdint.hpp>
+#include <bsl/bind_apis.hpp>
 
 namespace bsl
 {
-    /// @class bsl::example_class_base
+    /// @class bsl::test_bind_apis_apis
     ///
     /// <!-- description -->
-    ///   @brief A example of a base class that is compliant with AUTOSAR.
-    ///     Note that we must define the rule of 5 (the destructor and copy/move
-    ///     constructors/assignment operators must be protected).
+    ///   @brief Defines a test class for the bind_apis API.
     ///
-    class example_class_base
+    /// <!-- template parameters -->
+    ///   @tparam IMPL defines the implementation's type
+    ///
+    template<typename IMPL>
+    class test_bind_apis_apis
     {
     public:
         /// <!-- description -->
-        ///   @brief Creates a default bsl::example_class_base
+        ///   @brief Default constructor
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
-        constexpr example_class_base() noexcept = default;
+        constexpr test_bind_apis_apis() noexcept = default;
 
         /// <!-- description -->
-        ///   @brief Simple example of a getter
+        ///   @brief Tests a static function
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
-        ///   @return returns the value of m_data1;
+        ///   @param answer the answer to all of life's questions.
+        ///   @return true if the answer is correct, false otherwise.
+        ///
+        static constexpr bool
+        static_func_example(bsl::int32 const answer) noexcept
+        {
+            return IMPL::impl_type::static_func_example(answer);
+        }
+
+        /// <!-- description -->
+        ///   @brief Tests a member function
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param answer the answer to all of life's questions.
+        ///   @return true if the answer is correct, false otherwise.
         ///
         constexpr bool
-        get() const noexcept
+        member_func_example(bsl::int32 const answer) noexcept
         {
-            return m_data1;
+            return IMPL::impl(this).member_func_example(answer);
+        }
+
+        /// <!-- description -->
+        ///   @brief Tests a const member function
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param answer the answer to all of life's questions.
+        ///   @return true if the answer is correct, false otherwise.
+        ///
+        constexpr bool
+        member_func_example(bsl::int32 const answer) const noexcept
+        {
+            return IMPL::impl(this).member_func_example(answer);
         }
 
     protected:
         /// <!-- description -->
-        ///   @brief Destroyes a previously created bsl::example_class_base
+        ///   @brief default destructor
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
-        ~example_class_base() noexcept = default;
+        ~test_bind_apis_apis() noexcept = default;
 
         /// <!-- description -->
-        ///   @brief copy constructor
+        ///   @brief default copy constructor
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -82,10 +122,10 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
         ///
-        constexpr example_class_base(example_class_base const &o) noexcept = default;
+        constexpr test_bind_apis_apis(test_bind_apis_apis const &o) noexcept = default;
 
         /// <!-- description -->
-        ///   @brief move constructor
+        ///   @brief default move constructor
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -94,10 +134,10 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///
-        constexpr example_class_base(example_class_base &&o) noexcept = default;
+        constexpr test_bind_apis_apis(test_bind_apis_apis &&o) noexcept = default;
 
         /// <!-- description -->
-        ///   @brief copy assignment
+        ///   @brief default copy assignment
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -107,11 +147,11 @@ namespace bsl
         ///   @param o the object being copied
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr example_class_base &
-        operator=(example_class_base const &o) &noexcept = default;
+        [[maybe_unused]] constexpr test_bind_apis_apis &
+        operator=(test_bind_apis_apis const &o) &noexcept = default;
 
         /// <!-- description -->
-        ///   @brief copy constructor
+        ///   @brief default move assignment
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -121,13 +161,13 @@ namespace bsl
         ///   @param o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr example_class_base &
-        operator=(example_class_base &&o) &noexcept = default;
-
-    private:
-        /// @brief dummy data #1
-        bool m_data1{};
+        [[maybe_unused]] constexpr test_bind_apis_apis &
+        operator=(test_bind_apis_apis &&o) &noexcept = default;
     };
+
+    /// @brief defines the test_bind_apis type
+    template<typename D>
+    using test_bind_apis = bind_apis<test_bind_apis_apis, D>;
 }
 
 #endif

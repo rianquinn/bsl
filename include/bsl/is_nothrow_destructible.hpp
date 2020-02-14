@@ -47,7 +47,8 @@ namespace bsl
     struct is_nothrow_destructible final
     {
         /// @brief the boolean that answers the type trait query
-        static constexpr bool value{is_destructible<T>::value && noexcept(bsl::declval<T &>().~T())};
+        static constexpr bool value{is_destructible<T>::value &&
+                                    noexcept(bsl::declval<T &>().~T())};
     };
 }
 

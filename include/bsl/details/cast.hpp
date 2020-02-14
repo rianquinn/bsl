@@ -21,49 +21,33 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
-///
-/// @file remove_all_extents.hpp
-///
 
-#ifndef BSL_REMOVE_ALL_EXTENTS_HPP
-#define BSL_REMOVE_ALL_EXTENTS_HPP
-
-#include "cstdint.hpp"
-#include "type_identity.hpp"
+#ifndef BSL_DETAILS_CAST_HPP
+#define BSL_DETAILS_CAST_HPP
 
 namespace bsl
 {
-    /// @class bsl::remove_all_extents
-    ///
-    /// <!-- description -->
-    ///   @brief Provides the member typedef type which is the same as T,
-    ///     except that its topmost extent is removed.
-    ///   @include remove_all_extents/overview.cpp
-    ///
-    /// <!-- template parameters -->
-    ///   @tparam T the type to remove the extent from
-    ///
-    template<typename T>
-    class remove_all_extents final : public type_identity<T>
-    {};
-
-    /// @brief a helper that reduces the verbosity of bsl::remove_all_extents
-    template<typename T>
-    using remove_all_extents_t = typename remove_all_extents<T>::type;
-
-    /// @cond
-
-    template<typename T>
-    struct remove_all_extents<T[]> final :
-        public type_identity<typename remove_all_extents<T>::type>
-    {};
-
-    template<typename T, bsl::uintmax N>
-    struct remove_all_extents<T[N]> final :
-        public type_identity<typename remove_all_extents<T>::type>
-    {};
-
-    /// @endcond
+    namespace details
+    {
+        /// <!-- description -->
+        ///   @brief Equivalent to a static_cast from a void *
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam T the type to convert the ptr to
+        ///   @param ptr the pointer to convert
+        ///   @return static_cast<T *>(ptr);
+        ///
+        template<typename T>
+        constexpr T const *
+        cast(void const *const ptr) noexcept
+        {
+            return static_cast<T const *>(ptr);
+        }
+    }
 }
 
 #endif

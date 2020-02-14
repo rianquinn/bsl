@@ -22,7 +22,7 @@
 # This file contains a set of macros that all Bareflank projects need to
 # function "internally". These are not intended to be exposed to the user.
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -633,14 +633,18 @@ macro(bf_add_test NAME)
     set(multiValueArgs DEFINES)
     cmake_parse_arguments(ARGS "" "" "${multiValueArgs}" ${ARGN})
 
-    add_executable(test_${NAME} ${NAME}.cpp)
-    target_include_directories(test_${NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+    file(RELATIVE_PATH REL_NAME ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_LIST_DIR})
+    file(TO_CMAKE_PATH "${REL_NAME}" REL_NAME)
+    string(REPLACE "/" "_" REL_NAME ${REL_NAME})
+
+    add_executable(${REL_NAME}_${NAME} ${NAME}.cpp)
+    target_include_directories(${REL_NAME}_${NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
     if(WIN32)
-        target_link_libraries(test_${NAME} libcmt.lib)
+        target_link_libraries(${REL_NAME}_${NAME} libcmt.lib)
     endif()
-    target_compile_options(test_${NAME} PRIVATE -fno-access-control)
-    add_test(test_${NAME} test_${NAME})
-    bf_generate_defines(test_${NAME} ${ARGN})
+    target_compile_options(${REL_NAME}_${NAME} PRIVATE -fno-access-control)
+    add_test(${REL_NAME}_${NAME} ${REL_NAME}_${NAME})
+    bf_generate_defines(${REL_NAME}_${NAME} ${ARGN})
 endmacro(bf_add_test)
 
 #locate dot

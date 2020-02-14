@@ -2,7 +2,10 @@ namespace __detail
 {
     // ALL generic swap overloads MUST already have a declaration available at this point.
 
-    template<class _Tp, class _Up = _Tp, bool _NotVoid = !is_void<_Tp>::value && !is_void<_Up>::value>
+    template<
+        class _Tp,
+        class _Up = _Tp,
+        bool _NotVoid = !is_void<_Tp>::value && !is_void<_Up>::value>
     struct __swappable_with
     {
         template<class _LHS, class _RHS>
@@ -14,7 +17,8 @@ namespace __detail
         typedef decltype((__test_swap<_Tp, _Up>(0))) __swap1;
         typedef decltype((__test_swap<_Up, _Tp>(0))) __swap2;
 
-        static const bool value = _IsNotSame<__swap1, __nat>::value && _IsNotSame<__swap2, __nat>::value;
+        static const bool value =
+            _IsNotSame<__swap1, __nat>::value && _IsNotSame<__swap2, __nat>::value;
     };
 
     template<class _Tp, class _Up>
@@ -44,5 +48,6 @@ struct __is_swappable : public integral_constant<bool, __detail::__swappable_wit
 {};
 
 template<class _Tp>
-struct __is_nothrow_swappable : public integral_constant<bool, __detail::__nothrow_swappable_with<_Tp &>::value>
+struct __is_nothrow_swappable :
+    public integral_constant<bool, __detail::__nothrow_swappable_with<_Tp &>::value>
 {};
