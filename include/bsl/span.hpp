@@ -25,14 +25,24 @@
 #ifndef BSL_SPAN_HPP
 #define BSL_SPAN_HPP
 
-#include "cstdint.hpp"
-#include "numeric_limits.hpp"
+#include "view.hpp"
 
 namespace bsl
 {
-    template<T>
-    class span
-    {};
+    template<typename T>
+    class span final : public view<T>
+    {
+        constexpr span() noexcept = default;
+
+        template<bsl::uintmax N>
+        explicit constexpr span(T (&arr)[N]) noexcept    // --
+            : view<T>{arr}
+        {}
+
+        explicit constexpr span(T *const data, bsl::uintmax size) noexcept    // --
+            : view<T>{data, size}
+        {}
+    };
 }
 
 #endif

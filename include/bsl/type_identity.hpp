@@ -115,7 +115,8 @@ namespace bsl
         ///   @param o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr type_identity &operator=(type_identity &&o) &noexcept = default;
+        [[maybe_unused]] constexpr type_identity &    // --
+        operator=(type_identity &&o) &noexcept = default;
     };
 
     /// @brief a helper that reduces the verbosity of bsl::remove_const

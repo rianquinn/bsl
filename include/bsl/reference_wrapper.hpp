@@ -64,8 +64,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param t a reference to an instance of T that is being wrapped
         ///
-        constexpr reference_wrapper(T &t) noexcept
-            : m_ptr{&t}
+        constexpr reference_wrapper(T &t) noexcept : m_ptr{&t}
         {}
 
         /// <!-- description -->

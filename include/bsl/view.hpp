@@ -30,28 +30,53 @@
 namespace bsl
 {
     template<typename T>
-    class view final
+    class view
     {
-        T m_ptr[];
+        /// @brief stores a pointer to the data being viewed
+        T *m_data;
+        /// @brief stores the number of elements being viewed
         bsl::uintmax m_size;
 
     public:
+        /// <!-- description -->
+        ///   @brief Creates a default view. This constructor ensures that a
+        ///     view is a POD type, allowing it to be defined in the global
+        ///     scope. 
+        ///   @include
+        ///   @related
+        ///
+        /// <!-- notes -->
+        ///   @note
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam
+        ///   @param
+        ///   @return
+        ///
         constexpr view() noexcept = default;
 
         template<bsl::uintmax N>
         explicit constexpr view(T (&arr)[N]) noexcept    // --
-            : m_ptr{arr}, m_size{N}
+            : m_data{arr}, m_size{N}
         {}
 
-        explicit constexpr view(T *const ptr, bsl::uintmax count) noexcept    // --
-            : m_ptr{ptr}, m_size{count}
-        {}
+        explicit constexpr view(T *const data, bsl::uintmax size) noexcept    // --
+            : m_data{data}, m_size{size}
+        {
+            if ((nullptr == m_data) || (0 == m_size)) {
+                *this = view{};
+            }
+        }
 
         /// <!-- description -->
         ///   @brief Returns a pointer to the instance of T stored at index
         ///     "index". If the index is out of bounds, or the view is invalid,
         ///     this function returns a nullptr.
-        ///   @include view/overview.cpp
+        ///   @include view/at.cpp
         ///
         ///   SUPPRESSION: PRQA 4211 - false positive
         ///   - We suppress this because M9-3-3 states that if a function
@@ -74,14 +99,15 @@ namespace bsl
         ///     detecting this.
         ///
         ///   SUPPRESSION: PRQA 4024 - false positive
-        ///   - We suppress this because A(-3-1) states that pointer we should
+        ///   - We suppress this because A9-3-1 states that pointer we should
         ///     not provide a non-const reference or pointer to private
         ///     member function, unless the class mimics a smart pointer or
         ///     a containter. This class mimics a container.
         ///
         /// <!-- contracts -->
         ///   @pre the view must be valid and the index must be less than the
-        ///     size of the array the view is pointer to
+        ///     size of the array the view is pointer to. If not, a nullptr
+        ///     is returned.
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
@@ -90,25 +116,233 @@ namespace bsl
         ///     "index". If the index is out of bounds, or the view is invalid,
         ///     this function returns a nullptr.
         ///
-        constexpr T *
-        at(bsl::uintmax const index) noexcept // PRQA S 4211
+        [[nodiscard]] constexpr T *
+        at(bsl::uintmax const index) noexcept    // PRQA S 4211
         {
-            if ((nullptr == m_ptr) || (index >= m_size)) {
+            if ((nullptr == m_data) || (index >= m_size)) {
                 return nullptr;
             }
 
-            return &m_ptr[index]; // PRQA S 3706, 4024
+            return &m_data[index];    // PRQA S 3706, 4024
         }
 
-        constexpr T const *
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "index". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///   @include view/at.cpp
+        ///
+        ///   SUPPRESSION: PRQA 3706 - false positive
+        ///   - We suppress this because M5-0-15 states that pointer arithmetic
+        ///     is not allowed, and instead direct indexing or an array should
+        ///     be used. This took a while to sort out. The short story is,
+        ///     this is a false positive. M5-0-15 wants you to do ptr[X]
+        ///     instead of *(ptr + X), which is what we are doing here. This
+        ///     example is clearly shown in the second to last line in the
+        ///     example that MISRA 2008 provides. The language for this was
+        ///     cleaned up in MISRA 2012 as well. PRQA should be capable of
+        ///     detecting this.
+        ///
+        /// <!-- contracts -->
+        ///   @pre the view must be valid and the index must be less than the
+        ///     size of the array the view is pointer to. If not, a nullptr
+        ///     is returned.
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param index the index of the instance to return
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "index". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr T const *
         at(bsl::uintmax const index) const noexcept
         {
-            if ((nullptr == m_ptr) || (index >= m_size)) {
+            if ((nullptr == m_data) || (index >= m_size)) {
                 return nullptr;
             }
 
-            return &m_ptr[index]; // PRQA S 3706 // M5-0-15
+            return &m_data[index];    // PRQA S 3706
         }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "0". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///   @include view/front.cpp
+        ///
+        /// <!-- contracts -->
+        ///   @pre the view must be valid and contain data. If not, a nullptr
+        ///     is returned.
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "0". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr T *
+        front() noexcept
+        {
+            return this->at(0);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "0". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///   @include view/front.cpp
+        ///
+        /// <!-- contracts -->
+        ///   @pre the view must be valid and contain data. If not, a nullptr
+        ///     is returned.
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "0". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr T const *
+        front() const noexcept
+        {
+            return this->at(0);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "size() - 1". If the index is out of bounds, or the view is
+        ///     invalid, this function returns a nullptr.
+        ///   @include view/back.cpp
+        ///
+        /// <!-- contracts -->
+        ///   @pre the view must be valid and contain data. If not, a nullptr
+        ///     is returned.
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "size() - 1". If the index is out of bounds, or the view is
+        ///     invalid, this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr T *
+        back() noexcept
+        {
+            return this->at(m_size > 0 ? m_size - 1 : 0);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "size() - 1". If the index is out of bounds, or the view is
+        ///     invalid, this function returns a nullptr.
+        ///   @include view/back.cpp
+        ///
+        /// <!-- contracts -->
+        ///   @pre the view must be valid and contain data. If not, a nullptr
+        ///     is returned.
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "size() - 1". If the index is out of bounds, or the view is
+        ///     invalid, this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr T const *
+        back() const noexcept
+        {
+            return this->at(m_size > 0 ? m_size - 1 : 0);
+        }
+
+        [[nodiscard]] constexpr void *
+        data() noexcept
+        {
+            return m_data;
+        }
+
+        [[nodiscard]] constexpr void const *
+        data() const noexcept
+        {
+            return m_data;
+        }
+
+        [[nodiscard]] constexpr bsl::uintmax
+        size() const noexcept
+        {
+            return m_size;
+        }
+
+        [[nodiscard]] constexpr bsl::uintmax
+        size_bytes() const noexcept
+        {
+            return m_size * sizeof(T);
+        }
+
+        [[nodiscard]] constexpr bool
+        empty() const noexcept
+        {
+            return nullptr == m_data;
+        }
+
+    protected:
+        /// <!-- description -->
+        ///   @brief Destroyes a previously created bsl::view
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        ~view() noexcept = default;
+
+        /// <!-- description -->
+        ///   @brief copy constructor
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param o the object being copied
+        ///
+        constexpr view(view const &o) noexcept = default;
+
+        /// <!-- description -->
+        ///   @brief move constructor
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param o the object being moved
+        ///
+        constexpr view(view &&o) noexcept = default;
+
+        /// <!-- description -->
+        ///   @brief copy assignment
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param o the object being copied
+        ///   @return a reference to *this
+        ///
+        [[maybe_unused]] constexpr view &operator=(view const &o) &noexcept = default;
+
+        /// <!-- description -->
+        ///   @brief move assignment
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param o the object being moved
+        ///   @return a reference to *this
+        ///
+        [[maybe_unused]] constexpr view &    // --
+        operator=(view &&o) &noexcept = default;
     };
 }
 
