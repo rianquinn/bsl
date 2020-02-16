@@ -2,7 +2,7 @@
 
 ## **Description**
 
-The Bareflank Support Library (BSL) is a simple, header-only library that provides support for the C++ Core Guideline compliance. Similar to the goals of the Guideline Support Library (GSL) by Microsoft, the BSL aims to provide the facilities needed to ensure guideline compliance, while minimizing the need for verbosity.
+The Bareflank Support Library (BSL) is a header-only library that provides an AUTOSAR and C++ Core Guideline compliant implementation of the C++ Standard Library. To achieve this, the BSL does not adhere to the C++ Standard Library specification, but attempts to where possible (as the C++ Standard Library specification in its current form is not compliant with either set of guidelines). Since a number of critical systems applications do not support dynamic memory or C++ exceptions, the BSL uses neither, but is capable of coexisting with the C++ Standard Library including properly handling if exceptions are enabled and used.
 
 [![Material for MkDocs](https://github.com/Bareflank/bsl/raw/master/docs/images/example.png)](https://github.com/Bareflank/bsl/raw/master/docs/images/example.png)
 
@@ -13,20 +13,76 @@ The Bareflank Support Library (BSL) is a simple, header-only library that provid
 Get the latest version of the BSL from GitHub:
 
 ``` bash
-wget https://raw.githubusercontent.com/Bareflank/bsl/master/include/bsl.h
+git clone https://github.com/rianquinn/bsl
+mkdir bsl/build && cd bsl/build
+cmake ..
+make install -j
 ```
 
 Enjoy:
 
 ``` c++
-#include "bsl.h"
+#include <bsl/discard.hpp>
+#include <bsl/main.hpp>
+#include <bsl/array.hpp>
 
-auto
-main() -> int
+namespace bsl
 {
-    auto da = bsl::make_dynarray<int>(42);
+    bsl::exit_code
+    entry(bsl::arguments const &args) noexcept
+    {
+        bsl::discard(args);
+        bsl::array<bsl::int32, 42> arr{};
+
+        bsl::foreach(arr, [](auto &elem, auto index){
+            elem = index;
+        });
+
+        bsl::foreach(arr, [](auto const &elem, auto){
+            bsl::print("{} ", elem);
+        });
+
+        bsl::print("\n");
+        return bsl::exit_code::exit_success;
+    }
 }
+
 ```
+
+## **Build Requirements**
+Currently, the BSL only supports the Clang/LLVM 9+ compiler. This, however, ensures the BSL can be natively compiled on Windows including support for cross-compiling.
+
+### **Windows**
+To compile the BSL on Windows, you must first install the following:
+- [Visual Studio](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&rel=16) (Enable "Desktop development with C++")
+- [LLVM 9+](https://github.com/llvm/llvm-project/releases)
+- [CMake 3.16+](https://cmake.org/download/)
+
+Visual Studio is needed as it contains Windows specific libraries that are needed during compilation. Instead of using the Clang/LLVM project that natively ships with Visual Studio, we use the standard Clang/LLVM binaries provided by the LLVM project which ensures we get all of the tools including LLD, Clang Tidy and Clang Format. CMake 3.16+ is needed as we currently make use of some features in CMake 3.16. If you do not want to use the Visual Studio Command Prompt, you will need to add "Ninja" to your path. Either search for Ninja on your system, or download it from here (just copy Ninja to LLVM's bin directory):
+- [Ninja](https://github.com/ninja-build/ninja/releases)
+
+Once you have everything installed, you can build the BSL using the following:
+
+``` bash
+git clone https://github.com/rianquinn/bsl
+mkdir bsl/build && cd bsl/build
+cmake -G Ninja -DCMAKE_CXX_COMPILER="clang++" ..
+ninja
+```
+
+As well as install the BSL using:
+```
+ninja install
+```
+
+### **Ubuntu Linux**
+TBD
+
+### **Arch Linux**
+TBD
+
+### **macOS**
+TBD
 
 ## **Resources**
 
@@ -56,11 +112,11 @@ And as always, we are always looking for more help:
 ![Codacy grade](https://img.shields.io/codacy/grade/9e55fc17a08d4e2abe51d82f09f4449f)
 [![CodeFactor](https://www.codefactor.io/repository/github/bareflank/bsl/badge)](https://www.codefactor.io/repository/github/bareflank/bsl)
 
-The Bareflank Support Library leverages the following tools to ensure the highest possible code quality. Each pull request undergoes the follwoing rigurous testing and review:
+The Bareflank Support Library leverages the following tools to ensure the highest possible code quality. Each pull request undergoes the following rigorous testing and review:
 
--   **Static Analysis:** Clang Tidy, CppCheck, Codacy, CodeFactor, and LGTM
--   **Dynamic Analysis:** Google's ASAN and UBSAN, Valgrind
--   **Code Coverage:** LCOV Code Coverage with CodeCov
+-   **Static Analysis:** Clang Tidy, SonarCloud, Perforce Helix QAC
+-   **Dynamic Analysis:** Google's ASAN and UBSAN
+-   **Code Coverage:** LLVM Code Coverage with CodeCov
 -   **Coding Standards**: [AUTOSAR C++14](https://www.autosar.org/fileadmin/user_upload/standards/adaptive/17-03/AUTOSAR_RS_CPP14Guidelines.pdf)
 -   **Style**: Clang Format and Git Check
--   **Documentation**: MkDocs and Doxygen
+-   **Documentation**: Doxygen

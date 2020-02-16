@@ -25,9 +25,7 @@
 #include <bsl/discard.hpp>
 #include <bsl/main.hpp>
 
-#include <bsl/is_const.hpp>
-#include <bsl/add_const.hpp>
-#include <bsl/remove_const.hpp>
+#include "add_const/overview.cpp"
 
 namespace bsl
 {
@@ -42,15 +40,12 @@ namespace bsl
     ///   @param args the arguments passed to the application
     ///   @return exit_success on success, exit_failure otherwise
     ///
-    [[maybe_unused]] bsl::exit_code
-    example__add_const__overview(bsl::arguments const &args) noexcept
+    bsl::exit_code
+    entry(bsl::arguments const &args) noexcept
     {
         bsl::discard(args);
 
-        static_assert(bsl::is_const<bsl::add_const_t<bool>>::value);
-        static_assert(bsl::is_const<bsl::add_const_t<bool const>>::value);
-        static_assert(!bsl::is_const<bsl::remove_const_t<bool>>::value);
-        static_assert(!bsl::is_const<bsl::remove_const_t<bool const>>::value);
+        example__add_const__overview(args);
 
         return bsl::exit_code::exit_success;
     }
