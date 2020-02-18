@@ -37,7 +37,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the member typedef type which is the same as T,
     ///     except that a topmost rvalue reference is added.
-    ///   @include add_rvalue_reference/overview.cpp
+    ///   @include example_add_rvalue_reference__overview.cpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to add an rvalue reference to

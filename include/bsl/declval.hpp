@@ -36,9 +36,6 @@ namespace bsl
     ///   @brief Converts any type T to a reference type, making it possible
     ///     to use member functions in decltype expressions without the need
     ///     to go through constructors.
-    ///   @include example_has_get.hpp
-    ///   @include example_class_base.hpp
-    ///   @include declval/overview.cpp
     ///
     /// <!-- contracts -->
     ///   @pre none

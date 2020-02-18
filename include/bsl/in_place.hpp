@@ -45,7 +45,15 @@ namespace bsl
     class in_place_t final
     {
     public:
-        explicit in_place_t() noexcept = default;
+        /// <!-- description -->
+        ///   @brief Default constructor that ensure construction of
+        ///     this type must be explicit
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        explicit constexpr in_place_t() noexcept = default;
     };
 
     /// @brief reduces the verbosity of bsl::in_place_t
@@ -68,7 +76,15 @@ namespace bsl
     class in_place_type_t final
     {
     public:
-        explicit in_place_type_t() noexcept = default;
+        /// <!-- description -->
+        ///   @brief Default constructor that ensure construction of
+        ///     this type must be explicit
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        explicit constexpr in_place_type_t() noexcept = default;
     };
 
     /// @class bsl::in_place_index
@@ -88,7 +104,15 @@ namespace bsl
     class in_place_index_t final
     {
     public:
-        explicit in_place_index_t() noexcept = default;
+        /// <!-- description -->
+        ///   @brief Default constructor that ensure construction of
+        ///     this type must be explicit
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        explicit constexpr in_place_index_t() noexcept = default;
     };
 }
 

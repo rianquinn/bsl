@@ -42,6 +42,11 @@
 ///     C++ requires that the placement new function is defind in the global
 ///     namespace.
 ///
+///   SUPPRESSION: PRQA 2000 - false positive
+///   - We suppress this because M0-1-10 states that functions should be used
+///     if they are defined. This function is used by bsl::result and others,
+///     but PRQA is not able to detect this.
+///
 /// <!-- contracts -->
 ///   @pre none
 ///   @post none
@@ -52,7 +57,7 @@
 ///   @return returns ptr
 ///
 constexpr void *
-operator new(bsl::uintmax count, void *const ptr) noexcept    // PRQA S 2000
+operator new(bsl::uintmax count, void *const ptr) noexcept    // PRQA S 2000, 1503
 {
     bsl::discard(count);
     return ptr;

@@ -37,7 +37,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the member typedef type which is the same as T
     ///     if B is true, otherwise is the same as U
-    ///   @include conditional/overview.cpp
+    ///   @include example_conditional__overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam B the conditional parameter

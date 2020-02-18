@@ -54,6 +54,7 @@ namespace bsl
         template<typename Default, template<typename...> class Op, typename... Args>
         struct detector<Default, bsl::void_t<Op<Args...>>, Op, Args...> final
         {
+            /// @brief the boolean that answers the type trait query
             static constexpr bool value{true};
         };
 

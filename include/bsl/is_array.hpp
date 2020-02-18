@@ -55,12 +55,14 @@ namespace bsl
     template<typename T>
     struct is_array<T[]> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 
     template<typename T, bsl::uintmax N>
     struct is_array<T[N]> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 

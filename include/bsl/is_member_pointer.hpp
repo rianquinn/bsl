@@ -53,12 +53,14 @@ namespace bsl
     template<typename T, typename U>
     struct is_member_pointer<T U::*> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 
     template<typename T, typename U>
     struct is_member_pointer<T U::*const> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 

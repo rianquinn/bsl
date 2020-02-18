@@ -73,12 +73,14 @@ namespace bsl
     template<typename T, bool B>
     struct is_destructible<T, true, B> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{false};
     };
 
     template<typename T, bool B>
     struct is_destructible<T, B, true> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 

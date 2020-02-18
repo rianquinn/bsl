@@ -53,12 +53,14 @@ namespace bsl
     template<>
     struct is_bool<bool> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 
     template<>
     struct is_bool<bool const> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 

@@ -33,7 +33,10 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Used to construct T at a specific location in memory using
     ///     a placement-new. The difference is, this function takes a void *
-    ///     and returns a T *.
+    ///     and returns a T *. This should be used instead of using the
+    ///     placement new operator directly as it encapsulates issues with
+    ///     PRQA.
+    ///   @include example_construct_at__overview.hpp
     ///
     ///   SUPPRESSION: PRQA 5217 - false positive
     ///   - We suppress this because A18-5-2 states that non-placement
@@ -43,7 +46,7 @@ namespace bsl
     ///   SUPPRESSION: PRQA 3058 - false positive
     ///   - We suppress this because M8-4-4 states that function pointers
     ///     should be preceeded by an &. In some cases, even if it is, this
-    ///     rule still triggers.
+    ///     rule still triggers (some sort of bug with PRQA)
     ///
     /// <!-- contracts -->
     ///   @pre none

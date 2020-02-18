@@ -41,7 +41,7 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Creates a default view. This constructor ensures that a
         ///     view is a POD type, allowing it to be defined in the global
-        ///     scope. 
+        ///     scope.
         ///   @include
         ///   @related
         ///

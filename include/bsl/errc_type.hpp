@@ -321,6 +321,21 @@ namespace bsl
 
 namespace bsl
 {
+    /// <!-- description -->
+    ///   @brief Returns a human readable version of the error code. If
+    ///     the error code is a custom, user defined error code, returns
+    ///     a nullptr.
+    ///   @include errc_type/message.cpp
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @return Returns a human readable version of the error code. If
+    ///     the error code is a custom, user defined error code, returns
+    ///     a nullptr.
+    ///
     template<typename T, T SUCCESS>
     [[nodiscard]] constexpr cstr_type
     errc_type<T, SUCCESS>::message() const noexcept

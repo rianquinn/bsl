@@ -61,48 +61,56 @@ namespace bsl
     template<>
     struct is_unsigned<bsl::uint8> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 
     template<>
     struct is_unsigned<bsl::uint8 const> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 
     template<>
     struct is_unsigned<bsl::uint16> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 
     template<>
     struct is_unsigned<bsl::uint16 const> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 
     template<>
     struct is_unsigned<bsl::uint32> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 
     template<>
     struct is_unsigned<bsl::uint32 const> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 
     template<>
     struct is_unsigned<bsl::uint64> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 
     template<>
     struct is_unsigned<bsl::uint64 const> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 

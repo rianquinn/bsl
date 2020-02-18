@@ -53,6 +53,7 @@ namespace bsl
     template<typename T>
     struct is_const<T const> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 

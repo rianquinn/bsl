@@ -163,7 +163,7 @@ namespace bsl
         ///   @throw throws if T's constructor throws
         ///
         template<typename... ARGS>
-        constexpr result(bsl::in_place_t ip, ARGS &&... args) noexcept    // PRQA S 2023
+        constexpr result(bsl::in_place_t const &ip, ARGS &&... args) noexcept    // PRQA S 2023
             : m_which{details::result_type::contains_t}, m_t{bsl::forward<ARGS>(args)...}
         {
             bsl::discard(ip);
@@ -356,7 +356,7 @@ namespace bsl
         ~result() noexcept
         {
             if (details::result_type::contains_t == m_which) {
-                m_t.T::~T();
+                destroy_at(&m_t);
             }
         }
 
@@ -426,18 +426,16 @@ namespace bsl
                 }
                 else {
                     E tmp_e{bsl::move(rhs.m_e)};
-                    rhs.m_e.E::~E();
                     construct_at<T>(&rhs.m_t, bsl::move(lhs.m_t));
-                    lhs.m_t.T::~T();
+                    destroy_at(&lhs.m_t);
                     construct_at<E>(&lhs.m_e, bsl::move(tmp_e));
                 }
             }
             else {
                 if (details::result_type::contains_t == rhs.m_which) {
                     E tmp_e{bsl::move(lhs.m_e)};
-                    lhs.m_e.E::~E();
                     construct_at<T>(&lhs.m_t, bsl::move(rhs.m_t));
-                    rhs.m_t.T::~T();
+                    destroy_at(&rhs.m_t);
                     construct_at<E>(&rhs.m_e, bsl::move(tmp_e));
                 }
                 else {
@@ -574,7 +572,11 @@ namespace bsl
         ///     the implementation as close to the example in the spec as
         ///     possible, and PRQA is still not able to detect this.
         ///
-        union    // PRQA S 2176
+        ///   SUPPRESSION: PRQA 2176 - false positive
+        ///   - We suppress this because A2-7-3 states that all class members
+        ///     should be documented. This is clearly documented.
+        ///
+        union    // PRQA S 2176, 2026
         {
             /// @brief stores T when not storing an error code
             T m_t;

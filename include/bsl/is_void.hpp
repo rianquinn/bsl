@@ -53,12 +53,14 @@ namespace bsl
     template<>
     struct is_void<void> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 
     template<>
     struct is_void<void const> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 

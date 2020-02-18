@@ -44,12 +44,13 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Applies lvalue-to-rvalue, array-to-pointer, and
     ///     function-to-pointer implicit conversions to the type T,
-    ///     removes cv-qualifiers, and defines the resulting type as the
-    ///     member typedef type
-    ///   @include decay/overview.cpp
+    ///     removes const-qualifiers, and defines the resulting type as the
+    ///     member typedef type. Note that this does not remove volatile as
+    ///     the BSL does not support the use of volatile.
+    ///   @include example_decay__overview.hpp
     ///
     /// <!-- template parameters -->
-    ///   @tparam T the type to add a const qualifier to
+    ///   @tparam T the type to decay
     ///
     template<typename T>
     class decay final :
@@ -61,6 +62,10 @@ namespace bsl
                 typename add_pointer<typename remove_reference<T>::type>::type,
                 typename remove_const<typename remove_reference<T>::type>::type>::type>::type>
     {};
+
+    /// @brief a helper that reduces the verbosity of bsl::add_const
+    template<typename T>
+    using decay_t = typename decay<T>::type;
 }
 
 #endif

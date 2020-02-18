@@ -55,7 +55,7 @@ namespace bsl
     ///     pass-through to the implementation. In this case, there is nothing
     ///     ambiguous to the user about this situation, and the spec doesn't
     ///     state whether PRQA is correct or not as the examples all discuss
-    ///     explicit function definitons and not implicitly default functions.
+    ///     explicit function definitons and not implicitly defaulted functions.
     ///     For this reason, PRQA is free to assume this rule includes
     ///     implicitly defaulted functions, and therefore, an exception to this
     ///     rule is required. It should be noted that objects like std::pair,
@@ -82,7 +82,7 @@ namespace bsl
         ///   @brief Used to create an object that has a set of APIs bound to
         ///     to an implementation. All of the arguments are passed to the
         ///     implementation.
-        ///   @include  bind_apis/constructor.cpp
+        ///   @include example_bind_apis__overview.cpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -100,13 +100,13 @@ namespace bsl
             : APIS<bind_apis<APIS, IMPL>>{}, m_d{bsl::forward<ARGS>(args)...}
         {}
 
-    protected:
         /// <!-- description -->
         ///   @brief Returns a reference to the implementation of the bound
         ///     object given a pointer to the APIs. This is used by the APIs
         ///     to convert "this" into a reference to the implementation so
         ///     that the APIs can call into the implementation to execute the
         ///     API itself.
+        ///   @include example_bind_apis__overview.cpp
         ///
         ///   SUPPRESSION: PRQA 3070 - exception required
         ///   - We suppress this because M5-2-3 states that a downcast is
@@ -131,9 +131,9 @@ namespace bsl
         ///   @throw throws if impl throws
         ///
         constexpr static IMPL &
-        impl(APIS<bind_apis<APIS, IMPL>> *const apis)
+        impl(APIS<bind_apis<APIS, IMPL>> &apis)
         {
-            return static_cast<bind_apis<APIS, IMPL> *>(apis)->m_d;    // PRQA S 3070
+            return static_cast<bind_apis<APIS, IMPL> *>(&apis)->m_d;    // PRQA S 3070
         }
 
         /// <!-- description -->
@@ -142,6 +142,7 @@ namespace bsl
         ///     to convert "this" into a reference to the implementation so
         ///     that the APIs can call into the implementation to execute the
         ///     API itself.
+        ///   @include example_bind_apis__overview.cpp
         ///
         ///   SUPPRESSION: PRQA 3070 - exception required
         ///   - We suppress this because M5-2-3 states that a downcast is
@@ -166,9 +167,9 @@ namespace bsl
         ///   @throw throws if impl throws
         ///
         constexpr static IMPL const &
-        impl(APIS<bind_apis<APIS, IMPL>> const *const apis)
+        impl(APIS<bind_apis<APIS, IMPL>> const &apis)
         {
-            return static_cast<bind_apis<APIS, IMPL> const *>(apis)->m_d;    // PRQA S 3070
+            return static_cast<bind_apis<APIS, IMPL> const *>(&apis)->m_d;    // PRQA S 3070
         }
 
     private:

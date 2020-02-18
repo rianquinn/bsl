@@ -37,6 +37,8 @@ namespace bsl
     ///     (i.e., the identity transformation).
     ///   @include type_identity/overview.cpp
     ///
+    ///   SUPPRESSION: PRQA 2411 - no exception required, N/A to AUTOSAR
+    ///
     /// <!-- template parameters -->
     ///   @tparam T the type that defines the member typedef "type"
     ///
@@ -45,7 +47,7 @@ namespace bsl
     {
     public:
         /// @brief the member typedef "type" being provided
-        using type = T;
+        using type = T;    // PRQA S 2411
 
         /// <!-- description -->
         ///   @brief Creates a default bsl::type_identity
@@ -101,7 +103,7 @@ namespace bsl
         ///   @param o the object being copied
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr type_identity &
+        [[maybe_unused]] constexpr type_identity &    // --
         operator=(type_identity const &o) &noexcept = default;
 
         /// <!-- description -->

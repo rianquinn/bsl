@@ -28,13 +28,11 @@
 #ifndef BSL_DESTROY_AT_HPP
 #define BSL_DESTROY_AT_HPP
 
-#include "is_nothrow_destructible.hpp"
-
 namespace bsl
 {
     /// <!-- description -->
     ///   @brief Calls the destructor of the object pointed to by ptr
-    ///   @include destroy_at/overview.cpp
+    ///   @include example_destroy_at__overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -44,12 +42,16 @@ namespace bsl
     ///   @tparam T defines the type pointer to by ptr
     ///   @param ptr a pointer to the object to destroy
     ///
+    /// <!-- exceptions -->
+    ///   @throw throws if T throws during destruction
+    ///
     template<typename T>
     constexpr void
-    destroy_at(T const *ptr) noexcept
+    destroy_at(T * const ptr)
     {
-        static_assert(is_nothrow_destructible<T>::value);
-        ptr->~T();
+        if (nullptr != ptr) {
+            ptr->T::~T();
+        }
     }
 }
 

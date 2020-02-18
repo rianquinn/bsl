@@ -39,14 +39,16 @@ namespace bsl
     ///   @brief Implements the std::aligned_aligned_storage interface. The
     ///     only real difference is we use "m_data" instead of "data" to
     ///     represent the member variable name.
-    ///   @include aligned_storage/overview.cpp
+    ///   @include example_aligned_storage__overview.cpp
     ///
     /// <!-- template parameters -->
+    ///   @tparam GUARD used to prevent you from creating an aligned_storage
+    ///     and not an aligned_storage_t
     ///   @tparam N the size of the storage buffer in bytes
     ///   @tparam A the alignment of the sotrage buffer. This defaults to
     ///     0, which means this is "unaligned" by default.
     ///
-    template<bsl::uintmax N, bsl::uintmax A = 0>
+    template<typename GUARD, bsl::uintmax N, bsl::uintmax A = 0>
     struct aligned_storage final
     {
         static_assert(N > 0, "empty aligned_storage is not supported");
@@ -58,13 +60,14 @@ namespace bsl
         ///
         struct type final
         {
+            /// @brief an array that provides the underlying storage
             alignas(A) byte m_data[N];
         };
     };
 
     /// @brief a helper that reduces the verbosity of bsl::aligned_storage
     template<bsl::uintmax N, bsl::uintmax A = 0>
-    using aligned_storage_t = typename aligned_storage<N, A>::type;
+    using aligned_storage_t = typename aligned_storage<void, N, A>::type;
 }
 
 #endif

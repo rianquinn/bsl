@@ -53,12 +53,14 @@ namespace bsl
     template<>
     struct is_null_pointer<decltype(nullptr)> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 
     template<>
     struct is_null_pointer<decltype(nullptr) const> final
     {
+        /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 

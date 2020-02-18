@@ -28,6 +28,8 @@
 #ifndef BSL_IS_DEFAULT_CONSTRUCTIBLE_HPP
 #define BSL_IS_DEFAULT_CONSTRUCTIBLE_HPP
 
+#include "is_constructible.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_default_constructible
@@ -45,7 +47,7 @@ namespace bsl
     struct is_default_constructible final
     {
         /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_constructible(T)};
+        static constexpr bool value{is_constructible<T>::value};
     };
 }
 

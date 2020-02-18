@@ -37,7 +37,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the member typedef type which is the same as T,
     ///     except that a topmost pointer is added.
-    ///   @include add_pointer/overview.cpp
+    ///   @include example_add_pointer__overview.cpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to add an pointer to
