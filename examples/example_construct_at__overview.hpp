@@ -50,7 +50,7 @@ namespace bsl
         bsl::discard(args);
 
         bsl::uint32 mydata{};
-        bsl::construct_at<bsl::uint32>(&mydata, 0U);
+        bsl::discard(bsl::construct_at<bsl::uint32>(&mydata, 0U));
 
         return bsl::exit_code::exit_success;
     }

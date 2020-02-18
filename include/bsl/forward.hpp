@@ -64,7 +64,7 @@ namespace bsl
     constexpr T &&
     forward(typename bsl::remove_reference_t<T> &val) noexcept
     {
-        return static_cast<T &&>(val);    // PRQA S 4624
+        return static_cast<T &&>(val);    // PRQA S 4624, 3100
     }
 
     /// <!-- description -->

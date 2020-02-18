@@ -36,7 +36,7 @@ namespace bsl
     /// - We suppress this because A3-9-1 is referring to integer types, not
     ///   c-style strings.
     ///
-    using cstr_type = const char *;    // PRQA S 2428
+    using cstr_type = char const *;    // PRQA S 2428
 }
 
 #endif

@@ -96,7 +96,7 @@ namespace bsl
         ///   @throw throws if impl throws
         ///
         template<typename... ARGS>
-        explicit bind_apis(ARGS &&... args)
+        explicit bind_apis(ARGS &&... args) noexcept(false)
             : APIS<bind_apis<APIS, IMPL>>{}, m_d{bsl::forward<ARGS>(args)...}
         {}
 
@@ -131,7 +131,7 @@ namespace bsl
         ///   @throw throws if impl throws
         ///
         constexpr static IMPL &
-        impl(APIS<bind_apis<APIS, IMPL>> &apis)
+        impl(APIS<bind_apis<APIS, IMPL>> &apis) noexcept(false)
         {
             return static_cast<bind_apis<APIS, IMPL> *>(&apis)->m_d;    // PRQA S 3070
         }
@@ -167,9 +167,9 @@ namespace bsl
         ///   @throw throws if impl throws
         ///
         constexpr static IMPL const &
-        impl(APIS<bind_apis<APIS, IMPL>> const &apis)
+        impl(APIS<bind_apis<APIS, IMPL>> const &apis) noexcept(false)
         {
-            return static_cast<bind_apis<APIS, IMPL> const *>(&apis)->m_d;    // PRQA S 3070
+            return static_cast<bind_apis<APIS, IMPL> const *>(&apis)->m_d;    // PRQA S 3070, 2841
         }
 
     private:

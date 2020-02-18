@@ -64,7 +64,7 @@ namespace bsl
     ///
     template<typename T, typename... ARGS>
     [[maybe_unused]] constexpr T *
-    construct_at(void *const ptr, ARGS &&... args)
+    construct_at(void *const ptr, ARGS &&... args) noexcept(false)
     {
         return new (ptr) T{bsl::forward<ARGS>(args)...};    // PRQA S 5217, 3058
     }

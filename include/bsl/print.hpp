@@ -30,7 +30,7 @@
 
 #include <cstdio>    // PRQA S 5188
 #include "forward.hpp"
-#include "cstr_type.hpp"
+#include "cstdint.hpp"
 
 namespace bsl
 {
@@ -52,13 +52,11 @@ namespace bsl
     ///   @param fmt the format string that defines what to print
     ///   @param args the associated arguments for the given format string
     ///
-    template<typename... ARGS>
+    template<typename CharT, bsl::uintmax N, typename... ARGS>
     constexpr void
-    print(cstr_type const fmt, ARGS &&... args) noexcept
+    print(CharT const (&fmt)[N], ARGS &&... args) noexcept
     {
-        if (nullptr != fmt) {
-            std::printf(fmt, bsl::forward<ARGS>(args)...);
-        }
+        std::printf(fmt, bsl::forward<ARGS>(args)...); // PRQA S 4919, 3840, 4632, 3804
     }
 }
 

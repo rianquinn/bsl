@@ -283,7 +283,7 @@ namespace bsl
         /// <!-- exceptions -->
         ///   @throw throws if T or E's copy constructor throws
         ///
-        constexpr result(result const &o)    // PRQA S 4285, 2023
+        constexpr result(result const &o) noexcept(false)    // PRQA S 4285, 2023
             : m_which{o.m_which}             // PRQA S 4050
         {
             if (details::result_type::contains_t == m_which) {
@@ -337,10 +337,10 @@ namespace bsl
             : m_which{o.m_which}                 // PRQA S 4050
         {
             if (details::result_type::contains_t == m_which) {
-                construct_at<T>(&m_t, bsl::move(o.m_t));
+                bsl::discard(construct_at<T>(&m_t, bsl::move(o.m_t)));
             }
             else {
-                construct_at<E>(&m_e, bsl::move(o.m_e));
+                bsl::discard(construct_at<E>(&m_e, bsl::move(o.m_e)));
             }
         }
 
@@ -376,7 +376,7 @@ namespace bsl
         ///   @throw throws if T or E's copy constructor throws
         ///
         [[maybe_unused]] constexpr result &
-        operator=(result const &o) &
+        operator=(result const &o) &noexcept(false)
         {
             result tmp{o};
             exchange(*this, tmp);
@@ -576,7 +576,7 @@ namespace bsl
         ///   - We suppress this because A2-7-3 states that all class members
         ///     should be documented. This is clearly documented.
         ///
-        union    // PRQA S 2176, 2026
+        union    // PRQA S 2176, 2026, 2177
         {
             /// @brief stores T when not storing an error code
             T m_t;

@@ -59,8 +59,8 @@ namespace bsl
         static_assert(bsl::is_pointer<bsl::add_pointer_t<bool>>::value);
         static_assert(bsl::is_pointer<bsl::add_pointer_t<bool &>>::value);
         static_assert(bsl::is_pointer<bsl::add_pointer_t<bool &&>>::value);
-        static_assert(bsl::is_pointer<bsl::add_pointer_t<const bool>>::value);
-        static_assert(bsl::is_pointer<bsl::add_pointer_t<const bool &>>::value);
+        static_assert(bsl::is_pointer<bsl::add_pointer_t<bool const>>::value);
+        static_assert(bsl::is_pointer<bsl::add_pointer_t<bool const &>>::value);
 
         static_assert(bsl::is_same<bsl::add_pointer_t<bool>, bool *>::value);
         static_assert(bsl::is_same<bsl::add_pointer_t<bool &>, bool *>::value);

@@ -79,7 +79,11 @@ namespace bsl
 bsl::int32
 main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept    // PRQA S 1067
 {
-    return static_cast<bsl::int32>(bsl::entry({argc, argv}));
+    if ((0 != argc) && (nullptr != argv)) {
+        return static_cast<bsl::int32>(bsl::entry({argc, argv}));
+    }
+
+    return 1;
 }
 
 #endif

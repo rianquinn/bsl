@@ -47,10 +47,10 @@ namespace bsl
     ///
     template<typename T>
     constexpr void
-    destroy_at(T * const ptr)
+    destroy_at(T * const ptr) noexcept(false) // PRQA S 4215
     {
         if (nullptr != ptr) {
-            ptr->T::~T();
+            ptr->T::~T(); // PRQA S 3803
         }
     }
 }

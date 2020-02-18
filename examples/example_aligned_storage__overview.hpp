@@ -49,8 +49,9 @@ namespace bsl
     {
         bsl::discard(args);
 
-        bsl::aligned_storage_t<0x1000, 0x1000> const page{};
+        constexpr bsl::aligned_storage_t<0x1000, 0x1000> page{};
         static_assert(sizeof(page) == 0x1000);
+        bsl::discard(page);
 
         return bsl::exit_code::exit_success;
     }

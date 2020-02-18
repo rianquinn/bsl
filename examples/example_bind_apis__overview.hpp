@@ -79,6 +79,7 @@ namespace bsl
         }
 
         if (auto const impl = example_implementation::make(invalid_answer).get_if()) {
+            bsl::discard(impl);
             bsl::print("failure\n");
         }
         else {
