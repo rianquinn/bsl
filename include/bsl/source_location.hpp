@@ -120,8 +120,8 @@ namespace bsl
         ///
         static constexpr source_location
         current(
-            file_type const current_file = BSL_BUILTIN_FILE, // PRQA S 3842
-            func_type const current_func = BSL_BUILTIN_FUNCTION, // PRQA S 3842
+            file_type const current_file = BSL_BUILTIN_FILE,        // PRQA S 3842
+            func_type const current_func = BSL_BUILTIN_FUNCTION,    // PRQA S 3842
             line_type const current_line = BSL_BUILTIN_LINE) noexcept
         {
             return {current_file, current_func, current_line};

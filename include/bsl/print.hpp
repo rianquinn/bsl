@@ -56,7 +56,7 @@ namespace bsl
     constexpr void
     print(CharT const (&fmt)[N], ARGS &&... args) noexcept
     {
-        std::printf(fmt, bsl::forward<ARGS>(args)...); // PRQA S 4919, 3840, 4632, 3804
+        std::printf(fmt, bsl::forward<ARGS>(args)...);    // PRQA S 4919, 3840, 4632, 3804
     }
 }
 

@@ -94,7 +94,7 @@ namespace bsl
         ///
         template<typename T, enable_if_t<is_integral<T>::value> = true>
         explicit constexpr byte(T const t) noexcept    // --
-            : m_data{static_cast<bsl::uint8>(t)} // PRQA S 2906
+            : m_data{static_cast<bsl::uint8>(t)}       // PRQA S 2906
         {}
 
         /// <!-- description -->

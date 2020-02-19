@@ -1,65 +1,34 @@
 [[rules]]
-name      = "check for digraphs"
-pattern   = '<%|%>|<:|:>|%:'
-forbidden = '<%|%>|<:|:>|%:'
-ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
-hint      = "digraphs <%, %>, <:, :>, %: and %:%: are not allowed"
-includes  = ["**/*.hpp", "**/*.cpp"]
-
-[[rules]]
-name      = "check for C-style comments"
-pattern   = '(/\*/?([^/]|[^*]/)*\*/)'
-forbidden = '(/\*/?([^/]|[^*]/)*\*/)'
-hint      = "C-style comments are not allowed"
-includes  = ["**/*.hpp", "**/*.cpp"]
-
-[[rules]]
-name      = "check for octal"
-pattern   = '\D0[1-7][0-7]*'
-forbidden = '\D0[1-7][0-7]*'
-ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
-hint      = "octal literals are not allowed"
-includes  = ["**/*.hpp", "**/*.cpp"]
-
-[[rules]]
-name      = "check for octal escapes"
-pattern   = '\\0[1-7][0-7]*'
-forbidden = '\\0[1-7][0-7]*'
-ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)'
-hint      = "octal escapes are not allowed"
-includes  = ["**/*.hpp", "**/*.cpp"]
-
-[[rules]]
 name      = "check for signed hex constants"
-pattern   = '0[xX][0-9a-fA-F]+[^0-9a-fA-FU]'
-forbidden = '0[xX][0-9a-fA-F]+[^0-9a-fA-FU]'
+pattern   = "0[xX][0-9a-fA-F']+"
+required  = "0[xX][0-9a-fA-F']+U"
 ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
 hint      = "hex constants must end in U"
 includes  = ["**/*.hpp", "**/*.cpp"]
 
-[[rules]]
-name      = "check for lowercase hex"
-pattern   = '0[xX][0-9a-fA-F]*[a-f][0-9a-fA-F]*'
-forbidden = '0[xX][0-9a-fA-F]*[a-f][0-9a-fA-F]*'
-ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
-hint      = "hex constants must be in uppercase"
-includes  = ["**/*.hpp", "**/*.cpp"]
+# [[rules]]
+# name      = "check for lowercase hex"
+# pattern   = '0[xX][0-9a-fA-F]*[a-f][0-9a-fA-F]*'
+# forbidden = '0[xX][0-9a-fA-F]*[a-f][0-9a-fA-F]*'
+# ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
+# hint      = "hex constants must be in uppercase"
+# includes  = ["**/*.hpp", "**/*.cpp"]
 
-[[rules]]
-name      = "check for wchar_t"
-pattern   = 'wchar_t|[\t ]L"'
-forbidden = 'wchar_t|[\t ]L"'
-ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)'
-hint      = 'wchar_t, L<string> and L<char> are not allowed'
-includes  = ["**/*.hpp", "**/*.cpp"]
+# [[rules]]
+# name      = "check for wchar_t"
+# pattern   = 'wchar_t|[\t ]L"'
+# forbidden = 'wchar_t|[\t ]L"'
+# ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)'
+# hint      = 'wchar_t, L<string> and L<char> are not allowed'
+# includes  = ["**/*.hpp", "**/*.cpp"]
 
-[[rules]]
-name      = "check for wchar_t"
-pattern   = "[\t ]L'"
-forbidden = "[\t ]L'"
-ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)'
-hint      = 'wchar_t, L<string> and L<char> are not allowed'
-includes  = ["**/*.hpp", "**/*.cpp"]
+# [[rules]]
+# name      = "check for wchar_t"
+# pattern   = "[\t ]L'"
+# forbidden = "[\t ]L'"
+# ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)'
+# hint      = 'wchar_t, L<string> and L<char> are not allowed'
+# includes  = ["**/*.hpp", "**/*.cpp"]
 
 # [[rules]]
 # name      = "check for proper use of int8_t"

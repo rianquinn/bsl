@@ -51,7 +51,7 @@ namespace bsl
         bsl::discard(args);
 
         using example_decay_f_type = bsl::int32(bsl::int32);
-        using example_decay_fp_type = bsl::int32(*)(bsl::int32);
+        using example_decay_fp_type = bsl::int32 (*)(bsl::int32);
 
         static_assert(is_same<decay_t<bsl::int32>, bsl::int32>::value);
         static_assert(is_same<decay_t<bsl::int32 &>, bsl::int32>::value);

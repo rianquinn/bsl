@@ -284,7 +284,7 @@ namespace bsl
         ///   @throw throws if T or E's copy constructor throws
         ///
         constexpr result(result const &o) noexcept(false)    // PRQA S 4285, 2023
-            : m_which{o.m_which}             // PRQA S 4050
+            : m_which{o.m_which}                             // PRQA S 4050
         {
             if (details::result_type::contains_t == m_which) {
                 construct_at<T>(&m_t, o.m_t);
@@ -376,7 +376,8 @@ namespace bsl
         ///   @throw throws if T or E's copy constructor throws
         ///
         [[maybe_unused]] constexpr result &
-        operator=(result const &o) &noexcept(false)
+            operator=(result const &o) &
+            noexcept(false)
         {
             result tmp{o};
             exchange(*this, tmp);

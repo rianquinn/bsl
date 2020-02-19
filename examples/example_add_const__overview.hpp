@@ -29,9 +29,8 @@
 #include <bsl/exit_code.hpp>
 #include <bsl/arguments.hpp>
 
-#include <bsl/is_const.hpp>
 #include <bsl/add_const.hpp>
-#include <bsl/remove_const.hpp>
+#include <bsl/is_same.hpp>
 
 namespace bsl
 {
@@ -51,10 +50,16 @@ namespace bsl
     {
         bsl::discard(args);
 
-        static_assert(bsl::is_const<bsl::add_const_t<bool>>::value);
-        static_assert(bsl::is_const<bsl::add_const_t<bool const>>::value);
-        static_assert(!bsl::is_const<bsl::remove_const_t<bool>>::value);
-        static_assert(!bsl::is_const<bsl::remove_const_t<bool const>>::value);
+        bsl::int32 const testvar{012};
+        bsl::discard(testvar);
+
+        /* hello */
+
+        static_assert(is_same<add_const_t<bsl::int32>, bsl::int32 const>::value);
+        static_assert(is_same<add_const_t<bsl::int32 *>, bsl::int32 *const>::value);
+        static_assert(is_same<add_const_t<bsl::int32 &>, bsl::int32 &>::value);
+        static_assert(is_same<add_const_t<bsl::int32(bsl::int32)>, bsl::int32(bsl::int32)>::value);
+        static_assert(is_same<add_const_t<bsl::int32 const>, bsl::int32 const>::value);
 
         return bsl::exit_code::exit_success;
     }
