@@ -51,17 +51,17 @@ namespace bsl
     template<typename T>
     using remove_extent_t = typename remove_extent<T>::type;
 
-    /// @cond
+    /// @cond --
 
     template<typename T>
-    struct remove_extent<T[]> final : public type_identity<T>
+    struct remove_extent<T[]> final : public type_identity<T>    // NOLINT
     {};
 
     template<typename T, bsl::uintmax N>
-    struct remove_extent<T[N]> final : public type_identity<T>
+    struct remove_extent<T[N]> final : public type_identity<T>    // NOLINT
     {};
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

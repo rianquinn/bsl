@@ -48,7 +48,7 @@ namespace bsl
         static constexpr bool value{false};
     };
 
-    /// @cond
+    /// @cond --
 
     template<>
     struct is_void<void> final
@@ -64,7 +64,7 @@ namespace bsl
         static constexpr bool value{true};
     };
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

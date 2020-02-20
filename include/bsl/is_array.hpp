@@ -50,23 +50,23 @@ namespace bsl
         static constexpr bool value{false};
     };
 
-    /// @cond
+    /// @cond --
 
     template<typename T>
-    struct is_array<T[]> final
+    struct is_array<T[]> final    // NOLINT
     {
         /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 
     template<typename T, bsl::uintmax N>
-    struct is_array<T[N]> final
+    struct is_array<T[N]> final    // NOLINT
     {
         /// @brief the boolean that answers the type trait query
         static constexpr bool value{true};
     };
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

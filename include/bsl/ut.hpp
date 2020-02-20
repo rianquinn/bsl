@@ -61,25 +61,25 @@ namespace bsl
     }
 
     /// <!-- description -->
-    ///   @brief Outputs a message and returns bsl::exit_code::exit_success
+    ///   @brief Outputs a message and returns bsl::exit_success
     ///
     /// <!-- contracts -->
     ///   @pre none
     ///   @post none
     ///
     /// <!-- inputs/outputs -->
-    ///   @return returns bsl::exit_code::exit_success
+    ///   @return returns bsl::exit_success
     ///
     template<typename T = void>
     bsl::exit_code
     ut_success() noexcept
     {
-        printf("%s%s%s\n", green, "All tests passed", reset_color);
-        return bsl::exit_code::exit_success;
+        bsl::print("%s%s%s\n", green, "All tests passed", reset_color);
+        return bsl::exit_success;
     }
 
     /// <!-- description -->
-    ///   @brief Outputs a message and returns bsl::exit_code::exit_success
+    ///   @brief Outputs a message and returns bsl::exit_success
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -93,10 +93,10 @@ namespace bsl
     void
     ut_failure(sloc_type const &sloc = here()) noexcept
     {
-        printf("%s%s%s ", red, "[UNIT TEST FAILED]", reset_color);
-        printf("in test case \"");
-        printf("%s%s%s", magenta, details::ut_current_test_case(), reset_color);
-        printf("\"\n");
+        bsl::print("%s%s%s ", red, "[UNIT TEST FAILED]", reset_color);
+        bsl::print("in test case \"");
+        bsl::print("%s%s%s", magenta, details::ut_current_test_case(), reset_color);
+        bsl::print("\"\n");
         details::ut_output_here(sloc);
 
         std::exit(EXIT_FAILURE);    // PRQA S 5024
@@ -122,10 +122,10 @@ namespace bsl
     ut_check(const bool test, sloc_type const &sloc = here()) noexcept
     {
         if (!test) {
-            printf("%s%s%s ", red, "[CHECK FAILED]", reset_color);
-            printf("in test case \"");
-            printf("%s%s%s", magenta, details::ut_current_test_case(), reset_color);
-            printf("\"\n");
+            bsl::print("%s%s%s ", red, "[CHECK FAILED]", reset_color);
+            bsl::print("in test case \"");
+            bsl::print("%s%s%s", magenta, details::ut_current_test_case(), reset_color);
+            bsl::print("\"\n");
             details::ut_output_here(sloc);
 
             std::exit(EXIT_FAILURE);    // PRQA S 5024

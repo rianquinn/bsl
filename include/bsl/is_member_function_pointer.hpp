@@ -50,7 +50,7 @@ namespace bsl
         static constexpr bool value{false};
     };
 
-    /// @cond
+    /// @cond --
 
     template<typename T, typename U>
     struct is_member_function_pointer<T U::*> final
@@ -66,7 +66,7 @@ namespace bsl
         static constexpr bool value{is_function<T>::value};
     };
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

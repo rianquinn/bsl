@@ -59,13 +59,13 @@ namespace bsl
     template<bool B, typename T = bool>
     using enable_if_t = typename enable_if<B, T>::type;
 
-    /// @cond
+    /// @cond --
 
     template<typename T>
     class enable_if<true, T> final : public type_identity<T>
     {};
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

@@ -50,40 +50,4 @@ namespace bsl
     bsl::exit_code entry(bsl::arguments const &args) noexcept;
 }    // namespace bsl
 
-/// <!-- description -->
-///   @brief Provides the "main" function for any C++ application. Instead of
-///     the user providing the main function, we provide it for them, ensuring
-///     that the proper init/fini code is executed. We also ensure the user
-///     has clean input/output from our provided bsl::entry function, including
-///     a safer arguments list and well defined output exit codes.
-///   @include main/overview.cpp
-///
-///   SUPPRESSION: PRQA 1067 - exception required
-///   - We suppress this because A3-1-1 states that functions defined in a
-///     header should either be a template, or inline, preventing multiple
-///     definitons. In this case, the main() function cannot be defined as
-///     a template or inline. Since we do not support shared libraries, this
-///     is a none issue as the compiler will detect the presence of shared
-///     libraries and error out. In otherwords, this is being checked by
-///     the compiler, so PRQA doesn't need to perform this check for us.
-///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
-///
-/// <!-- inputs/outputs -->
-///   @param argc the total number of arguments passed to the application
-///   @param argv the arguments passed to the application
-///   @return 0 on success, non-0 on failure
-///
-bsl::int32
-main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept    // PRQA S 1067
-{
-    if ((0 != argc) && (nullptr != argv)) {
-        return static_cast<bsl::int32>(bsl::entry({argc, argv}));
-    }
-
-    return 1;
-}
-
 #endif

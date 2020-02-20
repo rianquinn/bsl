@@ -52,7 +52,7 @@ namespace bsl
     template<bool B, typename T, typename U>
     using conditional_t = typename conditional<B, T, U>::type;
 
-    /// @cond
+    /// @cond --
 
     template<typename T, typename U>
     class conditional<true, T, U> final : public type_identity<T>
@@ -62,7 +62,7 @@ namespace bsl
     class conditional<false, T, U> final : public type_identity<U>
     {};
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

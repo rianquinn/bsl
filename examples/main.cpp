@@ -23,140 +23,141 @@
 /// SOFTWARE.
 
 #include <bsl/discard.hpp>
-#include <bsl/main.hpp>
 
-#include "example_add_const__overview.hpp"
-#include "example_add_lvalue_reference__overview.hpp"
-#include "example_add_pointer__overview.hpp"
-#include "example_add_rvalue_reference__overview.hpp"
-#include "example_aligned_storage__overview.hpp"
-#include "example_bind_apis__overview.hpp"
-#include "example_byte__overview.hpp"
-#include "example_conditional__overview.hpp"
-#include "example_construct_at__overview.hpp"
-#include "example_decay__overview.hpp"
-#include "example_destroy_at__overview.hpp"
-#include "example_discard__overview.hpp"
-#include "example_enable_if__overview.hpp"
-#include "example_is_assignable__overview.hpp"
-#include "example_is_base_of__overview.hpp"
-#include "example_is_bool__overview.hpp"
-#include "example_is_class__overview.hpp"
-#include "example_is_compound__overview.hpp"
-#include "example_is_const__overview.hpp"
-#include "example_is_constructible__overview.hpp"
-#include "example_is_copy_assignable__overview.hpp"
-#include "example_is_copy_constructible__overview.hpp"
-#include "example_is_default_constructible__overview.hpp"
-#include "example_is_empty__overview.hpp"
-#include "example_is_enum__overview.hpp"
-#include "example_is_function__overview.hpp"
-#include "example_is_fundamental__overview.hpp"
-#include "example_is_integral__overview.hpp"
-#include "example_is_lvalue_reference__overview.hpp"
-#include "example_is_member_function_pointer__overview.hpp"
-#include "example_is_member_object_pointer__overview.hpp"
-#include "example_is_member_pointer__overview.hpp"
-#include "example_is_move_assignable__overview.hpp"
-#include "example_is_move_constructible__overview.hpp"
-#include "example_is_nullptr__overview.hpp"
-#include "example_is_object__overview.hpp"
-#include "example_is_pod__overview.hpp"
-#include "example_is_pointer__overview.hpp"
-#include "example_is_reference__overview.hpp"
-#include "example_is_rvalue_reference__overview.hpp"
-#include "example_is_same__overview.hpp"
-#include "example_is_scalar__overview.hpp"
-#include "example_is_signed__overview.hpp"
-#include "example_is_standard_layout__overview.hpp"
-#include "example_is_trivial__overview.hpp"
-#include "example_is_unsigned__overview.hpp"
-#include "example_is_void__overview.hpp"
-#include "example_make_signed__overview.hpp"
-#include "example_make_unsigned__overview.hpp"
-#include "example_move__overview.hpp"
-#include "example_remove_const__overview.hpp"
-#include "example_remove_pointer__overview.hpp"
-#include "example_remove_reference__overview.hpp"
-#include "example_swap__overview.hpp"
-#include "example_type_identity__overview.hpp"
-#include "example_underlying_type__overview.hpp"
+#include "example_add_const_overview.hpp"
+#include "example_add_lvalue_reference_overview.hpp"
+#include "example_add_pointer_overview.hpp"
+#include "example_add_rvalue_reference_overview.hpp"
+#include "example_aligned_storage_overview.hpp"
+#include "example_bind_apis_overview.hpp"
+#include "example_byte_overview.hpp"
+#include "example_conditional_overview.hpp"
+#include "example_construct_at_overview.hpp"
+#include "example_decay_overview.hpp"
+#include "example_destroy_at_overview.hpp"
+#include "example_discard_overview.hpp"
+#include "example_enable_if_overview.hpp"
+#include "example_is_assignable_overview.hpp"
+#include "example_is_base_of_overview.hpp"
+#include "example_is_bool_overview.hpp"
+#include "example_is_class_overview.hpp"
+#include "example_is_compound_overview.hpp"
+#include "example_is_const_overview.hpp"
+#include "example_is_constructible_overview.hpp"
+#include "example_is_copy_assignable_overview.hpp"
+#include "example_is_copy_constructible_overview.hpp"
+#include "example_is_default_constructible_overview.hpp"
+#include "example_is_empty_overview.hpp"
+#include "example_is_enum_overview.hpp"
+#include "example_is_function_overview.hpp"
+#include "example_is_fundamental_overview.hpp"
+#include "example_is_integral_overview.hpp"
+#include "example_is_lvalue_reference_overview.hpp"
+#include "example_is_member_function_pointer_overview.hpp"
+#include "example_is_member_object_pointer_overview.hpp"
+#include "example_is_member_pointer_overview.hpp"
+#include "example_is_move_assignable_overview.hpp"
+#include "example_is_move_constructible_overview.hpp"
+#include "example_is_nullptr_overview.hpp"
+#include "example_is_object_overview.hpp"
+#include "example_is_pod_overview.hpp"
+#include "example_is_pointer_overview.hpp"
+#include "example_is_reference_overview.hpp"
+#include "example_is_rvalue_reference_overview.hpp"
+#include "example_is_same_overview.hpp"
+#include "example_is_scalar_overview.hpp"
+#include "example_is_signed_overview.hpp"
+#include "example_is_standard_layout_overview.hpp"
+#include "example_is_trivial_overview.hpp"
+#include "example_is_unsigned_overview.hpp"
+#include "example_is_void_overview.hpp"
+#include "example_make_signed_overview.hpp"
+#include "example_make_unsigned_overview.hpp"
+#include "example_move_overview.hpp"
+#include "example_remove_const_overview.hpp"
+#include "example_remove_pointer_overview.hpp"
+#include "example_remove_reference_overview.hpp"
+#include "example_swap_overview.hpp"
+#include "example_type_identity_overview.hpp"
+#include "example_underlying_type_overview.hpp"
 
-namespace bsl
+/// <!-- description -->
+///   @brief Provides the example's main function
+///
+/// <!-- contracts -->
+///   @pre none
+///   @post none
+///
+/// <!-- inputs/outputs -->
+///   @param argc the total number of arguments passed to the application
+///   @param argv the arguments passed to the application
+///   @return 0 on success, non-0 on failure
+///
+bsl::exit_code
+main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
 {
-    /// <!-- description -->
-    ///   @brief Provides the example's main function
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    bsl::exit_code
-    entry(bsl::arguments const &args) noexcept
-    {
-        bsl::discard(args);
-
-        bsl::discard(example_add_const__overview(args));
-        bsl::discard(example_add_lvalue_reference__overview(args));
-        bsl::discard(example_add_pointer__overview(args));
-        bsl::discard(example_add_rvalue_reference__overview(args));
-        bsl::discard(example_aligned_storage__overview(args));
-        bsl::discard(example_bind_apis__overview(args));
-        bsl::discard(example_byte__overview(args));
-        bsl::discard(example_conditional__overview(args));
-        bsl::discard(example_construct_at__overview(args));
-        bsl::discard(example_decay__overview(args));
-        bsl::discard(example_destroy_at__overview(args));
-        bsl::discard(example_discard__overview(args));
-        bsl::discard(example_enable_if__overview(args));
-        bsl::discard(example_is_assignable__overview(args));
-        bsl::discard(example_is_base_of__overview(args));
-        bsl::discard(example_is_bool__overview(args));
-        bsl::discard(example_is_class__overview(args));
-        bsl::discard(example_is_compound__overview(args));
-        bsl::discard(example_is_const__overview(args));
-        bsl::discard(example_is_constructible__overview(args));
-        bsl::discard(example_is_copy_assignable__overview(args));
-        bsl::discard(example_is_copy_constructible__overview(args));
-        bsl::discard(example_is_default_constructible__overview(args));
-        bsl::discard(example_is_empty__overview(args));
-        bsl::discard(example_is_enum__overview(args));
-        bsl::discard(example_is_function__overview(args));
-        bsl::discard(example_is_fundamental__overview(args));
-        bsl::discard(example_is_integral__overview(args));
-        bsl::discard(example_is_lvalue_reference__overview(args));
-        bsl::discard(example_is_member_function_pointer__overview(args));
-        bsl::discard(example_is_member_object_pointer__overview(args));
-        bsl::discard(example_is_member_pointer__overview(args));
-        bsl::discard(example_is_move_assignable__overview(args));
-        bsl::discard(example_is_move_constructible__overview(args));
-        bsl::discard(example_is_nullptr__overview(args));
-        bsl::discard(example_is_object__overview(args));
-        bsl::discard(example_is_pod__overview(args));
-        bsl::discard(example_is_pointer__overview(args));
-        bsl::discard(example_is_reference__overview(args));
-        bsl::discard(example_is_rvalue_reference__overview(args));
-        bsl::discard(example_is_same__overview(args));
-        bsl::discard(example_is_scalar__overview(args));
-        bsl::discard(example_is_signed__overview(args));
-        bsl::discard(example_is_standard_layout__overview(args));
-        bsl::discard(example_is_trivial__overview(args));
-        bsl::discard(example_is_unsigned__overview(args));
-        bsl::discard(example_is_void__overview(args));
-        bsl::discard(example_make_signed__overview(args));
-        bsl::discard(example_make_unsigned__overview(args));
-        bsl::discard(example_move__overview(args));
-        bsl::discard(example_remove_const__overview(args));
-        bsl::discard(example_remove_pointer__overview(args));
-        bsl::discard(example_remove_reference__overview(args));
-        bsl::discard(example_swap__overview(args));
-        bsl::discard(example_type_identity__overview(args));
-        bsl::discard(example_underlying_type__overview(args));
-
-        return bsl::exit_code::exit_success;
+    if ((0 == argc) || (nullptr == argv)) {
+        return bsl::exit_failure;
     }
+
+    bsl::arguments args{argc, argv};
+
+    bsl::discard(bsl::example_add_const_overview(args));
+    bsl::discard(bsl::example_add_lvalue_reference_overview(args));
+    bsl::discard(bsl::example_add_pointer_overview(args));
+    bsl::discard(bsl::example_add_rvalue_reference_overview(args));
+    bsl::discard(bsl::example_aligned_storage_overview(args));
+    bsl::discard(bsl::example_bind_apis_overview(args));
+    bsl::discard(bsl::example_byte_overview(args));
+    bsl::discard(bsl::example_conditional_overview(args));
+    bsl::discard(bsl::example_construct_at_overview(args));
+    bsl::discard(bsl::example_decay_overview(args));
+    bsl::discard(bsl::example_destroy_at_overview(args));
+    bsl::discard(bsl::example_discard_overview(args));
+    bsl::discard(bsl::example_enable_if_overview(args));
+    bsl::discard(bsl::example_is_assignable_overview(args));
+    bsl::discard(bsl::example_is_base_of_overview(args));
+    bsl::discard(bsl::example_is_bool_overview(args));
+    bsl::discard(bsl::example_is_class_overview(args));
+    bsl::discard(bsl::example_is_compound_overview(args));
+    bsl::discard(bsl::example_is_const_overview(args));
+    bsl::discard(bsl::example_is_constructible_overview(args));
+    bsl::discard(bsl::example_is_copy_assignable_overview(args));
+    bsl::discard(bsl::example_is_copy_constructible_overview(args));
+    bsl::discard(bsl::example_is_default_constructible_overview(args));
+    bsl::discard(bsl::example_is_empty_overview(args));
+    bsl::discard(bsl::example_is_enum_overview(args));
+    bsl::discard(bsl::example_is_function_overview(args));
+    bsl::discard(bsl::example_is_fundamental_overview(args));
+    bsl::discard(bsl::example_is_integral_overview(args));
+    bsl::discard(bsl::example_is_lvalue_reference_overview(args));
+    bsl::discard(bsl::example_is_member_function_pointer_overview(args));
+    bsl::discard(bsl::example_is_member_object_pointer_overview(args));
+    bsl::discard(bsl::example_is_member_pointer_overview(args));
+    bsl::discard(bsl::example_is_move_assignable_overview(args));
+    bsl::discard(bsl::example_is_move_constructible_overview(args));
+    bsl::discard(bsl::example_is_nullptr_overview(args));
+    bsl::discard(bsl::example_is_object_overview(args));
+    bsl::discard(bsl::example_is_pod_overview(args));
+    bsl::discard(bsl::example_is_pointer_overview(args));
+    bsl::discard(bsl::example_is_reference_overview(args));
+    bsl::discard(bsl::example_is_rvalue_reference_overview(args));
+    bsl::discard(bsl::example_is_same_overview(args));
+    bsl::discard(bsl::example_is_scalar_overview(args));
+    bsl::discard(bsl::example_is_signed_overview(args));
+    bsl::discard(bsl::example_is_standard_layout_overview(args));
+    bsl::discard(bsl::example_is_trivial_overview(args));
+    bsl::discard(bsl::example_is_unsigned_overview(args));
+    bsl::discard(bsl::example_is_void_overview(args));
+    bsl::discard(bsl::example_make_signed_overview(args));
+    bsl::discard(bsl::example_make_unsigned_overview(args));
+    bsl::discard(bsl::example_move_overview(args));
+    bsl::discard(bsl::example_remove_const_overview(args));
+    bsl::discard(bsl::example_remove_pointer_overview(args));
+    bsl::discard(bsl::example_remove_reference_overview(args));
+    bsl::discard(bsl::example_swap_overview(args));
+    bsl::discard(bsl::example_type_identity_overview(args));
+    bsl::discard(bsl::example_underlying_type_overview(args));
+
+    return bsl::exit_success;
 }

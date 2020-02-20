@@ -27,38 +27,27 @@
 #include <bsl/add_const.hpp>
 #include <bsl/is_same.hpp>
 
-namespace bsl
+namespace
 {
     class myclass final
     {};
+}
 
-    /// <!-- description -->
-    ///   @brief Provides the example's main function
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    bsl::exit_code
-    entry(bsl::arguments const &args) noexcept
-    {
-        bsl::discard(args);
+int
+main()
+{
+    using namespace bsl;
 
-        static_assert(is_same<add_const_t<bsl::int32>, bsl::int32 const>::value);
-        static_assert(is_same<add_const_t<bsl::int32 *>, bsl::int32 *const>::value);
-        static_assert(is_same<add_const_t<bsl::int32 &>, bsl::int32 &>::value);
-        static_assert(is_same<add_const_t<bsl::int32(bsl::int32)>, bsl::int32(bsl::int32)>::value);
-        static_assert(is_same<add_const_t<bsl::int32 const>, bsl::int32 const>::value);
-        static_assert(is_same<add_const_t<myclass>, myclass const>::value);
-        static_assert(is_same<add_const_t<myclass *>, myclass *const>::value);
-        static_assert(is_same<add_const_t<myclass &>, myclass &>::value);
-        static_assert(is_same<add_const_t<myclass(myclass)>, myclass(myclass)>::value);
-        static_assert(is_same<add_const_t<myclass const>, myclass const>::value);
+    static_assert(is_same<add_const_t<bsl::int32>, bsl::int32 const>::value);
+    static_assert(is_same<add_const_t<bsl::int32 *>, bsl::int32 *const>::value);
+    static_assert(is_same<add_const_t<bsl::int32 &>, bsl::int32 &>::value);
+    static_assert(is_same<add_const_t<bsl::int32(bsl::int32)>, bsl::int32(bsl::int32)>::value);
+    static_assert(is_same<add_const_t<bsl::int32 const>, bsl::int32 const>::value);
+    static_assert(is_same<add_const_t<myclass>, myclass const>::value);
+    static_assert(is_same<add_const_t<myclass *>, myclass *const>::value);
+    static_assert(is_same<add_const_t<myclass &>, myclass &>::value);
+    static_assert(is_same<add_const_t<myclass(myclass)>, myclass(myclass)>::value);
+    static_assert(is_same<add_const_t<myclass const>, myclass const>::value);
 
-        return bsl::ut_success();
-    }
+    return bsl::ut_success();
 }

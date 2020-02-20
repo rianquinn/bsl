@@ -28,18 +28,16 @@
 #include <bsl/cstdint.hpp>
 #include <bsl/result.hpp>
 
-namespace bsl
+    namespace bsl
 {
     /// @class bsl::example_implementation
     ///
     /// <!-- description -->
     ///   @brief Defines a test class for the bind_apis API.
     ///
-    /// <!-- template parameters -->
-    ///   @tparam IMPL defines the implementation's type
-    ///
     class example_implementation final
     {
+    public:
         /// <!-- description -->
         ///   @brief Tests a constructor that takes arguments
         ///
@@ -54,7 +52,6 @@ namespace bsl
             : m_answer{answer}
         {}
 
-    public:
         /// <!-- description -->
         ///   @brief Tests a constructor that takes arguments, and is capable
         ///     of returning an error. Note that if a constructor always
@@ -70,13 +67,13 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param answer the answer to all of life's questions.
         ///
-        static bsl::result<example_implementation>
+        [[nodiscard]] static bsl::result<example_implementation>
         make(bsl::int32 const answer) noexcept
         {
             constexpr bsl::int32 valid_answer{42};
 
             if (answer == valid_answer) {
-                return bsl::result{example_implementation{valid_answer}};
+                return {bsl::in_place, valid_answer};
             }
 
             return {bsl::errc_failure, bsl::here()};
@@ -93,16 +90,11 @@ namespace bsl
         ///   @param answer the answer to all of life's questions.
         ///   @return true if the answer is correct, false otherwise.
         ///
-        static constexpr bool
+        [[nodiscard]] static constexpr bool
         static_func_example(bsl::int32 const answer) noexcept
         {
             constexpr bsl::int32 valid_answer{42};
-
-            if (answer == valid_answer) {
-                return true;
-            }
-
-            return false;
+            return answer == valid_answer;
         }
 
         /// <!-- description -->
@@ -116,14 +108,10 @@ namespace bsl
         ///   @param answer the answer to all of life's questions.
         ///   @return true if the answer is correct, false otherwise.
         ///
-        constexpr bool
+        [[nodiscard]] constexpr bool
         member_func_example(bsl::int32 const answer) const noexcept
         {
-            if (answer == m_answer) {
-                return true;
-            }
-
-            return false;
+            return answer == m_answer;
         }
 
     private:

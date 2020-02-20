@@ -62,7 +62,7 @@ namespace bsl
         ///   @param answer the answer to all of life's questions.
         ///   @return true if the answer is correct, false otherwise.
         ///
-        static constexpr bool
+        [[nodiscard]] static constexpr bool
         static_func_example(bsl::int32 const answer) noexcept
         {
             return IMPL::impl_type::static_func_example(answer);
@@ -79,7 +79,7 @@ namespace bsl
         ///   @param answer the answer to all of life's questions.
         ///   @return true if the answer is correct, false otherwise.
         ///
-        constexpr bool
+        [[nodiscard]] constexpr bool
         member_func_example(bsl::int32 const answer) const noexcept
         {
             return IMPL::impl(*this).member_func_example(answer);

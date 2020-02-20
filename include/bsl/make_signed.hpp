@@ -58,7 +58,7 @@ namespace bsl
     template<typename T>
     using make_signed_t = typename make_signed<T>::type;
 
-    /// @cond
+    /// @cond --
 
     template<>
     class make_signed<bsl::uint8> final : public type_identity<bsl::int8>
@@ -92,7 +92,7 @@ namespace bsl
     class make_signed<bsl::uint64 const> final : public type_identity<bsl::int64 const>
     {};
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

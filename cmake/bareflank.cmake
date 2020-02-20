@@ -242,12 +242,6 @@ endif()
 # ------------------------------------------------------------------------------
 
 if(CMAKE_BUILD_TYPE STREQUAL CLANG_TIDY)
-    if(NOT DEFINED ENABLE_CLANG_TIDY)
-        set(ENABLE_CLANG_TIDY ON)
-    endif()
-endif()
-
-if(ENABLE_CLANG_TIDY)
     bf_find_program(CMAKE_CXX_CLANG_TIDY "clang-tidy" "https://clang.llvm.org/extra/clang-tidy/")
     message(STATUS "Tool [Clang Tidy]: ${BF_ENABLED} - ${CMAKE_CXX_CLANG_TIDY}")
 endif()
@@ -292,6 +286,17 @@ if(ENABLE_CLANG_FORMAT)
     message(STATUS "Tool [Clang Format]: ${BF_ENABLED} - ${BF_CLANG_FORMAT}")
 else()
     message(STATUS "Tool [Clang Format]: ${BF_DISABLED}")
+endif()
+
+# ------------------------------------------------------------------------------
+# llvm-cov
+# ------------------------------------------------------------------------------
+
+if(CMAKE_BUILD_TYPE STREQUAL COVERAGE)
+    bf_find_program(BF_GRCOV "grcov" "https://github.com/mozilla/grcov")
+    message(STATUS "Tool [grcov]: ${BF_ENABLED} - ${BF_GRCOV}")
+else()
+    message(STATUS "Tool [grcov]: ${BF_DISABLED}")
 endif()
 
 # ------------------------------------------------------------------------------
@@ -356,13 +361,7 @@ endif()
 # asan
 # ------------------------------------------------------------------------------
 
-if(CMAKE_BUILD_TYPE STREQUAL ASAN AND UNIX)
-    if(NOT DEFINED ENABLE_ASAN)
-        set(ENABLE_ASAN ON)
-    endif()
-endif()
-
-if(ENABLE_ASAN)
+if(CMAKE_BUILD_TYPE STREQUAL ASAN)
     message(STATUS "Tool [Google's ASAN]: ${BF_ENABLED}")
 else()
     message(STATUS "Tool [Google's ASAN]: ${BF_DISABLED}")
@@ -372,13 +371,7 @@ endif()
 # ubsan
 # ------------------------------------------------------------------------------
 
-if(CMAKE_BUILD_TYPE STREQUAL UBSAN AND UNIX)
-    if(NOT DEFINED ENABLE_UBSAN)
-        set(ENABLE_UBSAN ON)
-    endif()
-endif()
-
-if(ENABLE_UBSAN)
+if(CMAKE_BUILD_TYPE STREQUAL UBSAN)
     message(STATUS "Tool [Google's UBSAN]: ${BF_ENABLED}")
 else()
     message(STATUS "Tool [Google's UBSAN]: ${BF_DISABLED}")
@@ -388,22 +381,34 @@ endif()
 # c++ flags
 # ------------------------------------------------------------------------------
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -fno-exceptions -fno-rtti")
+string(APPEND CMAKE_CXX_FLAGS
+    "${CMAKE_CXX_FLAGS} "
+    "-fno-exceptions "
+    "-fno-rtti "
+    "-fcomment-block-commands=include "
+    "-fcomment-block-commands=cond "
+    "-fcomment-block-commands=endcond "
+    "-Weverything "
+    "-Wno-c++98-compat "
+    "-Wno-padded "
+    "-Wno-weak-vtables "
+    "-Wno-ctad-maybe-unsupported "
+)
 
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -Werror -Wall -Wextra -Wpedantic")
-set(CMAKE_LINKER_FLAGS_RELEASE "-O3 -DNDEBUG -Werror -Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_DEBUG "-Og -g -Wall -Wextra -Wpedantic")
-set(CMAKE_LINKER_FLAGS_DEBUG "-Og -g -Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_CLANG_TIDY "-O0 -Werror -Weverything -fcomment-block-commands=include -Wno-c++98-compat -Wno-padded -Wno-weak-vtables")
-set(CMAKE_LINKER_FLAGS_CLANG_TIDY "-O0 -Werror -Weverything -fcomment-block-commands=include -Wno-c++98-compat -Wno-padded -Wno-weak-vtables")
-set(CMAKE_CXX_FLAGS_PERFORCE "-O0 -Werror -Wall -Wextra -Wpedantic")
-set(CMAKE_LINKER_FLAGS_PERFORCE "-O0 -Werror -Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address -Wall -Wextra -Wpedantic")
-set(CMAKE_LINKER_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address -Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_UBSAN "-Og -g -fsanitize=undefined -Wall -Wextra -Wpedantic")
-set(CMAKE_LINKER_FLAGS_UBSAN "-Og -g -fsanitize=undefined -Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_COVERAGE "-O0 --coverage -fprofile-arcs -ftest-coverage -Wall -Wextra -Wpedantic")
-set(CMAKE_LINKER_FLAGS_COVERAGE "-O0 --coverage -fprofile-arcs -ftest-coverage -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -Werror")
+set(CMAKE_LINKER_FLAGS_RELEASE "-O3 -DNDEBUG -Werror")
+set(CMAKE_CXX_FLAGS_DEBUG "-Og -g")
+set(CMAKE_LINKER_FLAGS_DEBUG "-Og -g")
+set(CMAKE_CXX_FLAGS_CLANG_TIDY "-O0 -Werror")
+set(CMAKE_LINKER_FLAGS_CLANG_TIDY "-O0 -Werror")
+set(CMAKE_CXX_FLAGS_PERFORCE "-O0 -Werror")
+set(CMAKE_LINKER_FLAGS_PERFORCE "-O0 -Werror")
+set(CMAKE_CXX_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address")
+set(CMAKE_LINKER_FLAGS_ASAN "-Og -g -fno-omit-frame-pointer -fsanitize=address")
+set(CMAKE_CXX_FLAGS_UBSAN "-Og -g -fsanitize=undefined")
+set(CMAKE_LINKER_FLAGS_UBSAN "-Og -g -fsanitize=undefined")
+set(CMAKE_CXX_FLAGS_COVERAGE "-O0 -fprofile-arcs -ftest-coverage")
+set(CMAKE_LINKER_FLAGS_COVERAGE "-O0 -fprofile-arcs -ftest-coverage")
 
 message(STATUS "CXX Flags:${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}}")
 
@@ -424,6 +429,10 @@ if(NOT DEFINED BSL_DEBUG_LEVEL)
     set(BSL_DEBUG_LEVEL "debug_level_t::verbosity_level_0")
 endif()
 
+if(NOT DEFINED BSL_PAGE_SIZE)
+    set(BSL_PAGE_SIZE "0x1000U")
+endif()
+
 if(CMAKE_BUILD_TYPE STREQUAL PERFORCE)
     set(BSL_BUILTIN_FILE "\"file\"")
     set(BSL_BUILTIN_FUNCTION "\"function\"")
@@ -436,6 +445,7 @@ endif()
 
 list(APPEND BSL_DEFAULT_DEFINES
     BSL_DEBUG_LEVEL=${BSL_DEBUG_LEVEL}
+    BSL_PAGE_SIZE=${BSL_PAGE_SIZE}
     BSL_BUILTIN_FILE=${BSL_BUILTIN_FILE}
     BSL_BUILTIN_FUNCTION=${BSL_BUILTIN_FUNCTION}
     BSL_BUILTIN_LINE=${BSL_BUILTIN_LINE}

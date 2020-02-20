@@ -50,7 +50,7 @@ namespace bsl
     template<typename T>
     using add_lvalue_reference_t = typename add_lvalue_reference<T>::type;
 
-    /// @cond
+    /// @cond --
 
     template<typename T>
     class add_lvalue_reference<T &> final : public type_identity<T &>
@@ -64,7 +64,7 @@ namespace bsl
     class add_lvalue_reference<void> final : public type_identity<void>
     {};
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

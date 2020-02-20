@@ -50,7 +50,7 @@ namespace bsl
     template<typename T>
     using remove_pointer_t = typename remove_pointer<T>::type;
 
-    /// @cond
+    /// @cond --
 
     template<typename T>
     struct remove_pointer<T *> final : public type_identity<T>
@@ -60,7 +60,7 @@ namespace bsl
     struct remove_pointer<T *const> final : public type_identity<T>
     {};
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

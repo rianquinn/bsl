@@ -31,10 +31,8 @@
 #include "../forward.hpp"
 #include "../main.hpp"
 #include "../new.hpp"
+#include "../print.hpp"
 #include "../source_location.hpp"
-
-#include <cstdio>     // PRQA S 5188
-#include <cstdlib>    // PRQA S 5188
 
 namespace bsl
 {
@@ -62,11 +60,11 @@ namespace bsl
         void
         ut_output_here(sloc_type const &sloc) noexcept
         {
-            printf("  --> ");
-            printf("%s%s%s", yellow, sloc.file_name(), reset_color);
-            printf(": ");
-            printf("%s%d%s", cyan, sloc.line(), reset_color);
-            printf("\n");
+            bsl::print("  --> ");
+            bsl::print("%s%s%s", yellow, sloc.file_name(), reset_color);
+            bsl::print(": ");
+            bsl::print("%s%d%s", cyan, sloc.line(), reset_color);
+            bsl::print("\n");
         }
     }
 }

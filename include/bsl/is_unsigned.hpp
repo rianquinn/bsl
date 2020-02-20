@@ -56,7 +56,7 @@ namespace bsl
         static constexpr bool value{false};
     };
 
-    /// @cond
+    /// @cond --
 
     template<>
     struct is_unsigned<bsl::uint8> final
@@ -114,7 +114,7 @@ namespace bsl
         static constexpr bool value{true};
     };
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

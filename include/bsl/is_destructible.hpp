@@ -68,7 +68,7 @@ namespace bsl
             is_detected<details::destructor_type, remove_all_extents_t<T>>::value};
     };
 
-    /// @cond
+    /// @cond --
 
     template<typename T, bool B>
     struct is_destructible<T, true, B> final
@@ -84,7 +84,7 @@ namespace bsl
         static constexpr bool value{true};
     };
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

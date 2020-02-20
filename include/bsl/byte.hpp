@@ -173,7 +173,7 @@ namespace bsl
         ///     static_cast to perform the conversion.
         ///
         template<typename T = bsl::uint32, enable_if_t<is_integral<T>::value> = true>
-        constexpr T
+        [[nodiscard]] constexpr T
         to_integer() const noexcept
         {
             return static_cast<T>(m_data);
@@ -239,7 +239,7 @@ namespace bsl
     ///   @return returns byte tmp{b}; tmp <<= shift;
     ///
     template<typename SHIFT_T, enable_if_t<is_unsigned<SHIFT_T>::value> = true>
-    constexpr byte const
+    constexpr byte
     operator<<(byte const &b, SHIFT_T const shift) noexcept
     {
         byte tmp{b};
@@ -262,7 +262,7 @@ namespace bsl
     ///   @return returns byte tmp{b}; tmp >>= shift;
     ///
     template<typename SHIFT_T, enable_if_t<is_unsigned<SHIFT_T>::value> = true>
-    constexpr byte const
+    constexpr byte
     operator>>(byte const &b, SHIFT_T const shift) noexcept
     {
         byte tmp{b};
@@ -343,7 +343,7 @@ namespace bsl
     ///   @param rhs the right hand side of the binary operation
     ///   @return returns tmp{lhs}; tmp |= rhs;
     ///
-    constexpr byte const
+    constexpr byte
     operator|(byte const &lhs, byte const &rhs) noexcept
     {
         byte tmp{lhs};
@@ -364,7 +364,7 @@ namespace bsl
     ///   @param rhs the right hand side of the binary operation
     ///   @return returns tmp{lhs}; tmp &= rhs;
     ///
-    constexpr byte const operator&(byte const &lhs, byte const &rhs) noexcept
+    constexpr byte operator&(byte const &lhs, byte const &rhs) noexcept
     {
         byte tmp{lhs};
         tmp &= rhs;
@@ -384,7 +384,7 @@ namespace bsl
     ///   @param rhs the right hand side of the binary operation
     ///   @return returns tmp{lhs}; tmp ^= rhs;
     ///
-    constexpr byte const
+    constexpr byte
     operator^(byte const &lhs, byte const &rhs) noexcept
     {
         byte tmp{lhs};
@@ -404,7 +404,7 @@ namespace bsl
     ///   @param b the bsl::byte to invert
     ///   @return returns byte{~b.to_integer()}
     ///
-    constexpr byte const
+    constexpr byte
     operator~(byte const &b) noexcept
     {
         return byte{~b.to_integer()};

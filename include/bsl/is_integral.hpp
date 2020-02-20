@@ -56,7 +56,7 @@ namespace bsl
         static constexpr bool value{false};
     };
 
-    /// @cond
+    /// @cond --
 
     template<>
     struct is_integral<bool> final
@@ -184,7 +184,7 @@ namespace bsl
         static constexpr bool value{true};
     };
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

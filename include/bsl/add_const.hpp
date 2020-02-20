@@ -50,13 +50,13 @@ namespace bsl
     template<typename T>
     using add_const_t = typename add_const<T>::type;
 
-    /// @cond
+    /// @cond --
 
     template<typename T>
     class add_const<T const> final : public type_identity<T const>
     {};
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

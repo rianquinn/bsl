@@ -57,11 +57,11 @@ namespace bsl
     ///   @post none
     ///
     /// <!-- inputs/outputs -->
-    ///   @tparam T the type that defines the parameter being discarded
+    ///   @tparam ARGS the types that define the provided arguments to ignore
     ///
     template<typename... ARGS>
     constexpr void
-    discard(ARGS &&...) noexcept    // PRQA S 4649, 2028
+    discard(ARGS &&...) noexcept    // PRQA S 4649, 2028 // NOLINT
     {}
 }
 

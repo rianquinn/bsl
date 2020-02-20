@@ -54,7 +54,7 @@ namespace bsl
     ///
     /// <!-- template parameters -->
     ///   @tparam T the nullable type
-    ///   @tparam TAG the type used to store whether or not T is present
+    ///   @tparam E the error type to use
     ///
     template<typename T, typename E = errc_type<>>
     class result final
@@ -64,6 +64,47 @@ namespace bsl
         static_assert(!is_move_constructible<T>::value || is_nothrow_move_constructible<T>::value);
         static_assert(!is_move_constructible<E>::value || is_nothrow_move_constructible<E>::value);
         static_assert(is_trivially_destructible<E>::value);
+
+        /// <!-- description -->
+        ///   @brief Swaps *this with other
+        ///   @include result/exchange.cpp
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param lhs the left hand side of the exchange
+        ///   @param rhs the right hand side of the exchange
+        ///
+        static constexpr void
+        private_swap(result &lhs, result &rhs) noexcept
+        {
+            if (details::result_type::contains_t == lhs.m_which) {
+                if (details::result_type::contains_t == rhs.m_which) {
+                    bsl::swap(lhs.m_t, rhs.m_t);
+                }
+                else {
+                    E tmp_e{bsl::move(rhs.m_e)};
+                    construct_at<T>(&rhs.m_t, bsl::move(lhs.m_t));
+                    destroy_at(&lhs.m_t);
+                    construct_at<E>(&lhs.m_e, bsl::move(tmp_e));
+                }
+            }
+            else {
+                if (details::result_type::contains_t == rhs.m_which) {
+                    E tmp_e{bsl::move(lhs.m_e)};
+                    construct_at<T>(&lhs.m_t, bsl::move(rhs.m_t));
+                    destroy_at(&rhs.m_t);
+                    construct_at<E>(&rhs.m_e, bsl::move(tmp_e));
+                }
+                else {
+                    bsl::swap(lhs.m_e, rhs.m_e);
+                }
+            }
+
+            bsl::swap(lhs.m_which, rhs.m_which);
+        }
 
     public:
         /// <!-- description -->
@@ -163,7 +204,9 @@ namespace bsl
         ///   @throw throws if T's constructor throws
         ///
         template<typename... ARGS>
-        constexpr result(bsl::in_place_t const &ip, ARGS &&... args) noexcept    // PRQA S 2023
+        constexpr result(    // NOLINT
+            bsl::in_place_t const &ip,
+            ARGS &&... args) noexcept    // PRQA S 2023
             : m_which{details::result_type::contains_t}, m_t{bsl::forward<ARGS>(args)...}
         {
             bsl::discard(ip);
@@ -380,7 +423,7 @@ namespace bsl
             noexcept(false)
         {
             result tmp{o};
-            exchange(*this, tmp);
+            private_swap(*this, tmp);
             return *this;
         }
 
@@ -401,50 +444,8 @@ namespace bsl
             noexcept
         {
             result tmp{bsl::move(o)};
-            exchange(*this, tmp);
+            private_swap(*this, tmp);
             return *this;
-        }
-
-        /// <!-- description -->
-        ///   @brief Exchanges (i.e., swaps) *this with other. We use the
-        ///     name exchange instead of swap to prevent name collisions.
-        ///   @include result/exchange.cpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param lhs the left hand side of the exchange
-        ///   @param rhs the right hand side of the exchange
-        ///
-        static constexpr void
-        exchange(result &lhs, result &rhs) noexcept
-        {
-            if (details::result_type::contains_t == lhs.m_which) {
-                if (details::result_type::contains_t == rhs.m_which) {
-                    bsl::swap(lhs.m_t, rhs.m_t);
-                }
-                else {
-                    E tmp_e{bsl::move(rhs.m_e)};
-                    construct_at<T>(&rhs.m_t, bsl::move(lhs.m_t));
-                    destroy_at(&lhs.m_t);
-                    construct_at<E>(&lhs.m_e, bsl::move(tmp_e));
-                }
-            }
-            else {
-                if (details::result_type::contains_t == rhs.m_which) {
-                    E tmp_e{bsl::move(lhs.m_e)};
-                    construct_at<T>(&lhs.m_t, bsl::move(rhs.m_t));
-                    destroy_at(&rhs.m_t);
-                    construct_at<E>(&rhs.m_e, bsl::move(tmp_e));
-                }
-                else {
-                    bsl::swap(lhs.m_e, rhs.m_e);
-                }
-            }
-
-            bsl::swap(lhs.m_which, rhs.m_which);
         }
 
         /// <!-- description -->
@@ -469,8 +470,9 @@ namespace bsl
         ///   @return Returns a handle to T if this object contains T,
         ///     otherwise it returns a nullptr.
         ///
-        constexpr T *
-        get_if() noexcept
+        [[nodiscard]] constexpr T *
+            get_if() &
+            noexcept
         {
             if (details::result_type::contains_t == m_which) {
                 return &m_t;    // PRQA S 4024
@@ -478,6 +480,16 @@ namespace bsl
 
             return nullptr;
         }
+
+        /// <!-- description -->
+        ///   @brief Prevents the use of get_if() on temporary objects, which
+        ///     would result in UB.
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a handle to T if this object contains T,
+        ///     otherwise it returns a nullptr.
+        ///
+        [[nodiscard]] constexpr T *get_if() &&noexcept = delete;
 
         /// <!-- description -->
         ///   @brief Returns a handle to T if this object contains T,
@@ -492,8 +504,8 @@ namespace bsl
         ///   @return Returns a handle to T if this object contains T,
         ///     otherwise it returns a nullptr.
         ///
-        constexpr T const *
-        get_if() const noexcept
+        [[nodiscard]] constexpr T const *
+        get_if() const &noexcept
         {
             if (details::result_type::contains_t == m_which) {
                 return &m_t;
@@ -501,6 +513,16 @@ namespace bsl
 
             return nullptr;
         }
+
+        /// <!-- description -->
+        ///   @brief Prevents the use of get_if() on temporary objects, which
+        ///     would result in UB.
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a handle to T if this object contains T,
+        ///     otherwise it returns a nullptr.
+        ///
+        [[nodiscard]] constexpr T const *get_if() const &&noexcept = delete;
 
         /// <!-- description -->
         ///   @brief Returns an error code if this object contains E,
@@ -516,7 +538,7 @@ namespace bsl
         ///   @return Returns an error code if this object contains E,
         ///     otherwise it returns "or".
         ///
-        constexpr E
+        [[nodiscard]] constexpr E
         errc(E const &fallback = E{}) const noexcept
         {
             if (details::result_type::contains_e == m_which) {

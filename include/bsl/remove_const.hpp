@@ -50,13 +50,13 @@ namespace bsl
     template<typename T>
     using remove_const_t = typename remove_const<T>::type;
 
-    /// @cond
+    /// @cond --
 
     template<typename T>
     struct remove_const<T const> final : public type_identity<T>
     {};
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

@@ -58,7 +58,7 @@ namespace bsl
         static constexpr T max{};
     };
 
-    /// @cond
+    /// @cond --
 
     template<>
     struct numeric_limits<bool> final
@@ -141,7 +141,7 @@ namespace bsl
         static constexpr bsl::uint64 max{0xFF'FF'FF'FF'FF'FF'FF'FFU};
     };
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

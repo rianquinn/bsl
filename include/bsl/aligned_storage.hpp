@@ -61,7 +61,7 @@ namespace bsl
         struct type final
         {
             /// @brief an array that provides the underlying storage
-            alignas(A) byte m_data[N];
+            alignas(A) byte m_data[N];    // NOLINT
         };
     };
 

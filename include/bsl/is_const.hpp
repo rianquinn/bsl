@@ -48,7 +48,7 @@ namespace bsl
         static constexpr bool value{false};
     };
 
-    /// @cond
+    /// @cond --
 
     template<typename T>
     struct is_const<T const> final
@@ -57,7 +57,7 @@ namespace bsl
         static constexpr bool value{true};
     };
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

@@ -28,7 +28,7 @@
 #ifndef BSL_IS_BASE_OF_HPP
 #define BSL_IS_BASE_OF_HPP
 
-#include "details/remove_cv.hpp"
+#include "remove_const.hpp"
 
 namespace bsl
 {

@@ -56,7 +56,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return returns the value of m_data1;
         ///
-        constexpr bool
+        [[nodiscard]] constexpr bool
         get() const noexcept
         {
             return m_data1;

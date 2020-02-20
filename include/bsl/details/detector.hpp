@@ -40,7 +40,9 @@ namespace bsl
         ///   @include detector/overview.cpp
         ///
         /// <!-- template parameters -->
-        ///   @tparam T the type to query
+        ///   @tparam Default unused
+        ///   @tparam Op the operation to detect
+        ///   @tparam Args the arguments to the operation to detect
         ///
         template<typename Default, typename, template<typename...> class Op, typename... Args>
         struct detector final
@@ -49,7 +51,7 @@ namespace bsl
             static constexpr bool value{false};
         };
 
-        /// @cond
+        /// @cond --
 
         template<typename Default, template<typename...> class Op, typename... Args>
         struct detector<Default, bsl::void_t<Op<Args...>>, Op, Args...> final
@@ -58,7 +60,7 @@ namespace bsl
             static constexpr bool value{true};
         };
 
-        /// @endcond
+        /// @endcond --
     }
 }
 

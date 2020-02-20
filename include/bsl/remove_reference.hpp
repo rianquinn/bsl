@@ -50,7 +50,7 @@ namespace bsl
     template<typename T>
     using remove_reference_t = typename remove_reference<T>::type;
 
-    /// @cond
+    /// @cond --
 
     template<typename T>
     struct remove_reference<T &> final : public type_identity<T>
@@ -60,7 +60,7 @@ namespace bsl
     struct remove_reference<T &&> final : public type_identity<T>
     {};
 
-    /// @endcond
+    /// @endcond --
 }
 
 #endif

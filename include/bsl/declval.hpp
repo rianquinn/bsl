@@ -42,7 +42,7 @@ namespace bsl
     ///   @post none
     ///
     /// <!-- inputs/outputs -->
-    ///   @tparam The type T to get a reference type from
+    ///   @tparam T the type T to get a reference type from
     ///   @return Cannot be called and thus never returns a value. The return
     ///     type is T&& unless T is (possibly cv-qualified) void, in which
     ///     case the return type is T.

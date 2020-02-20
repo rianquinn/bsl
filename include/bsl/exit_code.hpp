@@ -32,20 +32,14 @@
 
 namespace bsl
 {
-    /// @enum bsl::exit_code
-    ///
-    /// <!-- description -->
-    ///   @brief Defines the supported exit codes that are passed to bsl::exit
-    ///     or returned from bsl_main(). These are similar to EXIT_SUCCESS
-    ///     and EXIT_FAILURE without the use of macros.
-    ///
-    enum class exit_code : bsl::int32
-    {
-        /// @brief represents a successful exit
-        exit_success = 0,
-        /// @brief represents a failed exit
-        exit_failure = 1
-    };
+    /// @brief defines the exit code type
+    using exit_code = bsl::int32;
+
+    /// @brief represents a successful exit
+    constexpr exit_code exit_success{0};
+
+    /// @brief represents a failed exit
+    constexpr exit_code exit_failure{1};
 }
 
 #endif

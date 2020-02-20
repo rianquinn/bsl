@@ -45,9 +45,25 @@
 #  exclusive with readability-const-return-type, which identifies a known
 #  performance issue.
 #
+# -cppcoreguidelines-owning-memory
+#
+#  We do not support dynamic memory, and this is triggering on placement-new
+#  which should not be wrapped in a gsl::owner as the returned pointer is not
+#  an owned.
+#
+# -cppcoreguidelines-pro-type-union-access
+#
+#  AUTOSAR allows for tagged unions, which we use to implement variant like
+#  wrappers. PRQA can handle this check for us.
+#
+# -cert-oop54-cpp,-warnings-as-errors
+#
+#  This produces a false positive when assignment is implemented using the
+#  temporary swap method, which AUTOSAR requires.
+#
 
-Checks: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon,-modernize-use-trailing-return-type,-readability-redundant-member-init,-cert-dcl21-cpp'
-WarningsAsErrors: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon,-modernize-use-trailing-return-type,-readability-redundant-member-init,-cert-dcl21-cpp'
+Checks: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon,-modernize-use-trailing-return-type,-readability-redundant-member-init,-cert-dcl21-cpp,-cppcoreguidelines-owning-memory,-cppcoreguidelines-pro-type-union-access,-cert-oop54-cpp,-warnings-as-errors'
+WarningsAsErrors: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon,-modernize-use-trailing-return-type,-readability-redundant-member-init,-cert-dcl21-cpp,-cppcoreguidelines-owning-memory,-cppcoreguidelines-pro-type-union-access,-cert-oop54-cpp,-warnings-as-errors'
 HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false
 CheckOptions:

@@ -28,7 +28,7 @@
 #ifndef BSL_CSTDINT_HPP
 #define BSL_CSTDINT_HPP
 
-#include <stdint.h>
+#include <stdint.h>    // NOLINT
 
 namespace bsl
 {
