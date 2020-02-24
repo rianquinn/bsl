@@ -306,6 +306,10 @@ if(CMAKE_BUILD_TYPE STREQUAL COVERAGE)
         COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_SOURCE_DIR}
         bash ${CMAKE_BINARY_DIR}/codecov.sh -t ${BSL_CODECOV_TOKEN} -f ${CMAKE_BINARY_DIR}/coverage.info
     )
+    add_custom_command(TARGET info
+        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   ninja codecov-upload                  checks source against regex rules"
+        VERBATIM
+    )
 else()
     message(STATUS "Tool [grcov]: ${BF_DISABLED}")
 endif()
