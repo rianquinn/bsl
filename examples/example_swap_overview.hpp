@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_SWAP_OVERVIEW_HPP
 #define EXAMPLE_SWAP_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/swap.hpp>
 
 namespace bsl
@@ -40,20 +36,12 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_swap_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_swap_overview() noexcept
     {
-        bsl::discard(args);
-
         bool var1{true};
         bool var2{false};
         bsl::swap(var1, var2);
-
-        return bsl::exit_success;
     }
 }
 

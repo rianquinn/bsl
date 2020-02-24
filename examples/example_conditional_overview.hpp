@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_CONDITIONAL_OVERVIEW_HPP
 #define EXAMPLE_CONDITIONAL_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/is_same.hpp>
 #include <bsl/conditional.hpp>
 
@@ -41,19 +37,11 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_conditional_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_conditional_overview() noexcept
     {
-        bsl::discard(args);
-
         static_assert(bsl::is_same<bsl::conditional_t<true, bool, void>, bool>::value);
         static_assert(bsl::is_same<bsl::conditional_t<false, bool, void>, void>::value);
-
-        return bsl::exit_success;
     }
 }
 

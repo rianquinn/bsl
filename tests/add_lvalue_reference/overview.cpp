@@ -22,51 +22,35 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef BSL_DETAILS_UT_HELPERS_HPP
-#define BSL_DETAILS_UT_HELPERS_HPP
+#include <bsl/ut.hpp>
 
-#include "../color.hpp"
-#include "../cstr_type.hpp"
-#include "../discard.hpp"
-#include "../forward.hpp"
-#include "../main.hpp"
-#include "../new.hpp"
-#include "../print.hpp"
-#include "../source_location.hpp"
+#include <bsl/add_pointer.hpp>
+#include <bsl/is_same.hpp>
 
-namespace bsl
+namespace
 {
-    namespace details
-    {
-        using ut_test_handler_type = void (*)();
-
-        template<typename T = void>
-        cstr_type &
-        ut_current_test_case() noexcept
-        {
-            static cstr_type s_ut_current_test_case{};
-            return s_ut_current_test_case;
-        }
-
-        template<typename T = void>
-        ut_test_handler_type &
-        ut_reset_handler() noexcept
-        {
-            static ut_test_handler_type s_ut_reset_handler{};
-            return s_ut_reset_handler;
-        }
-
-        template<typename T = void>
-        void
-        ut_output_here(sloc_type const &sloc) noexcept
-        {
-            bsl::print("  --> ");
-            bsl::print("%s%s%s", yellow, sloc.file_name(), reset_color);
-            bsl::print(": ");
-            bsl::print("%s%d%s", cyan, sloc.line(), reset_color);
-            bsl::print("\n");
-        }
-    }
+    class myclass final
+    {};
 }
 
-#endif
+bsl::exit_code
+main()
+{
+    using namespace bsl;
+
+    static_assert(is_same<add_pointer_t<bool>, bool *>::value);
+    static_assert(is_same<add_pointer_t<bool *>, bool **>::value);
+    static_assert(is_same<add_pointer_t<bool const>, bool const *>::value);
+    static_assert(is_same<add_pointer_t<bool &>, bool *>::value);
+
+    static_assert(is_same<add_pointer_t<myclass>, myclass *>::value);
+    static_assert(is_same<add_pointer_t<myclass *>, myclass **>::value);
+    static_assert(is_same<add_pointer_t<myclass const>, myclass const *>::value);
+    static_assert(is_same<add_pointer_t<myclass &>, myclass *>::value);
+
+    static_assert(is_same<add_pointer_t<void>, void *>::value);
+    static_assert(is_same<add_pointer_t<void *>, void **>::value);
+    static_assert(is_same<add_pointer_t<void const>, void const *>::value);
+
+    return ut_success();
+}

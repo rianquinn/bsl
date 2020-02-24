@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_DECAY_OVERVIEW_HPP
 #define EXAMPLE_DECAY_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/decay.hpp>
 #include <bsl/is_same.hpp>
 
@@ -41,15 +37,9 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_decay_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_decay_overview() noexcept
     {
-        bsl::discard(args);
-
         using example_decay_f_type = bsl::int32(bsl::int32);
         using example_decay_fp_type = bsl::int32 (*)(bsl::int32);
 
@@ -59,8 +49,6 @@ namespace bsl
         static_assert(is_same<decay_t<bsl::int32 const &>, bsl::int32>::value);
         static_assert(is_same<decay_t<bsl::int32[1]>, bsl::int32 *>::value);    // NOLINT
         static_assert(is_same<decay_t<example_decay_f_type>, example_decay_fp_type>::value);
-
-        return bsl::exit_success;
     }
 }
 

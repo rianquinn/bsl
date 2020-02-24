@@ -25,12 +25,9 @@
 #ifndef EXAMPLE_ADD_CONST_OVERVIEW_HPP
 #define EXAMPLE_ADD_CONST_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/add_const.hpp>
 #include <bsl/is_same.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -41,22 +38,12 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_add_const_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_add_const_overview() noexcept
     {
-        bsl::discard(args);
-
-        static_assert(is_same<add_const_t<bsl::int32>, bsl::int32 const>::value);
-        static_assert(is_same<add_const_t<bsl::int32 *>, bsl::int32 *const>::value);
-        static_assert(is_same<add_const_t<bsl::int32 &>, bsl::int32 &>::value);
-        static_assert(is_same<add_const_t<bsl::int32(bsl::int32)>, bsl::int32(bsl::int32)>::value);
-        static_assert(is_same<add_const_t<bsl::int32 const>, bsl::int32 const>::value);
-
-        return bsl::exit_success;
+        if constexpr (bsl::is_same<bsl::add_const_t<bool>, bool const>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

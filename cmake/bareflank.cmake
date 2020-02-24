@@ -292,9 +292,20 @@ endif()
 # llvm-cov
 # ------------------------------------------------------------------------------
 
+if(NOT DEFINED BSL_CODECOV_TOKEN)
+    set(BSL_CODECOV_TOKEN "3127698f-3d70-4a23-a00f-cd7e54768434")
+endif()
+
 if(CMAKE_BUILD_TYPE STREQUAL COVERAGE)
     bf_find_program(BF_GRCOV "grcov" "https://github.com/mozilla/grcov")
     message(STATUS "Tool [grcov]: ${BF_ENABLED} - ${BF_GRCOV}")
+    add_custom_target(codecov-upload
+        COMMAND ctest --output-on-failure
+        COMMAND grcov ${CMAKE_BINARY_DIR} -s ${CMAKE_SOURCE_DIR} -t lcov --branch -o ${CMAKE_BINARY_DIR}/coverage.info
+        COMMAND curl -s https://codecov.io/bash > ${CMAKE_BINARY_DIR}/codecov.sh
+        COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_SOURCE_DIR}
+        bash ${CMAKE_BINARY_DIR}/codecov.sh -t ${BSL_CODECOV_TOKEN} -f ${CMAKE_BINARY_DIR}/coverage.info
+    )
 else()
     message(STATUS "Tool [grcov]: ${BF_DISABLED}")
 endif()

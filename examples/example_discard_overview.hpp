@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_DISCARD_OVERVIEW_HPP
 #define EXAMPLE_DISCARD_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 namespace bsl
 {
     /// <!-- description -->
@@ -38,16 +34,9 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_discard_overview(bsl::arguments const &args) noexcept
-    {
-        bsl::discard(args);
-        return bsl::exit_success;
-    }
+    inline void
+    example_discard_overview() noexcept
+    {}
 }
 
 #endif

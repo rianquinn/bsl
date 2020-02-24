@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_IS_ASSIGNABLE_OVERVIEW_HPP
 #define EXAMPLE_IS_ASSIGNABLE_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/is_bool.hpp>
 #include <bsl/is_assignable.hpp>
 
@@ -41,19 +37,11 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_is_assignable_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_is_assignable_overview() noexcept
     {
-        bsl::discard(args);
-
         static_assert(bsl::is_assignable<bsl::is_bool<bool>, bsl::is_bool<bool>>::value);
         static_assert(!bsl::is_assignable<bsl::is_bool<bool>, bool>::value);
-
-        return bsl::exit_success;
     }
 }
 

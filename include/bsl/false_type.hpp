@@ -21,28 +21,19 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
+///
+/// @file false_type.hpp
+///
 
-#ifndef BSL_DETAILS_RESULT_TYPE_HPP
-#define BSL_DETAILS_RESULT_TYPE_HPP
+#ifndef BSL_FALSE_TYPE_HPP
+#define BSL_FALSE_TYPE_HPP
 
-#include "../cstdint.hpp"
+#include "bool_constant.hpp"
 
 namespace bsl
 {
-    namespace details
-    {
-        /// @enum bsl::details::result_type
-        ///
-        /// <!-- description -->
-        ///   @brief Defines what a bsl::result is currently storing. This is
-        ///     defined as a bsl::uint8 to ensure it is as small as possible.
-        ///
-        enum class result_type : bsl::uint8
-        {
-            contains_t,
-            contains_e
-        };
-    }
+    /// @brief provides a bool_constant that represents "false"
+    using false_type = bool_constant<false>;
 }
 
 #endif

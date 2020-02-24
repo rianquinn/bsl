@@ -33,7 +33,7 @@ namespace
     {};
 }
 
-int
+bsl::exit_code
 main()
 {
     using namespace bsl;

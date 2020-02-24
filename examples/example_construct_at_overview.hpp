@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_CONSTRUCT_AT_OVERVIEW_HPP
 #define EXAMPLE_CONSTRUCT_AT_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/construct_at.hpp>
 
 namespace bsl
@@ -40,19 +36,11 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_construct_at_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_construct_at_overview() noexcept
     {
-        bsl::discard(args);
-
         bsl::uint32 mydata{};
         bsl::discard(bsl::construct_at<bsl::uint32>(&mydata, 0U));
-
-        return bsl::exit_success;
     }
 }
 

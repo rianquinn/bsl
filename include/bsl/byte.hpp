@@ -54,7 +54,7 @@ namespace bsl
     ///     portion of the integer will be dropped using whatever mechanism the
     ///     compiler sees fit. If a safe integer type is needed, please use
     ///     the safe integer types provided by the BSL instead.
-    ///   @include byte/overview.cpp
+    ///   @include example_byte_overview.cpp
     ///
     class byte final
     {
@@ -68,7 +68,7 @@ namespace bsl
         ///     This is needed as aligned storage uses a bsl::byte as its
         ///     base type, and aligned storage is needed as a global resource
         ///     to support the bsl::manager.
-        ///   @include example_byte__overview.hpp
+        ///   @include example_byte_overview.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -82,7 +82,7 @@ namespace bsl
         ///     bsl::uint8. As such, if the integer type is signed, it will be
         ///     converted to an unsigned type, and if the integer type is
         ///     larger than a byte, data will be lost in the conversion.
-        ///   @include example_byte__overview.hpp
+        ///   @include example_byte_overview.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -161,7 +161,7 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the bsl::byte as a given integer type using a
         ///     static_cast to perform the conversion.
-        ///   @include example_byte__overview.hpp
+        ///   @include example_byte_overview.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -181,8 +181,46 @@ namespace bsl
     };
 
     /// <!-- description -->
+    ///   @brief The same as lhs.to_integer() == rhs.to_integer()
+    ///   @include example_byte_overview.hpp
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @param lhs the left hand side of the operator
+    ///   @param rhs the right hand side of the operator
+    ///   @return returns lhs.to_integer() == rhs.to_integer()
+    ///
+    constexpr bool
+    operator==(byte const &lhs, byte const &rhs) noexcept
+    {
+        return lhs.to_integer() == rhs.to_integer();
+    }
+
+    /// <!-- description -->
+    ///   @brief The same as !(lhs == rhs)
+    ///   @include example_byte_overview.hpp
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @param lhs the left hand side of the operator
+    ///   @param rhs the right hand side of the operator
+    ///   @return returns !(lhs == rhs)
+    ///
+    constexpr bool
+    operator!=(byte const &lhs, byte const &rhs) noexcept
+    {
+        return !(lhs == rhs);
+    }
+
+    /// <!-- description -->
     ///   @brief The same as b = byte{b.to_integer() << shift}
-    ///   @include example_byte__overview.hpp
+    ///   @include example_byte_overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -204,7 +242,7 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief The same as b = byte{b.to_integer() >> shift}
-    ///   @include example_byte__overview.hpp
+    ///   @include example_byte_overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -226,7 +264,7 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief The same as byte tmp{b}; tmp <<= shift;
-    ///   @include example_byte__overview.hpp
+    ///   @include example_byte_overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -249,7 +287,7 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief The same as byte tmp{b}; tmp >>= shift;
-    ///   @include example_byte__overview.hpp
+    ///   @include example_byte_overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -272,7 +310,7 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief The same as lhs = byte{lhs.to_integer() | rhs.to_integer()};
-    ///   @include example_byte__overview.hpp
+    ///   @include example_byte_overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -292,7 +330,7 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief The same as lhs = byte{lhs.to_integer() & rhs.to_integer()};
-    ///   @include example_byte__overview.hpp
+    ///   @include example_byte_overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -312,7 +350,7 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief The same as lhs = byte{lhs.to_integer() ^ rhs.to_integer()};
-    ///   @include example_byte__overview.hpp
+    ///   @include example_byte_overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -332,7 +370,7 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief The same as tmp{lhs}; tmp |= rhs;
-    ///   @include example_byte__overview.hpp
+    ///   @include example_byte_overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -353,7 +391,7 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief The same as tmp{lhs}; tmp &= rhs;
-    ///   @include example_byte__overview.hpp
+    ///   @include example_byte_overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -373,7 +411,7 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief The same as tmp{lhs}; tmp ^= rhs;
-    ///   @include example_byte__overview.hpp
+    ///   @include example_byte_overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -394,7 +432,7 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief The same as byte{~b.to_integer()}
-    ///   @include example_byte__overview.hpp
+    ///   @include example_byte_overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none

@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_IS_LVALUE_REFERENCE_OVERVIEW_HPP
 #define EXAMPLE_IS_LVALUE_REFERENCE_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/is_reference.hpp>
 #include <bsl/is_lvalue_reference.hpp>
 #include <bsl/is_rvalue_reference.hpp>
@@ -45,15 +41,9 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_is_lvalue_reference_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_is_lvalue_reference_overview() noexcept
     {
-        bsl::discard(args);
-
         static_assert(!bsl::is_reference<bool>::value);
         static_assert(!bsl::is_lvalue_reference<bool>::value);
         static_assert(!bsl::is_rvalue_reference<bool>::value);
@@ -87,8 +77,6 @@ namespace bsl
 
         static_assert(!bsl::is_reference<bsl::add_lvalue_reference_t<void>>::value);
         static_assert(!bsl::is_reference<bsl::add_rvalue_reference_t<void>>::value);
-
-        return bsl::exit_success;
     }
 }
 

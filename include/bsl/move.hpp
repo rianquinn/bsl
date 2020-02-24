@@ -38,10 +38,11 @@ namespace bsl
     ///     another object.
     ///   @include move/overview.cpp
     ///
-    /// <!-- notes -->
-    ///   @note This function, unlike most others, must be defined in the
-    ///     std:: namespace as Perforce expects this function to
-    ///     be defined here.
+    ///   SUPPRESSION: PRQA 4624 - false positive
+    ///   - We suppress this because A7-5-1 states that a function shall not
+    ///     return a pointer or reference to a parameter that is a const
+    ///     reference, and this is a false positive because this is the
+    ///     required definition for std::move
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -56,7 +57,7 @@ namespace bsl
     constexpr bsl::remove_reference_t<T> &&
     move(T &&val) noexcept
     {
-        return static_cast<bsl::remove_reference_t<T> &&>(val);
+        return static_cast<bsl::remove_reference_t<T> &&>(val);    // PRQA S 4624
     }
 }
 

@@ -26,67 +26,53 @@
 #include "test_bind_apis_apis.hpp"
 #include "test_bind_apis_impl.hpp"
 
-namespace bsl
+bsl::exit_code
+main()
 {
-    /// <!-- description -->
-    ///   @brief Provides the example's main function
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    bsl::exit_code
-    entry(bsl::arguments const &args) noexcept
-    {
-        bsl::discard(args);
+    using namespace bsl;
 
-        bsl::ut_scenario{"constructor"} = ([]() {
-            bsl::ut_given{} = ([]() {
-                bsl::ut_then{} = ([]() {
-                    bsl::ut_check(
-                        true == test_bind_apis<test_bind_apis_impl>::static_func_example(42));
-                    bsl::ut_check(
-                        false == test_bind_apis<test_bind_apis_impl>::static_func_example(43));
-                });
+    bsl::ut_scenario{"constructor"} = ([]() {
+        bsl::ut_given{} = ([]() {
+            bsl::ut_then{} = ([]() {
+                bsl::ut_check(test_bind_apis<test_bind_apis_impl>::static_func_example(42));
+                bsl::ut_check(!test_bind_apis<test_bind_apis_impl>::static_func_example(23));
             });
         });
+    });
 
-        bsl::ut_scenario{"constructor"} = ([]() {
-            bsl::ut_given{} = ([]() {
-                test_bind_apis<test_bind_apis_impl> const test{42};
+    bsl::ut_scenario{"constructor"} = ([]() {
+        bsl::ut_given{} = ([]() {
+            test_bind_apis<test_bind_apis_impl> const test{42};
+
+            bsl::ut_then{} = ([&test]() {
+                bsl::ut_check(test.member_func_example(42));
+                bsl::ut_check(!test.member_func_example(23));
+            });
+        });
+    });
+
+    bsl::ut_scenario{"make (constructor with error handling)"} = ([]() {
+        bsl::ut_given{} = ([]() {
+            auto res = test_bind_apis_impl::make(42);
+            if (auto const impl = res.get_if()) {
+                test_bind_apis<test_bind_apis_impl> const test{*impl};
 
                 bsl::ut_then{} = ([&test]() {
-                    bsl::ut_check(true == test.member_func_example(42));
-                    bsl::ut_check(false == test.member_func_example(43));
+                    bsl::ut_check(test.member_func_example(42));
+                    bsl::ut_check(!test.member_func_example(23));
                 });
-            });
+            }
         });
 
-        bsl::ut_scenario{"make (constructor with error handling)"} = ([]() {
-            bsl::ut_given{} = ([]() {
-                if (auto const impl = test_bind_apis_impl::make(42).get_if()) {
-                    test_bind_apis<test_bind_apis_impl> const test{*impl};
-
-                    bsl::ut_then{} = ([&test]() {
-                        bsl::ut_check(true == test.member_func_example(42));
-                        bsl::ut_check(false == test.member_func_example(43));
-                    });
-                }
-            });
-
-            bsl::ut_given{} = ([]() {
-                if (auto const impl = test_bind_apis_impl::make(43).get_if()) {
-                    bsl::ut_then{} = ([]() {
-                        return bsl::ut_failure();
-                    });
-                }
-            });
+        bsl::ut_given{} = ([]() {
+            auto res = test_bind_apis_impl::make(23);
+            if (auto const impl = res.get_if()) {
+                bsl::ut_then{} = ([]() {
+                    return bsl::ut_failure();
+                });
+            }
         });
+    });
 
-        return bsl::ut_success();
-    }
+    return bsl::ut_success();
 }

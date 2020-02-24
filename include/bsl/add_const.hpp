@@ -37,7 +37,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the member typedef type which is the same as T,
     ///     except that a topmost const qualifier is added.
-    ///   @include example_add_const__overview.cpp
+    ///   @include example_add_const_overview.cpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to add a const qualifier to

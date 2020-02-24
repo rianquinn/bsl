@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_REMOVE_POINTER_OVERVIEW_HPP
 #define EXAMPLE_REMOVE_POINTER_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/is_same.hpp>
 #include <bsl/is_pointer.hpp>
 #include <bsl/add_pointer.hpp>
@@ -43,15 +39,9 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_remove_pointer_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_remove_pointer_overview() noexcept
     {
-        bsl::discard(args);
-
         static_assert(!bsl::is_pointer<bool>::value);
         static_assert(!bsl::is_pointer<bool &>::value);
         static_assert(!bsl::is_pointer<bool &&>::value);
@@ -75,8 +65,6 @@ namespace bsl
         static_assert(bsl::is_same<bsl::remove_pointer_t<bool *>, bool>::value);
         static_assert(bsl::is_same<bsl::remove_pointer_t<bool const *>, bool const>::value);
         static_assert(bsl::is_same<bsl::remove_pointer_t<bool const *const>, bool const>::value);
-
-        return bsl::exit_success;
     }
 }
 

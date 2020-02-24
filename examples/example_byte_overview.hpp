@@ -25,13 +25,8 @@
 #ifndef EXAMPLE_BYTE_OVERVIEW_HPP
 #define EXAMPLE_BYTE_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/print.hpp>
 #include <bsl/byte.hpp>
-#include <bsl/is_pod.hpp>
 
 namespace bsl
 {
@@ -42,42 +37,11 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_byte_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_byte_overview() noexcept
     {
-        bsl::discard(args);
-        static_assert(is_pod<bsl::byte>::value);
-
-        bsl::byte mybyte{1};
-        bsl::print("byte: %u\n", mybyte.to_integer<bsl::uint32>());
-
-        mybyte <<= 1U;
-        bsl::print("byte: %u\n", mybyte.to_integer());
-        mybyte >>= 1U;
-        bsl::print("byte: %u\n", mybyte.to_integer());
-
-        bsl::print("byte: %u\n", (mybyte << 1U).to_integer());
-        bsl::print("byte: %u\n", (mybyte >> 1U).to_integer());
-
-        mybyte &= bsl::byte{0};
-        bsl::print("byte: %u\n", mybyte.to_integer());
-
-        mybyte |= bsl::byte{1};
-        bsl::print("byte: %u\n", mybyte.to_integer());
-
-        mybyte ^= bsl::byte{1};
-        bsl::print("byte: %u\n", mybyte.to_integer());
-
-        bsl::print("byte: %u\n", (mybyte | bsl::byte{1}).to_integer());
-        bsl::print("byte: %u\n", (mybyte & bsl::byte{1}).to_integer());
-        bsl::print("byte: %u\n", (mybyte ^ bsl::byte{1}).to_integer());
-        bsl::print("byte: %x\n", (~mybyte).to_integer());
-
-        return bsl::exit_success;
+        bsl::byte const mybyte{1U};
+        bsl::print("byte: %d\n", mybyte.to_integer<bsl::int32>());
     }
 }
 

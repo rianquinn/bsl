@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_TYPE_IDENTITY_OVERVIEW_HPP
 #define EXAMPLE_TYPE_IDENTITY_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/is_bool.hpp>
 #include <bsl/is_void.hpp>
 #include <bsl/type_identity.hpp>
@@ -54,19 +50,11 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_type_identity_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_type_identity_overview() noexcept
     {
-        bsl::discard(args);
-
         static_assert(bsl::is_bool<myclass<bool>::type>::value);
         static_assert(bsl::is_void<myclass<void>::type>::value);
-
-        return bsl::exit_success;
     }
 }
 

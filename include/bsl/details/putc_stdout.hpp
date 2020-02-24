@@ -22,51 +22,35 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef BSL_DETAILS_SCENARIO_IMPL_HPP
-#define BSL_DETAILS_SCENARIO_IMPL_HPP
+#ifndef BSL_DETAILS_PUTC_STDOUT_HPP
+#define BSL_DETAILS_PUTC_STDOUT_HPP
 
-#include "ut_helpers.hpp"
+#include "../cstdint.hpp"
+#include "../discard.hpp"
+
+#include <cstdio>
 
 namespace bsl
 {
     namespace details
     {
-        class scenario_impl final
+        inline void
+        putc_stdout(bsl::int8 const c) noexcept
         {
-        public:
-            explicit constexpr scenario_impl(cstr_type const &name) noexcept : m_name{name}
-            {
-                bsl::discard(m_name);
-            }
+            BSL_PUTC_STDOUT(c);
+        }
 
-            template<typename FUNC>
-            [[maybe_unused]] constexpr scenario_impl &
-            operator=(FUNC &&func) noexcept
-            {
-                ut_current_test_case() = m_name;
+        inline void
+        putc_stdout_prqa(bsl::int8 const c) noexcept
+        {
+            bsl::discard(c);
+        }
 
-                bsl::forward<FUNC>(func)();
-                if (nullptr != ut_reset_handler()) {
-                    ut_reset_handler()();
-                }
-
-                ut_current_test_case() = nullptr;
-                return *this;
-            }
-
-            constexpr scenario_impl(scenario_impl const &o) noexcept = delete;
-            constexpr scenario_impl(scenario_impl &&o) noexcept = delete;
-
-            [[maybe_unused]] constexpr scenario_impl &
-            operator=(scenario_impl const &o) &noexcept = delete;
-            [[maybe_unused]] constexpr scenario_impl &
-            operator=(scenario_impl &&o) &noexcept = delete;
-
-            ~scenario_impl() noexcept = default;
-
-        private:
-            cstr_type m_name;
-        };
+        inline void
+        putc_stdout_fputc(bsl::int8 const c) noexcept
+        {
+            bsl::discard(std::fputc(c, stdout));
+        }
     }
 }
 

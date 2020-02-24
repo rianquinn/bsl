@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_IS_SCALAR_OVERVIEW_HPP
 #define EXAMPLE_IS_SCALAR_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/cstddef.hpp>
 #include <bsl/cstdint.hpp>
 #include <bsl/is_scalar.hpp>
@@ -42,23 +38,14 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_is_scalar_overview(bsl::arguments const &args) noexcept
-    {
-        bsl::discard(args);
-
-        // static_assert(bsl::is_scalar<bsl::uint64>::value);
+    inline void
+    example_is_scalar_overview() noexcept
+    {    // static_assert(bsl::is_scalar<bsl::uint64>::value);
         // static_assert(bsl::is_scalar<bsl::exit_code>::value);
         // static_assert(bsl::is_scalar<bool *>::value);
         // static_assert(bsl::is_scalar<bool(bsl::arguments::*)>::value);
         // static_assert(bsl::is_scalar<bsl::nullptr_t>::value);
         // static_assert(!bsl::is_scalar<bsl::arguments>::value);
-
-        return bsl::exit_success;
     }
 }
 

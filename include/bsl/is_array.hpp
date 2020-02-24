@@ -29,6 +29,8 @@
 #define BSL_IS_ARRAY_HPP
 
 #include "cstdint.hpp"
+#include "true_type.hpp"
+#include "false_type.hpp"
 
 namespace bsl
 {
@@ -44,27 +46,18 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_array final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{false};
-    };
+    class is_array final : public false_type
+    {};
 
     /// @cond --
 
     template<typename T>
-    struct is_array<T[]> final    // NOLINT
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_array<T[]> final : public true_type    // NOLINT
+    {};
 
     template<typename T, bsl::uintmax N>
-    struct is_array<T[N]> final    // NOLINT
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_array<T[N]> final : public true_type    // NOLINT
+    {};
 
     /// @endcond --
 }

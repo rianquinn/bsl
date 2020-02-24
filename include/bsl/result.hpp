@@ -28,9 +28,9 @@
 #ifndef BSL_RESULT_HPP
 #define BSL_RESULT_HPP
 
-#include "details/result_type.hpp"
-
 #include "construct_at.hpp"
+#include "cstdint.hpp"
+#include "destroy_at.hpp"
 #include "errc_type.hpp"
 #include "in_place.hpp"
 #include "move.hpp"
@@ -45,6 +45,21 @@
 
 namespace bsl
 {
+    namespace details
+    {
+        /// @enum bsl::details::result_type
+        ///
+        /// <!-- description -->
+        ///   @brief Defines what a bsl::result is currently storing. This is
+        ///     defined as a bsl::uint8 to ensure it is as small as possible.
+        ///
+        enum class result_type : bsl::uint8
+        {
+            contains_t,
+            contains_e
+        };
+    }
+
     /// @class bsl::details::result
     ///
     /// <!-- description -->
@@ -198,15 +213,14 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param ip provide bsl::in_place to construct in place
         ///   @param args the arguments to create T with
-        ///   @return a new bsl::result
         ///
         /// <!-- exceptions -->
         ///   @throw throws if T's constructor throws
         ///
         template<typename... ARGS>
-        constexpr result(    // NOLINT
+        constexpr result(    // PRQA S 2023 // NOLINT
             bsl::in_place_t const &ip,
-            ARGS &&... args) noexcept    // PRQA S 2023
+            ARGS &&... args) noexcept
             : m_which{details::result_type::contains_t}, m_t{bsl::forward<ARGS>(args)...}
         {
             bsl::discard(ip);
@@ -237,7 +251,6 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param e the error code being copied
         ///   @param sloc the source location of the error
-        ///   @return a new bsl::result
         ///
         /// <!-- exceptions -->
         ///   @throw throws if E's copy constructor throws

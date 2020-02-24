@@ -25,11 +25,9 @@
 #ifndef EXAMPLE_ALIGNED_STORAGE_OVERVIEW_HPP
 #define EXAMPLE_ALIGNED_STORAGE_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/aligned_storage.hpp>
+#include <bsl/alignment_of.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -40,19 +38,18 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_aligned_storage_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_aligned_storage_overview() noexcept
     {
-        bsl::discard(args);
+        using page_type = bsl::aligned_storage_t<BSL_PAGE_SIZE, BSL_PAGE_SIZE>;
 
-        constexpr bsl::aligned_storage_t<BSL_PAGE_SIZE, BSL_PAGE_SIZE> page{};
-        bsl::discard(page);
+        if constexpr (bsl::alignment_of<page_type>::value == BSL_PAGE_SIZE) {
+            bsl::print("success\n");
+        }
 
-        return bsl::exit_success;
+        if constexpr (sizeof(page_type) >= BSL_PAGE_SIZE) {
+            bsl::print("success\n");
+        }
     }
 }
 

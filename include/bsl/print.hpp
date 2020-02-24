@@ -20,7 +20,7 @@
 /// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-/// SOFTWARE.  
+/// SOFTWARE.
 ///
 /// @file print.hpp
 ///
@@ -28,9 +28,7 @@
 #ifndef BSL_PRINT_HPP
 #define BSL_PRINT_HPP
 
-#include <cstdio>    // PRQA S 5188
-#include "forward.hpp"
-#include "cstdint.hpp"
+#include <cstdio>    // PRQA S 1-10000 // NOLINT
 
 namespace bsl
 {
@@ -55,13 +53,13 @@ namespace bsl
     template<typename CharT, bsl::uintmax N, typename... ARGS>
     constexpr void
     print(CharT const (&fmt)[N], ARGS &&... args) noexcept    // NOLINT
-    {
-#pragma clang diagnostic push                             // PRQA S 1040, 1074
-#pragma clang diagnostic ignored "-Wformat-nonliteral"    // PRQA S 1040, 1074
-#pragma clang diagnostic ignored "-Wformat-security"      // PRQA S 1040, 1074
-        std::printf(fmt, bsl::forward<ARGS>(args)...);    // PRQA S 4919, 3840, 4632, 3804 // NOLINT
-#pragma clang diagnostic pop                              // PRQA S 1040, 1074
-    }
+    {                                                         // PRQA S 1-10000 // NOLINT
+#pragma clang diagnostic push                                 // PRQA S 1-10000 // NOLINT
+#pragma clang diagnostic ignored "-Wformat-security"          // PRQA S 1-10000 // NOLINT
+#pragma clang diagnostic ignored "-Wformat-nonliteral"        // PRQA S 1-10000 // NOLINT
+        std::printf(fmt, args...);                            // PRQA S 1-10000 // NOLINT
+#pragma clang diagnostic pop                                  // PRQA S 1-10000 // NOLINT
+    }                                                         // PRQA S 1-10000 // NOLINT
 }
 
 #endif

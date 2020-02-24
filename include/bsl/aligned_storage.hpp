@@ -39,7 +39,7 @@ namespace bsl
     ///   @brief Implements the std::aligned_aligned_storage interface. The
     ///     only real difference is we use "m_data" instead of "data" to
     ///     represent the member variable name.
-    ///   @include example_aligned_storage__overview.cpp
+    ///   @include example_aligned_storage_overview.cpp
     ///
     /// <!-- template parameters -->
     ///   @tparam GUARD used to prevent you from creating an aligned_storage

@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_IS_CONST_OVERVIEW_HPP
 #define EXAMPLE_IS_CONST_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/is_const.hpp>
 #include <bsl/add_const.hpp>
 #include <bsl/remove_const.hpp>
@@ -42,21 +38,13 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_is_const_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_is_const_overview() noexcept
     {
-        bsl::discard(args);
-
         static_assert(bsl::is_const<bsl::add_const_t<bool>>::value);
         static_assert(bsl::is_const<bsl::add_const_t<bool const>>::value);
         static_assert(!bsl::is_const<bsl::remove_const_t<bool>>::value);
         static_assert(!bsl::is_const<bsl::remove_const_t<bool const>>::value);
-
-        return bsl::exit_success;
     }
 }
 

@@ -46,11 +46,6 @@ namespace bsl
     ///     reference, and this is a false positive because this is the
     ///     required definition for std::forward
     ///
-    /// <!-- notes -->
-    ///   @note This function, unlike most others, must be defined in the
-    ///     std:: namespace as Perforce expects this function to
-    ///     be defined here.
-    ///
     /// <!-- contracts -->
     ///   @pre none
     ///   @post none

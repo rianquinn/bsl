@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_ENABLE_IF_OVERVIEW_HPP
 #define EXAMPLE_ENABLE_IF_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/enable_if.hpp>
 #include <bsl/is_bool.hpp>
 
@@ -43,14 +39,11 @@ namespace bsl
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type to query
-    ///   @return success
     ///
     template<typename T, bsl::enable_if_t<bsl::is_bool<T>::value> = true>
-    constexpr bsl::exit_code
+    constexpr void
     foo() noexcept
-    {
-        return bsl::exit_success;
-    }
+    {}
 
     /// <!-- description -->
     ///   @brief Provides the example's main function
@@ -59,16 +52,9 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_enable_if_overview(bsl::arguments const &args) noexcept
-    {
-        bsl::discard(args);
-        return foo<bool>();
-    }
+    inline void
+    example_enable_if_overview() noexcept
+    {}
 }
 
 #endif

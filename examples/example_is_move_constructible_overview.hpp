@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_IS_MOVE_CONSTRUCTIBLE_OVERVIEW_HPP
 #define EXAMPLE_IS_MOVE_CONSTRUCTIBLE_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/is_bool.hpp>
 #include <bsl/is_move_constructible.hpp>
 
@@ -41,17 +37,10 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_is_move_constructible_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_is_move_constructible_overview() noexcept
     {
-        bsl::discard(args);
         static_assert(bsl::is_move_constructible<bsl::is_bool<bool>>::value);
-
-        return bsl::exit_success;
     }
 }
 

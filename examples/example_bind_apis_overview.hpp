@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_BIND_APIS_OVERVIEW_HPP
 #define EXAMPLE_BIND_APIS_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/print.hpp>
 #include "example_interface.hpp"
 #include "example_implementation.hpp"
@@ -44,14 +40,9 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_bind_apis_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_bind_apis_overview() noexcept
     {
-        bsl::discard(args);
         constexpr bsl::int32 valid_answer{42};
 
         if (example_bind_apis_type::static_func_example(valid_answer)) {
@@ -69,8 +60,6 @@ namespace bsl
         else {
             bsl::print("failure\n");
         }
-
-        return bsl::exit_success;
     }
 }
 

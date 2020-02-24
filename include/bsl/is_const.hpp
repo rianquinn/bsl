@@ -28,6 +28,9 @@
 #ifndef BSL_IS_CONST_HPP
 #define BSL_IS_CONST_HPP
 
+#include "true_type.hpp"
+#include "false_type.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_const
@@ -42,20 +45,14 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_const final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{false};
-    };
+    class is_const final : public false_type
+    {};
 
     /// @cond --
 
     template<typename T>
-    struct is_const<T const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_const<T const> final : public true_type
+    {};
 
     /// @endcond --
 }

@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_MAKE_SIGNED_OVERVIEW_HPP
 #define EXAMPLE_MAKE_SIGNED_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/cstdint.hpp>
 #include <bsl/is_signed.hpp>
 #include <bsl/make_signed.hpp>
@@ -42,15 +38,9 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_make_signed_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_make_signed_overview() noexcept
     {
-        bsl::discard(args);
-
         static_assert(bsl::is_signed<bsl::int8>::value);
         static_assert(bsl::is_signed<bsl::int16>::value);
         static_assert(bsl::is_signed<bsl::int32>::value);
@@ -129,8 +119,6 @@ namespace bsl
         static_assert(bsl::is_signed<bsl::make_signed_t<bsl::uint16 const>>::value);
         static_assert(bsl::is_signed<bsl::make_signed_t<bsl::uint32 const>>::value);
         static_assert(bsl::is_signed<bsl::make_signed_t<bsl::uint64 const>>::value);
-
-        return bsl::exit_success;
     }
 }
 

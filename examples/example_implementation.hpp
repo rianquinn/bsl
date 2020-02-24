@@ -28,7 +28,7 @@
 #include <bsl/cstdint.hpp>
 #include <bsl/result.hpp>
 
-    namespace bsl
+namespace bsl
 {
     /// @class bsl::example_implementation
     ///

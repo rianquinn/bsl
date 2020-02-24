@@ -35,9 +35,6 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Defines a test class for the bind_apis API.
     ///
-    /// <!-- template parameters -->
-    ///   @tparam IMPL defines the implementation's type
-    ///
     class test_bind_apis_impl final
     {
     public:
@@ -70,7 +67,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param answer the answer to all of life's questions.
         ///
-        static bsl::result<test_bind_apis_impl>
+        [[nodiscard]] static bsl::result<test_bind_apis_impl>
         make(bsl::int32 const answer) noexcept
         {
             if (answer == 42) {
@@ -91,14 +88,10 @@ namespace bsl
         ///   @param answer the answer to all of life's questions.
         ///   @return true if the answer is correct, false otherwise.
         ///
-        static constexpr bool
+        [[nodiscard]] static constexpr bool
         static_func_example(bsl::int32 const answer) noexcept
         {
-            if (answer == 42) {
-                return true;
-            }
-
-            return false;
+            return answer == 42;
         }
 
         /// <!-- description -->
@@ -112,14 +105,10 @@ namespace bsl
         ///   @param answer the answer to all of life's questions.
         ///   @return true if the answer is correct, false otherwise.
         ///
-        constexpr bool
+        [[nodiscard]] constexpr bool
         member_func_example(bsl::int32 const answer) const noexcept
         {
-            if (answer == m_answer) {
-                return true;
-            }
-
-            return false;
+            return answer == m_answer;
         }
 
     private:

@@ -26,10 +26,6 @@
 #ifndef EXAMPLE_IS_UNSIGNED_OVERVIEW_HPP
 #define EXAMPLE_IS_UNSIGNED_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/cstdint.hpp>
 #include <bsl/is_unsigned.hpp>
 #include <bsl/make_unsigned.hpp>
@@ -43,15 +39,9 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_is_unsigned_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_is_unsigned_overview() noexcept
     {
-        bsl::discard(args);
-
         static_assert(!bsl::is_unsigned<bsl::int8>::value);
         static_assert(!bsl::is_unsigned<bsl::int16>::value);
         static_assert(!bsl::is_unsigned<bsl::int32>::value);
@@ -130,8 +120,6 @@ namespace bsl
         static_assert(bsl::is_unsigned<bsl::make_unsigned_t<bsl::int16 const>>::value);
         static_assert(bsl::is_unsigned<bsl::make_unsigned_t<bsl::int32 const>>::value);
         static_assert(bsl::is_unsigned<bsl::make_unsigned_t<bsl::int64 const>>::value);
-
-        return bsl::exit_success;
     }
 }
 

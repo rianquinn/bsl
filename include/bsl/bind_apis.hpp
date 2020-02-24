@@ -119,6 +119,11 @@ namespace bsl
         ///     interface pattern). In other words, in this case, the rule
         ///     does not apply as the complaint is satisfied.
         ///
+        ///   SUPPRESSION: PRQA 2841 - false positive
+        ///   - We suppress this because PRQA is generating a false positive,
+        ///     thinking that this is an invalid dereference of an array, which
+        ///     is way out in left field.
+        ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
@@ -133,7 +138,7 @@ namespace bsl
         constexpr static IMPL &
         impl(APIS<bind_apis<APIS, IMPL>> &apis) noexcept(false)
         {
-            return static_cast<bind_apis<APIS, IMPL> *>(&apis)->m_d;    // PRQA S 3070
+            return static_cast<bind_apis<APIS, IMPL> *>(&apis)->m_d;    // PRQA S 3070, 2841
         }
 
         /// <!-- description -->
@@ -154,6 +159,11 @@ namespace bsl
         ///     issue at compile time (its the whole reason we have the static
         ///     interface pattern). In other words, in this case, the rule
         ///     does not apply as the complaint is satisfied.
+        ///
+        ///   SUPPRESSION: PRQA 2841 - false positive
+        ///   - We suppress this because PRQA is generating a false positive,
+        ///     thinking that this is an invalid dereference of an array, which
+        ///     is way out in left field.
         ///
         /// <!-- contracts -->
         ///   @pre none

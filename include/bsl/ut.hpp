@@ -25,11 +25,113 @@
 #ifndef BSL_UT_HPP
 #define BSL_UT_HPP
 
-#include "details/scenario_impl.hpp"
-#include "details/scenario_step_impl.hpp"
+#include <stdlib.h>    // NOLINT
+
+#include "color.hpp"
+#include "cstr_type.hpp"
+#include "discard.hpp"
+#include "forward.hpp"
+#include "main.hpp"
+#include "new.hpp"
+#include "print.hpp"
+#include "source_location.hpp"
 
 namespace bsl
 {
+    namespace details
+    {
+        using ut_test_handler_type = void (*)();
+
+        template<typename T = void>
+        cstr_type &
+        ut_current_test_case() noexcept
+        {
+            static cstr_type s_ut_current_test_case{};
+            return s_ut_current_test_case;
+        }
+
+        template<typename T = void>
+        ut_test_handler_type &
+        ut_reset_handler() noexcept
+        {
+            static ut_test_handler_type s_ut_reset_handler{};
+            return s_ut_reset_handler;
+        }
+
+        template<typename T = void>
+        void
+        ut_output_here(sloc_type const &sloc) noexcept
+        {
+            bsl::print("  --> ");
+            bsl::print("%s%s%s", yellow, sloc.file_name(), reset_color);
+            bsl::print(": ");
+            bsl::print("%s%d%s", cyan, sloc.line(), reset_color);
+            bsl::print("\n");
+        }
+
+        class scenario_impl final
+        {
+        public:
+            explicit constexpr scenario_impl(cstr_type const &name) noexcept : m_name{name}
+            {
+                bsl::discard(m_name);
+            }
+
+            template<typename FUNC>
+            [[maybe_unused]] constexpr scenario_impl &
+            operator=(FUNC &&func) noexcept
+            {
+                ut_current_test_case() = m_name;
+
+                bsl::forward<FUNC>(func)();
+                if (nullptr != ut_reset_handler()) {
+                    ut_reset_handler()();
+                }
+
+                ut_current_test_case() = nullptr;
+                return *this;
+            }
+
+            constexpr scenario_impl(scenario_impl const &o) noexcept = delete;
+            constexpr scenario_impl(scenario_impl &&o) noexcept = delete;
+
+            [[maybe_unused]] constexpr scenario_impl &
+            operator=(scenario_impl const &o) &noexcept = delete;
+            [[maybe_unused]] constexpr scenario_impl &
+            operator=(scenario_impl &&o) &noexcept = delete;
+
+            ~scenario_impl() noexcept = default;
+
+        private:
+            cstr_type m_name;
+        };
+
+        class scenario_step_impl final
+        {
+        public:
+            constexpr scenario_step_impl() noexcept = default;
+
+            template<typename FUNC>
+            [[maybe_unused]] constexpr scenario_step_impl &
+            operator=(FUNC &&func) noexcept
+            {
+                bsl::forward<FUNC>(func)();
+                return *this;    // PRQA S 2880
+            }
+
+            constexpr scenario_step_impl(scenario_step_impl const &o) noexcept = delete;
+            constexpr scenario_step_impl(scenario_step_impl &&o) noexcept = delete;
+
+            [[maybe_unused]] constexpr scenario_step_impl &
+            operator=(scenario_step_impl const &o) &noexcept = delete;
+            [[maybe_unused]] constexpr scenario_step_impl &
+            operator=(scenario_step_impl &&o) &noexcept = delete;
+
+            ~scenario_step_impl() noexcept = default;
+        };
+
+    }
+
     /// @brief defines a scenario
     using ut_scenario = details::scenario_impl;
 
@@ -99,7 +201,7 @@ namespace bsl
         bsl::print("\"\n");
         details::ut_output_here(sloc);
 
-        std::exit(EXIT_FAILURE);    // PRQA S 5024
+        exit(EXIT_FAILURE);    // PRQA S 5024
     }
 
     /// <!-- description -->
@@ -128,7 +230,7 @@ namespace bsl
             bsl::print("\"\n");
             details::ut_output_here(sloc);
 
-            std::exit(EXIT_FAILURE);    // PRQA S 5024
+            exit(EXIT_FAILURE);    // PRQA S 5024
         }
 
         return test;

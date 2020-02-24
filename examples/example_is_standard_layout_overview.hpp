@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_IS_STANDARD_LAYOUT_OVERVIEW_HPP
 #define EXAMPLE_IS_STANDARD_LAYOUT_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/is_standard_layout.hpp>
 #include "example_class_pod.hpp"
 #include "example_class_subclass.hpp"
@@ -42,14 +38,9 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_is_standard_layout_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_is_standard_layout_overview() noexcept
     {
-        bsl::discard(args);
         static_assert(!bsl::is_standard_layout<example_class_subclass>::value);
 
         // TODO: --
@@ -58,8 +49,6 @@ namespace bsl
         // this. Once PRQA addresses this issue, we can add the rest of this
         // example.
         //
-
-        return bsl::exit_success;
     }
 }
 

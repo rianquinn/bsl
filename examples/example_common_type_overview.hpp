@@ -22,38 +22,34 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef BSL_DETAILS_SCENARIO_STEP_IMPL_HPP
-#define BSL_DETAILS_SCENARIO_STEP_IMPL_HPP
+#ifndef EXAMPLE_COMMON_TYPE_OVERVIEW_HPP
+#define EXAMPLE_COMMON_TYPE_OVERVIEW_HPP
 
-#include "ut_helpers.hpp"
+#include <bsl/common_type.hpp>
+#include <bsl/is_same.hpp>
+#include <bsl/print.hpp>
+
+#include "example_class_base.hpp"
+#include "example_class_subclass.hpp"
 
 namespace bsl
 {
-    namespace details
+    /// <!-- description -->
+    ///   @brief Provides the example's main function
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    inline void
+    example_common_type_overview() noexcept
     {
-        class scenario_step_impl final
-        {
-        public:
-            constexpr scenario_step_impl() noexcept = default;
+        using example_common_type =    // --
+            bsl::common_type_t<example_class_base, example_class_subclass>;
 
-            template<typename FUNC>
-            [[maybe_unused]] constexpr scenario_step_impl &
-            operator=(FUNC &&func) noexcept
-            {
-                bsl::forward<FUNC>(func)();
-                return *this;    // PRQA S 2880
-            }
-
-            constexpr scenario_step_impl(scenario_step_impl const &o) noexcept = delete;
-            constexpr scenario_step_impl(scenario_step_impl &&o) noexcept = delete;
-
-            [[maybe_unused]] constexpr scenario_step_impl &
-            operator=(scenario_step_impl const &o) &noexcept = delete;
-            [[maybe_unused]] constexpr scenario_step_impl &
-            operator=(scenario_step_impl &&o) &noexcept = delete;
-
-            ~scenario_step_impl() noexcept = default;
-        };
+        if constexpr (is_same<example_common_type, example_class_base>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

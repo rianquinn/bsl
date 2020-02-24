@@ -28,10 +28,36 @@
 #ifndef BSL_ADD_LVALUE_REFERENCE_HPP
 #define BSL_ADD_LVALUE_REFERENCE_HPP
 
+#include "cstdint.hpp"
 #include "type_identity.hpp"
 
 namespace bsl
 {
+    namespace details
+    {
+        /// <!-- description -->
+        ///   @brief Returns T with an added & if possible
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam T the type to return with an added &
+        ///   @param ignored ignored
+        ///   @return only used for decltype
+        ///
+        template<typename T>
+        auto try_add_lvalue_reference(bsl::int32 ignored) noexcept -> type_identity<T &>;
+
+        /// <!-- description -->
+        ///   @brief Returns T if & cannot be added
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam T the type to return without an addd &
+        ///   @param ignored ignored
+        ///   @return only used for decltype
+        ///
+        template<typename T>
+        auto try_add_lvalue_reference(bool ignored) noexcept -> type_identity<T>;
+    }
+
     /// @class bsl::add_lvalue_reference
     ///
     /// <!-- description -->
@@ -43,28 +69,12 @@ namespace bsl
     ///   @tparam T the type to add an lvalue reference to
     ///
     template<typename T>
-    class add_lvalue_reference final : public type_identity<T &>
+    class add_lvalue_reference final : public decltype(details::try_add_lvalue_reference<T>(0))
     {};
 
     /// @brief a helper that reduces the verbosity of bsl::add_lvalue_reference
     template<typename T>
     using add_lvalue_reference_t = typename add_lvalue_reference<T>::type;
-
-    /// @cond --
-
-    template<typename T>
-    class add_lvalue_reference<T &> final : public type_identity<T &>
-    {};
-
-    template<typename T>
-    class add_lvalue_reference<T &&> final : public type_identity<T &>
-    {};
-
-    template<>
-    class add_lvalue_reference<void> final : public type_identity<void>
-    {};
-
-    /// @endcond --
 }
 
 #endif

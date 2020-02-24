@@ -25,14 +25,9 @@
 #ifndef EXAMPLE_ADD_POINTER_OVERVIEW_HPP
 #define EXAMPLE_ADD_POINTER_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
-#include <bsl/is_same.hpp>
-#include <bsl/is_pointer.hpp>
 #include <bsl/add_pointer.hpp>
-#include <bsl/remove_pointer.hpp>
+#include <bsl/is_same.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -43,40 +38,12 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_add_pointer_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_add_pointer_overview() noexcept
     {
-        bsl::discard(args);
-
-        static_assert(!bsl::is_pointer<bool>::value);
-        static_assert(!bsl::is_pointer<bool &>::value);
-        static_assert(!bsl::is_pointer<bool &&>::value);
-
-        static_assert(bsl::is_pointer<bsl::add_pointer_t<bool>>::value);
-        static_assert(bsl::is_pointer<bsl::add_pointer_t<bool &>>::value);
-        static_assert(bsl::is_pointer<bsl::add_pointer_t<bool &&>>::value);
-        static_assert(bsl::is_pointer<bsl::add_pointer_t<bool const>>::value);
-        static_assert(bsl::is_pointer<bsl::add_pointer_t<bool const &>>::value);
-
-        static_assert(bsl::is_same<bsl::add_pointer_t<bool>, bool *>::value);
-        static_assert(bsl::is_same<bsl::add_pointer_t<bool &>, bool *>::value);
-        static_assert(bsl::is_same<bsl::add_pointer_t<bool &&>, bool *>::value);
-        static_assert(bsl::is_same<bsl::add_pointer_t<bool const>, bool const *>::value);
-        static_assert(bsl::is_same<bsl::add_pointer_t<bool const &>, bool const *>::value);
-
-        static_assert(!bsl::is_pointer<bsl::remove_pointer_t<bool *>>::value);
-        static_assert(!bsl::is_pointer<bsl::remove_pointer_t<bool *const>>::value);
-        static_assert(!bsl::is_pointer<bsl::remove_pointer_t<bool const *const>>::value);
-
-        static_assert(bsl::is_same<bsl::remove_pointer_t<bool *>, bool>::value);
-        static_assert(bsl::is_same<bsl::remove_pointer_t<bool const *>, bool const>::value);
-        static_assert(bsl::is_same<bsl::remove_pointer_t<bool const *const>, bool const>::value);
-
-        return bsl::exit_success;
+        if constexpr (bsl::is_same<bsl::add_pointer_t<bool>, bool *>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

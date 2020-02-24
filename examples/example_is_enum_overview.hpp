@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_IS_ENUM_OVERVIEW_HPP
 #define EXAMPLE_IS_ENUM_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/is_enum.hpp>
 
 namespace bsl
@@ -40,19 +36,10 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_is_enum_overview(bsl::arguments const &args) noexcept
-    {
-        bsl::discard(args);
-
-        // static_assert(bsl::is_enum<bsl::exit_code>::value);
+    inline void
+    example_is_enum_overview() noexcept
+    {    // static_assert(bsl::is_enum<bsl::exit_code>::value);
         // static_assert(!bsl::is_enum<bool>::value);
-
-        return bsl::exit_success;
     }
 }
 

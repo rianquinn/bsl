@@ -25,10 +25,6 @@
 #ifndef EXAMPLE_MOVE_OVERVIEW_HPP
 #define EXAMPLE_MOVE_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
-#include <bsl/exit_code.hpp>
-#include <bsl/arguments.hpp>
-
 #include <bsl/move.hpp>
 
 namespace bsl
@@ -40,20 +36,13 @@ namespace bsl
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    [[maybe_unused]] inline bsl::exit_code
-    example_move_overview(bsl::arguments const &args) noexcept
+    inline void
+    example_move_overview() noexcept
     {
         bool var1{true};
         bool &&var2{bsl::move(var1)};
 
-        bsl::discard(args);
         bsl::discard(var2);
-
-        return bsl::exit_success;
     }
 }
 

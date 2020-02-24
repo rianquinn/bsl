@@ -34,8 +34,7 @@ namespace bsl
     ///     standard layout. For more examples, please see cppreference.
     ///
     struct example_class_pod final
-    {
-        /// @brief dummy data #1
+    {    /// @brief dummy data #1
         bool m_data1;
         /// @brief dummy data #2
         bool m_data2;
