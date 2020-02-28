@@ -36,30 +36,26 @@ namespace bsl
     ///
     /// <!-- description -->
     ///   @brief Provides the member typedef type which is the same as T
-    ///     if B is true, otherwise is the same as U
-    ///   @include example_conditional__overview.hpp
+    ///     if B is true, otherwise is the same as F
+    ///   @include example_conditional_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam B the conditional parameter
     ///   @tparam T the type to return if B is true
-    ///   @tparam U the type to return if B is false
+    ///   @tparam F the type to return if B is false
     ///
-    template<bool B, typename T, typename U>
-    class conditional final
+    template<bool B, typename T, typename F>
+    class conditional final : public type_identity<T>
     {};
 
     /// @brief a helper that reduces the verbosity of bsl::conditional
-    template<bool B, typename T, typename U>
-    using conditional_t = typename conditional<B, T, U>::type;
+    template<bool B, typename T, typename F>
+    using conditional_t = typename conditional<B, T, F>::type;
 
     /// @cond --
 
-    template<typename T, typename U>
-    class conditional<true, T, U> final : public type_identity<T>
-    {};
-
-    template<typename T, typename U>
-    class conditional<false, T, U> final : public type_identity<U>
+    template<typename T, typename F>
+    class conditional<false, T, F> final : public type_identity<F>
     {};
 
     /// @endcond --

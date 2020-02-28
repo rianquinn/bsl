@@ -32,7 +32,7 @@ namespace bsl
 {
     /// <!-- description -->
     ///   @brief Calls the destructor of the object pointed to by ptr
-    ///   @include example_destroy_at__overview.hpp
+    ///   @include example_destroy_at_overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -47,10 +47,10 @@ namespace bsl
     ///
     template<typename T>
     constexpr void
-    destroy_at(T *const ptr) noexcept(false)    // PRQA S 4215
+    destroy_at(T const *const ptr) noexcept(noexcept(ptr->T::~T()))
     {
         if (nullptr != ptr) {
-            ptr->T::~T();    // PRQA S 3803
+            ptr->T::~T();
         }
     }
 }

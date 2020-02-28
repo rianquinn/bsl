@@ -28,27 +28,25 @@
 #ifndef BSL_IS_DEFAULT_CONSTRUCTIBLE_HPP
 #define BSL_IS_DEFAULT_CONSTRUCTIBLE_HPP
 
-#include "is_constructible.hpp"
+#include "bool_constant.hpp"
 
 namespace bsl
 {
     /// @class bsl::is_default_constructible
     ///
     /// <!-- description -->
-    ///   @brief If the provided type is constructible, provides the
+    ///   @brief If the provided type is default constructible, provides the
     ///     member constant value equal to true. Otherwise the member constant
     ///     value is false.
-    ///   @include is_default_constructible/overview.cpp
+    ///   @include example_is_default_constructible_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_default_constructible final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{is_constructible<T>::value};
-    };
+    class is_default_constructible final : // --
+        public bool_constant<__is_constructible(T)>
+    {};
 }
 
 #endif

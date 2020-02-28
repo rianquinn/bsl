@@ -41,7 +41,6 @@ namespace bsl
         ///     invoke function so that a bsl::function only has to execute
         ///     the base class's invoke function without knowing if the
         ///     function is a normal function or a member function.
-        ///   @include
         ///
         /// <!-- template parameters -->
         ///   @tparam R the return type of the function being wrapped
@@ -86,7 +85,7 @@ namespace bsl
             /// <!-- exceptions -->
             ///   @throw throws if the wrapped function throws
             ///
-            virtual constexpr R invoke(ARGS &&... args) const = 0;
+            [[nodiscard]] virtual R invoke(ARGS &&... args) const noexcept(false) = 0;
 
         protected:
             /// <!-- description -->
@@ -141,7 +140,113 @@ namespace bsl
             [[maybe_unused]] constexpr base_wrapper &
             operator=(base_wrapper &&o) &noexcept = default;
         };
-    };
+
+        /// @class bsl::details::base_wrapper
+        ///
+        /// <!-- description -->
+        ///   @brief Provides the base class implementation for the function,
+        ///     member function and const member function wrappers.
+        ///     Specifically, this ensures each wrapper implements that same
+        ///     invoke function so that a bsl::function only has to execute
+        ///     the base class's invoke function without knowing if the
+        ///     function is a normal function or a member function.
+        ///
+        /// <!-- template parameters -->
+        ///   @tparam R the return type of the function being wrapped
+        ///   @tparam ARGS the arg types of the function being wrapped
+        ///
+        template<typename R, typename... ARGS>
+        class base_wrapper<R(ARGS...) noexcept>
+        {
+        public:
+            /// <!-- description -->
+            ///   @brief default constructor
+            ///
+            /// <!-- contracts -->
+            ///   @pre none
+            ///   @post none
+            ///
+            constexpr base_wrapper() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief virtual default destructor
+            ///
+            /// <!-- contracts -->
+            ///   @pre none
+            ///   @post none
+            ///
+            virtual ~base_wrapper() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief Pure virtual "invoke" function that is overloaded
+            ///     by the function, member function and const member function
+            ///     wrappers. This function is called by the bsl::function to
+            ///     execute a wrapped function.
+            ///
+            /// <!-- contracts -->
+            ///   @pre none
+            ///   @post none
+            ///
+            /// <!-- inputs/outputs -->
+            ///   @param args the arguments to pass to the wrapped function
+            ///   @return the return value of the wrapped function
+            ///
+            [[nodiscard]] virtual R invoke(ARGS &&... args) const noexcept = 0;
+
+        protected:
+            /// <!-- description -->
+            ///   @brief copy constructor
+            ///
+            /// <!-- contracts -->
+            ///   @pre none
+            ///   @post none
+            ///
+            /// <!-- inputs/outputs -->
+            ///   @param o the object being copied
+            ///
+            constexpr base_wrapper(base_wrapper const &o) noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief move constructor
+            ///
+            /// <!-- contracts -->
+            ///   @pre none
+            ///   @post none
+            ///
+            /// <!-- inputs/outputs -->
+            ///   @param o the object being moved
+            ///
+            constexpr base_wrapper(base_wrapper &&o) noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy assignment
+            ///
+            /// <!-- contracts -->
+            ///   @pre none
+            ///   @post none
+            ///
+            /// <!-- inputs/outputs -->
+            ///   @param o the object being copied
+            ///   @return a reference to *this
+            ///
+            [[maybe_unused]] constexpr base_wrapper &
+            operator=(base_wrapper const &o) &noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief move assignment
+            ///
+            /// <!-- contracts -->
+            ///   @pre none
+            ///   @post none
+            ///
+            /// <!-- inputs/outputs -->
+            ///   @param o the object being moved
+            ///   @return a reference to *this
+            ///
+            [[maybe_unused]] constexpr base_wrapper &
+            operator=(base_wrapper &&o) &noexcept = default;
+        };
+    }
 }
 
 #endif

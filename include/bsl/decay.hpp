@@ -47,20 +47,20 @@ namespace bsl
     ///     removes const-qualifiers, and defines the resulting type as the
     ///     member typedef type. Note that this does not remove volatile as
     ///     the BSL does not support the use of volatile.
-    ///   @include example_decay__overview.hpp
+    ///   @include example_decay_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to decay
     ///
     template<typename T>
     class decay final :
-        public type_identity<typename conditional<
-            is_array<typename remove_reference<T>::type>::value,
-            typename remove_extent<typename remove_reference<T>::type>::type *,
-            typename conditional<
-                is_function<typename remove_reference<T>::type>::value,
-                typename add_pointer<typename remove_reference<T>::type>::type,
-                typename remove_const<typename remove_reference<T>::type>::type>::type>::type>
+        public type_identity<conditional_t<
+            is_array<remove_reference_t<T>>::value,
+            remove_extent_t<remove_reference_t<T>> *,
+            conditional_t<
+                is_function<remove_reference_t<T>>::value,
+                add_pointer_t<remove_reference_t<T>>,
+                remove_const_t<remove_reference_t<T>>>>>
     {};
 
     /// @brief a helper that reduces the verbosity of bsl::add_const

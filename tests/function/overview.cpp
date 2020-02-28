@@ -22,240 +22,803 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
+#include <bsl/function.hpp>
 #include <bsl/ut.hpp>
 
-#include <bsl/function.hpp>
-#include <bsl/is_pod.hpp>
-#include <bsl/move.hpp>
-#include "test_function_func.hpp"
-#include "test_function_memfunc.hpp"
-#include "test_function_cmemfunc.hpp"
-
-namespace bsl
+namespace
 {
-    /// @brief Provides a global POD type for testing
-    static bsl::function<bool(bsl::int32 const &)> g_func;
+    bool g_called{false};
 
-    /// <!-- description -->
-    ///   @brief Provides the example's main function
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
-    /// <!-- inputs/outputs -->
-    ///   @param args the arguments passed to the application
-    ///   @return exit_success on success, exit_failure otherwise
-    ///
-    bsl::exit_code
-    entry(bsl::arguments const &args) noexcept
+    void
+    reset_handler()
     {
-        bsl::discard(args);
-        static_assert(is_pod<bsl::function<bool(bsl::int32 const &)>>::value);
+        g_called = false;
+    }
 
-        bsl::ut_scenario{"empty"} = []() {
-            bsl::ut_given{} = []() {
-                bsl::function<bool(bsl::int32 const &)> const func{&test_function_func};
-                bsl::ut_when{} = [&func]() {
-                    g_func = func;
-                    bsl::ut_then{} = []() {
-                        bsl::ut_check(g_func(42));
-                    };
-                };
-            };
-        };
+    [[nodiscard]] constexpr bool
+    test_func(bool const val)
+    {
+        return val;
+    }
 
-        bsl::ut_scenario{"function pointer"} = []() {
-            bsl::ut_given{} = []() {
-                bsl::function<bool(bsl::int32 const &)> const func{&test_function_func};
-                bsl::ut_then{} = [&func]() {
-                    bsl::ut_check(func(42));
-                };
-            };
-        };
+    [[nodiscard]] constexpr bool
+    test_func_noexcept(bool const val) noexcept
+    {
+        return val;
+    }
 
-        bsl::ut_scenario{"member function pointer"} = []() {
-            bsl::ut_given{} = []() {
-                test_function_memfunc test{};
-                bsl::function<bool(bsl::int32 const &)> const func{
-                    test, &test_function_memfunc::is_answer};
-                bsl::ut_then{} = [&func]() {
-                    bsl::ut_check(func(42));
-                };
-            };
-        };
+    void
+    test_func_void(bool const val)
+    {
+        bsl::discard(val);
+        g_called = true;
+    }
 
-        bsl::ut_scenario{"const member function pointer"} = []() {
-            bsl::ut_given{} = []() {
-                test_function_cmemfunc const test{};
-                bsl::function<bool(bsl::int32 const &)> const func{
-                    test, &test_function_cmemfunc::is_answer};
-                bsl::ut_then{} = [&func]() {
-                    bsl::ut_check(func(42));
-                };
-            };
-        };
+    void
+    test_func_void_noexcept(bool const val) noexcept
+    {
+        bsl::discard(val);
+        g_called = true;
+    }
 
-        bsl::ut_scenario{"function pointer copy construct"} = []() {
-            bsl::ut_given{} = []() {
-                bsl::function<bool(bsl::int32 const &)> const func1{&test_function_func};
-                bsl::function<bool(bsl::int32 const &)> const func2{func1};
-                bsl::ut_then{} = [&func1, &func2]() {
-                    bsl::ut_check(func1(42));
-                    bsl::ut_check(func2(42));
-                };
-            };
-        };
+    class myclass final
+    {
+    public:
+        [[nodiscard]] constexpr bool
+        test_memfunc(bool const val)    // NOLINT
+        {
+            return val;
+        }
 
-        bsl::ut_scenario{"function pointer move construct"} = []() {
-            bsl::ut_given{} = []() {
-                bsl::function<bool(bsl::int32 const &)> func1{&test_function_func};
-                bsl::function<bool(bsl::int32 const &)> const func2{bsl::move(func1)};
-                bsl::ut_then{} = [&func2]() {
-                    bsl::ut_check(func2(42));
-                };
-            };
-        };
+        [[nodiscard]] constexpr bool
+        test_memfunc_noexcept(bool const val) noexcept    // NOLINT
+        {
+            return val;
+        }
 
-        bsl::ut_scenario{"member function pointer copy construct"} = []() {
-            bsl::ut_given{} = []() {
-                test_function_memfunc test{};
-                bsl::function<bool(bsl::int32 const &)> const func1{
-                    test, &test_function_memfunc::is_answer};
-                bsl::function<bool(bsl::int32 const &)> const func2{func1};
-                bsl::ut_then{} = [&func1, &func2]() {
-                    bsl::ut_check(func1(42));
-                    bsl::ut_check(func2(42));
-                };
-            };
-        };
+        void
+        test_memfunc_void(bool const val)    // NOLINT
+        {
+            bsl::discard(val);
+            g_called = true;
+        }
 
-        bsl::ut_scenario{"member function pointer move construct"} = []() {
-            bsl::ut_given{} = []() {
-                test_function_memfunc test{};
-                bsl::function<bool(bsl::int32 const &)> func1{test,
-                                                              &test_function_memfunc::is_answer};
-                bsl::function<bool(bsl::int32 const &)> const func2{bsl::move(func1)};
-                bsl::ut_then{} = [&func2]() {
-                    bsl::ut_check(func2(42));
-                };
-            };
-        };
+        void
+        test_memfunc_void_noexcept(bool const val) noexcept    // NOLINT
+        {
+            bsl::discard(val);
+            g_called = true;
+        }
 
-        bsl::ut_scenario{"const member function pointer copy construct"} = []() {
-            bsl::ut_given{} = []() {
-                test_function_cmemfunc const test{};
-                bsl::function<bool(bsl::int32 const &)> const func1{
-                    test, &test_function_cmemfunc::is_answer};
-                bsl::function<bool(bsl::int32 const &)> const func2{func1};
-                bsl::ut_then{} = [&func1, &func2]() {
-                    bsl::ut_check(func1(42));
-                    bsl::ut_check(func2(42));
-                };
-            };
-        };
+        [[nodiscard]] constexpr bool
+        test_cmemfunc(bool const val) const    // NOLINT
+        {
+            return val;
+        }
 
-        bsl::ut_scenario{"const member function pointer move construct"} = []() {
-            bsl::ut_given{} = []() {
-                test_function_cmemfunc const test{};
-                bsl::function<bool(bsl::int32 const &)> func1{test,
-                                                              &test_function_cmemfunc::is_answer};
-                bsl::function<bool(bsl::int32 const &)> const func2{bsl::move(func1)};
-                bsl::ut_then{} = [&func2]() {
-                    bsl::ut_check(func2(42));
-                };
-            };
-        };
+        [[nodiscard]] constexpr bool
+        test_cmemfunc_noexcept(bool const val) const noexcept    // NOLINT
+        {
+            return val;
+        }
 
-        bsl::ut_scenario{"function pointer copy assignment"} = []() {
-            bsl::ut_given{} = []() {
-                bsl::function<bool(bsl::int32 const &)> const func1{&test_function_func};
-                bsl::function<bool(bsl::int32 const &)> func2{};
-                bsl::ut_when{} = [&func1, &func2]() {
-                    func2 = func1;
-                    bsl::ut_then{} = [&func1, &func2]() {
-                        bsl::ut_check(func1(42));
-                        bsl::ut_check(func2(42));
-                    };
-                };
-            };
-        };
+        void
+        test_cmemfunc_void(bool const val) const    // NOLINT
+        {
+            bsl::discard(val);
+            g_called = true;
+        }
 
-        bsl::ut_scenario{"function pointer move assignment"} = []() {
-            bsl::ut_given{} = []() {
-                bsl::function<bool(bsl::int32 const &)> func1{&test_function_func};
-                bsl::function<bool(bsl::int32 const &)> func2{};
-                bsl::ut_when{} = [&func1, &func2]() {
-                    func2 = bsl::move(func1);
-                    bsl::ut_then{} = [&func2]() {
-                        bsl::ut_check(func2(42));
-                    };
-                };
-            };
-        };
-
-        bsl::ut_scenario{"member function pointer copy assignment"} = []() {
-            bsl::ut_given{} = []() {
-                test_function_memfunc test{};
-                bsl::function<bool(bsl::int32 const &)> const func1{
-                    test, &test_function_memfunc::is_answer};
-                bsl::function<bool(bsl::int32 const &)> func2{};
-                bsl::ut_when{} = [&func1, &func2]() {
-                    func2 = func1;
-                    bsl::ut_then{} = [&func1, &func2]() {
-                        bsl::ut_check(func1(42));
-                        bsl::ut_check(func2(42));
-                    };
-                };
-            };
-        };
-
-        bsl::ut_scenario{"member function pointer move assignment"} = []() {
-            bsl::ut_given{} = []() {
-                test_function_memfunc test{};
-                bsl::function<bool(bsl::int32 const &)> func1{test,
-                                                              &test_function_memfunc::is_answer};
-                bsl::function<bool(bsl::int32 const &)> func2{};
-                bsl::ut_when{} = [&func1, &func2]() {
-                    func2 = bsl::move(func1);
-                    bsl::ut_then{} = [&func2]() {
-                        bsl::ut_check(func2(42));
-                    };
-                };
-            };
-        };
-
-        bsl::ut_scenario{"const member function pointer copy assignment"} = []() {
-            bsl::ut_given{} = []() {
-                test_function_cmemfunc const test{};
-                bsl::function<bool(bsl::int32 const &)> const func1{
-                    test, &test_function_cmemfunc::is_answer};
-                bsl::function<bool(bsl::int32 const &)> func2{};
-                bsl::ut_when{} = [&func1, &func2]() {
-                    func2 = func1;
-                    bsl::ut_then{} = [&func1, &func2]() {
-                        bsl::ut_check(func1(42));
-                        bsl::ut_check(func2(42));
-                    };
-                };
-            };
-        };
-
-        bsl::ut_scenario{"const member function pointer move assignment"} = []() {
-            bsl::ut_given{} = []() {
-                test_function_cmemfunc const test{};
-                bsl::function<bool(bsl::int32 const &)> func1{test,
-                                                              &test_function_cmemfunc::is_answer};
-                bsl::function<bool(bsl::int32 const &)> func2{};
-                bsl::ut_when{} = [&func1, &func2]() {
-                    func2 = bsl::move(func1);
-                    bsl::ut_then{} = [&func2]() {
-                        bsl::ut_check(func2(42));
-                    };
-                };
-            };
-        };
-
-        return bsl::ut_success();
+        void
+        test_cmemfunc_void_noexcept(bool const val) const noexcept    // NOLINT
+        {
+            bsl::discard(val);
+            g_called = true;
+        }
     };
-};
+}
+
+/// <!-- description -->
+///   @brief Main function for this unit test. If a call to ut_check() fails
+///     the application will fast fail. If all calls to ut_check() pass, this
+///     function will successfully return with bsl::exit_success.
+///
+/// <!-- contracts -->
+///   @pre none
+///   @post none
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+bsl::exit_code
+main()
+{
+    using namespace bsl;
+    bsl::set_ut_reset_handler(&reset_handler);
+
+    bsl::ut_scenario{"func"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function const func{&test_func};
+            bsl::ut_when{} = [&func]() {
+                ut_check(func.valid());
+                auto const res{func(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+
+            static_assert(!noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"func (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function const func{&test_func_noexcept};
+            bsl::ut_when{} = [&func]() {
+                ut_check(func.valid());
+                auto const res{func(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+
+            static_assert(noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"func with void return"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function const func{&test_func_void};
+            bsl::ut_when{} = [&func]() {
+                ut_check(func.valid());
+                g_called = false;
+                func(true);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+
+            static_assert(!noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"func with void return (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function const func{&test_func_void_noexcept};
+            bsl::ut_when{} = [&func]() {
+                ut_check(func.valid());
+                g_called = false;
+                func(true);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+
+            static_assert(noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"memfunc"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            bsl::function const func{c, &myclass::test_memfunc};
+            bsl::ut_when{} = [&func]() {
+                ut_check(func.valid());
+                auto const res{func(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+
+            static_assert(!noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"memfunc (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            bsl::function const func{c, &myclass::test_memfunc_noexcept};
+            bsl::ut_when{} = [&func]() {
+                ut_check(func.valid());
+                auto const res{func(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+
+            static_assert(noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"memfunc with void return"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            bsl::function const func{c, &myclass::test_memfunc_void};
+            bsl::ut_when{} = [&func]() {
+                ut_check(func.valid());
+                g_called = false;
+                func(true);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+
+            static_assert(!noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"memfunc with void return (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            bsl::function const func{c, &myclass::test_memfunc_void_noexcept};
+            bsl::ut_when{} = [&func]() {
+                ut_check(func.valid());
+                g_called = false;
+                func(true);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+
+            static_assert(noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"cmemfunc"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            bsl::function const func{c, &myclass::test_cmemfunc};
+            bsl::ut_when{} = [&func]() {
+                ut_check(func.valid());
+                auto const res{func(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+
+            static_assert(!noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"cmemfunc (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            bsl::function const func{c, &myclass::test_cmemfunc_noexcept};
+            bsl::ut_when{} = [&func]() {
+                ut_check(func.valid());
+                auto const res{func(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+
+            static_assert(noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"cmemfunc with void return"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            bsl::function const func{c, &myclass::test_cmemfunc_void};
+            bsl::ut_when{} = [&func]() {
+                ut_check(func.valid());
+                g_called = false;
+                func(true);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+
+            static_assert(!noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"cmemfunc with void return (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            bsl::function const func{c, &myclass::test_cmemfunc_void_noexcept};
+            bsl::ut_when{} = [&func]() {
+                ut_check(func.valid());
+                g_called = false;
+                func(true);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+
+            static_assert(noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"default constructor with no signature"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function const func{};
+            bsl::ut_then{} = [&func]() {
+                bsl::ut_check(!func.valid());
+                func();
+            };
+
+            static_assert(noexcept(func()));
+        };
+    };
+
+    bsl::ut_scenario{"default constructor"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function<bool()> const func{};
+            bsl::ut_then{} = [&func]() {
+                bsl::ut_check(!func.valid());
+                bsl::ut_check(!func().success());
+            };
+
+            static_assert(!noexcept(func()));
+        };
+    };
+
+    bsl::ut_scenario{"default constructor with void return"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function<void()> const func{};
+            bsl::ut_then{} = [&func]() {
+                bsl::ut_check(!func.valid());
+                func();
+            };
+
+            static_assert(!noexcept(func()));
+        };
+    };
+
+    bsl::ut_scenario{"default constructor (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function<bool() noexcept> const func{};
+            bsl::ut_then{} = [&func]() {
+                bsl::ut_check(!func.valid());
+                bsl::ut_check(!func().success());
+            };
+
+            static_assert(noexcept(func()));
+        };
+    };
+
+    bsl::ut_scenario{"default constructor with void return (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function<void() noexcept> const func{};
+            bsl::ut_then{} = [&func]() {
+                bsl::ut_check(!func.valid());
+                func();
+            };
+
+            static_assert(noexcept(func()));
+        };
+    };
+
+    bsl::ut_scenario{"nullptr func"} = []() {
+        bsl::ut_given{} = []() {
+            bool (*myfunc)(bool){};
+            bsl::function const func{myfunc};
+            bsl::ut_when{} = [&func]() {
+                ut_check(!func.valid());
+                auto const res{func(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() == nullptr);
+                };
+            };
+
+            static_assert(!noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"nullptr func (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            bool (*myfunc)(bool) noexcept {};
+            bsl::function const func{myfunc};
+            bsl::ut_when{} = [&func]() {
+                ut_check(!func.valid());
+                auto const res{func(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() == nullptr);
+                };
+            };
+
+            static_assert(noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"nullptr func with void return"} = []() {
+        bsl::ut_given{} = []() {
+            void (*myfunc)(bool){};
+            bsl::function const func{myfunc};
+            bsl::ut_when{} = [&func]() {
+                ut_check(!func.valid());
+                func(true);
+            };
+
+            static_assert(!noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"nullptr func with void return (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            void (*myfunc)(bool) noexcept {};
+            bsl::function const func{myfunc};
+            bsl::ut_when{} = [&func]() {
+                ut_check(!func.valid());
+                func(true);
+            };
+
+            static_assert(noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"nullptr memfunc"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            bool (myclass::*myfunc)(bool){};
+            bsl::function const func{c, myfunc};
+            bsl::ut_when{} = [&func]() {
+                ut_check(!func.valid());
+                auto const res{func(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() == nullptr);
+                };
+            };
+
+            static_assert(!noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"nullptr memfunc (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            bool (myclass::*myfunc)(bool) noexcept {};
+            bsl::function const func{c, myfunc};
+            bsl::ut_when{} = [&func]() {
+                ut_check(!func.valid());
+                auto const res{func(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() == nullptr);
+                };
+            };
+
+            static_assert(noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"nullptr memfunc with void return"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            void (myclass::*myfunc)(bool){};
+            bsl::function const func{c, myfunc};
+            bsl::ut_when{} = [&func]() {
+                ut_check(!func.valid());
+                func(true);
+            };
+
+            static_assert(!noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"nullptr memfunc with void return (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            void (myclass::*myfunc)(bool) noexcept {};
+            bsl::function const func{c, myfunc};
+            bsl::ut_when{} = [&func]() {
+                ut_check(!func.valid());
+                func(true);
+            };
+
+            static_assert(noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"nullptr cmemfunc"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            bool (myclass::*myfunc)(bool) const {};
+            bsl::function const func{c, myfunc};
+            bsl::ut_when{} = [&func]() {
+                ut_check(!func.valid());
+                auto const res{func(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() == nullptr);
+                };
+            };
+
+            static_assert(!noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"nullptr cmemfunc (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            bool (myclass::*myfunc)(bool) const noexcept {};
+            bsl::function const func{c, myfunc};
+            bsl::ut_when{} = [&func]() {
+                ut_check(!func.valid());
+                auto const res{func(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() == nullptr);
+                };
+            };
+
+            static_assert(noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"nullptr cmemfunc with void return"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            void (myclass::*myfunc)(bool) const {};
+            bsl::function const func{c, myfunc};
+            bsl::ut_when{} = [&func]() {
+                ut_check(!func.valid());
+                func(true);
+            };
+
+            static_assert(!noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"nullptr cmemfunc with void return (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c{};
+            void (myclass::*myfunc)(bool) const noexcept {};
+            bsl::function const func{c, myfunc};
+            bsl::ut_when{} = [&func]() {
+                ut_check(!func.valid());
+                func(true);
+            };
+
+            static_assert(noexcept(func(true)));
+        };
+    };
+
+    bsl::ut_scenario{"copy construction"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function const func1{&test_func};
+            bsl::function const func2{func1};
+            bsl::ut_when{} = [&func2]() {
+                auto const res{func2(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"copy construction (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function const func1{&test_func_noexcept};
+            bsl::function const func2{func1};
+            bsl::ut_when{} = [&func2]() {
+                auto const res{func2(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"copy construction with void return"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function const func1{&test_func_void};
+            bsl::function const func2{func1};
+            bsl::ut_when{} = [&func2]() {
+                ut_check(func2.valid());
+                g_called = false;
+                func2(true);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"copy construction with void return"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function const func1{&test_func_void_noexcept};
+            bsl::function const func2{func1};
+            bsl::ut_when{} = [&func2]() {
+                ut_check(func2.valid());
+                g_called = false;
+                func2(true);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"move construction"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function func1{&test_func};
+            bsl::function const func2{bsl::move(func1)};
+            bsl::ut_when{} = [&func2]() {
+                auto const res{func2(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"move construction (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function func1{&test_func_noexcept};
+            bsl::function const func2{bsl::move(func1)};
+            bsl::ut_when{} = [&func2]() {
+                auto const res{func2(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"move construction with void return"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function func1{&test_func_void};
+            bsl::function const func2{bsl::move(func1)};
+            bsl::ut_when{} = [&func2]() {
+                ut_check(func2.valid());
+                g_called = false;
+                func2(true);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"move construction with void return"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function func1{&test_func_void_noexcept};
+            bsl::function const func2{bsl::move(func1)};
+            bsl::ut_when{} = [&func2]() {
+                ut_check(func2.valid());
+                g_called = false;
+                func2(true);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"copy assignment"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function const func1{&test_func};
+            bsl::function<bool(bool)> func2{};
+            bsl::ut_when{} = [&func1, &func2]() {
+                func2 = func1;
+                auto const res{func2(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"copy assignment (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function const func1{&test_func_noexcept};
+            bsl::function<bool(bool) noexcept> func2{};
+            bsl::ut_when{} = [&func1, &func2]() {
+                func2 = func1;
+                ut_check(func2.valid());
+                auto const res{func2(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"copy assignment with void return"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function const func1{&test_func_void};
+            bsl::function<void(bool)> func2{};
+            bsl::ut_when{} = [&func1, &func2]() {
+                func2 = func1;
+                ut_check(func2.valid());
+                g_called = false;
+                func2(true);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"copy assignment with void return (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function const func1{&test_func_void_noexcept};
+            bsl::function<void(bool) noexcept> func2{};
+            bsl::ut_when{} = [&func1, &func2]() {
+                func2 = func1;
+                ut_check(func2.valid());
+                g_called = false;
+                func2(true);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"move assignment"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function func1{&test_func};
+            bsl::function<bool(bool)> func2{};
+            bsl::ut_when{} = [&func1, &func2]() {
+                func2 = bsl::move(func1);
+                auto const res{func2(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"move assignment (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function func1{&test_func_noexcept};
+            bsl::function<bool(bool) noexcept> func2{};
+            bsl::ut_when{} = [&func1, &func2]() {
+                func2 = bsl::move(func1);
+                ut_check(func2.valid());
+                auto const res{func2(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"move assignment with void return"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function func1{&test_func_void};
+            bsl::function<void(bool)> func2{};
+            bsl::ut_when{} = [&func1, &func2]() {
+                func2 = bsl::move(func1);
+                ut_check(func2.valid());
+                g_called = false;
+                func2(true);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"move assignment with void return (noexcept)"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::function func1{&test_func_void_noexcept};
+            bsl::function<void(bool) noexcept> func2{};
+            bsl::ut_when{} = [&func1, &func2]() {
+                func2 = bsl::move(func1);
+                ut_check(func2.valid());
+                g_called = false;
+                func2(true);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+        };
+    };
+
+    return bsl::ut_success();
+}

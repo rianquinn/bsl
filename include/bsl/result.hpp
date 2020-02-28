@@ -140,6 +140,14 @@ namespace bsl
         ///     it needs a better definition to ensure the library the spec
         ///     demands can actually be compliant with the spec itself.
         ///
+        ///   SUPPRESSION: PRQA 2180 - exception required
+        ///   - We suppress this because A12-1-4 states that all constructors
+        ///     that are callable from a fundamental type should be marked as
+        ///     explicit. This is a fundamental type, but all implicit
+        ///     conversions are disabled through the use of the implicit
+        ///     general template constructor that is deleted which absorbs all
+        ///     incoming potential implicit conversions.
+        ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
@@ -151,7 +159,7 @@ namespace bsl
         /// <!-- exceptions -->
         ///   @throw throws if T's copy constructor throws
         ///
-        explicit constexpr result(T const &t) noexcept    // PRQA S 2023
+        constexpr result(T const &t) noexcept    // PRQA S 2023, 2180 // NOLINT
             : m_which{details::result_type::contains_t}, m_t{t}
         {}
 
@@ -173,6 +181,14 @@ namespace bsl
         ///     it needs a better definition to ensure the library the spec
         ///     demands can actually be compliant with the spec itself.
         ///
+        ///   SUPPRESSION: PRQA 2180 - exception required
+        ///   - We suppress this because A12-1-4 states that all constructors
+        ///     that are callable from a fundamental type should be marked as
+        ///     explicit. This is a fundamental type, but all implicit
+        ///     conversions are disabled through the use of the implicit
+        ///     general template constructor that is deleted which absorbs all
+        ///     incoming potential implicit conversions.
+        ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
@@ -184,7 +200,7 @@ namespace bsl
         /// <!-- exceptions -->
         ///   @throw throws if T's copy constructor throws
         ///
-        explicit constexpr result(T &&t) noexcept    // PRQA S 2023
+        constexpr result(T &&t) noexcept    // PRQA S 2023, 2180 // NOLINT
             : m_which{details::result_type::contains_t}, m_t{bsl::move(t)}
         {}
 
@@ -244,6 +260,12 @@ namespace bsl
         ///     it needs a better definition to ensure the library the spec
         ///     demands can actually be compliant with the spec itself.
         ///
+        ///   SUPPRESSION: PRQA 2180 - false positive
+        ///   - We suppress this because A12-1-4 states that all constructors
+        ///     that are callable from a fundamental type should be marked as
+        ///     explicit. This is not a fundamental type and there for does
+        ///     not apply.
+        ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
@@ -255,7 +277,9 @@ namespace bsl
         /// <!-- exceptions -->
         ///   @throw throws if E's copy constructor throws
         ///
-        constexpr result(E const &e, sloc_type const &sloc) noexcept    // PRQA S 2023
+        constexpr result(    // PRQA S 2023, 2180 // NOLINT
+            E const &e,
+            sloc_type const &sloc = here()) noexcept
             : m_which{details::result_type::contains_e}, m_e{e}
         {
             bsl::discard(sloc);
@@ -279,6 +303,12 @@ namespace bsl
         ///     it needs a better definition to ensure the library the spec
         ///     demands can actually be compliant with the spec itself.
         ///
+        ///   SUPPRESSION: PRQA 2180 - false positive
+        ///   - We suppress this because A12-1-4 states that all constructors
+        ///     that are callable from a fundamental type should be marked as
+        ///     explicit. This is not a fundamental type and there for does
+        ///     not apply.
+        ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
@@ -291,7 +321,9 @@ namespace bsl
         /// <!-- exceptions -->
         ///   @throw throws if E's copy constructor throws
         ///
-        constexpr result(E &&e, sloc_type const &sloc) noexcept    // PRQA S 2023
+        constexpr result(    // PRQA S 2023, 2180 // NOLINT
+            E &&e,
+            sloc_type const &sloc = here()) noexcept
             : m_which{details::result_type::contains_e}, m_e{bsl::move(e)}
         {
             bsl::discard(sloc);
@@ -393,12 +425,34 @@ namespace bsl
             : m_which{o.m_which}                 // PRQA S 4050
         {
             if (details::result_type::contains_t == m_which) {
-                bsl::discard(construct_at<T>(&m_t, bsl::move(o.m_t)));
+                construct_at<T>(&m_t, bsl::move(o.m_t));
             }
             else {
-                bsl::discard(construct_at<E>(&m_e, bsl::move(o.m_e)));
+                construct_at<E>(&m_e, bsl::move(o.m_e));
             }
         }
+
+        /// <!-- description -->
+        ///   @brief This constructor allows for single argument constructors
+        ///     without the need to mark them as explicit as it will absorb
+        ///     any incoming potential implicit conversion and prevent it.
+        ///
+        ///   SUPPRESSION: PRQA 2180 - false positive
+        ///   - We suppress this because A12-1-4 states that all constructors
+        ///     that are callable from a fundamental type should be marked as
+        ///     explicit. This is callable with a fundamental type, but it
+        ///     is marked as "delete" which means it does not apply.
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam O the type that could be implicitly converted
+        ///   @param val the value that could be implicitly converted
+        ///
+        template<typename O>
+        result(O val) noexcept = delete;    // PRQA S 2180
 
         /// <!-- description -->
         ///   @brief Destroyes a previously created bsl::result. Since

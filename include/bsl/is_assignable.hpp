@@ -28,6 +28,8 @@
 #ifndef BSL_IS_ASSIGNABLE_HPP
 #define BSL_IS_ASSIGNABLE_HPP
 
+#include "bool_constant.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_assignable
@@ -36,17 +38,15 @@ namespace bsl
     ///   @brief If the provided type is assignable, provides the
     ///     member constant value equal to true. Otherwise the member constant
     ///     value is false.
-    ///   @include is_assignable/overview.cpp
+    ///   @include example_is_assignable_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
-    template<typename T, typename... Args>
-    struct is_assignable final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_assignable(T, Args...)};
-    };
+    template<typename T, typename U>
+    class is_assignable final : // --
+        public bool_constant<__is_assignable(T, U)>
+    {};
 }
 
 #endif

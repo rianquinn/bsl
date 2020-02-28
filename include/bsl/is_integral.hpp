@@ -29,6 +29,8 @@
 #define BSL_IS_INTEGRAL_HPP
 
 #include "cstdint.hpp"
+#include "true_type.hpp"
+#include "false_type.hpp"
 
 namespace bsl
 {
@@ -38,7 +40,7 @@ namespace bsl
     ///   @brief If the provided type is an integral type (taking into account
     ///     const qualifications), provides the member constant value
     ///     equal to true. Otherwise the member constant value is false.
-    ///   @include is_integral/overview.cpp
+    ///   @include example_is_integral_overview.hpp
     ///
     /// <!-- notes -->
     ///   @note We only support the cstdint.hpp basic fixed-width types
@@ -50,139 +52,82 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_integral final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{false};
-    };
+    class is_integral final : public false_type
+    {};
 
     /// @cond --
 
     template<>
-    struct is_integral<bool> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bool> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bool const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bool const> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::int8> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::int8> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::int8 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::int8 const> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::int16> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::int16> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::int16 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::int16 const> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::int32> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::int32> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::int32 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::int32 const> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::int64> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::int64> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::int64 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::int64 const> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::uint8> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::uint8> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::uint8 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::uint8 const> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::uint16> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::uint16> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::uint16 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::uint16 const> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::uint32> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::uint32> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::uint32 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::uint32 const> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::uint64> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::uint64> final : public true_type
+    {};
 
     template<>
-    struct is_integral<bsl::uint64 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_integral<bsl::uint64 const> final : public true_type
+    {};
 
     /// @endcond --
 }

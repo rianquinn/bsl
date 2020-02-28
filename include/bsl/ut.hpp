@@ -30,8 +30,9 @@
 #include "color.hpp"
 #include "cstr_type.hpp"
 #include "discard.hpp"
+#include "exit_code.hpp"
 #include "forward.hpp"
-#include "main.hpp"
+#include "move.hpp"
 #include "new.hpp"
 #include "print.hpp"
 #include "source_location.hpp"
@@ -68,81 +69,111 @@ namespace bsl
             bsl::print("%s%d%s", cyan, sloc.line(), reset_color);
             bsl::print("\n");
         }
-
-        class scenario_impl final
-        {
-        public:
-            explicit constexpr scenario_impl(cstr_type const &name) noexcept : m_name{name}
-            {
-                bsl::discard(m_name);
-            }
-
-            template<typename FUNC>
-            [[maybe_unused]] constexpr scenario_impl &
-            operator=(FUNC &&func) noexcept
-            {
-                ut_current_test_case() = m_name;
-
-                bsl::forward<FUNC>(func)();
-                if (nullptr != ut_reset_handler()) {
-                    ut_reset_handler()();
-                }
-
-                ut_current_test_case() = nullptr;
-                return *this;
-            }
-
-            constexpr scenario_impl(scenario_impl const &o) noexcept = delete;
-            constexpr scenario_impl(scenario_impl &&o) noexcept = delete;
-
-            [[maybe_unused]] constexpr scenario_impl &
-            operator=(scenario_impl const &o) &noexcept = delete;
-            [[maybe_unused]] constexpr scenario_impl &
-            operator=(scenario_impl &&o) &noexcept = delete;
-
-            ~scenario_impl() noexcept = default;
-
-        private:
-            cstr_type m_name;
-        };
-
-        class scenario_step_impl final
-        {
-        public:
-            constexpr scenario_step_impl() noexcept = default;
-
-            template<typename FUNC>
-            [[maybe_unused]] constexpr scenario_step_impl &
-            operator=(FUNC &&func) noexcept
-            {
-                bsl::forward<FUNC>(func)();
-                return *this;    // PRQA S 2880
-            }
-
-            constexpr scenario_step_impl(scenario_step_impl const &o) noexcept = delete;
-            constexpr scenario_step_impl(scenario_step_impl &&o) noexcept = delete;
-
-            [[maybe_unused]] constexpr scenario_step_impl &
-            operator=(scenario_step_impl const &o) &noexcept = delete;
-            [[maybe_unused]] constexpr scenario_step_impl &
-            operator=(scenario_step_impl &&o) &noexcept = delete;
-
-            ~scenario_step_impl() noexcept = default;
-        };
-
     }
 
-    /// @brief defines a scenario
-    using ut_scenario = details::scenario_impl;
+    class ut_scenario final
+    {
+    public:
+        explicit constexpr ut_scenario(cstr_type const &name) noexcept    // --
+            : m_name{name}
+        {}
 
-    /// @brief defines a scenario
-    using ut_given = details::scenario_step_impl;
+        template<typename FUNC>
+        [[maybe_unused]] constexpr ut_scenario &
+        operator=(FUNC &&func) noexcept
+        {
+            details::ut_current_test_case() = m_name;
 
-    /// @brief defines a scenario
-    using ut_when = details::scenario_step_impl;
+            bsl::forward<FUNC>(func)();
+            if (nullptr != details::ut_reset_handler()) {
+                details::ut_reset_handler()();
+            }
 
-    /// @brief defines a scenario
-    using ut_then = details::scenario_step_impl;
+            details::ut_current_test_case() = nullptr;
+            return *this;
+        }
+
+        constexpr ut_scenario(ut_scenario const &o) noexcept = delete;
+        constexpr ut_scenario(ut_scenario &&o) noexcept = delete;
+
+        [[maybe_unused]] constexpr ut_scenario &operator=(ut_scenario const &o) &noexcept = delete;
+        [[maybe_unused]] constexpr ut_scenario &operator=(ut_scenario &&o) &noexcept = delete;
+
+        ~ut_scenario() noexcept = default;
+
+    private:
+        cstr_type m_name;
+    };
+
+    class ut_given final
+    {
+    public:
+        constexpr ut_given() noexcept = default;
+
+        template<typename FUNC>
+        [[maybe_unused]] constexpr ut_given &
+        operator=(FUNC &&func) noexcept
+        {
+            bsl::forward<FUNC>(func)();
+            return *this;    // PRQA S 2880
+        }
+
+        constexpr ut_given(ut_given const &o) noexcept = delete;
+        constexpr ut_given(ut_given &&o) noexcept = delete;
+
+        [[maybe_unused]] constexpr ut_given &operator=(ut_given const &o) &noexcept = delete;
+        [[maybe_unused]] constexpr ut_given &operator=(ut_given &&o) &noexcept = delete;
+
+        ~ut_given() noexcept = default;
+    };
+
+    class ut_when final
+    {
+    public:
+        constexpr ut_when() noexcept = default;
+
+        template<typename FUNC>
+        [[maybe_unused]] constexpr ut_when &
+        operator=(FUNC &&func) noexcept
+        {
+            bsl::forward<FUNC>(func)();
+            return *this;    // PRQA S 2880
+        }
+
+        constexpr ut_when(ut_when const &o) noexcept = delete;
+        constexpr ut_when(ut_when &&o) noexcept = delete;
+
+        [[maybe_unused]] constexpr ut_when &operator=(ut_when const &o) &noexcept = delete;
+        [[maybe_unused]] constexpr ut_when &operator=(ut_when &&o) &noexcept = delete;
+
+        ~ut_when() noexcept = default;
+    };
+
+    class ut_then final
+    {
+    public:
+        constexpr ut_then() noexcept = default;
+
+        template<typename FUNC>
+        [[maybe_unused]] constexpr ut_then &
+        operator=(FUNC &&func) noexcept
+        {
+            bsl::forward<FUNC>(func)();
+            if (nullptr != details::ut_reset_handler()) {
+                details::ut_reset_handler()();
+            }
+
+            return *this;    // PRQA S 2880
+        }
+
+        constexpr ut_then(ut_then const &o) noexcept = delete;
+        constexpr ut_then(ut_then &&o) noexcept = delete;
+
+        [[maybe_unused]] constexpr ut_then &operator=(ut_then const &o) &noexcept = delete;
+        [[maybe_unused]] constexpr ut_then &operator=(ut_then &&o) &noexcept = delete;
+
+        ~ut_then() noexcept = default;
+    };
 
     /// <!-- description -->
     ///   @brief Sets the unit test's reset handler. After each test has

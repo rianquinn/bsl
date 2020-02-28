@@ -38,7 +38,7 @@ namespace bsl
     ///   @brief Defines a conditional "if" statement for SFINAE overload
     ///     resolution. If B is true, bsl::enable_if has a public member
     ///     typedef of type T, otherwise, there is no public member typedef.
-    ///   @include enable_if/overview.cpp
+    ///   @include example_enable_if_overview.hpp
     ///
     /// <!-- notes -->
     ///   @note Unlike the std::enable_if, the default type is an bool,

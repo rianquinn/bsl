@@ -28,6 +28,7 @@
 #ifndef BSL_PRINT_HPP
 #define BSL_PRINT_HPP
 
+#include "cstdint.hpp"
 #include <cstdio>    // PRQA S 1-10000 // NOLINT
 
 namespace bsl

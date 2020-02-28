@@ -100,7 +100,7 @@ namespace bsl
     /// <!-- template parameters -->
     ///   @tparam I the index to construct in place at
     ///
-    template<std::size_t I>
+    template<bsl::uintmax I>
     class in_place_index_t final
     {
     public:

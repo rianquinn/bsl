@@ -54,7 +54,7 @@ namespace bsl
         ///   @pre none
         ///   @post none
         ///
-        constexpr example_class_subclass() noexcept = default;
+        example_class_subclass() noexcept = default;
 
         /// <!-- description -->
         ///   @brief Destroyes a previously created bsl::example_class_subclass
@@ -78,7 +78,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
         ///
-        constexpr example_class_subclass(example_class_subclass const &o) noexcept = default;
+        example_class_subclass(example_class_subclass const &o) noexcept = default;
 
         /// <!-- description -->
         ///   @brief move constructor
@@ -90,7 +90,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///
-        constexpr example_class_subclass(example_class_subclass &&o) noexcept = default;
+        example_class_subclass(example_class_subclass &&o) noexcept = default;
 
         /// <!-- description -->
         ///   @brief copy assignment

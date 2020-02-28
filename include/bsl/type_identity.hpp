@@ -37,8 +37,6 @@ namespace bsl
     ///     (i.e., the identity transformation).
     ///   @include type_identity/overview.cpp
     ///
-    ///   SUPPRESSION: PRQA 2411 - no exception required, N/A to AUTOSAR
-    ///
     /// <!-- template parameters -->
     ///   @tparam T the type that defines the member typedef "type"
     ///
@@ -47,27 +45,9 @@ namespace bsl
     {
     public:
         /// @brief the member typedef "type" being provided
-        using type = T;    // PRQA S 2411
-
-        /// <!-- description -->
-        ///   @brief Creates a default bsl::type_identity
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        constexpr type_identity() noexcept = default;
+        using type = T;
 
     protected:
-        /// <!-- description -->
-        ///   @brief Destroyes a previously created bsl::type_identity
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        ~type_identity() noexcept = default;
-
         /// <!-- description -->
         ///   @brief copy constructor
         ///
@@ -119,9 +99,18 @@ namespace bsl
         ///
         [[maybe_unused]] constexpr type_identity &    // --
         operator=(type_identity &&o) &noexcept = default;
+
+        /// <!-- description -->
+        ///   @brief Destroyes a previously created bsl::type_identity
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        ~type_identity() noexcept = default;
     };
 
-    /// @brief a helper that reduces the verbosity of bsl::remove_const
+    /// @brief a helper that reduces the verbosity of bsl::type_identity
     template<typename T>
     using type_identity_t = typename type_identity<T>::type;
 }

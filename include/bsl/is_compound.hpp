@@ -28,6 +28,7 @@
 #ifndef BSL_IS_COMPOUND_HPP
 #define BSL_IS_COMPOUND_HPP
 
+#include "bool_constant.hpp"
 #include "is_fundamental.hpp"
 
 namespace bsl
@@ -38,17 +39,15 @@ namespace bsl
     ///   @brief If the provided type is a compound type, provides the member
     ///     constant value equal to true. Otherwise the member constant value
     ///     is false.
-    ///   @include is_compound/overview.cpp
+    ///   @include example_is_compound_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_compound final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{!is_fundamental<T>::value};
-    };
+    class is_compound final : // --
+        public bool_constant<!is_fundamental<T>::value>
+    {};
 }
 
 #endif

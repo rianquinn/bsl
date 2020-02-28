@@ -28,6 +28,9 @@
 #ifndef BSL_INTEGRAL_CONSTANT_HPP
 #define BSL_INTEGRAL_CONSTANT_HPP
 
+#include "type_identity.hpp"
+#include "value_type_identity.hpp"
+
 namespace bsl
 {
     /// @class bsl::integral_constant
@@ -42,39 +45,15 @@ namespace bsl
     ///   @tparam T the type of integral being stored
     ///
     template<typename T, T v>
-    class integral_constant
+    class integral_constant :
+        public value_type_identity<T>,
+        public type_identity<integral_constant<T, v>>
     {
     public:
-        /// @brief the Type T that stores the integral constant
+        /// @brief the type T that stores the integral constant
         static constexpr T value{v};
 
-        /// <!-- description -->
-        ///   @brief Returns the value of "value"
-        ///   @include example_integral_constant_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @return Returns the value of "value"
-        ///
-        constexpr T
-        operator()() const noexcept
-        {
-            return v;
-        }
-
     protected:
-        /// <!-- description -->
-        ///   @brief Destroyes a previously created bsl::integral_constant
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        ~integral_constant() noexcept = default;
-
         /// <!-- description -->
         ///   @brief copy constructor
         ///
@@ -126,6 +105,15 @@ namespace bsl
         ///
         [[maybe_unused]] constexpr integral_constant &    // --
         operator=(integral_constant &&o) &noexcept = default;
+
+        /// <!-- description -->
+        ///   @brief Destroyes a previously created bsl::integral_constant
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        ~integral_constant() noexcept = default;
     };
 }
 

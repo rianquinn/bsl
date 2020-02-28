@@ -27,6 +27,7 @@
 
 #include <bsl/decay.hpp>
 #include <bsl/is_same.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -40,15 +41,9 @@ namespace bsl
     inline void
     example_decay_overview() noexcept
     {
-        using example_decay_f_type = bsl::int32(bsl::int32);
-        using example_decay_fp_type = bsl::int32 (*)(bsl::int32);
-
-        static_assert(is_same<decay_t<bsl::int32>, bsl::int32>::value);
-        static_assert(is_same<decay_t<bsl::int32 &>, bsl::int32>::value);
-        static_assert(is_same<decay_t<bsl::int32 &&>, bsl::int32>::value);
-        static_assert(is_same<decay_t<bsl::int32 const &>, bsl::int32>::value);
-        static_assert(is_same<decay_t<bsl::int32[1]>, bsl::int32 *>::value);    // NOLINT
-        static_assert(is_same<decay_t<example_decay_f_type>, example_decay_fp_type>::value);
+        if (bsl::is_same<bsl::decay_t<bool const>, bool>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

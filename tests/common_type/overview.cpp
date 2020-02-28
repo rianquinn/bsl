@@ -22,10 +22,10 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/ut.hpp>
-
 #include <bsl/common_type.hpp>
 #include <bsl/is_same.hpp>
+
+#include <bsl/ut.hpp>
 
 // clang-format off
 
@@ -43,17 +43,17 @@ namespace
 
     struct s2_type final
     {
-        operator void *();
+        operator void *();    // NOLINT
     };
 
     struct s3_type final
     {
-        operator void *();
+        operator void *();    // NOLINT
     };
 
     struct s4_type final
     {
-        operator void const *();
+        operator void const *();    // NOLINT
     };
 
     class b1_type
@@ -63,6 +63,18 @@ namespace
     {};
 }
 
+/// <!-- description -->
+///   @brief Main function for this unit test. If a call to ut_check() fails
+///     the application will fast fail. If all calls to ut_check() pass, this
+///     function will successfully return with bsl::exit_success.
+///
+/// <!-- contracts -->
+///   @pre none
+///   @post none
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
 bsl::exit_code
 main()
 {
@@ -138,25 +150,25 @@ main()
     static_assert(is_same<common_type_t<bool *, bool *, bool const *>, bool const *>::value);
     static_assert(is_same<common_type_t<bool *, bool *, bool *, bool const *>, bool const *>::value);
 
-    static_assert(is_same<common_type_t<bool[42]>, bool *>::value);
-    static_assert(is_same<common_type_t<bool[42], bool[42]>, bool *>::value);
-    static_assert(is_same<common_type_t<bool[42], bool[42], bool[42]>, bool *>::value);
-    static_assert(is_same<common_type_t<bool[42], bool[42], bool[42], bool[42]>, bool *>::value);
+    static_assert(is_same<common_type_t<bool[42]>, bool *>::value);                                  // NOLINT
+    static_assert(is_same<common_type_t<bool[42], bool[42]>, bool *>::value);                        // NOLINT
+    static_assert(is_same<common_type_t<bool[42], bool[42], bool[42]>, bool *>::value);              // NOLINT
+    static_assert(is_same<common_type_t<bool[42], bool[42], bool[42], bool[42]>, bool *>::value);    // NOLINT
 
-    static_assert(is_same<common_type_t<bool const[42]>, bool const *>::value);
-    static_assert(is_same<common_type_t<bool[42], bool const[42]>, bool const *>::value);
-    static_assert(is_same<common_type_t<bool[42], bool[42], bool const[42]>, bool const *>::value);
-    static_assert(is_same<common_type_t<bool[42], bool[42], bool[42], bool const[42]>, bool const *>::value);
+    static_assert(is_same<common_type_t<bool const[42]>, bool const *>::value);                                  // NOLINT
+    static_assert(is_same<common_type_t<bool[42], bool const[42]>, bool const *>::value);                        // NOLINT
+    static_assert(is_same<common_type_t<bool[42], bool[42], bool const[42]>, bool const *>::value);              // NOLINT
+    static_assert(is_same<common_type_t<bool[42], bool[42], bool[42], bool const[42]>, bool const *>::value);    // NOLINT
 
-    static_assert(is_same<common_type_t<bool[23]>, bool *>::value);
-    static_assert(is_same<common_type_t<bool[42], bool[23]>, bool *>::value);
-    static_assert(is_same<common_type_t<bool[42], bool[42], bool[23]>, bool *>::value);
-    static_assert(is_same<common_type_t<bool[42], bool[42], bool[42], bool[23]>, bool *>::value);
+    static_assert(is_same<common_type_t<bool[23]>, bool *>::value);                                  // NOLINT
+    static_assert(is_same<common_type_t<bool[42], bool[23]>, bool *>::value);                        // NOLINT
+    static_assert(is_same<common_type_t<bool[42], bool[42], bool[23]>, bool *>::value);              // NOLINT
+    static_assert(is_same<common_type_t<bool[42], bool[42], bool[42], bool[23]>, bool *>::value);    // NOLINT
 
-    static_assert(is_same<common_type_t<bool const[23]>, bool const *>::value);
-    static_assert(is_same<common_type_t<bool[42], bool const[23]>, bool const *>::value);
-    static_assert(is_same<common_type_t<bool[42], bool[42], bool const[23]>, bool const *>::value);
-    static_assert(is_same<common_type_t<bool[42], bool[42], bool[42], bool const[23]>, bool const *>::value);
+    static_assert(is_same<common_type_t<bool const[23]>, bool const *>::value);                                  // NOLINT
+    static_assert(is_same<common_type_t<bool[42], bool const[23]>, bool const *>::value);                        // NOLINT
+    static_assert(is_same<common_type_t<bool[42], bool[42], bool const[23]>, bool const *>::value);              // NOLINT
+    static_assert(is_same<common_type_t<bool[42], bool[42], bool[42], bool const[23]>, bool const *>::value);    // NOLINT
 
     static_assert(is_same<common_type_t<e1_type, e1_type>, e1_type>::value);
     static_assert(is_same<common_type_t<e2_type, e2_type>, e2_type>::value);

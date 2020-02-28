@@ -41,13 +41,9 @@ namespace bsl
     inline void
     example_aligned_storage_overview() noexcept
     {
-        using page_type = bsl::aligned_storage_t<BSL_PAGE_SIZE, BSL_PAGE_SIZE>;
+        using page_type = bsl::aligned_storage_t<BSL_PAGE_SIZE, 64>;
 
-        if constexpr (bsl::alignment_of<page_type>::value == BSL_PAGE_SIZE) {
-            bsl::print("success\n");
-        }
-
-        if constexpr (sizeof(page_type) >= BSL_PAGE_SIZE) {
+        if (sizeof(page_type) >= BSL_PAGE_SIZE) {
             bsl::print("success\n");
         }
     }

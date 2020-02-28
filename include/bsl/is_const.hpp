@@ -39,7 +39,7 @@ namespace bsl
     ///   @brief If the provided type is qualified as const, provides the
     ///     member constant value equal to true. Otherwise the member constant
     ///     value is false.
-    ///   @include is_const/overview.cpp
+    ///   @include example_is_const_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query

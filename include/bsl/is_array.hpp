@@ -40,7 +40,7 @@ namespace bsl
     ///   @brief If the provided type is an array type (taking into account
     ///     const qualifications), provides the member constant value
     ///     equal to true. Otherwise the member constant value is false.
-    ///   @include is_array/overview.cpp
+    ///   @include example_is_array_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query

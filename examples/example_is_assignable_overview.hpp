@@ -25,8 +25,10 @@
 #ifndef EXAMPLE_IS_ASSIGNABLE_OVERVIEW_HPP
 #define EXAMPLE_IS_ASSIGNABLE_OVERVIEW_HPP
 
-#include <bsl/is_bool.hpp>
 #include <bsl/is_assignable.hpp>
+#include <bsl/print.hpp>
+
+#include "example_class_pod.hpp"
 
 namespace bsl
 {
@@ -40,8 +42,9 @@ namespace bsl
     inline void
     example_is_assignable_overview() noexcept
     {
-        static_assert(bsl::is_assignable<bsl::is_bool<bool>, bsl::is_bool<bool>>::value);
-        static_assert(!bsl::is_assignable<bsl::is_bool<bool>, bool>::value);
+        if (bsl::is_assignable<example_class_pod, example_class_pod>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

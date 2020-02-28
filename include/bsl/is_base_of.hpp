@@ -28,7 +28,8 @@
 #ifndef BSL_IS_BASE_OF_HPP
 #define BSL_IS_BASE_OF_HPP
 
-#include "remove_const.hpp"
+#include "bool_constant.hpp"
+#include "remove_const.hpp"    // Needed for PRQA
 
 namespace bsl
 {
@@ -38,9 +39,7 @@ namespace bsl
     ///   @brief If the provided type T is a base of type U, provides the member
     ///     constant value equal to true. Otherwise the member constant value
     ///     is false.
-    ///   @include example_class_base.hpp
-    ///   @include example_class_subclass.hpp
-    ///   @include is_base_of/overview.cpp
+    ///   @include example_is_base_of_overview.hpp
     ///
     ///   SUPPRESSION: PRQA 3702 - false positive
     ///   - We suppress this because M5-0-2 is concerned about ! and &&, which
@@ -52,11 +51,9 @@ namespace bsl
     ///   @tparam U the type to query
     ///
     template<typename T, typename U>
-    struct is_base_of final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_base_of(T, U)};    // PRQA S 3702
-    };
+    class is_base_of final : // --
+        public bool_constant<__is_base_of(T, U)> // PRQA S 3702
+    {};
 }
 
 #endif

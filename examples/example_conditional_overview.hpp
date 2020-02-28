@@ -25,8 +25,9 @@
 #ifndef EXAMPLE_CONDITIONAL_OVERVIEW_HPP
 #define EXAMPLE_CONDITIONAL_OVERVIEW_HPP
 
-#include <bsl/is_same.hpp>
 #include <bsl/conditional.hpp>
+#include <bsl/is_same.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -40,8 +41,13 @@ namespace bsl
     inline void
     example_conditional_overview() noexcept
     {
-        static_assert(bsl::is_same<bsl::conditional_t<true, bool, void>, bool>::value);
-        static_assert(bsl::is_same<bsl::conditional_t<false, bool, void>, void>::value);
+        if (bsl::is_same<bsl::conditional_t<true, bool, void>, bool>::value) {
+            bsl::print("success\n");
+        }
+
+        if (bsl::is_same<bsl::conditional_t<false, bool, void>, void>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

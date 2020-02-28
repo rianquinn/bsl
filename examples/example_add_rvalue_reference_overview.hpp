@@ -41,7 +41,7 @@ namespace bsl
     inline void
     example_add_rvalue_reference_overview() noexcept
     {
-        if constexpr (bsl::is_same<bsl::add_rvalue_reference_t<bool>, bool &&>::value) {
+        if (bsl::is_same<bsl::add_rvalue_reference_t<bool>, bool &&>::value) {
             bsl::print("success\n");
         }
     }

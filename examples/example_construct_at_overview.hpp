@@ -26,6 +26,7 @@
 #define EXAMPLE_CONSTRUCT_AT_OVERVIEW_HPP
 
 #include <bsl/construct_at.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -39,8 +40,12 @@ namespace bsl
     inline void
     example_construct_at_overview() noexcept
     {
-        bsl::uint32 mydata{};
-        bsl::discard(bsl::construct_at<bsl::uint32>(&mydata, 0U));
+        bool mydata{};
+        bsl::construct_at<bool>(&mydata, true);
+
+        if (mydata) {
+            bsl::print("success\n");
+        }
     }
 }
 

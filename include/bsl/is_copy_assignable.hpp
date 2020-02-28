@@ -28,6 +28,7 @@
 #ifndef BSL_IS_COPY_ASSIGNABLE_HPP
 #define BSL_IS_COPY_ASSIGNABLE_HPP
 
+#include "bool_constant.hpp"
 #include "add_const.hpp"
 #include "add_lvalue_reference.hpp"
 
@@ -39,18 +40,16 @@ namespace bsl
     ///   @brief If the provided type is copy assignable, provides the
     ///     member constant value equal to true. Otherwise the member constant
     ///     value is false.
-    ///   @include is_copy_assignable/overview.cpp
+    ///   @include example_is_copy_assignable_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_copy_assignable final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{
-            __is_assignable(add_lvalue_reference_t<T>, add_lvalue_reference_t<add_const_t<T>>)};
-    };
+    class is_copy_assignable final :
+        public bool_constant<__is_assignable(
+            add_lvalue_reference_t<T>, add_lvalue_reference_t<add_const_t<T>>)>
+    {};
 }
 
 #endif

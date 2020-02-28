@@ -25,6 +25,8 @@
 #ifndef BSL_DETAILS_MEMFUNC_WRAPPER_HPP
 #define BSL_DETAILS_MEMFUNC_WRAPPER_HPP
 
+#include "../forward.hpp"
+
 namespace bsl
 {
     namespace details
@@ -84,13 +86,70 @@ namespace bsl
             /// <!-- exceptions -->
             ///   @throw throws if the wrapped function throws
             ///
-            constexpr R
-            invoke(ARGS &&... args) const final
+            [[nodiscard]] R
+            invoke(ARGS &&... args) const noexcept(false) final
             {
                 return (m_t.*m_func)(bsl::forward<ARGS>(args)...);
             }
         };
-    };
+
+        /// @class bsl::details::memfunc_wrapper
+        ///
+        /// <!-- description -->
+        ///   @brief Wraps a member function
+        ///
+        /// <!-- template parameters -->
+        ///   @tparam T the type of object the member function belongs too
+        ///   @tparam R the return type of the function being wrapped
+        ///   @tparam ARGS the arg types of the function being wrapped
+        ///
+        template<typename T, typename R, typename... ARGS>
+        class memfunc_wrapper<T, R(ARGS...) noexcept> final :
+            public base_wrapper<R(ARGS...) noexcept>
+        {
+            /// @brief stores a reference to the member function's object
+            T &m_t;
+            /// @brief stores a pointer to the wrapped function
+            R (T::*m_func)(ARGS...) noexcept;
+
+        public:
+            /// <!-- description -->
+            ///   @brief Creates a bsl::details::memfunc_wrapper given a pointer
+            ///     to a member function. This function pointer is stored,
+            ///     in addition to a reference to the member function's object
+            ///     and later called by the overloaded invoke function.
+            ///
+            /// <!-- contracts -->
+            ///   @pre none
+            ///   @post none
+            ///
+            /// <!-- inputs/outputs -->
+            ///   @param t a reference to the member function's object
+            ///   @param func a pointer to a regular function
+            ///
+            explicit constexpr memfunc_wrapper(T &t, R (T::*const func)(ARGS...) noexcept) noexcept
+                : base_wrapper<R(ARGS...) noexcept>{}, m_t{t}, m_func{func}
+            {}
+
+            /// <!-- description -->
+            ///   @brief Calls the wrapped function by passing "args" to the
+            ///     function and returing the result.
+            ///
+            /// <!-- contracts -->
+            ///   @pre none
+            ///   @post none
+            ///
+            /// <!-- inputs/outputs -->
+            ///   @param args the arguments to pass to the wrapped function
+            ///   @return returns the result of the wrapped function
+            ///
+            [[nodiscard]] R
+            invoke(ARGS &&... args) const noexcept final
+            {
+                return (m_t.*m_func)(bsl::forward<ARGS>(args)...);
+            }
+        };
+    }
 }
 
 #endif

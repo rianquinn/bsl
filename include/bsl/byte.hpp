@@ -29,10 +29,12 @@
 #define BSL_BYTE_HPP
 
 #include "cstdint.hpp"
+#include "move.hpp"
+
 #include "enable_if.hpp"
 #include "is_integral.hpp"
+#include "is_same.hpp"
 #include "is_unsigned.hpp"
-#include "move.hpp"
 
 namespace bsl
 {
@@ -40,20 +42,8 @@ namespace bsl
     ///
     /// <!-- description -->
     ///   @brief std::byte is a distinct type that implements the concept of
-    ///     byte as specified in the C++ language definition. It is not a safe
-    ///     integer type, meaning wrapping is possible, and is not checked.
-    ///     Unlike a std::byte, the bsl::byte is implemented as a class since
-    ///     the relaxed implicit conversions between an integer type and an
-    ///     enum are not allowed by AUTOSAR. In addition, the shift operations
+    ///     byte as specified in the C++ language definition. Shift operations
     ///     all require unsigned integer types, instead of any integer type.
-    ///     A signed integer type, and an integer type of any size can be used
-    ///     to create a byte, and is created using a static_cast() to an
-    ///     8bit unsigned type, meaning if the integer type is signed, it will
-    ///     be converted to an unsigned type, and if the intger type is larger
-    ///     than 8 bits, only the first 8 bits wil be used and the remaining
-    ///     portion of the integer will be dropped using whatever mechanism the
-    ///     compiler sees fit. If a safe integer type is needed, please use
-    ///     the safe integer types provided by the BSL instead.
     ///   @include example_byte_overview.cpp
     ///
     class byte final
@@ -77,34 +67,49 @@ namespace bsl
         byte() noexcept = default;
 
         /// <!-- description -->
-        ///   @brief Creates a bsl::byte from an integer type. The bsl::byte
-        ///     is created by statically casting the provided integer to a
-        ///     bsl::uint8. As such, if the integer type is signed, it will be
-        ///     converted to an unsigned type, and if the integer type is
-        ///     larger than a byte, data will be lost in the conversion.
+        ///   @brief Creates a bsl::byte from a bsl::uint8
         ///   @include example_byte_overview.hpp
+        ///
+        ///   SUPPRESSION: PRQA 2180 - exception required
+        ///   - We suppress this because A12-1-4 states that all constructors
+        ///     that are callable from a fundamental type should be marked as
+        ///     explicit. This is a fundamental type, but all implicit
+        ///     conversions are disabled through the use of the implicit
+        ///     general template constructor that is deleted which absorbs all
+        ///     incoming potential implicit conversions.
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
-        ///   @tparam T the type of integer to create the bsl::byte from
-        ///   @param t the value of the integer to create the bsl::byte from.
+        ///   @param val the value of the integer to create the bsl::byte from.
         ///
-        template<typename T, enable_if_t<is_integral<T>::value> = true>
-        explicit constexpr byte(T const t) noexcept    // --
-            : m_data{static_cast<bsl::uint8>(t)}       // PRQA S 2906
+        constexpr byte(bsl::uint8 const val) noexcept    // PRQA S 2180 // NOLINT
+            : m_data{val}
         {}
 
         /// <!-- description -->
-        ///   @brief Destroyes a previously created bsl::byte
+        ///   @brief This constructor allows for single argument constructors
+        ///     without the need to mark them as explicit as it will absorb
+        ///     any incoming potential implicit conversion and prevent it.
+        ///
+        ///   SUPPRESSION: PRQA 2180 - false positive
+        ///   - We suppress this because A12-1-4 states that all constructors
+        ///     that are callable from a fundamental type should be marked as
+        ///     explicit. This is callable with a fundamental type, but it
+        ///     is marked as "delete" which means it does not apply.
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
-        ~byte() noexcept = default;
+        /// <!-- inputs/outputs -->
+        ///   @tparam O the type that could be implicitly converted
+        ///   @param val the value that could be implicitly converted
+        ///
+        template<typename O>
+        byte(O val) noexcept = delete;    // PRQA S 2180
 
         /// <!-- description -->
         ///   @brief copy constructor
@@ -159,6 +164,15 @@ namespace bsl
         operator=(byte &&o) &noexcept = default;
 
         /// <!-- description -->
+        ///   @brief Destroyes a previously created bsl::byte
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        ~byte() noexcept = default;
+
+        /// <!-- description -->
         ///   @brief Returns the bsl::byte as a given integer type using a
         ///     static_cast to perform the conversion.
         ///   @include example_byte_overview.hpp
@@ -172,7 +186,7 @@ namespace bsl
         ///   @return Returns the bsl::byte as a given integer type using a
         ///     static_cast to perform the conversion.
         ///
-        template<typename T = bsl::uint32, enable_if_t<is_integral<T>::value> = true>
+        template<typename T = bsl::uint8, enable_if_t<is_integral<T>::value> = true>
         [[nodiscard]] constexpr T
         to_integer() const noexcept
         {
@@ -227,16 +241,14 @@ namespace bsl
     ///   @post none
     ///
     /// <!-- inputs/outputs -->
-    ///   @tparam SHIFT_T the type used for the shift value
     ///   @param b the bsl::byte to shift
     ///   @param shift the number of bits to shift b
     ///   @return returns a reference to the provided "b"
     ///
-    template<typename SHIFT_T, enable_if_t<is_unsigned<SHIFT_T>::value> = true>
     constexpr byte &
-    operator<<=(byte &b, SHIFT_T const shift) noexcept
+    operator<<=(byte &b, bsl::uint32 const shift) noexcept
     {
-        b = byte{b.to_integer() << shift};
+        b = byte{static_cast<bsl::uint8>(b.to_integer<bsl::uint32>() << shift)};
         return b;
     }
 
@@ -249,16 +261,14 @@ namespace bsl
     ///   @post none
     ///
     /// <!-- inputs/outputs -->
-    ///   @tparam SHIFT_T the type used for the shift value
     ///   @param b the bsl::byte to shift
     ///   @param shift the number of bits to shift b
     ///   @return returns a reference to the provided "b"
     ///
-    template<typename SHIFT_T, enable_if_t<is_unsigned<SHIFT_T>::value> = true>
     constexpr byte &
-    operator>>=(byte &b, SHIFT_T const shift) noexcept
+    operator>>=(byte &b, bsl::uint32 const shift) noexcept
     {
-        b = byte{b.to_integer() >> shift};
+        b = byte{static_cast<bsl::uint8>(b.to_integer<bsl::uint32>() >> shift)};
         return b;
     }
 
@@ -271,14 +281,12 @@ namespace bsl
     ///   @post none
     ///
     /// <!-- inputs/outputs -->
-    ///   @tparam SHIFT_T the type used for the shift value
     ///   @param b the bsl::byte to shift
     ///   @param shift the number of bits to shift b
     ///   @return returns byte tmp{b}; tmp <<= shift;
     ///
-    template<typename SHIFT_T, enable_if_t<is_unsigned<SHIFT_T>::value> = true>
     constexpr byte
-    operator<<(byte const &b, SHIFT_T const shift) noexcept
+    operator<<(byte const &b, bsl::uint32 const shift) noexcept
     {
         byte tmp{b};
         tmp <<= shift;
@@ -294,14 +302,12 @@ namespace bsl
     ///   @post none
     ///
     /// <!-- inputs/outputs -->
-    ///   @tparam SHIFT_T the type used for the shift value
     ///   @param b the bsl::byte to shift
     ///   @param shift the number of bits to shift b
     ///   @return returns byte tmp{b}; tmp >>= shift;
     ///
-    template<typename SHIFT_T, enable_if_t<is_unsigned<SHIFT_T>::value> = true>
     constexpr byte
-    operator>>(byte const &b, SHIFT_T const shift) noexcept
+    operator>>(byte const &b, bsl::uint32 const shift) noexcept
     {
         byte tmp{b};
         tmp >>= shift;
@@ -324,7 +330,10 @@ namespace bsl
     constexpr byte &
     operator|=(byte &lhs, byte const &rhs) noexcept
     {
-        lhs = byte{lhs.to_integer() | rhs.to_integer()};
+        auto const lhs32{lhs.to_integer<bsl::uint32>()};
+        auto const rhs32{rhs.to_integer<bsl::uint32>()};
+
+        lhs = byte{static_cast<bsl::uint8>(lhs32 | rhs32)};
         return lhs;
     }
 
@@ -344,7 +353,10 @@ namespace bsl
     constexpr byte &
     operator&=(byte &lhs, byte const &rhs) noexcept
     {
-        lhs = byte{lhs.to_integer() & rhs.to_integer()};
+        auto const lhs32{lhs.to_integer<bsl::uint32>()};
+        auto const rhs32{rhs.to_integer<bsl::uint32>()};
+
+        lhs = byte{static_cast<bsl::uint8>(lhs32 & rhs32)};
         return lhs;
     }
 
@@ -364,7 +376,10 @@ namespace bsl
     constexpr byte &
     operator^=(byte &lhs, byte const &rhs) noexcept
     {
-        lhs = byte{lhs.to_integer() ^ rhs.to_integer()};
+        auto const lhs32{lhs.to_integer<bsl::uint32>()};
+        auto const rhs32{rhs.to_integer<bsl::uint32>()};
+
+        lhs = byte{static_cast<bsl::uint8>(lhs32 ^ rhs32)};
         return lhs;
     }
 
@@ -445,7 +460,7 @@ namespace bsl
     constexpr byte
     operator~(byte const &b) noexcept
     {
-        return byte{~b.to_integer()};
+        return byte{static_cast<bsl::uint8>(~b.to_integer<bsl::uint32>())};
     }
 }
 

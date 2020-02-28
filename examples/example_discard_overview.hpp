@@ -25,6 +25,9 @@
 #ifndef EXAMPLE_DISCARD_OVERVIEW_HPP
 #define EXAMPLE_DISCARD_OVERVIEW_HPP
 
+#include <bsl/discard.hpp>
+#include <bsl/print.hpp>
+
 namespace bsl
 {
     /// <!-- description -->
@@ -36,7 +39,12 @@ namespace bsl
     ///
     inline void
     example_discard_overview() noexcept
-    {}
+    {
+        bool val{};
+        bsl::discard(val);
+
+        bsl::print("success\n");
+    }
 }
 
 #endif

@@ -26,24 +26,45 @@
 #define EXAMPLE_ENABLE_IF_OVERVIEW_HPP
 
 #include <bsl/enable_if.hpp>
-#include <bsl/is_bool.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
     /// <!-- description -->
-    ///   @brief Returns success when the provided type is a bool.
+    ///   @brief Returns true if T is a bool, false otherwise
     ///
     /// <!-- contracts -->
     ///   @pre none
     ///   @post none
     ///
     /// <!-- inputs/outputs -->
-    ///   @tparam T the type to query
+    ///   @tparam T The type to query
+    ///   @return Returns true if T is a bool, false otherwise
     ///
-    template<typename T, bsl::enable_if_t<bsl::is_bool<T>::value> = true>
-    constexpr void
+    template<typename T, bsl::enable_if_t<bsl::is_same<T, bool>::value> = true>
+    constexpr bool
     foo() noexcept
-    {}
+    {
+        return true;
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns true if T is a bool, false otherwise
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T The type to query
+    ///   @return Returns true if T is a bool, false otherwise
+    ///
+    template<typename T, bsl::enable_if_t<!bsl::is_same<T, bool>::value> = true>
+    constexpr bool
+    foo() noexcept
+    {
+        return false;
+    }
 
     /// <!-- description -->
     ///   @brief Provides the example's main function
@@ -54,7 +75,15 @@ namespace bsl
     ///
     inline void
     example_enable_if_overview() noexcept
-    {}
+    {
+        if (foo<bool>()) {
+            bsl::print("success\n");
+        }
+
+        if (!foo<void>()) {
+            bsl::print("success\n");
+        }
+    }
 }
 
 #endif

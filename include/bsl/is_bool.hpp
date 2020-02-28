@@ -28,6 +28,9 @@
 #ifndef BSL_IS_BOOL_HPP
 #define BSL_IS_BOOL_HPP
 
+#include "true_type.hpp"
+#include "false_type.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_bool
@@ -42,27 +45,18 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_bool final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{false};
-    };
+    class is_bool final : public false_type
+    {};
 
     /// @cond --
 
     template<>
-    struct is_bool<bool> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_bool<bool> final : public true_type
+    {};
 
     template<>
-    struct is_bool<bool const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_bool<bool const> final : public true_type
+    {};
 
     /// @endcond --
 }

@@ -22,11 +22,11 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/ut.hpp>
-
 #include <bsl/byte.hpp>
 #include <bsl/is_same.hpp>
 #include <bsl/is_pod.hpp>
+
+#include <bsl/ut.hpp>
 
 namespace
 {
@@ -35,7 +35,7 @@ namespace
     {
         bsl::byte lhs{c};
         lhs <<= shift;
-        bsl::byte const rhs{c << shift};
+        bsl::byte const rhs{static_cast<bsl::uint8>(c << shift)};
 
         return lhs == rhs;
     }
@@ -45,7 +45,7 @@ namespace
     {
         bsl::byte lhs{c};
         lhs >>= shift;
-        bsl::byte const rhs{c >> shift};
+        bsl::byte const rhs{static_cast<bsl::uint8>(c >> shift)};
 
         return lhs == rhs;
     }
@@ -54,14 +54,14 @@ namespace
     test_lshift(bsl::uint8 c, bsl::uint8 shift) noexcept
     {
         bsl::byte const lhs{c};
-        return (lhs << shift) == bsl::byte{c << shift};
+        return (lhs << shift) == bsl::byte{static_cast<bsl::uint8>(c << shift)};
     }
 
     constexpr bool
     test_rshift(bsl::uint8 c, bsl::uint8 shift) noexcept
     {
         bsl::byte const lhs{c};
-        return (lhs >> shift) == bsl::byte{c >> shift};
+        return (lhs >> shift) == bsl::byte{static_cast<bsl::uint8>(c >> shift)};
     }
 
     constexpr bool
@@ -70,7 +70,7 @@ namespace
         bsl::byte b{lhs};
         b |= bsl::byte{rhs};
 
-        return b == bsl::byte{lhs | rhs};
+        return b == bsl::byte{static_cast<bsl::uint8>(lhs | rhs)};
     }
 
     constexpr bool
@@ -79,7 +79,7 @@ namespace
         bsl::byte b{lhs};
         b &= bsl::byte{rhs};
 
-        return b == bsl::byte{lhs & rhs};
+        return b == bsl::byte{static_cast<bsl::uint8>(lhs & rhs)};
     }
 
     constexpr bool
@@ -88,31 +88,31 @@ namespace
         bsl::byte b{lhs};
         b ^= bsl::byte{rhs};
 
-        return b == bsl::byte{lhs ^ rhs};
+        return b == bsl::byte{static_cast<bsl::uint8>(lhs ^ rhs)};
     }
 
     constexpr bool
     test_or(bsl::uint8 lhs, bsl::uint8 rhs) noexcept
     {
-        return (bsl::byte{lhs} | bsl::byte{rhs}) == bsl::byte{lhs | rhs};
+        return (bsl::byte{lhs} | bsl::byte{rhs}) == bsl::byte{static_cast<bsl::uint8>(lhs | rhs)};
     }
 
     constexpr bool
     test_and(bsl::uint8 lhs, bsl::uint8 rhs) noexcept
     {
-        return (bsl::byte{lhs} & bsl::byte{rhs}) == bsl::byte{lhs & rhs};
+        return (bsl::byte{lhs} & bsl::byte{rhs}) == bsl::byte{static_cast<bsl::uint8>(lhs & rhs)};
     }
 
     constexpr bool
     test_xor(bsl::uint8 lhs, bsl::uint8 rhs) noexcept
     {
-        return (bsl::byte{lhs} ^ bsl::byte{rhs}) == bsl::byte{lhs ^ rhs};
+        return (bsl::byte{lhs} ^ bsl::byte{rhs}) == bsl::byte{static_cast<bsl::uint8>(lhs ^ rhs)};
     }
 
     constexpr bool
     test_complement(bsl::uint8 c) noexcept
     {
-        return (~bsl::byte{c}) == bsl::byte{~c};
+        return (~bsl::byte{c}) == bsl::byte{static_cast<bsl::uint8>(~c)};
     }
 
     constexpr bool
@@ -126,8 +126,22 @@ namespace
     {
         return bsl::byte{c1} != bsl::byte(c2);
     }
+
+    bsl::byte b;
 }
 
+/// <!-- description -->
+///   @brief Main function for this unit test. If a call to ut_check() fails
+///     the application will fast fail. If all calls to ut_check() pass, this
+///     function will successfully return with bsl::exit_success.
+///
+/// <!-- contracts -->
+///   @pre none
+///   @post none
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
 bsl::exit_code
 main()
 {
@@ -136,11 +150,10 @@ main()
 
     bsl::ut_scenario{"default construction"} = []() {
         bsl::ut_given{} = []() {
-            bsl::byte b;
-            bsl::ut_when{} = [&b]() {
-                b = bsl::byte{42};
-                bsl::ut_then{} = [&b]() {
-                    bsl::ut_check(b.to_integer() == 42);
+            bsl::ut_when{} = []() {
+                b = bsl::byte{static_cast<bsl::uint8>(42)};
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(b.to_integer<bsl::int32>() == 42);
                 };
             };
         };

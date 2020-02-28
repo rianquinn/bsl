@@ -44,7 +44,7 @@ namespace bsl
         ///   @pre none
         ///   @post none
         ///
-        constexpr example_class_base() noexcept = default;
+        example_class_base() noexcept = default;
 
         /// <!-- description -->
         ///   @brief Simple example of a getter
@@ -62,6 +62,22 @@ namespace bsl
             return m_data1;
         }
 
+        /// <!-- description -->
+        ///   @brief Simple example of a setter
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param val the val to set m_data1 to
+        ///
+        constexpr void
+        set(bool const val) noexcept
+        {
+            m_data1 = val;
+        }
+
     protected:
         /// <!-- description -->
         ///   @brief Destroyes a previously created bsl::example_class_base
@@ -70,7 +86,10 @@ namespace bsl
         ///   @pre none
         ///   @post none
         ///
-        ~example_class_base() noexcept = default;
+        ~example_class_base() noexcept
+        {
+            m_data1 = false;
+        }
 
         /// <!-- description -->
         ///   @brief copy constructor
@@ -82,7 +101,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
         ///
-        constexpr example_class_base(example_class_base const &o) noexcept = default;
+        example_class_base(example_class_base const &o) noexcept = default;
 
         /// <!-- description -->
         ///   @brief move constructor
@@ -94,7 +113,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///
-        constexpr example_class_base(example_class_base &&o) noexcept = default;
+        example_class_base(example_class_base &&o) noexcept = default;
 
         /// <!-- description -->
         ///   @brief copy assignment
@@ -107,7 +126,7 @@ namespace bsl
         ///   @param o the object being copied
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr example_class_base &
+        [[maybe_unused]] example_class_base &
         operator=(example_class_base const &o) &noexcept = default;
 
         /// <!-- description -->
@@ -121,12 +140,11 @@ namespace bsl
         ///   @param o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr example_class_base &
-        operator=(example_class_base &&o) &noexcept = default;
+        [[maybe_unused]] example_class_base &operator=(example_class_base &&o) &noexcept = default;
 
     private:
         /// @brief dummy data #1
-        bool m_data1{};
+        bool m_data1{true};
     };
 }
 

@@ -28,6 +28,8 @@
 #ifndef BSL_IS_CONSTRUCTIBLE_HPP
 #define BSL_IS_CONSTRUCTIBLE_HPP
 
+#include "bool_constant.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_constructible
@@ -36,17 +38,15 @@ namespace bsl
     ///   @brief If the provided type is constructible, provides the
     ///     member constant value equal to true. Otherwise the member constant
     ///     value is false.
-    ///   @include is_constructible/overview.cpp
+    ///   @include example_is_constructible_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T, typename... Args>
-    struct is_constructible final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_constructible(T, Args...)};
-    };
+    class is_constructible final : // --
+        public bool_constant<__is_constructible(T, Args...)>
+    {};
 }
 
 #endif

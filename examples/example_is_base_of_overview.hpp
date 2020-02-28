@@ -26,6 +26,8 @@
 #define EXAMPLE_IS_BASE_OF_OVERVIEW_HPP
 
 #include <bsl/is_base_of.hpp>
+#include <bsl/print.hpp>
+
 #include "example_class_subclass.hpp"
 
 namespace bsl
@@ -40,8 +42,9 @@ namespace bsl
     inline void
     example_is_base_of_overview() noexcept
     {
-        static_assert(bsl::is_base_of<example_class_base, example_class_subclass>::value);
-        static_assert(!bsl::is_base_of<example_class_subclass, example_class_base>::value);
+        if (bsl::is_base_of<example_class_base, example_class_subclass>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

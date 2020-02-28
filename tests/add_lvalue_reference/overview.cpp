@@ -22,10 +22,10 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/ut.hpp>
-
 #include <bsl/add_pointer.hpp>
 #include <bsl/is_same.hpp>
+
+#include <bsl/ut.hpp>
 
 namespace
 {
@@ -33,6 +33,18 @@ namespace
     {};
 }
 
+/// <!-- description -->
+///   @brief Main function for this unit test. If a call to ut_check() fails
+///     the application will fast fail. If all calls to ut_check() pass, this
+///     function will successfully return with bsl::exit_success.
+///
+/// <!-- contracts -->
+///   @pre none
+///   @post none
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
 bsl::exit_code
 main()
 {

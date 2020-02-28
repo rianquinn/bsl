@@ -60,11 +60,11 @@ namespace bsl
         constexpr view() noexcept = default;
 
         template<bsl::uintmax N>
-        explicit constexpr view(T (&arr)[N]) noexcept    // --
+        constexpr view(T (&arr)[N]) noexcept    // --
             : m_data{arr}, m_size{N}
         {}
 
-        explicit constexpr view(T *const data, bsl::uintmax size) noexcept    // --
+        constexpr view(T *const data, bsl::uintmax size) noexcept    // --
             : m_data{data}, m_size{size}
         {
             if ((nullptr == m_data) || (0 == m_size)) {

@@ -25,6 +25,8 @@
 #ifndef BSL_DETAILS_FUNC_WRAPPER_HPP
 #define BSL_DETAILS_FUNC_WRAPPER_HPP
 
+#include "../forward.hpp"
+
 namespace bsl
 {
     namespace details
@@ -79,13 +81,64 @@ namespace bsl
             /// <!-- exceptions -->
             ///   @throw throws if the wrapped function throws
             ///
-            constexpr R
-            invoke(ARGS &&... args) const final
+            [[nodiscard]] R
+            invoke(ARGS &&... args) const noexcept(false) final
             {
                 return m_func(bsl::forward<ARGS>(args)...);
             }
         };
-    };
+
+        /// @class bsl::details::func_wrapper
+        ///
+        /// <!-- description -->
+        ///   @brief Wraps a regular function call.
+        ///
+        /// <!-- template parameters -->
+        ///   @tparam R the return type of the function being wrapped
+        ///   @tparam ARGS the arg types of the function being wrapped
+        ///
+        template<typename R, typename... ARGS>
+        class func_wrapper<R(ARGS...) noexcept> final : public base_wrapper<R(ARGS...) noexcept>
+        {
+            /// @brief stores a pointer to the wrapped function
+            R (*m_func)(ARGS...) noexcept;
+
+        public:
+            /// <!-- description -->
+            ///   @brief Creates a bsl::details::func_wrapper given a pointer
+            ///     to a regular function. This function pointer is stored,
+            ///     and later called by the overloaded invoke function.
+            ///
+            /// <!-- contracts -->
+            ///   @pre none
+            ///   @post none
+            ///
+            /// <!-- inputs/outputs -->
+            ///   @param func a pointer to a regular function
+            ///
+            explicit constexpr func_wrapper(R (*const func)(ARGS...) noexcept) noexcept
+                : base_wrapper<R(ARGS...) noexcept>{}, m_func{func}
+            {}
+
+            /// <!-- description -->
+            ///   @brief Calls the wrapped function by passing "args" to the
+            ///     function and returing the result.
+            ///
+            /// <!-- contracts -->
+            ///   @pre none
+            ///   @post none
+            ///
+            /// <!-- inputs/outputs -->
+            ///   @param args the arguments to pass to the wrapped function
+            ///   @return returns the result of the wrapped function
+            ///
+            [[nodiscard]] R
+            invoke(ARGS &&... args) const noexcept final
+            {
+                return m_func(bsl::forward<ARGS>(args)...);
+            }
+        };
+    }
 }
 
 #endif

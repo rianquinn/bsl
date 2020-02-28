@@ -37,7 +37,7 @@ namespace bsl
     ///     or an intentionally unused parameter. This function also exists
     ///     because in some cases, we must pass the address of a discard as
     ///     as a template parameter, which cannot be done with a static cast.
-    ///   @include discard/overview.cpp
+    ///   @include example_discard_overview.hpp
     ///
     ///   SUPPRESSION: PRQA 4050 - exception required
     ///   - We suppress this because M0-1-8 states that all functions marked

@@ -38,7 +38,7 @@ namespace bsl
     ///     template parameter), this overload forwards the argument to another
     ///     function with the value category it had when passed to the calling
     ///     function.
-    ///   @include forward/overview.cpp
+    ///   @include example_forward_overview.hpp
     ///
     ///   SUPPRESSION: PRQA 4624 - false positive
     ///   - We suppress this because A7-5-1 states that a function shall not
@@ -57,7 +57,7 @@ namespace bsl
     ///
     template<typename T>
     constexpr T &&
-    forward(typename bsl::remove_reference_t<T> &val) noexcept
+    forward(bsl::remove_reference_t<T> &val) noexcept
     {
         return static_cast<T &&>(val);    // PRQA S 4624, 3100
     }
@@ -68,18 +68,13 @@ namespace bsl
     ///     template parameter), this overload forwards the argument to another
     ///     function with the value category it had when passed to the calling
     ///     function.
-    ///   @include forward/overview.cpp
+    ///   @include example_forward_overview.hpp
     ///
     ///   SUPPRESSION: PRQA 4624 - false positive
     ///   - We suppress this because A7-5-1 states that a function shall not
     ///     return a pointer or reference to a parameter that is a const
     ///     reference, and this is a false positive because this is the
     ///     required definition for std::forward
-    ///
-    /// <!-- notes -->
-    ///   @note This function, unlike most others, must be defined in the
-    ///     std:: namespace as Perforce expects this function to
-    ///     be defined here.
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -92,7 +87,7 @@ namespace bsl
     ///
     template<typename T>
     constexpr T &&
-    forward(typename bsl::remove_reference_t<T> &&val) noexcept
+    forward(bsl::remove_reference_t<T> &&val) noexcept
     {
         return static_cast<T &&>(val);    // PRQA S 4624
     }

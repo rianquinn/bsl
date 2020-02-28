@@ -28,6 +28,8 @@
 #ifndef BSL_IS_CLASS_HPP
 #define BSL_IS_CLASS_HPP
 
+#include "bool_constant.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_class
@@ -36,17 +38,15 @@ namespace bsl
     ///   @brief If the provided type is a class type, provides the member
     ///     constant value equal to true. Otherwise the member constant value
     ///     is false.
-    ///   @include is_class/overview.cpp
+    ///   @include example_is_class_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_class final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_class(T)};
-    };
+    class is_class final : // --
+        public bool_constant<__is_class(T)>
+    {};
 }
 
 #endif

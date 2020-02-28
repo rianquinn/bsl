@@ -25,8 +25,10 @@
 #ifndef EXAMPLE_IS_CONSTRUCTIBLE_OVERVIEW_HPP
 #define EXAMPLE_IS_CONSTRUCTIBLE_OVERVIEW_HPP
 
-#include <bsl/is_bool.hpp>
 #include <bsl/is_constructible.hpp>
+#include <bsl/print.hpp>
+
+#include "example_class_pod.hpp"
 
 namespace bsl
 {
@@ -40,8 +42,9 @@ namespace bsl
     inline void
     example_is_constructible_overview() noexcept
     {
-        static_assert(bsl::is_constructible<bsl::is_bool<bool>>::value);
-        static_assert(!bsl::is_constructible<bsl::is_bool<bool>, bool>::value);
+        if (bsl::is_constructible<example_class_pod>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 
