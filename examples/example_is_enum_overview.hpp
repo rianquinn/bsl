@@ -26,6 +26,9 @@
 #define EXAMPLE_IS_ENUM_OVERVIEW_HPP
 
 #include <bsl/is_enum.hpp>
+#include <bsl/print.hpp>
+
+#include "example_enum.hpp"
 
 namespace bsl
 {
@@ -38,8 +41,10 @@ namespace bsl
     ///
     inline void
     example_is_enum_overview() noexcept
-    {    // static_assert(bsl::is_enum<bsl::exit_code>::value);
-        // static_assert(!bsl::is_enum<bool>::value);
+    {
+        if (bsl::is_enum<example_enum>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

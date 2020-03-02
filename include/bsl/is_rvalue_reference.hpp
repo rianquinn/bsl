@@ -28,6 +28,9 @@
 #ifndef BSL_IS_RVALUE_REFERENCE_HPP
 #define BSL_IS_RVALUE_REFERENCE_HPP
 
+#include "true_type.hpp"
+#include "false_type.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_rvalue_reference
@@ -36,26 +39,20 @@ namespace bsl
     ///   @brief If the provided type is an rvalue reference type, provides the
     ///     member constant value equal to true. Otherwise the member constant
     ///     value is false.
-    ///   @include is_rvalue_reference/overview.cpp
+    ///   @include example_is_rvalue_reference_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_rvalue_reference final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{false};
-    };
+    class is_rvalue_reference final : public false_type
+    {};
 
     /// @cond --
 
     template<typename T>
-    struct is_rvalue_reference<T &&> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_rvalue_reference<T &&> final : public true_type
+    {};
 
     /// @endcond --
 }

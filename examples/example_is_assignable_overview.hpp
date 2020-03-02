@@ -28,8 +28,6 @@
 #include <bsl/is_assignable.hpp>
 #include <bsl/print.hpp>
 
-#include "example_class_pod.hpp"
-
 namespace bsl
 {
     /// <!-- description -->
@@ -42,7 +40,7 @@ namespace bsl
     inline void
     example_is_assignable_overview() noexcept
     {
-        if (bsl::is_assignable<example_class_pod, example_class_pod>::value) {
+        if (bsl::is_assignable<bool &, bool>::value) {
             bsl::print("success\n");
         }
     }

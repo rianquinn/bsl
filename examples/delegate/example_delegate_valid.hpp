@@ -22,14 +22,13 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef EXAMPLE_FUNCTION_OVERVIEW_HPP
-#define EXAMPLE_FUNCTION_OVERVIEW_HPP
+#ifndef EXAMPLE_DELEGATE_VALID_HPP
+#define EXAMPLE_DELEGATE_VALID_HPP
 
-#include <bsl/function.hpp>
+#include <bsl/delegate.hpp>
 #include <bsl/print.hpp>
 
-#include "example_function.hpp"
-#include "example_class_subclass.hpp"
+#include "../example_function.hpp"
 
 namespace bsl
 {
@@ -41,24 +40,17 @@ namespace bsl
     ///   @post none
     ///
     inline void
-    example_function_overview() noexcept
+    example_delegate_valid() noexcept
     {
-        example_class_subclass const c;
-        bsl::function const func1{&example_function};
-        bsl::function const func2{c, &example_class_subclass::get};
+        bsl::delegate const func1{};
+        bsl::delegate const func2{&example_function};
 
-        auto const res1{func1(true)};
-        if (auto const val = res1.get_if()) {
-            if (*val) {
-                bsl::print("success\n");
-            }
+        if (!func1.valid()) {
+            bsl::print("success\n");
         }
 
-        auto const res2{func2()};
-        if (auto const val = res2.get_if()) {
-            if (*val) {
-                bsl::print("success\n");
-            }
+        if (func2.valid()) {
+            bsl::print("success\n");
         }
     }
 }

@@ -26,6 +26,7 @@
 #define EXAMPLE_IS_FUNDAMENTAL_OVERVIEW_HPP
 
 #include <bsl/is_fundamental.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -38,7 +39,11 @@ namespace bsl
     ///
     inline void
     example_is_fundamental_overview() noexcept
-    {}
+    {
+        if (bsl::is_fundamental<bool>::value) {
+            bsl::print("success\n");
+        }
+    }
 }
 
 #endif

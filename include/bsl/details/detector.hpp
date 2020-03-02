@@ -26,6 +26,8 @@
 #define BSL_DETAILS_DETECTOR_HPP
 
 #include "../void_t.hpp"
+#include "../true_type.hpp"
+#include "../false_type.hpp"
 
 namespace bsl
 {
@@ -45,20 +47,16 @@ namespace bsl
         ///   @tparam Args the arguments to the operation to detect
         ///
         template<typename Default, typename, template<typename...> class Op, typename... Args>
-        struct detector final
-        {
-            /// @brief the boolean that answers the type trait query
-            static constexpr bool value{false};
-        };
+        class detector final : // --
+            public false_type
+        {};
 
         /// @cond --
 
         template<typename Default, template<typename...> class Op, typename... Args>
-        struct detector<Default, bsl::void_t<Op<Args...>>, Op, Args...> final
-        {
-            /// @brief the boolean that answers the type trait query
-            static constexpr bool value{true};
-        };
+        class detector<Default, bsl::void_t<Op<Args...>>, Op, Args...> final : // --
+            public true_type
+        {};
 
         /// @endcond --
     }

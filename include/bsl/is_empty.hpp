@@ -28,6 +28,8 @@
 #ifndef BSL_IS_EMPTY_HPP
 #define BSL_IS_EMPTY_HPP
 
+#include "bool_constant.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_empty
@@ -36,17 +38,15 @@ namespace bsl
     ///   @brief If the provided type is empty, provides the member
     ///     constant value equal to true. Otherwise the member constant value
     ///     is false.
-    ///   @include is_empty/overview.cpp
+    ///   @include example_is_empty_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_empty final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_empty(T)};
-    };
+    class is_empty final : // --
+        public bool_constant<__is_empty(T)>
+    {};
 }
 
 #endif

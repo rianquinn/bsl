@@ -25,8 +25,8 @@
 #ifndef EXAMPLE_IS_MOVE_ASSIGNABLE_OVERVIEW_HPP
 #define EXAMPLE_IS_MOVE_ASSIGNABLE_OVERVIEW_HPP
 
-#include <bsl/is_bool.hpp>
 #include <bsl/is_move_assignable.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -40,7 +40,9 @@ namespace bsl
     inline void
     example_is_move_assignable_overview() noexcept
     {
-        static_assert(bsl::is_move_assignable<bsl::is_bool<bool>>::value);
+        if (bsl::is_move_assignable<bool>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

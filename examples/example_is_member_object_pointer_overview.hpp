@@ -25,9 +25,10 @@
 #ifndef EXAMPLE_IS_MEMBER_OBJECT_POINTER_OVERVIEW_HPP
 #define EXAMPLE_IS_MEMBER_OBJECT_POINTER_OVERVIEW_HPP
 
-#include <bsl/is_member_pointer.hpp>
 #include <bsl/is_member_object_pointer.hpp>
-#include <bsl/is_member_function_pointer.hpp>
+#include <bsl/print.hpp>
+
+#include "example_class_subclass.hpp"
 
 namespace bsl
 {
@@ -40,17 +41,10 @@ namespace bsl
     ///
     inline void
     example_is_member_object_pointer_overview() noexcept
-    {    // static_assert(!bsl::is_member_pointer<bool>::value);
-        // static_assert(!bsl::is_member_object_pointer<bool>::value);
-        // static_assert(!bsl::is_member_function_pointer<bool>::value);
-
-        // static_assert(bsl::is_member_pointer<bool(bsl::arguments::*)>::value);
-        // static_assert(bsl::is_member_object_pointer<bool(bsl::arguments::*)>::value);
-        // static_assert(!bsl::is_member_function_pointer<bool(bsl::arguments::*)>::value);
-
-        // static_assert(bsl::is_member_pointer<bool (bsl::arguments::*)()>::value);
-        // static_assert(!bsl::is_member_object_pointer<bool (bsl::arguments::*)()>::value);
-        // static_assert(bsl::is_member_function_pointer<bool (bsl::arguments::*)()>::value);
+    {
+        if (bsl::is_member_object_pointer<bool example_class_subclass::*>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

@@ -25,7 +25,7 @@
 #ifndef EXAMPLE_ERRC_TYPE_GET_HPP
 #define EXAMPLE_ERRC_TYPE_GET_HPP
 
-#include <bsl/function.hpp>
+#include <bsl/errc_type.hpp>
 #include <bsl/print.hpp>
 
 namespace bsl

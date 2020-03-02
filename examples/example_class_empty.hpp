@@ -22,35 +22,18 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef EXAMPLE_FUNCTION_CONSTRUCTOR_FUNC_HPP
-#define EXAMPLE_FUNCTION_CONSTRUCTOR_FUNC_HPP
-
-#include <bsl/function.hpp>
-#include <bsl/print.hpp>
-
-#include "../example_function.hpp"
+#ifndef BSL_EXAMPLE_CLASS_EMPTY_HPP
+#define BSL_EXAMPLE_CLASS_EMPTY_HPP
 
 namespace bsl
 {
+    /// @class bsl::example_class_empty
+    ///
     /// <!-- description -->
-    ///   @brief Provides the example's main function
+    ///   @brief A example of an empty class.
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
-    inline void
-    example_function_constructor_func() noexcept
-    {
-        bsl::function const func{&example_function};
-
-        auto const res1{func(true)};
-        if (auto const val = res1.get_if()) {
-            if (*val) {
-                bsl::print("success\n");
-            }
-        }
-    }
+    struct example_class_empty final
+    {};
 }
 
 #endif

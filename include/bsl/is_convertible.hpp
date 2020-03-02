@@ -52,7 +52,7 @@ namespace bsl
         ///   @return returns true if T is returnable, false otherwise
         ///
         template<typename T>
-        auto test_is_convertible1(bsl::int32 ignored) -> true_type_for<T()>;
+        auto test_is_convertible1(bsl::int32 ignored) noexcept -> true_type_for<T()>;
 
         /// <!-- description -->
         ///   @brief Tests if the provided type is returnable, which is
@@ -69,7 +69,7 @@ namespace bsl
         ///   @return returns true if T is returnable, false otherwise
         ///
         template<typename T>
-        auto test_is_convertible1(bool ignored) -> false_type;
+        auto test_is_convertible1(bool ignored) noexcept -> false_type;
 
         /// <!-- description -->
         ///   @brief Tests whether or not the provided to can be converted from
@@ -89,7 +89,7 @@ namespace bsl
         ///   @return returns true if T is returnable, false otherwise
         ///
         template<typename From, typename To>
-        auto test_is_convertible2(bsl::int32 ignored)
+        auto test_is_convertible2(bsl::int32 ignored) noexcept
             -> true_type_for<decltype(declval<void (&)(To)>()(declval<From>()))>;
 
         /// <!-- description -->
@@ -110,7 +110,7 @@ namespace bsl
         ///   @return returns true if T is returnable, false otherwise
         ///
         template<typename From, typename To>
-        auto test_is_convertible2(bool ignored) -> false_type;
+        auto test_is_convertible2(bool ignored) noexcept -> false_type;
 
         /// <!-- description -->
         ///   @brief Performs all of the tests including testing if both
@@ -126,7 +126,7 @@ namespace bsl
         ///   @return returns true if T is returnable, false otherwise
         ///
         template<typename From, typename To>
-        constexpr bool
+        [[nodiscard]] constexpr bool
         check_is_convertible() noexcept
         {
             if constexpr (is_void<From>::value && is_void<To>::value) {

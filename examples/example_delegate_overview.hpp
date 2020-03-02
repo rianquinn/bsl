@@ -22,13 +22,14 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef EXAMPLE_FUNCTION_FUNCTOR_HPP
-#define EXAMPLE_FUNCTION_FUNCTOR_HPP
+#ifndef EXAMPLE_DELEGATE_OVERVIEW_HPP
+#define EXAMPLE_DELEGATE_OVERVIEW_HPP
 
-#include <bsl/function.hpp>
+#include <bsl/delegate.hpp>
 #include <bsl/print.hpp>
 
-#include "../example_function.hpp"
+#include "example_function.hpp"
+#include "example_class_subclass.hpp"
 
 namespace bsl
 {
@@ -40,12 +41,21 @@ namespace bsl
     ///   @post none
     ///
     inline void
-    example_function_functor() noexcept
+    example_delegate_overview() noexcept
     {
-        bsl::function const func{&example_function};
+        example_class_subclass const c;
+        bsl::delegate const func1{&example_function};
+        bsl::delegate const func2{c, &example_class_subclass::get};
 
-        auto const res1{func(true)};
+        auto const res1{func1(true)};
         if (auto const val = res1.get_if()) {
+            if (*val) {
+                bsl::print("success\n");
+            }
+        }
+
+        auto const res2{func2()};
+        if (auto const val = res2.get_if()) {
             if (*val) {
                 bsl::print("success\n");
             }

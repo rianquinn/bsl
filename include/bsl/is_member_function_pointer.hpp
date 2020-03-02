@@ -28,7 +28,9 @@
 #ifndef BSL_IS_MEMBER_FUNCTION_POINTER_HPP
 #define BSL_IS_MEMBER_FUNCTION_POINTER_HPP
 
+#include "bool_constant.hpp"
 #include "is_function.hpp"
+#include "false_type.hpp"
 
 namespace bsl
 {
@@ -38,33 +40,26 @@ namespace bsl
     ///   @brief If the provided type is a member function pointer type (taking
     ///     into account const qualifications), provides the member constant
     ///     value equal to true. Otherwise the member constant value is false.
-    ///   @include is_member_function_pointer/overview.cpp
+    ///   @include example_is_member_function_pointer_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_member_function_pointer final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{false};
-    };
+    class is_member_function_pointer final : public false_type
+    {};
 
     /// @cond --
 
     template<typename T, typename U>
-    struct is_member_function_pointer<T U::*> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{is_function<T>::value};
-    };
+    class is_member_function_pointer<T U::*> final : // --
+        public bool_constant<is_function<T>::value>
+    {};
 
     template<typename T, typename U>
-    struct is_member_function_pointer<T U::*const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{is_function<T>::value};
-    };
+    class is_member_function_pointer<T U::*const> final : // --
+        public bool_constant<is_function<T>::value>
+    {};
 
     /// @endcond --
 }

@@ -203,7 +203,6 @@ main()
     static_assert(!is_copy_constructible<bool &&>::value);
     static_assert(!is_copy_constructible<bool const &&>::value);
     static_assert(!is_copy_constructible<bool(bool)>::value);
-
     static_assert(!is_copy_constructible<myclass_move_only>::value);
     static_assert(!is_copy_constructible<myclass_no_assign>::value);
 

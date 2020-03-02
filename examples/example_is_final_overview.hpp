@@ -22,13 +22,13 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef EXAMPLE_FUNCTION_VALID_HPP
-#define EXAMPLE_FUNCTION_VALID_HPP
+#ifndef EXAMPLE_IS_FINAL_OVERVIEW_HPP
+#define EXAMPLE_IS_FINAL_OVERVIEW_HPP
 
-#include <bsl/function.hpp>
+#include <bsl/is_final.hpp>
 #include <bsl/print.hpp>
 
-#include "../example_function.hpp"
+#include "example_class_subclass.hpp"
 
 namespace bsl
 {
@@ -40,16 +40,9 @@ namespace bsl
     ///   @post none
     ///
     inline void
-    example_function_valid() noexcept
+    example_is_final_overview() noexcept
     {
-        bsl::function const func1{};
-        bsl::function const func2{&example_function};
-
-        if (!func1.valid()) {
-            bsl::print("success\n");
-        }
-
-        if (func2.valid()) {
+        if (bsl::is_final<example_class_subclass>::value) {
             bsl::print("success\n");
         }
     }

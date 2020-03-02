@@ -28,25 +28,30 @@
 #ifndef BSL_IS_NOTHROW_DEFAULT_CONSTRUCTIBLE_HPP
 #define BSL_IS_NOTHROW_DEFAULT_CONSTRUCTIBLE_HPP
 
+#include "bool_constant.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_nothrow_default_constructible
     ///
     /// <!-- description -->
-    ///   @brief If the provided type is constructible, provides the
-    ///     member constant value equal to true. Otherwise the member constant
-    ///     value is false.
-    ///   @include is_nothrow_default_constructible/overview.cpp
+    ///   @brief If the provided type is nothrow default constructible, provides
+    ///     the member constant value equal to true. Otherwise the member
+    ///     constant value is false.
+    ///   @include example_is_nothrow_default_constructible_overview.hpp
+    ///
+    ///   SUPPRESSION: PRQA 0605 - false positive
+    ///   - We suppress this because A1-1-1 is compliance with C++, which
+    ///     is an issue with Perforce's implementation of
+    ///     __is_nothrow_constructible() which is only used during analysis.
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_nothrow_default_constructible final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_nothrow_constructible(T)};
-    };
+    class is_nothrow_default_constructible final : // --
+        public bool_constant<__is_nothrow_constructible(T)> // PRQA S 0605
+    {};
 }
 
 #endif

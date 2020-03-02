@@ -22,36 +22,54 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef EXAMPLE_FUNCTION_CONSTRUCTOR_CMEMFUNC_HPP
-#define EXAMPLE_FUNCTION_CONSTRUCTOR_CMEMFUNC_HPP
+#include <bsl/declval.hpp>
+#include <bsl/is_detected.hpp>
 
-#include <bsl/function.hpp>
-#include <bsl/print.hpp>
+#include <bsl/ut.hpp>
 
-#include "../example_class_subclass.hpp"
-
-namespace bsl
+namespace
 {
-    /// <!-- description -->
-    ///   @brief Provides the example's main function
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
-    inline void
-    example_function_constructor_cmemfunc() noexcept
-    {
-        example_class_subclass const c;
-        bsl::function const func{c, &example_class_subclass::get};
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunneeded-member-function"
 
-        auto const res{func()};
-        if (auto const val = res.get_if()) {
-            if (*val) {
-                bsl::print("success\n");
-            }
+    class myclass final
+    {
+    public:
+        [[nodiscard]] constexpr bool
+        get() const noexcept    // NOLINT
+        {
+            return true;
         }
-    }
+    };
+
+    template<typename T>
+    using get_type = decltype(bsl::declval<T &>().get());
+
+    template<typename T>
+    using set_type = decltype(bsl::declval<T &>().set());
+
+#pragma clang diagnostic pop
 }
 
-#endif
+/// <!-- description -->
+///   @brief Main function for this unit test. If a call to ut_check() fails
+///     the application will fast fail. If all calls to ut_check() pass, this
+///     function will successfully return with bsl::exit_success.
+///
+/// <!-- contracts -->
+///   @pre none
+///   @post none
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+bsl::exit_code
+main()
+{
+    using namespace bsl;
+
+    static_assert(is_detected<get_type, myclass>::value);
+    static_assert(!is_detected<set_type, myclass>::value);
+
+    return bsl::ut_success();
+}

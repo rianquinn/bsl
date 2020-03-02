@@ -24,7 +24,7 @@
 
 #include <bsl/cstr_type.hpp>
 #include <bsl/exit_code.hpp>
-#include <bsl/function.hpp>
+#include <bsl/delegate.hpp>
 #include <bsl/print.hpp>
 
 #include "example_add_const_overview.hpp"
@@ -56,6 +56,13 @@
 #include "example_construct_at_overview.hpp"
 #include "example_decay_overview.hpp"
 #include "example_declval_overview.hpp"
+#include "example_delegate_overview.hpp"
+#include "delegate/example_delegate_constructor_cmemfunc.hpp"
+#include "delegate/example_delegate_constructor_func.hpp"
+#include "delegate/example_delegate_constructor_memfunc.hpp"
+#include "delegate/example_delegate_default_constructor.hpp"
+#include "delegate/example_delegate_functor.hpp"
+#include "delegate/example_delegate_valid.hpp"
 #include "example_destroy_at_overview.hpp"
 #include "example_discard_overview.hpp"
 #include "example_enable_if_overview.hpp"
@@ -72,13 +79,6 @@
 #include "example_exchange_overview.hpp"
 #include "example_extent_overview.hpp"
 #include "example_forward_overview.hpp"
-#include "example_function_overview.hpp"
-#include "function/example_function_constructor_cmemfunc.hpp"
-#include "function/example_function_constructor_func.hpp"
-#include "function/example_function_constructor_memfunc.hpp"
-#include "function/example_function_default_constructor.hpp"
-#include "function/example_function_functor.hpp"
-#include "function/example_function_valid.hpp"
 #include "example_has_virtual_destructor_overview.hpp"
 #include "example_integer_sequence_overview.hpp"
 #include "example_integral_constant_overview.hpp"
@@ -98,23 +98,32 @@
 #include "example_is_copy_assignable_overview.hpp"
 #include "example_is_copy_constructible_overview.hpp"
 #include "example_is_default_constructible_overview.hpp"
-// #include "example_is_empty_overview.hpp"
-// #include "example_is_enum_overview.hpp"
-// #include "example_is_function_overview.hpp"
-// #include "example_is_fundamental_overview.hpp"
-// #include "example_is_integral_overview.hpp"
-// #include "example_is_lvalue_reference_overview.hpp"
-// #include "example_is_member_function_pointer_overview.hpp"
-// #include "example_is_member_object_pointer_overview.hpp"
-// #include "example_is_member_pointer_overview.hpp"
-// #include "example_is_move_assignable_overview.hpp"
-// #include "example_is_move_constructible_overview.hpp"
+#include "example_is_detected_overview.hpp"
+#include "example_is_destructible_overview.hpp"
+#include "example_is_empty_overview.hpp"
+#include "example_is_enum_overview.hpp"
+#include "example_is_final_overview.hpp"
+#include "example_is_function_overview.hpp"
+#include "example_is_fundamental_overview.hpp"
+#include "example_is_integral_overview.hpp"
+#include "example_is_lvalue_reference_overview.hpp"
+#include "example_is_member_function_pointer_overview.hpp"
+#include "example_is_member_object_pointer_overview.hpp"
+#include "example_is_member_pointer_overview.hpp"
+#include "example_is_move_assignable_overview.hpp"
+#include "example_is_move_constructible_overview.hpp"
+#include "example_is_nothrow_assignable_overview.hpp"
+#include "example_is_nothrow_constructible_overview.hpp"
+#include "example_is_nothrow_copy_assignable_overview.hpp"
+#include "example_is_nothrow_copy_constructible_overview.hpp"
+#include "example_is_nothrow_default_constructible_overview.hpp"
+#include "example_is_nothrow_destructible_overview.hpp"
 // #include "example_is_nullptr_overview.hpp"
 // #include "example_is_object_overview.hpp"
 // #include "example_is_pod_overview.hpp"
 // #include "example_is_pointer_overview.hpp"
 // #include "example_is_reference_overview.hpp"
-// #include "example_is_rvalue_reference_overview.hpp"
+#include "example_is_rvalue_reference_overview.hpp"
 // #include "example_is_same_overview.hpp"
 // #include "example_is_scalar_overview.hpp"
 // #include "example_is_signed_overview.hpp"
@@ -146,7 +155,7 @@ namespace
     ///   @param name the name of the example
     ///
     constexpr void
-    example(bsl::function<void() noexcept> const &func, bsl::cstr_type const name) noexcept
+    example(bsl::delegate<void() noexcept> const &func, bsl::cstr_type const name) noexcept
     {
         bsl::print("======================================================================\n");
         bsl::print("example: %s \n", name);
@@ -206,6 +215,13 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_construct_at_overview, "example_construct_at_overview");
     example(&bsl::example_decay_overview, "example_decay_overview");
     example(&bsl::example_declval_overview, "example_declval_overview");
+    example(&bsl::example_delegate_overview, "example_delegate_overview");
+    example(&bsl::example_delegate_constructor_cmemfunc, "example_delegate_constructor_cmemfunc");
+    example(&bsl::example_delegate_constructor_func, "example_delegate_constructor_func");
+    example(&bsl::example_delegate_constructor_memfunc, "example_delegate_constructor_memfunc");
+    example(&bsl::example_delegate_default_constructor, "example_delegate_default_constructor");
+    example(&bsl::example_delegate_functor, "example_delegate_functor");
+    example(&bsl::example_delegate_valid, "example_delegate_valid");
     example(&bsl::example_destroy_at_overview, "example_destroy_at_overview");
     example(&bsl::example_discard_overview, "example_discard_overview");
     example(&bsl::example_enable_if_overview, "example_enable_if_overview");
@@ -222,13 +238,6 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_exchange_overview, "example_exchange_overview");
     example(&bsl::example_extent_overview, "example_extent_overview");
     example(&bsl::example_forward_overview, "example_forward_overview");
-    example(&bsl::example_function_overview, "example_function_overview");
-    example(&bsl::example_function_constructor_cmemfunc, "example_function_constructor_cmemfunc");
-    example(&bsl::example_function_constructor_func, "example_function_constructor_func");
-    example(&bsl::example_function_constructor_memfunc, "example_function_constructor_memfunc");
-    example(&bsl::example_function_default_constructor, "example_function_default_constructor");
-    example(&bsl::example_function_functor, "example_function_functor");
-    example(&bsl::example_function_valid, "example_function_valid");
     example(&bsl::example_has_virtual_destructor_overview, "example_has_virtual_destructor_overview");
     example(&bsl::example_integer_sequence_overview, "example_integer_sequence_overview");
     example(&bsl::example_integral_constant_overview, "example_integral_constant_overview");
@@ -248,23 +257,32 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_is_copy_assignable_overview, "example_is_copy_assignable_overview");
     example(&bsl::example_is_copy_constructible_overview, "example_is_copy_constructible_overview");
     example(&bsl::example_is_default_constructible_overview, "example_is_default_constructible_overview");
-    // example(&bsl::example_is_empty_overview, "example_is_empty_overview");
-    // example(&bsl::example_is_enum_overview, "example_is_enum_overview");
-    // example(&bsl::example_is_function_overview, "example_is_function_overview");
-    // example(&bsl::example_is_fundamental_overview, "example_is_fundamental_overview");
-    // example(&bsl::example_is_integral_overview, "example_is_integral_overview");
-    // example(&bsl::example_is_lvalue_reference_overview, "example_is_lvalue_reference_overview");
-    // example(&bsl::example_is_member_function_pointer_overview, "example_is_member_function_pointer_overview");
-    // example(&bsl::example_is_member_object_pointer_overview, "example_is_member_object_pointer_overview");
-    // example(&bsl::example_is_member_pointer_overview, "example_is_member_pointer_overview");
-    // example(&bsl::example_is_move_assignable_overview, "example_is_move_assignable_overview");
-    // example(&bsl::example_is_move_constructible_overview, "example_is_move_constructible_overview");
+    example(&bsl::example_is_detected_overview, "example_is_detected_overview");
+    example(&bsl::example_is_destructible_overview, "example_is_destructible_overview");
+    example(&bsl::example_is_empty_overview, "example_is_empty_overview");
+    example(&bsl::example_is_enum_overview, "example_is_enum_overview");
+    example(&bsl::example_is_final_overview, "example_is_final_overview");
+    example(&bsl::example_is_function_overview, "example_is_function_overview");
+    example(&bsl::example_is_fundamental_overview, "example_is_fundamental_overview");
+    example(&bsl::example_is_integral_overview, "example_is_integral_overview");
+    example(&bsl::example_is_lvalue_reference_overview, "example_is_lvalue_reference_overview");
+    example(&bsl::example_is_member_function_pointer_overview, "example_is_member_function_pointer_overview");
+    example(&bsl::example_is_member_object_pointer_overview, "example_is_member_object_pointer_overview");
+    example(&bsl::example_is_member_pointer_overview, "example_is_member_pointer_overview");
+    example(&bsl::example_is_move_assignable_overview, "example_is_move_assignable_overview");
+    example(&bsl::example_is_move_constructible_overview, "example_is_move_constructible_overview");
+    example(&bsl::example_is_nothrow_assignable_overview, "example_is_nothrow_assignable_overview");
+    example(&bsl::example_is_nothrow_constructible_overview, "example_is_nothrow_constructible_overview");
+    example(&bsl::example_is_nothrow_copy_assignable_overview, "example_is_nothrow_copy_assignable_overview");
+    example(&bsl::example_is_nothrow_copy_constructible_overview, "example_is_nothrow_copy_constructible_overview");
+    example(&bsl::example_is_nothrow_default_constructible_overview, "example_is_nothrow_default_constructible_overview");
+    example(&bsl::example_is_nothrow_destructible_overview, "example_is_nothrow_destructible_overview");
     // example(&bsl::example_is_nullptr_overview, "example_is_nullptr_overview");
     // example(&bsl::example_is_object_overview, "example_is_object_overview");
     // example(&bsl::example_is_pod_overview, "example_is_pod_overview");
     // example(&bsl::example_is_pointer_overview, "example_is_pointer_overview");
     // example(&bsl::example_is_reference_overview, "example_is_reference_overview");
-    // example(&bsl::example_is_rvalue_reference_overview, "example_is_rvalue_reference_overview");
+    example(&bsl::example_is_rvalue_reference_overview, "example_is_rvalue_reference_overview");
     // example(&bsl::example_is_same_overview, "example_is_same_overview");
     // example(&bsl::example_is_scalar_overview, "example_is_scalar_overview");
     // example(&bsl::example_is_signed_overview, "example_is_signed_overview");

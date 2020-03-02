@@ -28,25 +28,25 @@
 #ifndef BSL_IS_NOTHROW_ASSIGNABLE_HPP
 #define BSL_IS_NOTHROW_ASSIGNABLE_HPP
 
+#include "bool_constant.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_nothrow_assignable
     ///
     /// <!-- description -->
-    ///   @brief If the provided type is assignable, provides the
+    ///   @brief If the provided type is nothrow assignable, provides the
     ///     member constant value equal to true. Otherwise the member constant
     ///     value is false.
-    ///   @include is_nothrow_assignable/overview.cpp
+    ///   @include example_is_nothrow_assignable_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
-    template<typename T, typename... Args>
-    struct is_nothrow_assignable final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_nothrow_assignable(T, Args...)};
-    };
+    template<typename T, typename U>
+    class is_nothrow_assignable final : // --
+        public bool_constant<__is_nothrow_assignable(T, U)>
+    {};
 }
 
 #endif

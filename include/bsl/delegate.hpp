@@ -22,11 +22,11 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file function.hpp
+/// @file delegate.hpp
 ///
 
-#ifndef BSL_FUNCTION_HPP
-#define BSL_FUNCTION_HPP
+#ifndef BSL_DELEGATE_HPP
+#define BSL_DELEGATE_HPP
 
 #include "details/cast.hpp"
 #include "details/base_wrapper.hpp"
@@ -41,63 +41,63 @@
 namespace bsl
 {
     template<typename>
-    class function;
+    class delegate;
 
-    /// @class bsl::details::function
+    /// @class bsl::delegate
     ///
     /// <!-- description -->
     ///   @brief Implements a simplified version of std::function. Unlike
-    ///     std::function, a bsl::function has the following differences:
+    ///     std::function, a bsl::delegate has the following differences:
     ///     - Lambda functions, and binding in general are not supported.
     ///       Instead, either use a function pointer, or a member function
     ///       pointer. The reason is this implementation attempts to reduce
     ///       the overhead of std::function, and dynamic memory is not
-    ///       supported, so the bsl::function has a fixed amount of memory
+    ///       supported, so the bsl::delegate has a fixed amount of memory
     ///       that it can support for wrapping.
     ///     - Operator bool is not supported as AUTOSAR does not allow for
     ///       the use of the conversion operator. Instead, use valid().
     ///     - Target access, non-member and helper functions are not supported.
     ///     - Functions marked as "noexcept" are supported. If the function
-    ///       is marked as noexcept, the resulting bsl::function's functor
+    ///       is marked as noexcept, the resulting bsl::delegate's functor
     ///       will also be marked as noexcept and vice versa.
-    ///   @include example_function_overview.hpp
+    ///   @include example_delegate_overview.hpp
     ///
     /// <!-- template parameters -->
-    ///   @tparam R the return value of the function being wrapped
-    ///   @tparam ARGS The arguments to the function being wrapped
+    ///   @tparam R the return value of the delegate being wrapped
+    ///   @tparam ARGS The arguments to the delegate being wrapped
     ///
     template<typename R, typename... ARGS>
-    class function<R(ARGS...)> final
+    class delegate<R(ARGS...)> final
     {
-        /// @brief stores whether or not this function is valid
+        /// @brief stores whether or not this delegate is valid
         bool m_valid;
         /// @brief stores the invoke wrapper
         aligned_storage_t<sizeof(void *) * 3> m_store;
 
     public:
         /// <!-- description -->
-        ///   @brief Provides support for ensuring that a bsl::function is a
+        ///   @brief Provides support for ensuring that a bsl::delegate is a
         ///     POD type, allowing it to be defined as a global resource.
-        ///     When used globally, a bsl::function should not include {},
-        ///     ensuing it is a POD. As required by C++, the OS will zero
-        ///     initialize the bsl::function for you, marking the bsl::function
+        ///     When used globally, a bsl::delegate should not include {},
+        ///     as required by AUTOSAR. The OS will automatically zero
+        ///     initialize the bsl::delegate for you, marking the bsl::delegate
         ///     as invalid. If you use this constructor locally, you must
-        ///     include {} to ensure the bsl::function is initialized, which
+        ///     include {} to ensure the bsl::delegate is initialized, which
         ///     most compilers will warn about.
-        ///   @include function/example_function_default_constructor.hpp
+        ///   @include delegate/example_delegate_default_constructor.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
-        function() noexcept = default;
+        delegate() noexcept = default;
 
         /// <!-- description -->
-        ///   @brief Creates a bsl::function from a function pointer. If the
-        ///     function pointer is a nullptr, the resulting bsl::function
+        ///   @brief Creates a bsl::delegate from a function pointer. If the
+        ///     function pointer is a nullptr, the resulting bsl::delegate
         ///     is marked as invalid, and will always return an error when
         ///     executed.
-        ///   @include function/example_function_constructor_func.hpp
+        ///   @include delegate/example_delegate_constructor_func.hpp
         ///
         ///   SUPPRESSION: PRQA 2180 - false positive
         ///   - We suppress this because A12-1-4 states that all constructors
@@ -110,9 +110,9 @@ namespace bsl
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
-        ///   @param func a pointer to the function being wrapped
+        ///   @param func a pointer to the delegate being wrapped
         ///
-        function(R (*const func)(ARGS...)) noexcept    // PRQA S 2180 // NOLINT
+        delegate(R (*const func)(ARGS...)) noexcept    // PRQA S 2180 // NOLINT
             : m_valid{nullptr != func}, m_store{}
         {
             static_assert(sizeof(m_store) >= sizeof(details::func_wrapper<R(ARGS...)>));
@@ -123,11 +123,11 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Creates a bsl::function from a member function pointer. If
-        ///     the function pointer is a nullptr, the resulting bsl::function
+        ///   @brief Creates a bsl::delegate from a member function pointer. If
+        ///     the function pointer is a nullptr, the resulting bsl::delegate
         ///     is marked as invalid, and will always return an error when
         ///     executed.
-        ///   @include function/example_function_constructor_memfunc.hpp
+        ///   @include delegate/example_delegate_constructor_memfunc.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -135,10 +135,10 @@ namespace bsl
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
-        ///   @param func a pointer to the function being wrapped
+        ///   @param func a pointer to the delegate being wrapped
         ///
         template<typename T, typename U>
-        function(T &t, R (U::*const func)(ARGS...)) noexcept    // --
+        delegate(T &t, R (U::*const func)(ARGS...)) noexcept    // --
             : m_valid{nullptr != func}, m_store{}
         {
             static_assert(sizeof(m_store) >= sizeof(details::memfunc_wrapper<T, R(ARGS...)>));
@@ -149,11 +149,11 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Creates a bsl::function from a const member function
+        ///   @brief Creates a bsl::delegate from a const member function
         ///     pointer. If the function pointer is a nullptr, the resulting
-        ///     bsl::function is marked as invalid, and will always return an
+        ///     bsl::delegate is marked as invalid, and will always return an
         ///     error when executed.
-        ///   @include function/example_function_constructor_cmemfunc.hpp
+        ///   @include delegate/example_delegate_constructor_cmemfunc.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -161,10 +161,10 @@ namespace bsl
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
-        ///   @param func a pointer to the function being wrapped
+        ///   @param func a pointer to the delegate being wrapped
         ///
         template<typename T, typename U>
-        function(T const &t, R (U::*const func)(ARGS...) const) noexcept    // --
+        delegate(T const &t, R (U::*const func)(ARGS...) const) noexcept    // --
             : m_valid{nullptr != func}, m_store{}
         {
             static_assert(sizeof(m_store) >= sizeof(details::cmemfunc_wrapper<T, R(ARGS...)>));
@@ -175,12 +175,12 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Execute the bsl::function by calling the wrapped function
+        ///   @brief Execute the bsl::delegate by calling the wrapped function
         ///     with "args" and returning the result.
-        ///   @include function/example_function_functor.hpp
+        ///   @include delegate/example_delegate_functor.hpp
         ///
         /// <!-- contracts -->
-        ///   @pre assumes the bsl::function is valid
+        ///   @pre none
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
@@ -204,16 +204,16 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief If the bsl::function is valid, returns true, otherwise
+        ///   @brief If the bsl::delegate is valid, returns true, otherwise
         ///     returns false.
-        ///   @include function/example_function_valid.hpp
+        ///   @include delegate/example_delegate_valid.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
-        ///   @return If the bsl::function is valid, returns true, otherwise
+        ///   @return If the bsl::delegate is valid, returns true, otherwise
         ///     returns false.
         ///
         [[nodiscard]] bool
@@ -223,61 +223,61 @@ namespace bsl
         }
     };
 
-    /// @class bsl::details::function
+    /// @class bsl::delegate
     ///
     /// <!-- description -->
     ///   @brief Implements a simplified version of std::function. Unlike
-    ///     std::function, a bsl::function has the following differences:
+    ///     std::function, a bsl::delegate has the following differences:
     ///     - Lambda functions, and binding in general are not supported.
     ///       Instead, either use a function pointer, or a member function
     ///       pointer. The reason is this implementation attempts to reduce
     ///       the overhead of std::function, and dynamic memory is not
-    ///       supported, so the bsl::function has a fixed amount of memory
+    ///       supported, so the bsl::delegate has a fixed amount of memory
     ///       that it can support for wrapping.
     ///     - Operator bool is not supported as AUTOSAR does not allow for
     ///       the use of the conversion operator. Instead, use valid().
     ///     - Target access, non-member and helper functions are not supported.
     ///     - Functions marked as "noexcept" are supported. If the function
-    ///       is marked as noexcept, the resulting bsl::function's functor
+    ///       is marked as noexcept, the resulting bsl::delegate's functor
     ///       will also be marked as noexcept and vice versa.
-    ///   @include example_function_overview.hpp
+    ///   @include example_delegate_overview.hpp
     ///
     /// <!-- template parameters -->
-    ///   @tparam R the return value of the function being wrapped
-    ///   @tparam ARGS The arguments to the function being wrapped
+    ///   @tparam R the return value of the delegate being wrapped
+    ///   @tparam ARGS The arguments to the delegate being wrapped
     ///
     template<typename R, typename... ARGS>
-    class function<R(ARGS...) noexcept> final
+    class delegate<R(ARGS...) noexcept> final
     {
-        /// @brief stores whether or not this function is valid
+        /// @brief stores whether or not this delegate is valid
         bool m_valid;
         /// @brief stores the invoke wrapper
         aligned_storage_t<sizeof(void *) * 3> m_store;
 
     public:
         /// <!-- description -->
-        ///   @brief Provides support for ensuring that a bsl::function is a
+        ///   @brief Provides support for ensuring that a bsl::delegate is a
         ///     POD type, allowing it to be defined as a global resource.
-        ///     When used globally, a bsl::function should not include {},
-        ///     ensuing it is a POD. As required by C++, the OS will zero
-        ///     initialize the bsl::function for you, marking the bsl::function
+        ///     When used globally, a bsl::delegate should not include {},
+        ///     as required by AUTOSAR. The OS will automatically zero
+        ///     initialize the bsl::delegate for you, marking the bsl::delegate
         ///     as invalid. If you use this constructor locally, you must
-        ///     include {} to ensure the bsl::function is initialized, which
+        ///     include {} to ensure the bsl::delegate is initialized, which
         ///     most compilers will warn about.
-        ///   @include function/example_function_default_constructor.hpp
+        ///   @include delegate/example_delegate_default_constructor.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
-        function() noexcept = default;
+        delegate() noexcept = default;
 
         /// <!-- description -->
-        ///   @brief Creates a bsl::function from a function pointer. If the
-        ///     function pointer is a nullptr, the resulting bsl::function
+        ///   @brief Creates a bsl::delegate from a function pointer. If the
+        ///     function pointer is a nullptr, the resulting bsl::delegate
         ///     is marked as invalid, and will always return an error when
         ///     executed.
-        ///   @include function/example_function_constructor_func.hpp
+        ///   @include delegate/example_delegate_constructor_func.hpp
         ///
         ///   SUPPRESSION: PRQA 2180 - false positive
         ///   - We suppress this because A12-1-4 states that all constructors
@@ -290,9 +290,9 @@ namespace bsl
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
-        ///   @param func a pointer to the function being wrapped
+        ///   @param func a pointer to the delegate being wrapped
         ///
-        function(R (*const func)(ARGS...) noexcept) noexcept    // PRQA S 2180 // NOLINT
+        delegate(R (*const func)(ARGS...) noexcept) noexcept    // PRQA S 2180 // NOLINT
             : m_valid{nullptr != func}, m_store{}
         {
             static_assert(sizeof(m_store) >= sizeof(details::func_wrapper<R(ARGS...)>));
@@ -303,11 +303,11 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Creates a bsl::function from a member function pointer. If
-        ///     the function pointer is a nullptr, the resulting bsl::function
+        ///   @brief Creates a bsl::delegate from a member function pointer. If
+        ///     the function pointer is a nullptr, the resulting bsl::delegate
         ///     is marked as invalid, and will always return an error when
         ///     executed.
-        ///   @include function/example_function_constructor_memfunc.hpp
+        ///   @include delegate/example_delegate_constructor_memfunc.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -315,10 +315,10 @@ namespace bsl
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
-        ///   @param func a pointer to the function being wrapped
+        ///   @param func a pointer to the delegate being wrapped
         ///
         template<typename T, typename U>
-        function(T &t, R (U::*const func)(ARGS...) noexcept) noexcept    // --
+        delegate(T &t, R (U::*const func)(ARGS...) noexcept) noexcept    // --
             : m_valid{nullptr != func}, m_store{}
         {
             static_assert(sizeof(m_store) >= sizeof(details::memfunc_wrapper<T, R(ARGS...)>));
@@ -329,11 +329,11 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Creates a bsl::function from a const member function
+        ///   @brief Creates a bsl::delegate from a const member function
         ///     pointer. If the function pointer is a nullptr, the resulting
-        ///     bsl::function is marked as invalid, and will always return an
+        ///     bsl::delegate is marked as invalid, and will always return an
         ///     error when executed.
-        ///   @include function/example_function_constructor_cmemfunc.hpp
+        ///   @include delegate/example_delegate_constructor_cmemfunc.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -341,10 +341,10 @@ namespace bsl
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
-        ///   @param func a pointer to the function being wrapped
+        ///   @param func a pointer to the delegate being wrapped
         ///
         template<typename T, typename U>
-        function(T const &t, R (U::*const func)(ARGS...) const noexcept) noexcept    // --
+        delegate(T const &t, R (U::*const func)(ARGS...) const noexcept) noexcept    // --
             : m_valid{nullptr != func}, m_store{}
         {
             static_assert(sizeof(m_store) >= sizeof(details::cmemfunc_wrapper<T, R(ARGS...)>));
@@ -355,12 +355,12 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Execute the bsl::function by calling the wrapped function
+        ///   @brief Execute the bsl::delegate by calling the wrapped function
         ///     with "args" and returning the result.
-        ///   @include function/example_function_functor.hpp
+        ///   @include delegate/example_delegate_functor.hpp
         ///
         /// <!-- contracts -->
-        ///   @pre assumes the bsl::function is valid
+        ///   @pre none
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
@@ -381,16 +381,16 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief If the bsl::function is valid, returns true, otherwise
+        ///   @brief If the bsl::delegate is valid, returns true, otherwise
         ///     returns false.
-        ///   @include function/example_function_valid.hpp
+        ///   @include delegate/example_delegate_valid.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
-        ///   @return If the bsl::function is valid, returns true, otherwise
+        ///   @return If the bsl::delegate is valid, returns true, otherwise
         ///     returns false.
         ///
         [[nodiscard]] bool
@@ -400,60 +400,60 @@ namespace bsl
         }
     };
 
-    /// @class bsl::details::function
+    /// @class bsl::delegate
     ///
     /// <!-- description -->
     ///   @brief Implements a simplified version of std::function. Unlike
-    ///     std::function, a bsl::function has the following differences:
+    ///     std::function, a bsl::delegate has the following differences:
     ///     - Lambda functions, and binding in general are not supported.
     ///       Instead, either use a function pointer, or a member function
     ///       pointer. The reason is this implementation attempts to reduce
     ///       the overhead of std::function, and dynamic memory is not
-    ///       supported, so the bsl::function has a fixed amount of memory
+    ///       supported, so the bsl::delegate has a fixed amount of memory
     ///       that it can support for wrapping.
     ///     - Operator bool is not supported as AUTOSAR does not allow for
     ///       the use of the conversion operator. Instead, use valid().
     ///     - Target access, non-member and helper functions are not supported.
     ///     - Functions marked as "noexcept" are supported. If the function
-    ///       is marked as noexcept, the resulting bsl::function's functor
+    ///       is marked as noexcept, the resulting bsl::delegate's functor
     ///       will also be marked as noexcept and vice versa.
-    ///   @include example_function_overview.hpp
+    ///   @include example_delegate_overview.hpp
     ///
     /// <!-- template parameters -->
-    ///   @tparam ARGS The arguments to the function being wrapped
+    ///   @tparam ARGS The arguments to the delegate being wrapped
     ///
     template<typename... ARGS>
-    class function<void(ARGS...)> final
+    class delegate<void(ARGS...)> final
     {
-        /// @brief stores whether or not this function is valid
+        /// @brief stores whether or not this delegate is valid
         bool m_valid;
         /// @brief stores the invoke wrapper
         aligned_storage_t<sizeof(void *) * 3> m_store;
 
     public:
         /// <!-- description -->
-        ///   @brief Provides support for ensuring that a bsl::function is a
+        ///   @brief Provides support for ensuring that a bsl::delegate is a
         ///     POD type, allowing it to be defined as a global resource.
-        ///     When used globally, a bsl::function should not include {},
-        ///     ensuing it is a POD. As required by C++, the OS will zero
-        ///     initialize the bsl::function for you, marking the bsl::function
+        ///     When used globally, a bsl::delegate should not include {},
+        ///     as required by AUTOSAR. The OS will automatically zero
+        ///     initialize the bsl::delegate for you, marking the bsl::delegate
         ///     as invalid. If you use this constructor locally, you must
-        ///     include {} to ensure the bsl::function is initialized, which
+        ///     include {} to ensure the bsl::delegate is initialized, which
         ///     most compilers will warn about.
-        ///   @include function/example_function_default_constructor.hpp
+        ///   @include delegate/example_delegate_default_constructor.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
-        function() noexcept = default;
+        delegate() noexcept = default;
 
         /// <!-- description -->
-        ///   @brief Creates a bsl::function from a function pointer. If the
-        ///     function pointer is a nullptr, the resulting bsl::function
+        ///   @brief Creates a bsl::delegate from a function pointer. If the
+        ///     function pointer is a nullptr, the resulting bsl::delegate
         ///     is marked as invalid, and will always return an error when
         ///     executed.
-        ///   @include function/example_function_constructor_func.hpp
+        ///   @include delegate/example_delegate_constructor_func.hpp
         ///
         ///   SUPPRESSION: PRQA 2180 - false positive
         ///   - We suppress this because A12-1-4 states that all constructors
@@ -466,9 +466,9 @@ namespace bsl
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
-        ///   @param func a pointer to the function being wrapped
+        ///   @param func a pointer to the delegate being wrapped
         ///
-        function(void (*const func)(ARGS...)) noexcept    // PRQA S 2180 // NOLINT
+        delegate(void (*const func)(ARGS...)) noexcept    // PRQA S 2180 // NOLINT
             : m_valid{nullptr != func}, m_store{}
         {
             static_assert(sizeof(m_store) >= sizeof(details::func_wrapper<void(ARGS...)>));
@@ -479,11 +479,11 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Creates a bsl::function from a member function pointer. If
-        ///     the function pointer is a nullptr, the resulting bsl::function
+        ///   @brief Creates a bsl::delegate from a member function pointer. If
+        ///     the function pointer is a nullptr, the resulting bsl::delegate
         ///     is marked as invalid, and will always return an error when
         ///     executed.
-        ///   @include function/example_function_constructor_memfunc.hpp
+        ///   @include delegate/example_delegate_constructor_memfunc.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -491,10 +491,10 @@ namespace bsl
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
-        ///   @param func a pointer to the function being wrapped
+        ///   @param func a pointer to the delegate being wrapped
         ///
         template<typename T, typename U>
-        function(T &t, void (U::*const func)(ARGS...)) noexcept    // --
+        delegate(T &t, void (U::*const func)(ARGS...)) noexcept    // --
             : m_valid{nullptr != func}, m_store{}
         {
             static_assert(sizeof(m_store) >= sizeof(details::memfunc_wrapper<T, void(ARGS...)>));
@@ -505,11 +505,11 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Creates a bsl::function from a const member function
+        ///   @brief Creates a bsl::delegate from a const member function
         ///     pointer. If the function pointer is a nullptr, the resulting
-        ///     bsl::function is marked as invalid, and will always return an
+        ///     bsl::delegate is marked as invalid, and will always return an
         ///     error when executed.
-        ///   @include function/example_function_constructor_cmemfunc.hpp
+        ///   @include delegate/example_delegate_constructor_cmemfunc.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -517,10 +517,10 @@ namespace bsl
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
-        ///   @param func a pointer to the function being wrapped
+        ///   @param func a pointer to the delegate being wrapped
         ///
         template<typename T, typename U>
-        function(T const &t, void (U::*const func)(ARGS...) const) noexcept    // --
+        delegate(T const &t, void (U::*const func)(ARGS...) const) noexcept    // --
             : m_valid{nullptr != func}, m_store{}
         {
             static_assert(sizeof(m_store) >= sizeof(details::cmemfunc_wrapper<T, void(ARGS...)>));
@@ -531,12 +531,12 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Execute the bsl::function by calling the wrapped function
+        ///   @brief Execute the bsl::delegate by calling the wrapped function
         ///     with "args".
-        ///   @include function/example_function_functor.hpp
+        ///   @include delegate/example_delegate_functor.hpp
         ///
         /// <!-- contracts -->
-        ///   @pre assumes the bsl::function is valid
+        ///   @pre none
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
@@ -557,16 +557,16 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief If the bsl::function is valid, returns true, otherwise
+        ///   @brief If the bsl::delegate is valid, returns true, otherwise
         ///     returns false.
-        ///   @include function/example_function_valid.hpp
+        ///   @include delegate/example_delegate_valid.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
-        ///   @return If the bsl::function is valid, returns true, otherwise
+        ///   @return If the bsl::delegate is valid, returns true, otherwise
         ///     returns false.
         ///
         [[nodiscard]] bool
@@ -576,60 +576,60 @@ namespace bsl
         }
     };
 
-    /// @class bsl::details::function
+    /// @class bsl::delegate
     ///
     /// <!-- description -->
     ///   @brief Implements a simplified version of std::function. Unlike
-    ///     std::function, a bsl::function has the following differences:
+    ///     std::function, a bsl::delegate has the following differences:
     ///     - Lambda functions, and binding in general are not supported.
     ///       Instead, either use a function pointer, or a member function
     ///       pointer. The reason is this implementation attempts to reduce
     ///       the overhead of std::function, and dynamic memory is not
-    ///       supported, so the bsl::function has a fixed amount of memory
+    ///       supported, so the bsl::delegate has a fixed amount of memory
     ///       that it can support for wrapping.
     ///     - Operator bool is not supported as AUTOSAR does not allow for
     ///       the use of the conversion operator. Instead, use valid().
     ///     - Target access, non-member and helper functions are not supported.
     ///     - Functions marked as "noexcept" are supported. If the function
-    ///       is marked as noexcept, the resulting bsl::function's functor
+    ///       is marked as noexcept, the resulting bsl::delegate's functor
     ///       will also be marked as noexcept and vice versa.
-    ///   @include example_function_overview.hpp
+    ///   @include example_delegate_overview.hpp
     ///
     /// <!-- template parameters -->
-    ///   @tparam ARGS The arguments to the function being wrapped
+    ///   @tparam ARGS The arguments to the delegate being wrapped
     ///
     template<typename... ARGS>
-    class function<void(ARGS...) noexcept> final
+    class delegate<void(ARGS...) noexcept> final
     {
-        /// @brief stores whether or not this function is valid
+        /// @brief stores whether or not this delegate is valid
         bool m_valid;
         /// @brief stores the invoke wrapper
         aligned_storage_t<sizeof(void *) * 3> m_store;
 
     public:
         /// <!-- description -->
-        ///   @brief Provides support for ensuring that a bsl::function is a
+        ///   @brief Provides support for ensuring that a bsl::delegate is a
         ///     POD type, allowing it to be defined as a global resource.
-        ///     When used globally, a bsl::function should not include {},
-        ///     ensuing it is a POD. As required by C++, the OS will zero
-        ///     initialize the bsl::function for you, marking the bsl::function
+        ///     When used globally, a bsl::delegate should not include {},
+        ///     as required by AUTOSAR. The OS will automatically zero
+        ///     initialize the bsl::delegate for you, marking the bsl::delegate
         ///     as invalid. If you use this constructor locally, you must
-        ///     include {} to ensure the bsl::function is initialized, which
+        ///     include {} to ensure the bsl::delegate is initialized, which
         ///     most compilers will warn about.
-        ///   @include function/example_function_default_constructor.hpp
+        ///   @include delegate/example_delegate_default_constructor.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
-        function() noexcept = default;
+        delegate() noexcept = default;
 
         /// <!-- description -->
-        ///   @brief Creates a bsl::function from a function pointer. If the
-        ///     function pointer is a nullptr, the resulting bsl::function
+        ///   @brief Creates a bsl::delegate from a function pointer. If the
+        ///     function pointer is a nullptr, the resulting bsl::delegate
         ///     is marked as invalid, and will always return an error when
         ///     executed.
-        ///   @include function/example_function_constructor_func.hpp
+        ///   @include delegate/example_delegate_constructor_func.hpp
         ///
         ///   SUPPRESSION: PRQA 2180 - false positive
         ///   - We suppress this because A12-1-4 states that all constructors
@@ -642,9 +642,9 @@ namespace bsl
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
-        ///   @param func a pointer to the function being wrapped
+        ///   @param func a pointer to the delegate being wrapped
         ///
-        function(void (*const func)(ARGS...) noexcept) noexcept    // PRQA S 2180 // NOLINT
+        delegate(void (*const func)(ARGS...) noexcept) noexcept    // PRQA S 2180 // NOLINT
             : m_valid{nullptr != func}, m_store{}
         {
             static_assert(sizeof(m_store) >= sizeof(details::func_wrapper<void(ARGS...)>));
@@ -655,11 +655,11 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Creates a bsl::function from a member function pointer. If
-        ///     the function pointer is a nullptr, the resulting bsl::function
+        ///   @brief Creates a bsl::delegate from a member function pointer. If
+        ///     the function pointer is a nullptr, the resulting bsl::delegate
         ///     is marked as invalid, and will always return an error when
         ///     executed.
-        ///   @include function/example_function_constructor_memfunc.hpp
+        ///   @include delegate/example_delegate_constructor_memfunc.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -667,10 +667,10 @@ namespace bsl
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
-        ///   @param func a pointer to the function being wrapped
+        ///   @param func a pointer to the delegate being wrapped
         ///
         template<typename T, typename U>
-        function(T &t, void (U::*const func)(ARGS...) noexcept) noexcept    // --
+        delegate(T &t, void (U::*const func)(ARGS...) noexcept) noexcept    // --
             : m_valid{nullptr != func}, m_store{}
         {
             static_assert(sizeof(m_store) >= sizeof(details::memfunc_wrapper<T, void(ARGS...)>));
@@ -682,11 +682,11 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Creates a bsl::function from a const member function
+        ///   @brief Creates a bsl::delegate from a const member function
         ///     pointer. If the function pointer is a nullptr, the resulting
-        ///     bsl::function is marked as invalid, and will always return an
+        ///     bsl::delegate is marked as invalid, and will always return an
         ///     error when executed.
-        ///   @include function/example_function_constructor_cmemfunc.hpp
+        ///   @include delegate/example_delegate_constructor_cmemfunc.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -694,10 +694,10 @@ namespace bsl
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
-        ///   @param func a pointer to the function being wrapped
+        ///   @param func a pointer to the delegate being wrapped
         ///
         template<typename T, typename U>
-        function(T const &t, void (U::*const func)(ARGS...) const noexcept) noexcept    // --
+        delegate(T const &t, void (U::*const func)(ARGS...) const noexcept) noexcept    // --
             : m_valid{nullptr != func}, m_store{}
         {
             static_assert(sizeof(m_store) >= sizeof(details::cmemfunc_wrapper<T, void(ARGS...)>));
@@ -709,12 +709,12 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Execute the bsl::function by calling the wrapped function
+        ///   @brief Execute the bsl::delegate by calling the wrapped function
         ///     with "args".
-        ///   @include function/example_function_functor.hpp
+        ///   @include delegate/example_delegate_functor.hpp
         ///
         /// <!-- contracts -->
-        ///   @pre assumes the bsl::function is valid
+        ///   @pre none
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
@@ -732,16 +732,16 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief If the bsl::function is valid, returns true, otherwise
+        ///   @brief If the bsl::delegate is valid, returns true, otherwise
         ///     returns false.
-        ///   @include function/example_function_valid.hpp
+        ///   @include delegate/example_delegate_valid.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
         ///   @post none
         ///
         /// <!-- inputs/outputs -->
-        ///   @return If the bsl::function is valid, returns true, otherwise
+        ///   @return If the bsl::delegate is valid, returns true, otherwise
         ///     returns false.
         ///
         [[nodiscard]] bool
@@ -751,56 +751,56 @@ namespace bsl
         }
     };
 
-    /// @brief deduction guideline for bsl::function
-    function()->function<void() noexcept>;
+    /// @brief deduction guideline for bsl::delegate
+    delegate()->delegate<void() noexcept>;
 
-    /// @brief deduction guideline for bsl::function
+    /// @brief deduction guideline for bsl::delegate
     template<typename R, typename... ARGS>
-    function(R (*)(ARGS...))->function<R(ARGS...)>;
+    delegate(R (*)(ARGS...))->delegate<R(ARGS...)>;
 
-    /// @brief deduction guideline for bsl::function
+    /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename R, typename... ARGS>
-    function(T &t, R (U::*)(ARGS...))->function<R(ARGS...)>;
+    delegate(T &t, R (U::*)(ARGS...))->delegate<R(ARGS...)>;
 
-    /// @brief deduction guideline for bsl::function
+    /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename R, typename... ARGS>
-    function(T const &t, R (U::*)(ARGS...) const)->function<R(ARGS...)>;
+    delegate(T const &t, R (U::*)(ARGS...) const)->delegate<R(ARGS...)>;
 
-    /// @brief deduction guideline for bsl::function
+    /// @brief deduction guideline for bsl::delegate
     template<typename R, typename... ARGS>
-    function(R (*)(ARGS...) noexcept)->function<R(ARGS...) noexcept>;
+    delegate(R (*)(ARGS...) noexcept)->delegate<R(ARGS...) noexcept>;
 
-    /// @brief deduction guideline for bsl::function
+    /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename R, typename... ARGS>
-    function(T &t, R (U::*)(ARGS...) noexcept)->function<R(ARGS...) noexcept>;
+    delegate(T &t, R (U::*)(ARGS...) noexcept)->delegate<R(ARGS...) noexcept>;
 
-    /// @brief deduction guideline for bsl::function
+    /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename R, typename... ARGS>
-    function(T const &t, R (U::*)(ARGS...) const noexcept)->function<R(ARGS...) noexcept>;
+    delegate(T const &t, R (U::*)(ARGS...) const noexcept)->delegate<R(ARGS...) noexcept>;
 
-    /// @brief deduction guideline for bsl::function
+    /// @brief deduction guideline for bsl::delegate
     template<typename... ARGS>
-    function(void (*)(ARGS...))->function<void(ARGS...)>;
+    delegate(void (*)(ARGS...))->delegate<void(ARGS...)>;
 
-    /// @brief deduction guideline for bsl::function
+    /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename... ARGS>
-    function(T &t, void (U::*)(ARGS...))->function<void(ARGS...)>;
+    delegate(T &t, void (U::*)(ARGS...))->delegate<void(ARGS...)>;
 
-    /// @brief deduction guideline for bsl::function
+    /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename... ARGS>
-    function(T const &t, void (U::*)(ARGS...) const)->function<void(ARGS...)>;
+    delegate(T const &t, void (U::*)(ARGS...) const)->delegate<void(ARGS...)>;
 
-    /// @brief deduction guideline for bsl::function
+    /// @brief deduction guideline for bsl::delegate
     template<typename... ARGS>
-    function(void (*)(ARGS...) noexcept)->function<void(ARGS...) noexcept>;
+    delegate(void (*)(ARGS...) noexcept)->delegate<void(ARGS...) noexcept>;
 
-    /// @brief deduction guideline for bsl::function
+    /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename... ARGS>
-    function(T &t, void (U::*)(ARGS...) noexcept)->function<void(ARGS...) noexcept>;
+    delegate(T &t, void (U::*)(ARGS...) noexcept)->delegate<void(ARGS...) noexcept>;
 
-    /// @brief deduction guideline for bsl::function
+    /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename... ARGS>
-    function(T const &t, void (U::*)(ARGS...) const noexcept)->function<void(ARGS...) noexcept>;
+    delegate(T const &t, void (U::*)(ARGS...) const noexcept)->delegate<void(ARGS...) noexcept>;
 }
 
 #endif

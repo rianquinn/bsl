@@ -28,6 +28,7 @@
 #ifndef BSL_IS_DESTRUCTIBLE_HPP
 #define BSL_IS_DESTRUCTIBLE_HPP
 
+#include "bool_constant.hpp"
 #include "declval.hpp"
 #include "is_detected.hpp"
 #include "is_function.hpp"
@@ -41,9 +42,36 @@ namespace bsl
 {
     namespace details
     {
-        /// @brief defines a destructor type
         template<typename T>
-        using destructor_type = decltype(bsl::declval<T &>().~T());
+        using is_destructible_type = decltype(bsl::declval<T &>().~T());
+
+        /// <!-- description -->
+        ///   @brief Checks if a type "T" is destructible and if so, returns
+        ///     true, otherwise returns false.
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam T the type to query
+        ///   @return If "T" is destructible, returns true, otherwise returns
+        ///     false.
+        ///
+        template<typename T>
+        [[nodiscard]] constexpr bool
+        check_is_destructible() noexcept
+        {
+            if (is_reference<T>::value) {
+                return true;
+            }
+
+            if (is_void<T>::value || is_function<T>::value || is_unbounded_array<T>::value) {
+                return false;
+            }
+
+            return is_detected<is_destructible_type, remove_all_extents_t<T>>::value;
+        }
     }
 
     /// @class bsl::is_destructible
@@ -52,39 +80,15 @@ namespace bsl
     ///   @brief If the provided type is destructible, provides the
     ///     member constant value equal to true. Otherwise the member constant
     ///     value is false.
-    ///   @include is_destructible/overview.cpp
+    ///   @include example_is_destructible_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
-    template<
-        typename T,
-        bool = is_function<T>::value || is_void<T>::value || is_unbounded_array<T>::value,
-        bool = is_reference<T>::value || is_scalar<T>::value>
-    struct is_destructible final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{
-            is_detected<details::destructor_type, remove_all_extents_t<T>>::value};
-    };
-
-    /// @cond --
-
-    template<typename T, bool B>
-    struct is_destructible<T, true, B> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{false};
-    };
-
-    template<typename T, bool B>
-    struct is_destructible<T, B, true> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
-
-    /// @endcond --
+    template<typename T>
+    class is_destructible final : // --
+        public bool_constant<details::check_is_destructible<T>()>
+    {};
 }
 
 #endif

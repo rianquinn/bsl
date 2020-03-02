@@ -28,8 +28,6 @@
 #include <bsl/is_constructible.hpp>
 #include <bsl/print.hpp>
 
-#include "example_class_pod.hpp"
-
 namespace bsl
 {
     /// <!-- description -->
@@ -42,7 +40,7 @@ namespace bsl
     inline void
     example_is_constructible_overview() noexcept
     {
-        if (bsl::is_constructible<example_class_pod>::value) {
+        if (bsl::is_constructible<bool>::value) {
             bsl::print("success\n");
         }
     }

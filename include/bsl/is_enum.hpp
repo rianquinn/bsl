@@ -28,6 +28,8 @@
 #ifndef BSL_IS_ENUM_HPP
 #define BSL_IS_ENUM_HPP
 
+#include "bool_constant.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_enum
@@ -36,17 +38,15 @@ namespace bsl
     ///   @brief If the provided type is an enum type, provides the member
     ///     constant value equal to true. Otherwise the member constant value
     ///     is false.
-    ///   @include is_enum/overview.cpp
+    ///   @include example_is_enum_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_enum final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_enum(T)};
-    };
+    class is_enum final : // --
+        public bool_constant<__is_enum(T)>
+    {};
 }
 
 #endif

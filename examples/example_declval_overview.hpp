@@ -41,7 +41,7 @@ namespace bsl
     inline void
     example_declval_overview() noexcept
     {
-        using example_declval_type = // --
+        using example_declval_type =    // --
             decltype(bsl::declval<example_class_nodefault>().get());
 
         if (bsl::is_same<example_declval_type, bool>::value) {

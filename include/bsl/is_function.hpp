@@ -28,6 +28,7 @@
 #ifndef BSL_IS_FUNCTION_HPP
 #define BSL_IS_FUNCTION_HPP
 
+#include "bool_constant.hpp"
 #include "is_const.hpp"
 #include "is_reference.hpp"
 
@@ -39,17 +40,15 @@ namespace bsl
     ///   @brief If the provided type is a function type, provides the member
     ///     constant value equal to true. Otherwise the member constant value
     ///     is false.
-    ///   @include is_function/overview.cpp
+    ///   @include example_is_function_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_function final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{(!is_const<T const>::value) && (!is_reference<T>::value)};
-    };
+    class is_function final : // --
+        public bool_constant<(!is_const<T const>::value) && (!is_reference<T>::value)>
+    {};
 }
 
 #endif

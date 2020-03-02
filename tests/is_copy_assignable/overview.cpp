@@ -203,7 +203,6 @@ main()
     static_assert(!is_copy_assignable<bool const &>::value);
     static_assert(!is_copy_assignable<bool const &&>::value);
     static_assert(!is_copy_assignable<bool(bool)>::value);
-
     static_assert(!is_copy_assignable<myclass_move_only>::value);
     static_assert(!is_copy_assignable<myclass_no_assign>::value);
 

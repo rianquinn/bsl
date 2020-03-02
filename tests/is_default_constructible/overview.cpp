@@ -159,10 +159,10 @@ main()
 
     static_assert(!is_default_constructible<myclass_abstract>::value);
     static_assert(!is_default_constructible<myclass_abstract const>::value);
-    static_assert(!is_default_constructible<bool[]>::value);              // NOLINT
-    static_assert(!is_default_constructible<bool[][1]>::value);           // NOLINT
-    static_assert(!is_default_constructible<bool const[]>::value);        // NOLINT
-    static_assert(!is_default_constructible<bool const[][1]>::value);     // NOLINT
+    static_assert(!is_default_constructible<bool[]>::value);             // NOLINT
+    static_assert(!is_default_constructible<bool[][1]>::value);          // NOLINT
+    static_assert(!is_default_constructible<bool const[]>::value);       // NOLINT
+    static_assert(!is_default_constructible<bool const[][1]>::value);    // NOLINT
     static_assert(!is_default_constructible<void>::value);
     static_assert(!is_default_constructible<void const>::value);
     static_assert(!is_default_constructible<bool &>::value);
@@ -170,7 +170,6 @@ main()
     static_assert(!is_default_constructible<bool const &>::value);
     static_assert(!is_default_constructible<bool const &&>::value);
     static_assert(!is_default_constructible<bool(bool)>::value);
-
     static_assert(!is_default_constructible<myclass_nodefault>::value);
 
     return bsl::ut_success();

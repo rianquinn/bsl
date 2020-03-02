@@ -22,11 +22,13 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef EXAMPLE_FUNCTION_DEFAULT_CONSTRUCTOR_HPP
-#define EXAMPLE_FUNCTION_DEFAULT_CONSTRUCTOR_HPP
+#ifndef EXAMPLE_DELEGATE_CONSTRUCTOR_CMEMFUNC_HPP
+#define EXAMPLE_DELEGATE_CONSTRUCTOR_CMEMFUNC_HPP
 
-#include <bsl/function.hpp>
+#include <bsl/delegate.hpp>
 #include <bsl/print.hpp>
+
+#include "../example_class_subclass.hpp"
 
 namespace bsl
 {
@@ -38,12 +40,16 @@ namespace bsl
     ///   @post none
     ///
     inline void
-    example_function_default_constructor() noexcept
+    example_delegate_constructor_cmemfunc() noexcept
     {
-        bsl::function<bool() noexcept> const func{};
+        example_class_subclass const c;
+        bsl::delegate const func{c, &example_class_subclass::get};
 
-        if (func().failure()) {
-            bsl::print("success\n");
+        auto const res{func()};
+        if (auto const val = res.get_if()) {
+            if (*val) {
+                bsl::print("success\n");
+            }
         }
     }
 }

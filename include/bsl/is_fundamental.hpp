@@ -28,31 +28,57 @@
 #ifndef BSL_IS_FUNDAMENTAL_HPP
 #define BSL_IS_FUNDAMENTAL_HPP
 
-#include "is_integral.hpp"
+#include "bool_constant.hpp"
+#include "is_arithmetic.hpp"
 #include "is_void.hpp"
 #include "is_null_pointer.hpp"
 
 namespace bsl
 {
+    namespace details
+    {
+        /// <!-- description -->
+        ///   @brief Checks if the provided type "T" is a fundamental type
+        ///     and if so, returns true, otherwise returns false.
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam T the type to query
+        ///   @return Returns true if "T" is fundamental, false otherwise.
+        ///
+        template<typename T>
+        [[nodiscard]] constexpr bool
+        check_is_fundamental() noexcept
+        {
+            if (is_arithmetic<T>::value) {
+                return true;
+            }
+
+            if (is_void<T>::value) {
+                return true;
+            }
+
+            return is_null_pointer<T>::value;
+        }
+    }
+
     /// @class bsl::is_fundamental
     ///
     /// <!-- description -->
     ///   @brief If the provided type is a fundamental type, provides the member
     ///     constant value equal to true. Otherwise the member constant value
     ///     is false.
-    ///   @include is_fundamental/overview.cpp
+    ///   @include example_is_fundamental_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_fundamental final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{is_integral<T>::value ||    // --
-                                    is_void<T>::value ||        // --
-                                    is_null_pointer<T>::value};
-    };
+    class is_fundamental final : public bool_constant<details::check_is_fundamental<T>()>
+    {};
 }
 
 #endif

@@ -28,6 +28,7 @@
 #ifndef BSL_IS_MOVE_ASSIGNABLE_HPP
 #define BSL_IS_MOVE_ASSIGNABLE_HPP
 
+#include "bool_constant.hpp"
 #include "add_lvalue_reference.hpp"
 #include "add_rvalue_reference.hpp"
 
@@ -39,18 +40,15 @@ namespace bsl
     ///   @brief If the provided type is move assignable, provides the
     ///     member constant value equal to true. Otherwise the member constant
     ///     value is false.
-    ///   @include is_move_assignable/overview.cpp
+    ///   @include example_is_move_assignable_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_move_assignable final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{
-            __is_assignable(add_lvalue_reference_t<T>, add_rvalue_reference_t<T>)};
-    };
+    class is_move_assignable final :
+        public bool_constant<__is_assignable(add_lvalue_reference_t<T>, add_rvalue_reference_t<T>)>
+    {};
 }
 
 #endif

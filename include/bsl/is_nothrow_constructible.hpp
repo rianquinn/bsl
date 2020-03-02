@@ -28,25 +28,25 @@
 #ifndef BSL_IS_NOTHROW_CONSTRUCTIBLE_HPP
 #define BSL_IS_NOTHROW_CONSTRUCTIBLE_HPP
 
+#include "bool_constant.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_nothrow_constructible
     ///
     /// <!-- description -->
-    ///   @brief If the provided type is constructible, provides the
+    ///   @brief If the provided type is nothrow constructible, provides the
     ///     member constant value equal to true. Otherwise the member constant
     ///     value is false.
-    ///   @include is_nothrow_constructible/overview.cpp
+    ///   @include example_is_nothrow_constructible_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T, typename... Args>
-    struct is_nothrow_constructible final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_nothrow_constructible(T, Args...)};
-    };
+    class is_nothrow_constructible final : // --
+        public bool_constant<__is_nothrow_constructible(T, Args...)>
+    {};
 }
 
 #endif

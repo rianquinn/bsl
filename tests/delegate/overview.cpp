@@ -22,7 +22,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/function.hpp>
+#include <bsl/delegate.hpp>
 #include <bsl/ut.hpp>
 
 namespace
@@ -138,7 +138,7 @@ main()
 
     bsl::ut_scenario{"func"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function const func{&test_func};
+            bsl::delegate const func{&test_func};
             bsl::ut_when{} = [&func]() {
                 ut_check(func.valid());
                 auto const res{func(true)};
@@ -154,7 +154,7 @@ main()
 
     bsl::ut_scenario{"func (noexcept)"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function const func{&test_func_noexcept};
+            bsl::delegate const func{&test_func_noexcept};
             bsl::ut_when{} = [&func]() {
                 ut_check(func.valid());
                 auto const res{func(true)};
@@ -170,7 +170,7 @@ main()
 
     bsl::ut_scenario{"func with void return"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function const func{&test_func_void};
+            bsl::delegate const func{&test_func_void};
             bsl::ut_when{} = [&func]() {
                 ut_check(func.valid());
                 g_called = false;
@@ -186,7 +186,7 @@ main()
 
     bsl::ut_scenario{"func with void return (noexcept)"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function const func{&test_func_void_noexcept};
+            bsl::delegate const func{&test_func_void_noexcept};
             bsl::ut_when{} = [&func]() {
                 ut_check(func.valid());
                 g_called = false;
@@ -203,7 +203,7 @@ main()
     bsl::ut_scenario{"memfunc"} = []() {
         bsl::ut_given{} = []() {
             myclass c{};
-            bsl::function const func{c, &myclass::test_memfunc};
+            bsl::delegate const func{c, &myclass::test_memfunc};
             bsl::ut_when{} = [&func]() {
                 ut_check(func.valid());
                 auto const res{func(true)};
@@ -220,7 +220,7 @@ main()
     bsl::ut_scenario{"memfunc (noexcept)"} = []() {
         bsl::ut_given{} = []() {
             myclass c{};
-            bsl::function const func{c, &myclass::test_memfunc_noexcept};
+            bsl::delegate const func{c, &myclass::test_memfunc_noexcept};
             bsl::ut_when{} = [&func]() {
                 ut_check(func.valid());
                 auto const res{func(true)};
@@ -237,7 +237,7 @@ main()
     bsl::ut_scenario{"memfunc with void return"} = []() {
         bsl::ut_given{} = []() {
             myclass c{};
-            bsl::function const func{c, &myclass::test_memfunc_void};
+            bsl::delegate const func{c, &myclass::test_memfunc_void};
             bsl::ut_when{} = [&func]() {
                 ut_check(func.valid());
                 g_called = false;
@@ -254,7 +254,7 @@ main()
     bsl::ut_scenario{"memfunc with void return (noexcept)"} = []() {
         bsl::ut_given{} = []() {
             myclass c{};
-            bsl::function const func{c, &myclass::test_memfunc_void_noexcept};
+            bsl::delegate const func{c, &myclass::test_memfunc_void_noexcept};
             bsl::ut_when{} = [&func]() {
                 ut_check(func.valid());
                 g_called = false;
@@ -271,7 +271,7 @@ main()
     bsl::ut_scenario{"cmemfunc"} = []() {
         bsl::ut_given{} = []() {
             myclass c{};
-            bsl::function const func{c, &myclass::test_cmemfunc};
+            bsl::delegate const func{c, &myclass::test_cmemfunc};
             bsl::ut_when{} = [&func]() {
                 ut_check(func.valid());
                 auto const res{func(true)};
@@ -288,7 +288,7 @@ main()
     bsl::ut_scenario{"cmemfunc (noexcept)"} = []() {
         bsl::ut_given{} = []() {
             myclass c{};
-            bsl::function const func{c, &myclass::test_cmemfunc_noexcept};
+            bsl::delegate const func{c, &myclass::test_cmemfunc_noexcept};
             bsl::ut_when{} = [&func]() {
                 ut_check(func.valid());
                 auto const res{func(true)};
@@ -305,7 +305,7 @@ main()
     bsl::ut_scenario{"cmemfunc with void return"} = []() {
         bsl::ut_given{} = []() {
             myclass c{};
-            bsl::function const func{c, &myclass::test_cmemfunc_void};
+            bsl::delegate const func{c, &myclass::test_cmemfunc_void};
             bsl::ut_when{} = [&func]() {
                 ut_check(func.valid());
                 g_called = false;
@@ -322,7 +322,7 @@ main()
     bsl::ut_scenario{"cmemfunc with void return (noexcept)"} = []() {
         bsl::ut_given{} = []() {
             myclass c{};
-            bsl::function const func{c, &myclass::test_cmemfunc_void_noexcept};
+            bsl::delegate const func{c, &myclass::test_cmemfunc_void_noexcept};
             bsl::ut_when{} = [&func]() {
                 ut_check(func.valid());
                 g_called = false;
@@ -338,7 +338,7 @@ main()
 
     bsl::ut_scenario{"default constructor with no signature"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function const func{};
+            bsl::delegate const func{};
             bsl::ut_then{} = [&func]() {
                 bsl::ut_check(!func.valid());
                 func();
@@ -350,7 +350,7 @@ main()
 
     bsl::ut_scenario{"default constructor"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function<bool()> const func{};
+            bsl::delegate<bool()> const func{};
             bsl::ut_then{} = [&func]() {
                 bsl::ut_check(!func.valid());
                 bsl::ut_check(!func().success());
@@ -362,7 +362,7 @@ main()
 
     bsl::ut_scenario{"default constructor with void return"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function<void()> const func{};
+            bsl::delegate<void()> const func{};
             bsl::ut_then{} = [&func]() {
                 bsl::ut_check(!func.valid());
                 func();
@@ -374,7 +374,7 @@ main()
 
     bsl::ut_scenario{"default constructor (noexcept)"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function<bool() noexcept> const func{};
+            bsl::delegate<bool() noexcept> const func{};
             bsl::ut_then{} = [&func]() {
                 bsl::ut_check(!func.valid());
                 bsl::ut_check(!func().success());
@@ -386,7 +386,7 @@ main()
 
     bsl::ut_scenario{"default constructor with void return (noexcept)"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function<void() noexcept> const func{};
+            bsl::delegate<void() noexcept> const func{};
             bsl::ut_then{} = [&func]() {
                 bsl::ut_check(!func.valid());
                 func();
@@ -399,7 +399,7 @@ main()
     bsl::ut_scenario{"nullptr func"} = []() {
         bsl::ut_given{} = []() {
             bool (*myfunc)(bool){};
-            bsl::function const func{myfunc};
+            bsl::delegate const func{myfunc};
             bsl::ut_when{} = [&func]() {
                 ut_check(!func.valid());
                 auto const res{func(true)};
@@ -415,7 +415,7 @@ main()
     bsl::ut_scenario{"nullptr func (noexcept)"} = []() {
         bsl::ut_given{} = []() {
             bool (*myfunc)(bool) noexcept {};
-            bsl::function const func{myfunc};
+            bsl::delegate const func{myfunc};
             bsl::ut_when{} = [&func]() {
                 ut_check(!func.valid());
                 auto const res{func(true)};
@@ -431,7 +431,7 @@ main()
     bsl::ut_scenario{"nullptr func with void return"} = []() {
         bsl::ut_given{} = []() {
             void (*myfunc)(bool){};
-            bsl::function const func{myfunc};
+            bsl::delegate const func{myfunc};
             bsl::ut_when{} = [&func]() {
                 ut_check(!func.valid());
                 func(true);
@@ -444,7 +444,7 @@ main()
     bsl::ut_scenario{"nullptr func with void return (noexcept)"} = []() {
         bsl::ut_given{} = []() {
             void (*myfunc)(bool) noexcept {};
-            bsl::function const func{myfunc};
+            bsl::delegate const func{myfunc};
             bsl::ut_when{} = [&func]() {
                 ut_check(!func.valid());
                 func(true);
@@ -458,7 +458,7 @@ main()
         bsl::ut_given{} = []() {
             myclass c{};
             bool (myclass::*myfunc)(bool){};
-            bsl::function const func{c, myfunc};
+            bsl::delegate const func{c, myfunc};
             bsl::ut_when{} = [&func]() {
                 ut_check(!func.valid());
                 auto const res{func(true)};
@@ -475,7 +475,7 @@ main()
         bsl::ut_given{} = []() {
             myclass c{};
             bool (myclass::*myfunc)(bool) noexcept {};
-            bsl::function const func{c, myfunc};
+            bsl::delegate const func{c, myfunc};
             bsl::ut_when{} = [&func]() {
                 ut_check(!func.valid());
                 auto const res{func(true)};
@@ -492,7 +492,7 @@ main()
         bsl::ut_given{} = []() {
             myclass c{};
             void (myclass::*myfunc)(bool){};
-            bsl::function const func{c, myfunc};
+            bsl::delegate const func{c, myfunc};
             bsl::ut_when{} = [&func]() {
                 ut_check(!func.valid());
                 func(true);
@@ -506,7 +506,7 @@ main()
         bsl::ut_given{} = []() {
             myclass c{};
             void (myclass::*myfunc)(bool) noexcept {};
-            bsl::function const func{c, myfunc};
+            bsl::delegate const func{c, myfunc};
             bsl::ut_when{} = [&func]() {
                 ut_check(!func.valid());
                 func(true);
@@ -520,7 +520,7 @@ main()
         bsl::ut_given{} = []() {
             myclass c{};
             bool (myclass::*myfunc)(bool) const {};
-            bsl::function const func{c, myfunc};
+            bsl::delegate const func{c, myfunc};
             bsl::ut_when{} = [&func]() {
                 ut_check(!func.valid());
                 auto const res{func(true)};
@@ -537,7 +537,7 @@ main()
         bsl::ut_given{} = []() {
             myclass c{};
             bool (myclass::*myfunc)(bool) const noexcept {};
-            bsl::function const func{c, myfunc};
+            bsl::delegate const func{c, myfunc};
             bsl::ut_when{} = [&func]() {
                 ut_check(!func.valid());
                 auto const res{func(true)};
@@ -554,7 +554,7 @@ main()
         bsl::ut_given{} = []() {
             myclass c{};
             void (myclass::*myfunc)(bool) const {};
-            bsl::function const func{c, myfunc};
+            bsl::delegate const func{c, myfunc};
             bsl::ut_when{} = [&func]() {
                 ut_check(!func.valid());
                 func(true);
@@ -568,7 +568,7 @@ main()
         bsl::ut_given{} = []() {
             myclass c{};
             void (myclass::*myfunc)(bool) const noexcept {};
-            bsl::function const func{c, myfunc};
+            bsl::delegate const func{c, myfunc};
             bsl::ut_when{} = [&func]() {
                 ut_check(!func.valid());
                 func(true);
@@ -580,8 +580,8 @@ main()
 
     bsl::ut_scenario{"copy construction"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function const func1{&test_func};
-            bsl::function const func2{func1};
+            bsl::delegate const func1{&test_func};
+            bsl::delegate const func2{func1};
             bsl::ut_when{} = [&func2]() {
                 auto const res{func2(true)};
                 bsl::ut_then{} = [&res]() {
@@ -594,8 +594,8 @@ main()
 
     bsl::ut_scenario{"copy construction (noexcept)"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function const func1{&test_func_noexcept};
-            bsl::function const func2{func1};
+            bsl::delegate const func1{&test_func_noexcept};
+            bsl::delegate const func2{func1};
             bsl::ut_when{} = [&func2]() {
                 auto const res{func2(true)};
                 bsl::ut_then{} = [&res]() {
@@ -608,8 +608,8 @@ main()
 
     bsl::ut_scenario{"copy construction with void return"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function const func1{&test_func_void};
-            bsl::function const func2{func1};
+            bsl::delegate const func1{&test_func_void};
+            bsl::delegate const func2{func1};
             bsl::ut_when{} = [&func2]() {
                 ut_check(func2.valid());
                 g_called = false;
@@ -623,8 +623,8 @@ main()
 
     bsl::ut_scenario{"copy construction with void return"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function const func1{&test_func_void_noexcept};
-            bsl::function const func2{func1};
+            bsl::delegate const func1{&test_func_void_noexcept};
+            bsl::delegate const func2{func1};
             bsl::ut_when{} = [&func2]() {
                 ut_check(func2.valid());
                 g_called = false;
@@ -638,8 +638,8 @@ main()
 
     bsl::ut_scenario{"move construction"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function func1{&test_func};
-            bsl::function const func2{bsl::move(func1)};
+            bsl::delegate func1{&test_func};
+            bsl::delegate const func2{bsl::move(func1)};
             bsl::ut_when{} = [&func2]() {
                 auto const res{func2(true)};
                 bsl::ut_then{} = [&res]() {
@@ -652,8 +652,8 @@ main()
 
     bsl::ut_scenario{"move construction (noexcept)"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function func1{&test_func_noexcept};
-            bsl::function const func2{bsl::move(func1)};
+            bsl::delegate func1{&test_func_noexcept};
+            bsl::delegate const func2{bsl::move(func1)};
             bsl::ut_when{} = [&func2]() {
                 auto const res{func2(true)};
                 bsl::ut_then{} = [&res]() {
@@ -666,8 +666,8 @@ main()
 
     bsl::ut_scenario{"move construction with void return"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function func1{&test_func_void};
-            bsl::function const func2{bsl::move(func1)};
+            bsl::delegate func1{&test_func_void};
+            bsl::delegate const func2{bsl::move(func1)};
             bsl::ut_when{} = [&func2]() {
                 ut_check(func2.valid());
                 g_called = false;
@@ -681,8 +681,8 @@ main()
 
     bsl::ut_scenario{"move construction with void return"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function func1{&test_func_void_noexcept};
-            bsl::function const func2{bsl::move(func1)};
+            bsl::delegate func1{&test_func_void_noexcept};
+            bsl::delegate const func2{bsl::move(func1)};
             bsl::ut_when{} = [&func2]() {
                 ut_check(func2.valid());
                 g_called = false;
@@ -696,8 +696,8 @@ main()
 
     bsl::ut_scenario{"copy assignment"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function const func1{&test_func};
-            bsl::function<bool(bool)> func2{};
+            bsl::delegate const func1{&test_func};
+            bsl::delegate<bool(bool)> func2{};
             bsl::ut_when{} = [&func1, &func2]() {
                 func2 = func1;
                 auto const res{func2(true)};
@@ -711,8 +711,8 @@ main()
 
     bsl::ut_scenario{"copy assignment (noexcept)"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function const func1{&test_func_noexcept};
-            bsl::function<bool(bool) noexcept> func2{};
+            bsl::delegate const func1{&test_func_noexcept};
+            bsl::delegate<bool(bool) noexcept> func2{};
             bsl::ut_when{} = [&func1, &func2]() {
                 func2 = func1;
                 ut_check(func2.valid());
@@ -727,8 +727,8 @@ main()
 
     bsl::ut_scenario{"copy assignment with void return"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function const func1{&test_func_void};
-            bsl::function<void(bool)> func2{};
+            bsl::delegate const func1{&test_func_void};
+            bsl::delegate<void(bool)> func2{};
             bsl::ut_when{} = [&func1, &func2]() {
                 func2 = func1;
                 ut_check(func2.valid());
@@ -743,8 +743,8 @@ main()
 
     bsl::ut_scenario{"copy assignment with void return (noexcept)"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function const func1{&test_func_void_noexcept};
-            bsl::function<void(bool) noexcept> func2{};
+            bsl::delegate const func1{&test_func_void_noexcept};
+            bsl::delegate<void(bool) noexcept> func2{};
             bsl::ut_when{} = [&func1, &func2]() {
                 func2 = func1;
                 ut_check(func2.valid());
@@ -759,8 +759,8 @@ main()
 
     bsl::ut_scenario{"move assignment"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function func1{&test_func};
-            bsl::function<bool(bool)> func2{};
+            bsl::delegate func1{&test_func};
+            bsl::delegate<bool(bool)> func2{};
             bsl::ut_when{} = [&func1, &func2]() {
                 func2 = bsl::move(func1);
                 auto const res{func2(true)};
@@ -774,8 +774,8 @@ main()
 
     bsl::ut_scenario{"move assignment (noexcept)"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function func1{&test_func_noexcept};
-            bsl::function<bool(bool) noexcept> func2{};
+            bsl::delegate func1{&test_func_noexcept};
+            bsl::delegate<bool(bool) noexcept> func2{};
             bsl::ut_when{} = [&func1, &func2]() {
                 func2 = bsl::move(func1);
                 ut_check(func2.valid());
@@ -790,8 +790,8 @@ main()
 
     bsl::ut_scenario{"move assignment with void return"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function func1{&test_func_void};
-            bsl::function<void(bool)> func2{};
+            bsl::delegate func1{&test_func_void};
+            bsl::delegate<void(bool)> func2{};
             bsl::ut_when{} = [&func1, &func2]() {
                 func2 = bsl::move(func1);
                 ut_check(func2.valid());
@@ -806,8 +806,8 @@ main()
 
     bsl::ut_scenario{"move assignment with void return (noexcept)"} = []() {
         bsl::ut_given{} = []() {
-            bsl::function func1{&test_func_void_noexcept};
-            bsl::function<void(bool) noexcept> func2{};
+            bsl::delegate func1{&test_func_void_noexcept};
+            bsl::delegate<void(bool) noexcept> func2{};
             bsl::ut_when{} = [&func1, &func2]() {
                 func2 = bsl::move(func1);
                 ut_check(func2.valid());

@@ -26,6 +26,9 @@
 #define EXAMPLE_IS_EMPTY_OVERVIEW_HPP
 
 #include <bsl/is_empty.hpp>
+#include <bsl/print.hpp>
+
+#include "example_class_empty.hpp"
 
 namespace bsl
 {
@@ -38,7 +41,11 @@ namespace bsl
     ///
     inline void
     example_is_empty_overview() noexcept
-    {}
+    {
+        if (bsl::is_empty<example_class_empty>::value) {
+            bsl::print("success\n");
+        }
+    }
 }
 
 #endif

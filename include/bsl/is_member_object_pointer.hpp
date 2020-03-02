@@ -33,24 +33,48 @@
 
 namespace bsl
 {
+    namespace details
+    {
+        /// <!-- description -->
+        ///   @brief Checks if a type "T" is a member object pointer and if so,
+        ///     returns true, otherwise returns false.
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam T the type to query
+        ///   @return If "T" is a member object pointer, returns true,
+        ///     otherwise returns false.
+        ///
+        template<typename T>
+        [[nodiscard]] constexpr bool
+        check_is_member_object_pointer() noexcept
+        {
+            if (bsl::is_member_function_pointer<T>::value) {
+                return false;
+            }
+
+            return bsl::is_member_pointer<T>::value;
+        }
+    }
+
     /// @class bsl::is_member_object_pointer
     ///
     /// <!-- description -->
     ///   @brief If the provided type is a member object pointer type (taking
     ///     into account const qualifications), provides the member constant
     ///     value equal to true. Otherwise the member constant value is false.
-    ///   @include is_member_object_pointer/overview.cpp
+    ///   @include example_is_member_object_pointer_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_member_object_pointer final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{(is_member_pointer<T>::value) &&
-                                    (!is_member_function_pointer<T>::value)};
-    };
+    class is_member_object_pointer final : // --
+        public bool_constant<details::check_is_member_object_pointer<T>()>
+    {};
 }
 
 #endif
