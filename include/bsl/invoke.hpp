@@ -22,33 +22,25 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file is_nothrow_copy_constructible.hpp
+/// @file invoke.hpp
 ///
 
-#ifndef BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
-#define BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
+#ifndef BSL_INVOKE_HPP
+#define BSL_INVOKE_HPP
 
-#include "bool_constant.hpp"
-#include "add_const.hpp"
-#include "add_lvalue_reference.hpp"
+#include "forward.hpp"
+#include "invoke_result.hpp"
+#include "details/invoke_impl.hpp"
 
 namespace bsl
 {
-    /// @class bsl::is_nothrow_copy_constructible
-    ///
-    /// <!-- description -->
-    ///   @brief If the provided type is nothrow copy constructible, provides
-    ///     the member constant value equal to true. Otherwise the member
-    ///     constant value is false.
-    ///   @include example_is_nothrow_copy_constructible_overview.hpp
-    ///
-    /// <!-- template parameters -->
-    ///   @tparam T the type to query
-    ///
-    template<typename T>
-    class is_nothrow_copy_constructible final :
-        public bool_constant<__is_nothrow_constructible(T, add_lvalue_reference_t<add_const_t<T>>)>
-    {};
+
+    template<typename F, typename... ARGS>
+    invoke_result_t<F, ARGS...>
+    invoke(F &&func, ARGS &&... a)
+    {
+        return details::invoke_impl(bsl::forward<F>(func), bsl::forward<ARGS>(a)...);
+    }
 }
 
 #endif

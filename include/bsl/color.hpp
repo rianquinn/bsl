@@ -68,6 +68,6 @@ namespace bsl
     constexpr cstr_type bold_cyan{"\033[1;96m"};
     /// @brief changes the foreground color to bold white
     constexpr cstr_type bold_white{"\033[1;97m"};
-}    // namespace bsl
+}
 
 #endif

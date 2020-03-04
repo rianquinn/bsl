@@ -22,33 +22,35 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file is_nothrow_copy_constructible.hpp
+/// @file is_reference_wrapper.hpp
 ///
 
-#ifndef BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
-#define BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
+#ifndef BSL_IS_REFERENCE_WRAPPER_HPP
+#define BSL_IS_REFERENCE_WRAPPER_HPP
 
 #include "bool_constant.hpp"
-#include "add_const.hpp"
-#include "add_lvalue_reference.hpp"
 
 namespace bsl
 {
-    /// @class bsl::is_nothrow_copy_constructible
+    /// @class bsl::is_reference_wrapper
     ///
     /// <!-- description -->
-    ///   @brief If the provided type is nothrow copy constructible, provides
-    ///     the member constant value equal to true. Otherwise the member
-    ///     constant value is false.
-    ///   @include example_is_nothrow_copy_constructible_overview.hpp
+    ///   @brief If the provided type is an abstract class type, provides the
+    ///     member constant value equal to true. Otherwise the member constant
+    ///     value is false.
+    ///   @include example_is_reference_wrapper_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class is_nothrow_copy_constructible final :
-        public bool_constant<__is_nothrow_constructible(T, add_lvalue_reference_t<add_const_t<T>>)>
+    struct is_reference_wrapper : std::false_type
     {};
+    template<typename T>
+    struct is_reference_wrapper<std::reference_wrapper<T>> : std::true_type
+    {};
+    template<typename T>
+    inline constexpr bool is_reference_wrapper_v = is_reference_wrapper<T>::value;
 }
 
 #endif

@@ -28,6 +28,7 @@
 #ifndef BSL_IS_NOTHROW_MOVE_CONSTRUCTIBLE_HPP
 #define BSL_IS_NOTHROW_MOVE_CONSTRUCTIBLE_HPP
 
+#include "bool_constant.hpp"
 #include "add_rvalue_reference.hpp"
 
 namespace bsl
@@ -35,20 +36,18 @@ namespace bsl
     /// @class bsl::is_nothrow_move_constructible
     ///
     /// <!-- description -->
-    ///   @brief If the provided type is move constructible, provides
+    ///   @brief If the provided type is nothrow move constructible, provides
     ///     the member constant value equal to true. Otherwise the member
     ///     constant value is false.
-    ///   @include is_nothrow_move_constructible/overview.cpp
+    ///   @include example_is_nothrow_move_constructible_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_nothrow_move_constructible final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_nothrow_constructible(T, add_rvalue_reference_t<T>)};
-    };
+    class is_nothrow_move_constructible final :
+        public bool_constant<__is_nothrow_constructible(T, add_rvalue_reference_t<T>)>
+    {};
 }
 
 #endif

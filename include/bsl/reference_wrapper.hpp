@@ -28,6 +28,10 @@
 #ifndef BSL_REFERENCE_WRAPPER_HPP
 #define BSL_REFERENCE_WRAPPER_HPP
 
+#include "type_identity.hpp"
+#include "enable_if.hpp"
+#include "is_same.hpp"
+
 namespace bsl
 {
     /// @class
@@ -49,9 +53,30 @@ namespace bsl
     ///   @tparam T the type of reference to wrap
     ///
     template<typename T>
-    class reference_wrapper final
+    class reference_wrapper final : type_identity<T>
     {
     public:
+        template <typename U,
+            typename = enable_if_ty<!is_same_v<remove_cvref_ty<U>, reference_wrapper>>,
+            typename = decltype(FUN(bml::declval<U>()))>
+        constexpr reference_wrapper(U&& u) noexcept
+            : m_ptr(bml::addressof(convert(bml::forward<U>(u))))
+        {}
+
+        constexpr reference_wrapper(reference_wrapper const& other) noexcept = default;
+        constexpr auto operator=(reference_wrapper const& other) noexcept -> reference_wrapper&
+            = default;
+
+        constexpr operator T&() const noexcept { return *m_ptr; }
+        constexpr auto get() const noexcept -> T& { return *m_ptr; }
+
+        template <typename... Args>
+        constexpr auto operator()(Args&&... args) const noexcept -> invoke_result_ty<T&, Args...>
+        {
+            return bml::invoke(get(), bml::forward<Args>(args)...);
+        }
+
+
         /// <!-- description -->
         ///   @brief Creates a reference wrapper given a reference to an
         ///     object "t" of type "T".
@@ -64,7 +89,8 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param t a reference to an instance of T that is being wrapped
         ///
-        constexpr reference_wrapper(T &t) noexcept : m_ptr{&t}
+        constexpr reference_wrapper(T &t) noexcept // --
+            : m_ptr{&t}
         {}
 
         /// <!-- description -->

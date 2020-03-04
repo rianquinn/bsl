@@ -22,33 +22,35 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file is_nothrow_copy_constructible.hpp
+/// @file foreach.hpp
 ///
 
-#ifndef BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
-#define BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
+#ifndef BSL_FOREACH_HPP
+#define BSL_FOREACH_HPP
 
-#include "bool_constant.hpp"
-#include "add_const.hpp"
-#include "add_lvalue_reference.hpp"
+#include "cstdint.hpp"
+#include "forward.hpp"
 
 namespace bsl
 {
-    /// @class bsl::is_nothrow_copy_constructible
-    ///
-    /// <!-- description -->
-    ///   @brief If the provided type is nothrow copy constructible, provides
-    ///     the member constant value equal to true. Otherwise the member
-    ///     constant value is false.
-    ///   @include example_is_nothrow_copy_constructible_overview.hpp
-    ///
-    /// <!-- template parameters -->
-    ///   @tparam T the type to query
-    ///
-    template<typename T>
-    class is_nothrow_copy_constructible final :
-        public bool_constant<__is_nothrow_constructible(T, add_lvalue_reference_t<add_const_t<T>>)>
-    {};
+    // A13-3-1 A8-4-9
+    template<typename T, bsl::uintmax N, typename FUNC>
+    constexpr void foreach (T (&array)[N], FUNC && func)    // PRQA S 2023, 4284  // NOLINT
+        noexcept(false)
+    {
+        for (bsl::uintmax i{0U}; i < N; ++i) {
+            bsl::forward<FUNC>(func)(array[i], i);
+        }
+    }
+
+    template<typename T, bsl::uintmax N, typename FUNC>
+    constexpr void foreach (T const (&array)[N], FUNC && func)    // PRQA S 2023 // NOLINT
+        noexcept(false)
+    {
+        for (bsl::uintmax i{0U}; i < N; ++i) {
+            bsl::forward<FUNC>(func)(array[i], i);
+        }
+    }
 }
 
 #endif

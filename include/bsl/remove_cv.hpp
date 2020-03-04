@@ -22,33 +22,51 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file is_nothrow_copy_constructible.hpp
+/// @file remove_cv.hpp
 ///
 
-#ifndef BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
-#define BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
+#ifndef BSL_REMOVE_CV_HPP
+#define BSL_REMOVE_CV_HPP
 
-#include "bool_constant.hpp"
-#include "add_const.hpp"
-#include "add_lvalue_reference.hpp"
+#include "type_identity.hpp"
 
 namespace bsl
 {
-    /// @class bsl::is_nothrow_copy_constructible
+    /// @class bsl::remove_cv
     ///
     /// <!-- description -->
-    ///   @brief If the provided type is nothrow copy constructible, provides
-    ///     the member constant value equal to true. Otherwise the member
-    ///     constant value is false.
-    ///   @include example_is_nothrow_copy_constructible_overview.hpp
+    ///   @brief Provides the member typedef type which is the same as T,
+    ///     except that its topmost const qualifier is removed.
+    ///   @include remove_cv/overview.cpp
     ///
     /// <!-- template parameters -->
-    ///   @tparam T the type to query
+    ///   @tparam T the type to remove the const qualifier from
     ///
     template<typename T>
-    class is_nothrow_copy_constructible final :
-        public bool_constant<__is_nothrow_constructible(T, add_lvalue_reference_t<add_const_t<T>>)>
+    class remove_cv final : public type_identity<T>
     {};
+
+    /// @brief a helper that reduces the verbosity of bsl::remove_cv
+    template<typename T>
+    using remove_cv_t = typename remove_cv<T>::type;
+
+    /// @cond --
+
+    template<typename T>
+    struct remove_cv<T const> final : public type_identity<T>
+    {};
+
+    template<typename T>
+    struct remove_volatile<T volatile> final : public type_identity<T>
+    {
+        static_assert(!is_volatile<T >::value)
+    };
+
+    template<typename T>
+    struct remove_cv<T const volatile> final : public type_identity<T>
+    {};
+
+    /// @endcond --
 }
 
 #endif

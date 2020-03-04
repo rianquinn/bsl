@@ -22,33 +22,22 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file is_nothrow_copy_constructible.hpp
+/// @file invoke_result.hpp
 ///
 
-#ifndef BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
-#define BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
+#ifndef BSL_INVOKE_RESULT_HPP
+#define BSL_INVOKE_RESULT_HPP
 
-#include "bool_constant.hpp"
-#include "add_const.hpp"
-#include "add_lvalue_reference.hpp"
+#include "details/invoke_result_base.hpp"
 
 namespace bsl
 {
-    /// @class bsl::is_nothrow_copy_constructible
-    ///
-    /// <!-- description -->
-    ///   @brief If the provided type is nothrow copy constructible, provides
-    ///     the member constant value equal to true. Otherwise the member
-    ///     constant value is false.
-    ///   @include example_is_nothrow_copy_constructible_overview.hpp
-    ///
-    /// <!-- template parameters -->
-    ///   @tparam T the type to query
-    ///
-    template<typename T>
-    class is_nothrow_copy_constructible final :
-        public bool_constant<__is_nothrow_constructible(T, add_lvalue_reference_t<add_const_t<T>>)>
+    template<typename F, typename... ARGS>
+    class invoke_result final : public details::invoke_result_base<void, F, ARGS...>
     {};
+
+    template<typename F, typename... ARGS>
+    using invoke_result_t = typename invoke_result<F, ARGS...>::type;
 }
 
 #endif

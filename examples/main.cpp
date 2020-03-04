@@ -118,6 +118,8 @@
 #include "example_is_nothrow_copy_constructible_overview.hpp"
 #include "example_is_nothrow_default_constructible_overview.hpp"
 #include "example_is_nothrow_destructible_overview.hpp"
+#include "example_is_nothrow_move_assignable_overview.hpp"
+#include "example_is_nothrow_move_constructible_overview.hpp"
 // #include "example_is_nullptr_overview.hpp"
 // #include "example_is_object_overview.hpp"
 // #include "example_is_pod_overview.hpp"
@@ -137,7 +139,7 @@
 // #include "example_remove_const_overview.hpp"
 // #include "example_remove_pointer_overview.hpp"
 // #include "example_remove_reference_overview.hpp"
-// #include "example_swap_overview.hpp"
+#include "example_swap_overview.hpp"
 // #include "example_type_identity_overview.hpp"
 // #include "example_underlying_type_overview.hpp"
 
@@ -277,6 +279,8 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_is_nothrow_copy_constructible_overview, "example_is_nothrow_copy_constructible_overview");
     example(&bsl::example_is_nothrow_default_constructible_overview, "example_is_nothrow_default_constructible_overview");
     example(&bsl::example_is_nothrow_destructible_overview, "example_is_nothrow_destructible_overview");
+    example(&bsl::example_is_nothrow_move_assignable_overview, "example_is_nothrow_move_assignable_overview");
+    example(&bsl::example_is_nothrow_move_constructible_overview, "example_is_nothrow_move_constructible_overview");
     // example(&bsl::example_is_nullptr_overview, "example_is_nullptr_overview");
     // example(&bsl::example_is_object_overview, "example_is_object_overview");
     // example(&bsl::example_is_pod_overview, "example_is_pod_overview");
@@ -296,7 +300,7 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     // example(&bsl::example_remove_const_overview, "example_remove_const_overview");
     // example(&bsl::example_remove_pointer_overview, "example_remove_pointer_overview");
     // example(&bsl::example_remove_reference_overview, "example_remove_reference_overview");
-    // example(&bsl::example_swap_overview, "example_swap_overview");
+    example(&bsl::example_swap_overview, "example_swap_overview");
     // example(&bsl::example_type_identity_overview, "example_type_identity_overview");
     // example(&bsl::example_underlying_type_overview, "example_underlying_type_overview");
 

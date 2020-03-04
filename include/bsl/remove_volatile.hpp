@@ -22,33 +22,48 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file is_nothrow_copy_constructible.hpp
+/// @file remove_volatile.hpp
 ///
 
-#ifndef BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
-#define BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
+#ifndef BSL_REMOVE_VOLATILE_HPP
+#define BSL_REMOVE_VOLATILE_HPP
 
-#include "bool_constant.hpp"
-#include "add_const.hpp"
-#include "add_lvalue_reference.hpp"
+#include "is_volatile.hpp"
+#include "type_identity.hpp"
 
 namespace bsl
 {
-    /// @class bsl::is_nothrow_copy_constructible
+    /// @class bsl::remove_volatile
     ///
     /// <!-- description -->
-    ///   @brief If the provided type is nothrow copy constructible, provides
-    ///     the member constant value equal to true. Otherwise the member
-    ///     constant value is false.
-    ///   @include example_is_nothrow_copy_constructible_overview.hpp
+    ///   @brief Provides the member typedef type which is the same as T,
+    ///     except that its topmost volatile qualifier is removed.
+    ///
+    /// <!-- notes -->
+    ///   @note "volatile" is not supported by the BSL as it is not compliant
+    ///     with AUTOSAR. We only provide this function so that we can
+    ///     implement 
     ///
     /// <!-- template parameters -->
-    ///   @tparam T the type to query
+    ///   @tparam T the type to remove the const qualifier from
     ///
     template<typename T>
-    class is_nothrow_copy_constructible final :
-        public bool_constant<__is_nothrow_constructible(T, add_lvalue_reference_t<add_const_t<T>>)>
+    class remove_volatile final : public type_identity<T>
     {};
+
+    /// @brief a helper that reduces the verbosity of bsl::remove_volatile
+    template<typename T>
+    using remove_volatile_t = typename remove_volatile<T>::type;
+
+    /// @cond --
+
+    template<typename T>
+    struct remove_volatile<T volatile> final : public type_identity<T>
+    {
+        static_assert(!is_volatile<T volatile>::value, "volatile is not supported");
+    };
+
+    /// @endcond --
 }
 
 #endif

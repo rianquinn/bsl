@@ -22,33 +22,44 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file is_nothrow_copy_constructible.hpp
+/// @file is_volatile.hpp
 ///
 
-#ifndef BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
-#define BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
+#ifndef BSL_IS_VOLATILE_HPP
+#define BSL_IS_VOLATILE_HPP
 
-#include "bool_constant.hpp"
-#include "add_const.hpp"
-#include "add_lvalue_reference.hpp"
+#include "true_type.hpp"
+#include "false_type.hpp"
 
 namespace bsl
 {
-    /// @class bsl::is_nothrow_copy_constructible
+    /// @class bsl::is_volatile
     ///
     /// <!-- description -->
-    ///   @brief If the provided type is nothrow copy constructible, provides
-    ///     the member constant value equal to true. Otherwise the member
-    ///     constant value is false.
-    ///   @include example_is_nothrow_copy_constructible_overview.hpp
+    ///   @brief If the provided type is qualified as volatile, provides the
+    ///     member constant value equal to true. Otherwise the member constant
+    ///     value is false.
+    ///
+    /// <!-- notes -->
+    ///   @note "volatile" is not supported by the BSL as it is not compliant
+    ///     with AUTOSAR. We only provide this function so that it can be used
+    ///     to detect if volatile is used in order to throw a compilation
+    ///     error. Do not use "volatile" with the BSL.
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class is_nothrow_copy_constructible final :
-        public bool_constant<__is_nothrow_constructible(T, add_lvalue_reference_t<add_const_t<T>>)>
+    class is_volatile final : public false_type
     {};
+
+    /// @cond --
+
+    template<typename T>
+    class is_volatile<T volatile> final : public true_type
+    {};
+
+    /// @endcond --
 }
 
 #endif

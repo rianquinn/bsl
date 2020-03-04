@@ -64,7 +64,7 @@ namespace bsl
         ///   @return returns true if T is nothrow destructible, false otherwise
         ///
         template<typename T>
-        auto destructor_is_marked_nothrow(bsl::int32 ignored)
+        auto destructor_is_marked_nothrow(bsl::int32 ignored) noexcept
             -> bool_constant<noexcept(bsl::declval<T &>().~T())>;
 
         /// <!-- description -->
@@ -84,7 +84,7 @@ namespace bsl
         ///   @return returns true if T is nothrow destructible, false otherwise
         ///
         template<typename T>
-        auto destructor_is_marked_nothrow(bool ignored) -> false_type;
+        auto destructor_is_marked_nothrow(bool ignored) noexcept -> false_type;
 
         /// <!-- description -->
         ///   @brief Checks if a type "T" is destructible and if so, returns

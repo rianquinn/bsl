@@ -21,34 +21,29 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
-///
-/// @file is_nothrow_copy_constructible.hpp
-///
 
-#ifndef BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
-#define BSL_IS_NOTHROW_COPY_CONSTRUCTIBLE_HPP
+#ifndef EXAMPLE_IS_NOTHROW_MOVE_CONSTRUCTIBLE_OVERVIEW_HPP
+#define EXAMPLE_IS_NOTHROW_MOVE_CONSTRUCTIBLE_OVERVIEW_HPP
 
-#include "bool_constant.hpp"
-#include "add_const.hpp"
-#include "add_lvalue_reference.hpp"
+#include <bsl/is_nothrow_move_constructible.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
-    /// @class bsl::is_nothrow_copy_constructible
-    ///
     /// <!-- description -->
-    ///   @brief If the provided type is nothrow copy constructible, provides
-    ///     the member constant value equal to true. Otherwise the member
-    ///     constant value is false.
-    ///   @include example_is_nothrow_copy_constructible_overview.hpp
+    ///   @brief Provides the example's main function
     ///
-    /// <!-- template parameters -->
-    ///   @tparam T the type to query
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
     ///
-    template<typename T>
-    class is_nothrow_copy_constructible final :
-        public bool_constant<__is_nothrow_constructible(T, add_lvalue_reference_t<add_const_t<T>>)>
-    {};
+    inline void
+    example_is_nothrow_move_constructible_overview() noexcept
+    {
+        if (bsl::is_nothrow_move_constructible<bool>::value) {
+            bsl::print("success\n");
+        }
+    }
 }
 
 #endif
