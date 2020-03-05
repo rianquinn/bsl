@@ -28,7 +28,6 @@
 #ifndef BSL_REMOVE_VOLATILE_HPP
 #define BSL_REMOVE_VOLATILE_HPP
 
-#include "is_volatile.hpp"
 #include "type_identity.hpp"
 
 namespace bsl
@@ -41,8 +40,9 @@ namespace bsl
     ///
     /// <!-- notes -->
     ///   @note "volatile" is not supported by the BSL as it is not compliant
-    ///     with AUTOSAR. We only provide this function so that we can
-    ///     implement 
+    ///     with AUTOSAR. We only provide this for completeness and will
+    ///     produce a compile-time error if these APIs are used. Also note
+    ///     that C++ in general is deprectating the use of volatile.
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to remove the const qualifier from
@@ -60,7 +60,7 @@ namespace bsl
     template<typename T>
     struct remove_volatile<T volatile> final : public type_identity<T>
     {
-        static_assert(!is_volatile<T volatile>::value, "volatile is not supported");
+        static_assert(sizeof(T) != sizeof(T), "volatile not supported");
     };
 
     /// @endcond --

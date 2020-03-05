@@ -28,29 +28,41 @@
 #ifndef BSL_IS_REFERENCE_WRAPPER_HPP
 #define BSL_IS_REFERENCE_WRAPPER_HPP
 
-#include "bool_constant.hpp"
+#include "true_type.hpp"
+#include "false_type.hpp"
 
 namespace bsl
 {
+    /// @brief provides a prototype for the reference_wrapper
+    template<typename T>
+    class reference_wrapper;
+
     /// @class bsl::is_reference_wrapper
     ///
     /// <!-- description -->
-    ///   @brief If the provided type is an abstract class type, provides the
-    ///     member constant value equal to true. Otherwise the member constant
-    ///     value is false.
+    ///   @brief If the provided type is a reference_wrapper (taking into
+    ///     account const qualifications), provides the member constant value
+    ///     equal to true. Otherwise the member constant value is false.
     ///   @include example_is_reference_wrapper_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_reference_wrapper : std::false_type
+    class is_reference_wrapper final : public false_type
     {};
+
+    /// @cond --
+
     template<typename T>
-    struct is_reference_wrapper<std::reference_wrapper<T>> : std::true_type
+    class is_reference_wrapper<reference_wrapper<T>> final : public true_type
     {};
+
     template<typename T>
-    inline constexpr bool is_reference_wrapper_v = is_reference_wrapper<T>::value;
+    class is_reference_wrapper<reference_wrapper<T> const> final : public true_type
+    {};
+
+    /// @endcond --
 }
 
 #endif

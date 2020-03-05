@@ -32,7 +32,7 @@
 #include "conditional.hpp"
 #include "is_array.hpp"
 #include "is_function.hpp"
-#include "remove_const.hpp"
+#include "remove_cv.hpp"
 #include "remove_extent.hpp"
 #include "remove_reference.hpp"
 #include "type_identity.hpp"
@@ -60,7 +60,7 @@ namespace bsl
             conditional_t<
                 is_function<remove_reference_t<T>>::value,
                 add_pointer_t<remove_reference_t<T>>,
-                remove_const_t<remove_reference_t<T>>>>>
+                remove_cv_t<remove_reference_t<T>>>>>
     {};
 
     /// @brief a helper that reduces the verbosity of bsl::add_const

@@ -36,11 +36,17 @@ namespace bsl
     ///
     /// <!-- description -->
     ///   @brief Provides the member typedef type which is the same as T,
-    ///     except that its topmost const qualifier is removed.
-    ///   @include remove_cv/overview.cpp
+    ///     except that its topmost const and volatile qualifiers are removed.
+    ///   @include example_remove_cv_overview.hpp
+    ///
+    /// <!-- notes -->
+    ///   @note "volatile" is not supported by the BSL as it is not compliant
+    ///     with AUTOSAR. We only provide this for completeness and will
+    ///     produce a compile-time error if these APIs are used. Also note
+    ///     that C++ in general is deprectating the use of volatile.
     ///
     /// <!-- template parameters -->
-    ///   @tparam T the type to remove the const qualifier from
+    ///   @tparam T the type to remove the const and volatile qualifiers from
     ///
     template<typename T>
     class remove_cv final : public type_identity<T>
@@ -57,14 +63,16 @@ namespace bsl
     {};
 
     template<typename T>
-    struct remove_volatile<T volatile> final : public type_identity<T>
+    struct remove_cv<T volatile> final : public type_identity<T>
     {
-        static_assert(!is_volatile<T >::value)
+        static_assert(sizeof(T) != sizeof(T), "volatile not supported");
     };
 
     template<typename T>
     struct remove_cv<T const volatile> final : public type_identity<T>
-    {};
+    {
+        static_assert(sizeof(T) != sizeof(T), "volatile not supported");
+    };
 
     /// @endcond --
 }

@@ -71,7 +71,7 @@ namespace bsl
     {
         /// @brief stores whether or not this delegate is valid
         bool m_valid;
-        /// @brief stores the invoke wrapper
+        /// @brief stores the call wrapper
         aligned_storage_t<sizeof(void *) * 3> m_store;
 
     public:
@@ -197,7 +197,7 @@ namespace bsl
                 details::base_wrapper<R(ARGS...)> const *const ptr{
                     details::cast<details::base_wrapper<R(ARGS...)>>(&m_store)};
 
-                return {bsl::in_place, ptr->invoke(bsl::forward<ARGS>(args)...)};
+                return {bsl::in_place, ptr->call(bsl::forward<ARGS>(args)...)};
             }
 
             return {bsl::errc_bad_function};
@@ -251,7 +251,7 @@ namespace bsl
     {
         /// @brief stores whether or not this delegate is valid
         bool m_valid;
-        /// @brief stores the invoke wrapper
+        /// @brief stores the call wrapper
         aligned_storage_t<sizeof(void *) * 3> m_store;
 
     public:
@@ -374,7 +374,7 @@ namespace bsl
                 details::base_wrapper<R(ARGS...) noexcept> const *const ptr{
                     details::cast<details::base_wrapper<R(ARGS...) noexcept>>(&m_store)};
 
-                return {bsl::in_place, ptr->invoke(bsl::forward<ARGS>(args)...)};
+                return {bsl::in_place, ptr->call(bsl::forward<ARGS>(args)...)};
             }
 
             return {bsl::errc_bad_function};
@@ -427,7 +427,7 @@ namespace bsl
     {
         /// @brief stores whether or not this delegate is valid
         bool m_valid;
-        /// @brief stores the invoke wrapper
+        /// @brief stores the call wrapper
         aligned_storage_t<sizeof(void *) * 3> m_store;
 
     public:
@@ -552,7 +552,7 @@ namespace bsl
                 details::base_wrapper<void(ARGS...)> const *const ptr{
                     details::cast<details::base_wrapper<void(ARGS...)>>(&m_store)};
 
-                ptr->invoke(bsl::forward<ARGS>(args)...);
+                ptr->call(bsl::forward<ARGS>(args)...);
             }
         }
 
@@ -603,7 +603,7 @@ namespace bsl
     {
         /// @brief stores whether or not this delegate is valid
         bool m_valid;
-        /// @brief stores the invoke wrapper
+        /// @brief stores the call wrapper
         aligned_storage_t<sizeof(void *) * 3> m_store;
 
     public:
@@ -727,7 +727,7 @@ namespace bsl
                 details::base_wrapper<void(ARGS...) noexcept> const *const ptr{
                     details::cast<details::base_wrapper<void(ARGS...) noexcept>>(&m_store)};
 
-                ptr->invoke(bsl::forward<ARGS>(args)...);
+                ptr->call(bsl::forward<ARGS>(args)...);
             }
         }
 

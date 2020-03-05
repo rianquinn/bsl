@@ -38,8 +38,8 @@ namespace bsl
         ///   @brief Provides the base class implementation for the function,
         ///     member function and const member function wrappers.
         ///     Specifically, this ensures each wrapper implements that same
-        ///     invoke function so that a bsl::function only has to execute
-        ///     the base class's invoke function without knowing if the
+        ///     call function so that a bsl::function only has to execute
+        ///     the base class's call function without knowing if the
         ///     function is a normal function or a member function.
         ///
         /// <!-- template parameters -->
@@ -69,7 +69,7 @@ namespace bsl
             virtual ~base_wrapper() noexcept = default;
 
             /// <!-- description -->
-            ///   @brief Pure virtual "invoke" function that is overloaded
+            ///   @brief Pure virtual "call" function that is overloaded
             ///     by the function, member function and const member function
             ///     wrappers. This function is called by the bsl::function to
             ///     execute a wrapped function.
@@ -85,7 +85,7 @@ namespace bsl
             /// <!-- exceptions -->
             ///   @throw throws if the wrapped function throws
             ///
-            [[nodiscard]] virtual R invoke(ARGS &&... args) const noexcept(false) = 0;
+            [[nodiscard]] virtual R call(ARGS &&... args) const noexcept(false) = 0;
 
         protected:
             /// <!-- description -->
@@ -147,8 +147,8 @@ namespace bsl
         ///   @brief Provides the base class implementation for the function,
         ///     member function and const member function wrappers.
         ///     Specifically, this ensures each wrapper implements that same
-        ///     invoke function so that a bsl::function only has to execute
-        ///     the base class's invoke function without knowing if the
+        ///     call function so that a bsl::function only has to execute
+        ///     the base class's call function without knowing if the
         ///     function is a normal function or a member function.
         ///
         /// <!-- template parameters -->
@@ -178,7 +178,7 @@ namespace bsl
             virtual ~base_wrapper() noexcept = default;
 
             /// <!-- description -->
-            ///   @brief Pure virtual "invoke" function that is overloaded
+            ///   @brief Pure virtual "call" function that is overloaded
             ///     by the function, member function and const member function
             ///     wrappers. This function is called by the bsl::function to
             ///     execute a wrapped function.
@@ -191,7 +191,7 @@ namespace bsl
             ///   @param args the arguments to pass to the wrapped function
             ///   @return the return value of the wrapped function
             ///
-            [[nodiscard]] virtual R invoke(ARGS &&... args) const noexcept = 0;
+            [[nodiscard]] virtual R call(ARGS &&... args) const noexcept = 0;
 
         protected:
             /// <!-- description -->

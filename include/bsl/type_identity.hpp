@@ -47,6 +47,15 @@ namespace bsl
         /// @brief the member typedef "type" being provided
         using type = T;
 
+        /// <!-- description -->
+        ///   @brief default constructor
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        constexpr type_identity() noexcept = default;
+
     protected:
         /// <!-- description -->
         ///   @brief copy constructor

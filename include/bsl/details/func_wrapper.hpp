@@ -53,7 +53,7 @@ namespace bsl
             /// <!-- description -->
             ///   @brief Creates a bsl::details::func_wrapper given a pointer
             ///     to a regular function. This function pointer is stored,
-            ///     and later called by the overloaded invoke function.
+            ///     and later called by the overloaded call function.
             ///
             /// <!-- contracts -->
             ///   @pre none
@@ -82,7 +82,7 @@ namespace bsl
             ///   @throw throws if the wrapped function throws
             ///
             [[nodiscard]] R
-            invoke(ARGS &&... args) const noexcept(false) final
+            call(ARGS &&... args) const noexcept(false) final
             {
                 return m_func(bsl::forward<ARGS>(args)...);
             }
@@ -107,7 +107,7 @@ namespace bsl
             /// <!-- description -->
             ///   @brief Creates a bsl::details::func_wrapper given a pointer
             ///     to a regular function. This function pointer is stored,
-            ///     and later called by the overloaded invoke function.
+            ///     and later called by the overloaded call function.
             ///
             /// <!-- contracts -->
             ///   @pre none
@@ -133,7 +133,7 @@ namespace bsl
             ///   @return returns the result of the wrapped function
             ///
             [[nodiscard]] R
-            invoke(ARGS &&... args) const noexcept final
+            call(ARGS &&... args) const noexcept final
             {
                 return m_func(bsl::forward<ARGS>(args)...);
             }

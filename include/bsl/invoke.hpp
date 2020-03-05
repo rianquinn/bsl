@@ -28,19 +28,53 @@
 #ifndef BSL_INVOKE_HPP
 #define BSL_INVOKE_HPP
 
-#include "forward.hpp"
-#include "invoke_result.hpp"
 #include "details/invoke_impl.hpp"
+
+#include "forward.hpp"
+#include "enable_if.hpp"
+#include "invoke_result.hpp"
+#include "is_void.hpp"
+#include "is_member_function_pointer.hpp"
+#include "is_member_object_pointer.hpp"
+#include "result.hpp"
 
 namespace bsl
 {
 
     template<typename F, typename... ARGS>
-    invoke_result_t<F, ARGS...>
+    constexpr invoke_result_t<F, ARGS...>
     invoke(F &&func, ARGS &&... a)
     {
-        return details::invoke_impl(bsl::forward<F>(func), bsl::forward<ARGS>(a)...);
+        // if constexpr (is_member_function_pointer<FUNC>::value) {
+        //     return details::invoke_mfp(bsl::forward<F>(func), bsl::forward<ARGS>(a)...);
+        // }
+        // else if constexpr (is_member_object_pointer<FUNC>::value) {
+        //     return details::invoke_mop(bsl::forward<F>(func), bsl::forward<ARGS>(a)...);
+        // }
+        // else {
+            return details::invoke_impl(bsl::forward<F>(func), bsl::forward<ARGS>(a)...);
+        // }
     }
+
+    // template<typename F, typename... ARGS>
+    // result<enable_if_t<!is_void<invoke_result_t<F, ARGS...>>::value, invoke_result_t<F, ARGS...>>>
+    // safe_invoke(F &&func, ARGS &&... a)
+    // {
+    //     if (nullptr == func) {
+    //         return {bsl::errc_nullptr_dereference};
+    //     }
+
+    //     return {inplace, details::invoke_impl(bsl::forward<F>(func), bsl::forward<ARGS>(a)...)};
+    // }
+
+    // template<typename F, typename... ARGS>
+    // enable_if_t<is_void<invoke_result_t<F, ARGS...>>::value, void>
+    // safe_invoke(F &&func, ARGS &&... a)
+    // {
+    //     if (nullptr != func) {
+    //         return {inplace, details::invoke_impl(bsl::forward<F>(func), bsl::forward<ARGS>(a)...)};
+    //     }
+    // }
 }
 
 #endif

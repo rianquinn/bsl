@@ -21,37 +21,35 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
-///
-/// @file remove_cvref.hpp
-///
 
-#ifndef BSL_REMOVE_CVREF_HPP
-#define BSL_REMOVE_CVREF_HPP
+#ifndef EXAMPLE_REFERENCE_WRAPPER_OVERVIEW_HPP
+#define EXAMPLE_REFERENCE_WRAPPER_OVERVIEW_HPP
 
-#include "remove_cv.hpp"
-#include "remove_reference.hpp"
+#include <bsl/reference_wrapper.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
-    /// @class bsl::remove_cvref
-    ///
     /// <!-- description -->
-    ///   @brief Provides the member typedef type which is the same as T,
-    ///     except that its topmost const, volatile and reference qualifiers
-    ///     are removed.
-    ///   @include example_remove_cvref_overview.hpp
+    ///   @brief Provides the example's main function
     ///
-    /// <!-- template parameters -->
-    ///   @tparam T the type to remove the const, volatile and reference
-    ///     qualifiers from
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
     ///
-    template<typename T>
-    class remove_cvref final : public type_identity<remove_cv_t<remove_reference_t<T>>>
-    {};
+    inline void
+    example_reference_wrapper_overview() noexcept
+    {
+        constexpr bsl::int32 expected{42};
 
-    /// @brief a helper that reduces the verbosity of bsl::remove_cvref
-    template<typename T>
-    using remove_cvref_t = typename remove_cvref<T>::type;
+        bsl::int32 data{};
+        bsl::reference_wrapper const rw{data};
+
+        rw.get() = expected;
+        if (expected == data) {
+            bsl::print("success\n");
+        }
+    }
 }
 
 #endif

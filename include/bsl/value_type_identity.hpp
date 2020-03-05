@@ -45,6 +45,15 @@ namespace bsl
         /// @brief the member typedef "value_type" being provided
         using value_type = T;
 
+        /// <!-- description -->
+        ///   @brief default constructor
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        constexpr value_type_identity() noexcept = default;
+
     protected:
         /// <!-- description -->
         ///   @brief copy constructor

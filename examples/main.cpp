@@ -136,6 +136,7 @@
 // #include "example_make_signed_overview.hpp"
 // #include "example_make_unsigned_overview.hpp"
 // #include "example_move_overview.hpp"
+#include "example_reference_wrapper_overview.hpp"
 // #include "example_remove_const_overview.hpp"
 // #include "example_remove_pointer_overview.hpp"
 // #include "example_remove_reference_overview.hpp"
@@ -297,6 +298,7 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     // example(&bsl::example_make_signed_overview, "example_make_signed_overview");
     // example(&bsl::example_make_unsigned_overview, "example_make_unsigned_overview");
     // example(&bsl::example_move_overview, "example_move_overview");
+    example(&bsl::example_reference_wrapper_overview, "example_reference_wrapper_overview");
     // example(&bsl::example_remove_const_overview, "example_remove_const_overview");
     // example(&bsl::example_remove_pointer_overview, "example_remove_pointer_overview");
     // example(&bsl::example_remove_reference_overview, "example_remove_reference_overview");

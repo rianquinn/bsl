@@ -25,53 +25,131 @@
 #ifndef BSL_DETAILS_INVOKE_IMPL_HPP
 #define BSL_DETAILS_INVOKE_IMPL_HPP
 
-#include "../print.hpp"
-
 #include "../decay.hpp"
 #include "../forward.hpp"
+#include "../invoke_result.hpp"
 #include "../is_base_of.hpp"
-#include "../is_member_function_pointer.hpp"
-// #include "is_reference_wrapper.hpp"
+#include "../is_reference_wrapper.hpp"
 
 namespace bsl
 {
     namespace details
     {
+        /// <!-- description -->
+        ///   @brief Implements INVOKE as defined by the C++ specification.
+        ///     Note that we use the name invoke_mfp as INVOKE is not
+        ///     compliant with AUTOSAR as the only difference with the name
+        ///     is the use of capitalization. Specifically, this is the
+        ///     member function pointer variant of INVOKE which, given a
+        ///     function, an object and a set of args will call the function.
+        ///
+        /// <!-- contracts -->
+        ///   @pre expects func != nullptr. Note that this pre-condition is
+        ///     not validated as there is no way to report an error. We do
+        ///     provide safe_invoke() versions of invoke() that result this
+        ///     issue and should be used instead. invoke() is only provided
+        ///     to ensure support with 3rd party libraries.
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam F the type that defines the function being called
+        ///   @tparam U the type that defines the class that encapsulates the
+        ///     function being called.
+        ///   @tparam T the type that defines the provided object. Note that
+        ///     normally, U == T, but if inheritance is used, it might not
+        ///     which is why U is provided instead of just using T.
+        ///   @tparam ARGS the types that define the arguments passed to the
+        ///     provided function when called.
+        ///   @param func a pointer to the function to call.
+        ///   @param t the object that encapsulates the provided function.
+        ///   @param a the arguments to pass to func
+        ///   @return The result of calling "func" with "a"
+        ///
         template<typename F, typename U, typename T, typename... ARGS>
-        constexpr decltype(auto)
-        invoke_impl(F U::*func, T &&t, ARGS &&... a)
+        constexpr bsl::invoke_result_t<F, ARGS...>
+        invoke_mfp(F U::*func, T &&t, ARGS &&... a)
         {
-            if constexpr (is_member_function_pointer<decltype(func)>::value) {
-                if constexpr (is_base_of<U, decay_t<T>>::value) {
-                    print("%d\n", __LINE__);
-                    return (bsl::forward<T>(t).*func)(bsl::forward<ARGS>(a)...);
-                }
-                // else if constexpr (is_reference_wrapper_v<decay_t<T1>>)
-                //     return (t1.get().*f)(bsl::forward<ARGS>(a)...);
-                else {
-                    print("%d\n", __LINE__);
-                    return ((*bsl::forward<T>(t)).*func)(bsl::forward<ARGS>(a)...);
-                }
+            if constexpr (is_base_of<U, decay_t<T>>::value) {
+                return (bsl::forward<T>(t).*func)(bsl::forward<ARGS>(a)...);
             }
+            else if constexpr (is_reference_wrapper<decay_t<T>>::value)
+                return (bsl::forward<T>(t.get()).*func)(bsl::forward<ARGS>(a)...);
             else {
-                if constexpr (is_base_of<T, decay_t<T>>::value) {
-                    print("%d\n", __LINE__);
-                    return bsl::forward<T>(t).*func;
-                }
-                // else if constexpr (is_reference_wrapper_v<decay_t<T1>>)
-                //     return t1.get().*f;
-                else {
-                    print("%d\n", __LINE__);
-                    return (*bsl::forward<T>(t)).*func;
-                }
+                return ((*bsl::forward<T>(t)).*func)(bsl::forward<ARGS>(a)...);
             }
         }
 
+        /// <!-- description -->
+        ///   @brief Implements INVOKE as defined by the C++ specification.
+        ///     Note that we use the name invoke_mfp as INVOKE is not
+        ///     compliant with AUTOSAR as the only difference with the name
+        ///     is the use of capitalization. Specifically, this is the
+        ///     member object pointer variant of INVOKE which, given a
+        ///     function, an object and a set of args will call the function.
+        ///
+        /// <!-- contracts -->
+        ///   @pre expects func != nullptr. Note that this pre-condition is
+        ///     not validated as there is no way to report an error. We do
+        ///     provide safe_invoke() versions of invoke() that result this
+        ///     issue and should be used instead. invoke() is only provided
+        ///     to ensure support with 3rd party libraries.
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam F the type that defines the function being called
+        ///   @tparam U the type that defines the class that encapsulates the
+        ///     function being called.
+        ///   @tparam T the type that defines the provided object. Note that
+        ///     normally, U == T, but if inheritance is used, it might not
+        ///     which is why U is provided instead of just using T.
+        ///   @tparam ARGS the types that define the arguments passed to the
+        ///     provided function when called.
+        ///   @param func a pointer to the function to call.
+        ///   @param t the object that encapsulates the provided function.
+        ///   @return The result of calling "func" with "a"
+        ///
+        template<typename F, typename U, typename T, typename... ARGS>
+        constexpr bsl::invoke_result_t<F, ARGS...>
+        invoke_mop(F U::*func, T &&t)
+        {
+            if constexpr (is_base_of<T, decay_t<T>>::value) {
+                return bsl::forward<T>(t).*func;
+            }
+            else if constexpr (is_reference_wrapper<decay_t<T>>::value)
+                return bsl::forward<T>(t.get()).*func;
+            else {
+                return (*bsl::forward<T>(t)).*func;
+            }
+        }
+
+        /// <!-- description -->
+        ///   @brief Implements INVOKE as defined by the C++ specification.
+        ///     Note that we use the name invoke_mfp as INVOKE is not
+        ///     compliant with AUTOSAR as the only difference with the name
+        ///     is the use of capitalization. Specifically, this is the
+        ///     function pointer variant of INVOKE which, given a
+        ///     function and a set of args will call the function.
+        ///
+        /// <!-- contracts -->
+        ///   @pre expects func != nullptr. Note that this pre-condition is
+        ///     not validated as there is no way to report an error. We do
+        ///     provide safe_invoke() versions of invoke() that result this
+        ///     issue and should be used instead. invoke() is only provided
+        ///     to ensure support with 3rd party libraries.
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam F the type that defines the function being called
+        ///   @tparam ARGS the types that define the arguments passed to the
+        ///     provided function when called.
+        ///   @param func a pointer to the function to call.
+        ///   @param a the arguments to pass to func
+        ///   @return The result of calling "func" with "a"
+        ///
         template<class F, class... ARGS>
-        constexpr decltype(auto)
+        constexpr bsl::invoke_result_t<F, ARGS...>
         invoke_impl(F &&func, ARGS &&... a)
         {
-            print("%d\n", __LINE__);
             return bsl::forward<F>(func)(bsl::forward<ARGS>(a)...);
         }
     }

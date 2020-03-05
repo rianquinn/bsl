@@ -59,7 +59,6 @@ main()
 {
     using namespace bsl;
 
-
     // // Check that INVOKE(f, t1, t2, ..., tN) is equivalent to (t1.*f)(t2, ..., tN) when f is a
     // // pointer to a member function of a class T and is_base_of_v<T, decay_ty<decltype(t1)>> is true
     // // (i.e. bullet 1.1 of [func.require] in N4659 - the C++17 final working draft).
@@ -428,38 +427,6 @@ main()
 
     //     check_invoke_failed(not_func_obj);
     // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     return bsl::ut_success();
 }

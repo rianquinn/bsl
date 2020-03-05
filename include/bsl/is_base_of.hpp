@@ -29,7 +29,7 @@
 #define BSL_IS_BASE_OF_HPP
 
 #include "bool_constant.hpp"
-#include "remove_const.hpp"    // Needed for PRQA
+#include "remove_cv.hpp"    // Needed for PRQA
 
 namespace bsl
 {
