@@ -29,52 +29,86 @@
 #define BSL_INVOKE_HPP
 
 #include "details/invoke_impl.hpp"
-
 #include "forward.hpp"
-#include "enable_if.hpp"
-#include "invoke_result.hpp"
-#include "is_void.hpp"
-#include "is_member_function_pointer.hpp"
-#include "is_member_object_pointer.hpp"
-#include "result.hpp"
 
 namespace bsl
 {
-
-    template<typename F, typename... ARGS>
-    constexpr invoke_result_t<F, ARGS...>
-    invoke(F &&func, ARGS &&... a)
+    /// <!-- description -->
+    ///   @brief Invokes the callable object "f".
+    ///   @include example_invoke_overview.hpp
+    ///
+    /// <!-- contracts -->
+    ///   @pre expects func != nullptr. Note that this pre-condition is
+    ///     not validated as there is no way to report an error. We do
+    ///     provide safe_invoke() versions of invoke() that resolve this
+    ///     issue and should be used instead. invoke() is only provided
+    ///     to ensure support with 3rd party libraries.
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam FUNC the type that defines the function being called
+    ///   @param f a pointer to the function being called.
+    ///   @return Returns the result of calling "f".
+    ///
+    template<typename FUNC>
+    constexpr auto
+    invoke(FUNC &&f) noexcept(// PRQA S 2023
+        noexcept(details::invoke_impl<FUNC, void>::call(bsl::forward<FUNC>(f))))
+        -> decltype(details::invoke_impl<FUNC, void>::call(bsl::forward<FUNC>(f)))
     {
-        // if constexpr (is_member_function_pointer<FUNC>::value) {
-        //     return details::invoke_mfp(bsl::forward<F>(func), bsl::forward<ARGS>(a)...);
-        // }
-        // else if constexpr (is_member_object_pointer<FUNC>::value) {
-        //     return details::invoke_mop(bsl::forward<F>(func), bsl::forward<ARGS>(a)...);
-        // }
-        // else {
-            return details::invoke_impl(bsl::forward<F>(func), bsl::forward<ARGS>(a)...);
-        // }
+        return details::invoke_impl<FUNC, void>::call(bsl::forward<FUNC>(f));
     }
 
-    // template<typename F, typename... ARGS>
-    // result<enable_if_t<!is_void<invoke_result_t<F, ARGS...>>::value, invoke_result_t<F, ARGS...>>>
-    // safe_invoke(F &&func, ARGS &&... a)
-    // {
-    //     if (nullptr == func) {
-    //         return {bsl::errc_nullptr_dereference};
-    //     }
-
-    //     return {inplace, details::invoke_impl(bsl::forward<F>(func), bsl::forward<ARGS>(a)...)};
-    // }
-
-    // template<typename F, typename... ARGS>
-    // enable_if_t<is_void<invoke_result_t<F, ARGS...>>::value, void>
-    // safe_invoke(F &&func, ARGS &&... a)
-    // {
-    //     if (nullptr != func) {
-    //         return {inplace, details::invoke_impl(bsl::forward<F>(func), bsl::forward<ARGS>(a)...)};
-    //     }
-    // }
+    /// <!-- description -->
+    ///   @brief Invokes the callable object "f" with arguments "tn".
+    ///   @include example_invoke_overview.hpp
+    ///
+    ///   SUPPRESSION: PRQA 2023 - exception required
+    ///   - We suppress this because A13-3-1 states that you should not
+    ///     overload functions that contain a forwarding reference because
+    ///     it is confusing to the user. The invoke function as defined by
+    ///     the C++ specification is violating this rule. Since this function
+    ///     is used a lot, we have no choice but to implement it as is. A
+    ///     better implementation of this function should have been to provide
+    ///     two different versions, one for functions and one for member
+    ///     functions, which would remove the need for this violation. As it
+    ///     is today, invoke is confusing as it doesn't explicitly define
+    ///     which parameter should be the 
+    ///
+    /// <!-- contracts -->
+    ///   @pre expects func != nullptr. Note that this pre-condition is
+    ///     not validated as there is no way to report an error. We do
+    ///     provide safe_invoke() versions of invoke() that resolve this
+    ///     issue and should be used instead. invoke() is only provided
+    ///     to ensure support with 3rd party libraries.
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam FUNC the type that defines the function being called
+    ///   @tparam T1 the type that defines the provided object. If f is not a
+    ///     member pointer or member object, T1 defines type of the first
+    ///     argument passed to f.
+    ///   @tparam TN the types that define the arguments passed to the
+    ///     provided function when called.
+    ///   @param f a pointer to the function being called.
+    ///   @param t1 a reference, reference wrapper or pointer to the object
+    ///     for which the function is called from. If f is not a member
+    ///     pointer or member object, t1 is the first argument passed to
+    ///     f.
+    ///   @param tn the arguments passed to the function f when called.
+    ///   @return Returns the result of calling "f" from "t1" with "tn"
+    ///
+    template<typename FUNC, typename T1, typename... TN>
+    constexpr auto
+    invoke(FUNC &&f, T1 &&t1, TN &&... tn) noexcept(    // PRQA S 2023
+        noexcept(details::invoke_impl<FUNC, T1>::call(
+            bsl::forward<FUNC>(f), bsl::forward<T1>(t1), bsl::forward<TN>(tn)...)))
+        -> decltype(details::invoke_impl<FUNC, T1>::call(
+            bsl::forward<FUNC>(f), bsl::forward<T1>(t1), bsl::forward<TN>(tn)...))
+    {
+        return details::invoke_impl<FUNC, T1>::call(
+            bsl::forward<FUNC>(f), bsl::forward<T1>(t1), bsl::forward<TN>(tn)...);
+    }
 }
 
 #endif

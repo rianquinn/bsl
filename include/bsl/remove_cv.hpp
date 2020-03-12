@@ -39,6 +39,14 @@ namespace bsl
     ///     except that its topmost const and volatile qualifiers are removed.
     ///   @include example_remove_cv_overview.hpp
     ///
+    ///   SUPPRESSION: PRQA 5219 - false positive
+    ///   - We suppress this because A2-11-1 states that the volatile keyword
+    ///     cannot be used. The volatile keyword is required to implement the
+    ///     remove_cv type trait, and more importantly, if you use this
+    ///     keword the code will not actually compile, meaning PRQA is
+    ///     detecting the use of the volatile keyword without first detecting
+    ///     if it is actually being used, only that it is present in the file.
+    ///
     /// <!-- notes -->
     ///   @note "volatile" is not supported by the BSL as it is not compliant
     ///     with AUTOSAR. We only provide this for completeness and will
@@ -63,13 +71,13 @@ namespace bsl
     {};
 
     template<typename T>
-    struct remove_cv<T volatile> final : public type_identity<T>
+    struct remove_cv<T volatile> final : public type_identity<T>    // PRQA S 5219
     {
         static_assert(sizeof(T) != sizeof(T), "volatile not supported");
     };
 
     template<typename T>
-    struct remove_cv<T const volatile> final : public type_identity<T>
+    struct remove_cv<T const volatile> final : public type_identity<T>    // PRQA S 5219
     {
         static_assert(sizeof(T) != sizeof(T), "volatile not supported");
     };

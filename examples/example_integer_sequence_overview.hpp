@@ -40,18 +40,19 @@ namespace bsl
     inline void
     example_integer_sequence_overview() noexcept
     {
-        constexpr bsl::int32 v1{4};
-        constexpr bsl::int32 v2{8};
-        constexpr bsl::int32 v3{15};
-        constexpr bsl::int32 v4{16};
-        constexpr bsl::int32 v5{23};
-        constexpr bsl::int32 v6{42};
+        constexpr bsl::uintmax size{6};
+        constexpr bsl::uintmax max{5};
+        constexpr bsl::uintmax min{0};
 
-        constexpr bsl::uintmax size{
-            bsl::integer_sequence<bsl::int32, v1, v2, v3, v4, v5, v6>::size()};
-        constexpr bsl::uintmax size_expected{6U};
+        if (bsl::make_index_sequence<6>::size() == size) {
+            bsl::print("success\n");
+        }
 
-        if (size == size_expected) {
+        if (bsl::make_index_sequence<6>::max() == max) {
+            bsl::print("success\n");
+        }
+
+        if (bsl::make_index_sequence<6>::min() == min) {
             bsl::print("success\n");
         }
     }

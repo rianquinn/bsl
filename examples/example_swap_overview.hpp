@@ -26,7 +26,6 @@
 #define EXAMPLE_SWAP_OVERVIEW_HPP
 
 #include <bsl/swap.hpp>
-#include <bsl/foreach.hpp>
 
 namespace bsl
 {
@@ -39,21 +38,7 @@ namespace bsl
     ///
     inline void
     example_swap_overview() noexcept
-    {
-        bool var1{true};
-        bool var2{false};
-        bsl::swap(var1, var2);
-        constexpr bsl::uintmax two{2U};
-
-        bool yourmom[two]{};    // NOLINT
-        bsl::foreach (yourmom, [](auto &elem, auto const i) noexcept {
-            elem = ((i % two) == 0U);
-        });
-
-        bsl::foreach (yourmom, [](auto &elem, auto const i) noexcept {
-            bsl::print("val [%d]: %d\n", i, elem);
-        });
-    }
+    {}
 }
 
 #endif

@@ -28,16 +28,30 @@
 #ifndef BSL_INVOKE_RESULT_HPP
 #define BSL_INVOKE_RESULT_HPP
 
-#include "details/invoke_result_base.hpp"
+#include "details/invoke_traits.hpp"
 
 namespace bsl
 {
-    template<typename F, typename... ARGS>
-    class invoke_result final : public details::invoke_result_base<void, F, ARGS...>
+    /// @class bsl::invoke_result
+    ///
+    /// <!-- description -->
+    ///   @brief Provides the member typedef type which is the result of
+    ///     calling bsl::invoke<F, ARGS...> if the provided template arguments
+    ///     are valid.
+    ///   @include example_invoke_result_overview.hpp
+    ///
+    /// <!-- template parameters -->
+    ///   @tparam FUNC the type that defines the function being called
+    ///   @tparam TN the types that define the arguments passed to the
+    ///     provided function when called.
+    ///
+    template<typename FUNC, typename... TN>
+    class invoke_result final : public details::invoke_traits<void, FUNC, TN...>
     {};
 
-    template<typename F, typename... ARGS>
-    using invoke_result_t = typename invoke_result<F, ARGS...>::type;
+    /// @brief a helper that reduces the verbosity of bsl::invoke_result
+    template<typename FUNC, typename... TN>
+    using invoke_result_t = typename invoke_result<FUNC, TN...>::type;
 }
 
 #endif

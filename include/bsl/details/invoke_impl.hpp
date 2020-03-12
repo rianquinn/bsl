@@ -25,133 +25,121 @@
 #ifndef BSL_DETAILS_INVOKE_IMPL_HPP
 #define BSL_DETAILS_INVOKE_IMPL_HPP
 
+#include "invoke_impl_fp.hpp"
+#include "invoke_impl_mfp_object.hpp"
+#include "invoke_impl_mfp_pointer.hpp"
+#include "invoke_impl_mfp_reference_wrapper.hpp"
+#include "invoke_impl_mop_object.hpp"
+#include "invoke_impl_mop_pointer.hpp"
+#include "invoke_impl_mop_reference_wrapper.hpp"
+
 #include "../decay.hpp"
+#include "../conditional.hpp"
 #include "../forward.hpp"
-#include "../invoke_result.hpp"
 #include "../is_base_of.hpp"
+#include "../is_member_function_pointer.hpp"
+#include "../is_member_object_pointer.hpp"
 #include "../is_reference_wrapper.hpp"
+#include "../remove_cvref.hpp"
 
 namespace bsl
 {
     namespace details
     {
+        /// @class bsl::details::invoke_impl_fp
+        ///
         /// <!-- description -->
-        ///   @brief Implements INVOKE as defined by the C++ specification.
-        ///     Note that we use the name invoke_mfp as INVOKE is not
-        ///     compliant with AUTOSAR as the only difference with the name
-        ///     is the use of capitalization. Specifically, this is the
-        ///     member function pointer variant of INVOKE which, given a
-        ///     function, an object and a set of args will call the function.
+        ///   @brief The "invoke" function is implemented by executing the
+        ///     "call" function from invoke_impl. The invoke_impl class uses
+        ///     SFINAE to figure out which invoke_impl_xxx function to inherit
+        ///     from. If the compiler can find a valid invoke_impl_xxx, it will
+        ///     inherit from it, otherwise, it will pick the default invoke_impl
+        ///     implementation which is an empty class (i.e., it does not
+        ///     provide a call function). This will either result in a compiler
+        ///     error, or an SFINAE substitution error, which is used to
+        ///     implement is_invocable, which is why invoke is implemented
+        ///     using class logic instead of a constexpr-if statement as
+        ///     documented by cppreference.
         ///
-        /// <!-- contracts -->
-        ///   @pre expects func != nullptr. Note that this pre-condition is
-        ///     not validated as there is no way to report an error. We do
-        ///     provide safe_invoke() versions of invoke() that result this
-        ///     issue and should be used instead. invoke() is only provided
-        ///     to ensure support with 3rd party libraries.
-        ///   @post none
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @tparam F the type that defines the function being called
-        ///   @tparam U the type that defines the class that encapsulates the
-        ///     function being called.
-        ///   @tparam T the type that defines the provided object. Note that
-        ///     normally, U == T, but if inheritance is used, it might not
-        ///     which is why U is provided instead of just using T.
-        ///   @tparam ARGS the types that define the arguments passed to the
-        ///     provided function when called.
-        ///   @param func a pointer to the function to call.
-        ///   @param t the object that encapsulates the provided function.
-        ///   @param a the arguments to pass to func
-        ///   @return The result of calling "func" with "a"
-        ///
-        template<typename F, typename U, typename T, typename... ARGS>
-        constexpr bsl::invoke_result_t<F, ARGS...>
-        invoke_mfp(F U::*func, T &&t, ARGS &&... a)
-        {
-            if constexpr (is_base_of<U, decay_t<T>>::value) {
-                return (bsl::forward<T>(t).*func)(bsl::forward<ARGS>(a)...);
-            }
-            else if constexpr (is_reference_wrapper<decay_t<T>>::value)
-                return (bsl::forward<T>(t.get()).*func)(bsl::forward<ARGS>(a)...);
-            else {
-                return ((*bsl::forward<T>(t)).*func)(bsl::forward<ARGS>(a)...);
-            }
-        }
+        template<
+            typename FUNC,
+            typename T1,
+            bool is_mfp = is_member_function_pointer<remove_cvref_t<FUNC>>::value,
+            bool is_mop = is_member_object_pointer<remove_cvref_t<FUNC>>::value>
+        class invoke_impl final
+        {};
 
+        /// @class bsl::details::invoke_impl_fp
+        ///
         /// <!-- description -->
-        ///   @brief Implements INVOKE as defined by the C++ specification.
-        ///     Note that we use the name invoke_mfp as INVOKE is not
-        ///     compliant with AUTOSAR as the only difference with the name
-        ///     is the use of capitalization. Specifically, this is the
-        ///     member object pointer variant of INVOKE which, given a
-        ///     function, an object and a set of args will call the function.
+        ///   @brief The "invoke" function is implemented by executing the
+        ///     "call" function from invoke_impl. The invoke_impl class uses
+        ///     SFINAE to figure out which invoke_impl_xxx function to inherit
+        ///     from. If the compiler can find a valid invoke_impl_xxx, it will
+        ///     inherit from it, otherwise, it will pick the default invoke_impl
+        ///     implementation which is an empty class (i.e., it does not
+        ///     provide a call function). This will either result in a compiler
+        ///     error, or an SFINAE substitution error, which is used to
+        ///     implement is_invocable, which is why invoke is implemented
+        ///     using class logic instead of a constexpr-if statement as
+        ///     documented by cppreference.
         ///
-        /// <!-- contracts -->
-        ///   @pre expects func != nullptr. Note that this pre-condition is
-        ///     not validated as there is no way to report an error. We do
-        ///     provide safe_invoke() versions of invoke() that result this
-        ///     issue and should be used instead. invoke() is only provided
-        ///     to ensure support with 3rd party libraries.
-        ///   @post none
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @tparam F the type that defines the function being called
-        ///   @tparam U the type that defines the class that encapsulates the
-        ///     function being called.
-        ///   @tparam T the type that defines the provided object. Note that
-        ///     normally, U == T, but if inheritance is used, it might not
-        ///     which is why U is provided instead of just using T.
-        ///   @tparam ARGS the types that define the arguments passed to the
-        ///     provided function when called.
-        ///   @param func a pointer to the function to call.
-        ///   @param t the object that encapsulates the provided function.
-        ///   @return The result of calling "func" with "a"
-        ///
-        template<typename F, typename U, typename T, typename... ARGS>
-        constexpr bsl::invoke_result_t<F, ARGS...>
-        invoke_mop(F U::*func, T &&t)
-        {
-            if constexpr (is_base_of<T, decay_t<T>>::value) {
-                return bsl::forward<T>(t).*func;
-            }
-            else if constexpr (is_reference_wrapper<decay_t<T>>::value)
-                return bsl::forward<T>(t.get()).*func;
-            else {
-                return (*bsl::forward<T>(t)).*func;
-            }
-        }
+        template<typename FUNC, typename U, typename T1>
+        class invoke_impl<FUNC U::*, T1, true, false> final :
+            public conditional_t<
+                is_base_of<U, decay_t<T1>>::value,
+                invoke_impl_mfp_object,
+                conditional_t<
+                    is_reference_wrapper<decay_t<T1>>::value,
+                    invoke_impl_mfp_reference_wrapper,
+                    invoke_impl_mfp_pointer>>
+        {};
 
+        /// @class bsl::details::invoke_impl_fp
+        ///
         /// <!-- description -->
-        ///   @brief Implements INVOKE as defined by the C++ specification.
-        ///     Note that we use the name invoke_mfp as INVOKE is not
-        ///     compliant with AUTOSAR as the only difference with the name
-        ///     is the use of capitalization. Specifically, this is the
-        ///     function pointer variant of INVOKE which, given a
-        ///     function and a set of args will call the function.
+        ///   @brief The "invoke" function is implemented by executing the
+        ///     "call" function from invoke_impl. The invoke_impl class uses
+        ///     SFINAE to figure out which invoke_impl_xxx function to inherit
+        ///     from. If the compiler can find a valid invoke_impl_xxx, it will
+        ///     inherit from it, otherwise, it will pick the default invoke_impl
+        ///     implementation which is an empty class (i.e., it does not
+        ///     provide a call function). This will either result in a compiler
+        ///     error, or an SFINAE substitution error, which is used to
+        ///     implement is_invocable, which is why invoke is implemented
+        ///     using class logic instead of a constexpr-if statement as
+        ///     documented by cppreference.
         ///
-        /// <!-- contracts -->
-        ///   @pre expects func != nullptr. Note that this pre-condition is
-        ///     not validated as there is no way to report an error. We do
-        ///     provide safe_invoke() versions of invoke() that result this
-        ///     issue and should be used instead. invoke() is only provided
-        ///     to ensure support with 3rd party libraries.
-        ///   @post none
+        template<typename FUNC, typename U, typename T1>
+        class invoke_impl<FUNC U::*, T1, false, true> final :
+            public conditional_t<
+                is_base_of<U, decay_t<T1>>::value,
+                invoke_impl_mop_object,
+                conditional_t<
+                    is_reference_wrapper<decay_t<T1>>::value,
+                    invoke_impl_mop_reference_wrapper,
+                    invoke_impl_mop_pointer>>
+        {};
+
+        /// @class bsl::details::invoke_impl_fp
         ///
-        /// <!-- inputs/outputs -->
-        ///   @tparam F the type that defines the function being called
-        ///   @tparam ARGS the types that define the arguments passed to the
-        ///     provided function when called.
-        ///   @param func a pointer to the function to call.
-        ///   @param a the arguments to pass to func
-        ///   @return The result of calling "func" with "a"
+        /// <!-- description -->
+        ///   @brief The "invoke" function is implemented by executing the
+        ///     "call" function from invoke_impl. The invoke_impl class uses
+        ///     SFINAE to figure out which invoke_impl_xxx function to inherit
+        ///     from. If the compiler can find a valid invoke_impl_xxx, it will
+        ///     inherit from it, otherwise, it will pick the default invoke_impl
+        ///     implementation which is an empty class (i.e., it does not
+        ///     provide a call function). This will either result in a compiler
+        ///     error, or an SFINAE substitution error, which is used to
+        ///     implement is_invocable, which is why invoke is implemented
+        ///     using class logic instead of a constexpr-if statement as
+        ///     documented by cppreference.
         ///
-        template<class F, class... ARGS>
-        constexpr bsl::invoke_result_t<F, ARGS...>
-        invoke_impl(F &&func, ARGS &&... a)
-        {
-            return bsl::forward<F>(func)(bsl::forward<ARGS>(a)...);
-        }
+        template<typename FUNC, typename T1>
+        class invoke_impl<FUNC, T1, false, false> final :  // --
+            public invoke_impl_fp
+        {};
     }
 }
 

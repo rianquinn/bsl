@@ -28,6 +28,9 @@
 #ifndef BSL_INTEGER_SEQUENCE_HPP
 #define BSL_INTEGER_SEQUENCE_HPP
 
+#include "details/integer_sequence_max.hpp"
+#include "details/integer_sequence_min.hpp"
+
 #include "cstdint.hpp"
 #include "value_type_identity.hpp"
 
@@ -52,7 +55,7 @@ namespace bsl
     public:
         /// <!-- description -->
         ///   @brief Equivalent to sizeof...(INTS)
-        ///   @include example_integer_sequence_overview.cpp
+        ///   @include integer_sequence/example_integer_sequence_size.cpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -66,17 +69,57 @@ namespace bsl
         {
             return sizeof...(INTS);
         }
+
+        /// <!-- description -->
+        ///   @brief Returns the max integer in the sequence
+        ///   @include integer_sequence/example_integer_sequence_max.cpp
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns the max integer in the sequence
+        ///
+        [[nodiscard]] static constexpr T
+        max() noexcept
+        {
+            return details::integer_sequence_max<T, INTS...>::value;
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns the min integer in the sequence
+        ///   @include integer_sequence/example_integer_sequence_min.cpp
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns the min integer in the sequence
+        ///
+        [[nodiscard]] static constexpr T
+        min() noexcept
+        {
+            return details::integer_sequence_min<T, INTS...>::value;
+        }
     };
 
     /// @brief helper alias template for the common case of bsl::uintmax
     template<bsl::uintmax... INTS>
     using index_sequence = integer_sequence<bsl::uintmax, INTS...>;
 
-    /// TODO
-    ///
-    /// Add make_integer_sequence and make_index_sequence. An implementation
-    /// can be found here: https://stackoverflow.com/questions/17424477/implementation-c14-make-integer-sequence
-    ///
+    /// @brief helper alias that makes integer sequences
+    template<typename T, T N>
+    using make_integer_sequence = __make_integer_seq<integer_sequence, T, N>;
+
+    /// @brief helper alias that makes integer sequences for bsl::uintmax
+    template<bsl::uintmax N>
+    using make_index_sequence = make_integer_sequence<bsl::uintmax, N>;
+
+    /// @brief helper alias that makes an index sequence given a list of types
+    template<typename... T>
+    using index_sequence_for = make_index_sequence<sizeof...(T)>;
 }
 
 #endif

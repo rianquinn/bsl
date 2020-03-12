@@ -31,9 +31,12 @@
 #include "example_add_lvalue_reference_overview.hpp"
 #include "example_add_pointer_overview.hpp"
 #include "example_add_rvalue_reference_overview.hpp"
+#include "example_addressof_overview.hpp"
 #include "example_aligned_storage_overview.hpp"
+// #include "example_aligned_union_overview.hpp"
 #include "example_alignment_of_overview.hpp"
 #include "example_as_const_overview.hpp"
+#include "example_bool_constant_overview.hpp"
 #include "example_byte_overview.hpp"
 #include "byte/example_byte_and_assign.hpp"
 #include "byte/example_byte_and.hpp"
@@ -51,8 +54,10 @@
 #include "byte/example_byte_to_integer.hpp"
 #include "byte/example_byte_xor_assign.hpp"
 #include "byte/example_byte_xor.hpp"
+#include "example_color_overview.hpp"
 #include "example_common_type_overview.hpp"
 #include "example_conditional_overview.hpp"
+#include "example_conjunction_overview.hpp"
 #include "example_construct_at_overview.hpp"
 #include "example_decay_overview.hpp"
 #include "example_declval_overview.hpp"
@@ -65,6 +70,7 @@
 #include "delegate/example_delegate_valid.hpp"
 #include "example_destroy_at_overview.hpp"
 #include "example_discard_overview.hpp"
+#include "example_disjunction_overview.hpp"
 #include "example_enable_if_overview.hpp"
 #include "example_errc_type_overview.hpp"
 #include "errc_type/example_errc_type_constructor_t.hpp"
@@ -78,10 +84,18 @@
 #include "errc_type/example_errc_type_success.hpp"
 #include "example_exchange_overview.hpp"
 #include "example_extent_overview.hpp"
+#include "example_false_type_overview.hpp"
 #include "example_forward_overview.hpp"
+// #include "example_has_unique_object_representations_overview.hpp"
 #include "example_has_virtual_destructor_overview.hpp"
-#include "example_integer_sequence_overview.hpp"
+#include "example_in_place_overview.hpp"
+// // #include "example_integer_sequence_overview.hpp"
+// // #include "integer_sequence/example_integer_sequence_max.hpp"
+// // #include "integer_sequence/example_integer_sequence_min.hpp"
+// // #include "integer_sequence/example_integer_sequence_size.hpp"
 #include "example_integral_constant_overview.hpp"
+#include "example_invoke_result_overview.hpp"
+#include "example_invoke_overview.hpp"
 #include "example_is_abstract_overview.hpp"
 // #include "example_is_aggregate_overview.hpp"
 #include "example_is_arithmetic_overview.hpp"
@@ -120,29 +134,29 @@
 #include "example_is_nothrow_destructible_overview.hpp"
 #include "example_is_nothrow_move_assignable_overview.hpp"
 #include "example_is_nothrow_move_constructible_overview.hpp"
-// #include "example_is_nullptr_overview.hpp"
-// #include "example_is_object_overview.hpp"
-// #include "example_is_pod_overview.hpp"
-// #include "example_is_pointer_overview.hpp"
-// #include "example_is_reference_overview.hpp"
-#include "example_is_rvalue_reference_overview.hpp"
-// #include "example_is_same_overview.hpp"
-// #include "example_is_scalar_overview.hpp"
-// #include "example_is_signed_overview.hpp"
-// #include "example_is_standard_layout_overview.hpp"
-// #include "example_is_trivial_overview.hpp"
-// #include "example_is_unsigned_overview.hpp"
-// #include "example_is_void_overview.hpp"
-// #include "example_make_signed_overview.hpp"
-// #include "example_make_unsigned_overview.hpp"
-// #include "example_move_overview.hpp"
-#include "example_reference_wrapper_overview.hpp"
-// #include "example_remove_const_overview.hpp"
-// #include "example_remove_pointer_overview.hpp"
-// #include "example_remove_reference_overview.hpp"
-#include "example_swap_overview.hpp"
-// #include "example_type_identity_overview.hpp"
-// #include "example_underlying_type_overview.hpp"
+// // #include "example_is_nullptr_overview.hpp"
+// // #include "example_is_object_overview.hpp"
+// // #include "example_is_pod_overview.hpp"
+// // #include "example_is_pointer_overview.hpp"
+// // #include "example_is_reference_overview.hpp"
+// #include "example_is_rvalue_reference_overview.hpp"
+// // #include "example_is_same_overview.hpp"
+// // #include "example_is_scalar_overview.hpp"
+// // #include "example_is_signed_overview.hpp"
+// // #include "example_is_standard_layout_overview.hpp"
+// // #include "example_is_trivial_overview.hpp"
+// // #include "example_is_unsigned_overview.hpp"
+// // #include "example_is_void_overview.hpp"
+// // #include "example_make_signed_overview.hpp"
+// // #include "example_make_unsigned_overview.hpp"
+// // #include "example_move_overview.hpp"
+// #include "example_reference_wrapper_overview.hpp"
+// // #include "example_remove_const_overview.hpp"
+// // #include "example_remove_pointer_overview.hpp"
+// // #include "example_remove_reference_overview.hpp"
+// #include "example_swap_overview.hpp"
+// // #include "example_type_identity_overview.hpp"
+// // #include "example_underlying_type_overview.hpp"
 
 namespace
 {
@@ -193,9 +207,12 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_add_lvalue_reference_overview, "example_add_lvalue_reference_overview");
     example(&bsl::example_add_pointer_overview, "example_add_pointer_overview");
     example(&bsl::example_add_rvalue_reference_overview, "example_add_rvalue_reference_overview");
+    example(&bsl::example_addressof_overview, "example_addressof_overview");
     example(&bsl::example_aligned_storage_overview, "example_aligned_storage_overview");
+    // example(&bsl::example_aligned_union_overview, "example_aligned_union_overview");
     example(&bsl::example_alignment_of_overview, "example_alignment_of_overview");
     example(&bsl::example_as_const_overview, "example_as_const_overview");
+    example(&bsl::example_bool_constant_overview, "example_bool_constant_overview");
     example(&bsl::example_byte_overview, "example_byte_overview");
     example(&bsl::example_byte_and_assign, "example_byte_and_assign");
     example(&bsl::example_byte_and, "example_byte_and");
@@ -213,8 +230,10 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_byte_to_integer, "example_byte_to_integer");
     example(&bsl::example_byte_xor_assign, "example_byte_xor_assign");
     example(&bsl::example_byte_xor, "example_byte_xor");
+    example(&bsl::example_color_overview, "example_color_overview");
     example(&bsl::example_common_type_overview, "example_common_type_overview");
     example(&bsl::example_conditional_overview, "example_conditional_overview");
+    example(&bsl::example_conjunction_overview, "example_conjunction_overview");
     example(&bsl::example_construct_at_overview, "example_construct_at_overview");
     example(&bsl::example_decay_overview, "example_decay_overview");
     example(&bsl::example_declval_overview, "example_declval_overview");
@@ -227,6 +246,7 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_delegate_valid, "example_delegate_valid");
     example(&bsl::example_destroy_at_overview, "example_destroy_at_overview");
     example(&bsl::example_discard_overview, "example_discard_overview");
+    example(&bsl::example_disjunction_overview, "example_disjunction_overview");
     example(&bsl::example_enable_if_overview, "example_enable_if_overview");
     example(&bsl::example_errc_type_overview, "example_errc_type_overview");
     example(&bsl::example_errc_type_constructor_t, "example_errc_type_constructor_t");
@@ -240,10 +260,18 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_errc_type_success, "example_errc_type_success");
     example(&bsl::example_exchange_overview, "example_exchange_overview");
     example(&bsl::example_extent_overview, "example_extent_overview");
+    example(&bsl::example_false_type_overview, "example_false_type_overview");
     example(&bsl::example_forward_overview, "example_forward_overview");
+    // example(&bsl::example_has_unique_object_representations_overview, "example_has_unique_object_representations_overview");
     example(&bsl::example_has_virtual_destructor_overview, "example_has_virtual_destructor_overview");
-    example(&bsl::example_integer_sequence_overview, "example_integer_sequence_overview");
+    example(&bsl::example_in_place_overview, "example_in_place_overview");
+    // // example(&bsl::example_integer_sequence_overview, "example_integer_sequence_overview");
+    // // example(&bsl::example_integer_sequence_max, "example_integer_sequence_max");
+    // // example(&bsl::example_integer_sequence_min, "example_integer_sequence_min");
+    // // example(&bsl::example_integer_sequence_size, "example_integer_sequence_size");
     example(&bsl::example_integral_constant_overview, "example_integral_constant_overview");
+    example(&bsl::example_invoke_result_overview, "example_invoke_result_overview");
+    example(&bsl::example_invoke_overview, "example_invoke_overview");
     example(&bsl::example_is_abstract_overview, "example_is_abstract_overview");
     // example(&bsl::example_is_aggregate_overview, "example_is_aggregate_overview");
     example(&bsl::example_is_arithmetic_overview, "example_is_arithmetic_overview");
@@ -282,29 +310,29 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_is_nothrow_destructible_overview, "example_is_nothrow_destructible_overview");
     example(&bsl::example_is_nothrow_move_assignable_overview, "example_is_nothrow_move_assignable_overview");
     example(&bsl::example_is_nothrow_move_constructible_overview, "example_is_nothrow_move_constructible_overview");
-    // example(&bsl::example_is_nullptr_overview, "example_is_nullptr_overview");
-    // example(&bsl::example_is_object_overview, "example_is_object_overview");
-    // example(&bsl::example_is_pod_overview, "example_is_pod_overview");
-    // example(&bsl::example_is_pointer_overview, "example_is_pointer_overview");
-    // example(&bsl::example_is_reference_overview, "example_is_reference_overview");
-    example(&bsl::example_is_rvalue_reference_overview, "example_is_rvalue_reference_overview");
-    // example(&bsl::example_is_same_overview, "example_is_same_overview");
-    // example(&bsl::example_is_scalar_overview, "example_is_scalar_overview");
-    // example(&bsl::example_is_signed_overview, "example_is_signed_overview");
-    // example(&bsl::example_is_standard_layout_overview, "example_is_standard_layout_overview");
-    // example(&bsl::example_is_trivial_overview, "example_is_trivial_overview");
-    // example(&bsl::example_is_unsigned_overview, "example_is_unsigned_overview");
-    // example(&bsl::example_is_void_overview, "example_is_void_overview");
-    // example(&bsl::example_make_signed_overview, "example_make_signed_overview");
-    // example(&bsl::example_make_unsigned_overview, "example_make_unsigned_overview");
-    // example(&bsl::example_move_overview, "example_move_overview");
-    example(&bsl::example_reference_wrapper_overview, "example_reference_wrapper_overview");
-    // example(&bsl::example_remove_const_overview, "example_remove_const_overview");
-    // example(&bsl::example_remove_pointer_overview, "example_remove_pointer_overview");
-    // example(&bsl::example_remove_reference_overview, "example_remove_reference_overview");
-    example(&bsl::example_swap_overview, "example_swap_overview");
-    // example(&bsl::example_type_identity_overview, "example_type_identity_overview");
-    // example(&bsl::example_underlying_type_overview, "example_underlying_type_overview");
+    // // example(&bsl::example_is_nullptr_overview, "example_is_nullptr_overview");
+    // // example(&bsl::example_is_object_overview, "example_is_object_overview");
+    // // example(&bsl::example_is_pod_overview, "example_is_pod_overview");
+    // // example(&bsl::example_is_pointer_overview, "example_is_pointer_overview");
+    // // example(&bsl::example_is_reference_overview, "example_is_reference_overview");
+    // example(&bsl::example_is_rvalue_reference_overview, "example_is_rvalue_reference_overview");
+    // // example(&bsl::example_is_same_overview, "example_is_same_overview");
+    // // example(&bsl::example_is_scalar_overview, "example_is_scalar_overview");
+    // // example(&bsl::example_is_signed_overview, "example_is_signed_overview");
+    // // example(&bsl::example_is_standard_layout_overview, "example_is_standard_layout_overview");
+    // // example(&bsl::example_is_trivial_overview, "example_is_trivial_overview");
+    // // example(&bsl::example_is_unsigned_overview, "example_is_unsigned_overview");
+    // // example(&bsl::example_is_void_overview, "example_is_void_overview");
+    // // example(&bsl::example_make_signed_overview, "example_make_signed_overview");
+    // // example(&bsl::example_make_unsigned_overview, "example_make_unsigned_overview");
+    // // example(&bsl::example_move_overview, "example_move_overview");
+    // example(&bsl::example_reference_wrapper_overview, "example_reference_wrapper_overview");
+    // // example(&bsl::example_remove_const_overview, "example_remove_const_overview");
+    // // example(&bsl::example_remove_pointer_overview, "example_remove_pointer_overview");
+    // // example(&bsl::example_remove_reference_overview, "example_remove_reference_overview");
+    // example(&bsl::example_swap_overview, "example_swap_overview");
+    // // example(&bsl::example_type_identity_overview, "example_type_identity_overview");
+    // // example(&bsl::example_underlying_type_overview, "example_underlying_type_overview");
 
     // clang-format on
 

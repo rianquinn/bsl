@@ -36,7 +36,7 @@ namespace bsl
     /// @class bsl::aligned_storage
     ///
     /// <!-- description -->
-    ///   @brief Implements the std::aligned_aligned_storage interface. The
+    ///   @brief Implements the std::aligned_storage interface. The
     ///     only real difference is we use "m_data" instead of "data" to
     ///     represent the member variable name.
     ///   @include example_aligned_storage_overview.cpp
@@ -56,7 +56,7 @@ namespace bsl
         /// @class bsl::aligned_storage::type
         ///
         /// <!-- description -->
-        ///   @brief Implements the std::aligned_aligned_storage type interface.
+        ///   @brief Implements the std::aligned_storage type interface.
         ///
         struct type final
         {

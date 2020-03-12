@@ -48,12 +48,3 @@ ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)|(".*")'
 hint      = 'prefix fixed width types with bsl::'
 includes  = ["**/*.hpp", "**/*.cpp"]
 excludes  = ["include/bsl/cstdint.hpp"]
-
-[[rules]]
-name      = "check for virtual"
-pattern   = "[\t ]virtual[\t ]"
-forbidden = "[\t ]virtual[\t ]"
-ignore    = '(/\*/?([^/]|[^*]/)*\*/)|(//.*\n)'
-hint      = 'virtual inheritance is not allowed'
-includes  = ["**/*.hpp", "**/*.cpp"]
-excludes  = ["include/bsl/details/*.hpp"]

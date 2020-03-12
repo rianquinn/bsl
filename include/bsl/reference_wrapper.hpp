@@ -32,7 +32,8 @@
 #include "decay.hpp"
 #include "declval.hpp"
 #include "enable_if.hpp"
-#include "invoke.hpp"
+#include "forward.hpp"
+#include "invoke_result.hpp"
 #include "is_same.hpp"
 
 namespace bsl

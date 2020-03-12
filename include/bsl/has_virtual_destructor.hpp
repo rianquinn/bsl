@@ -28,7 +28,7 @@
 #ifndef BSL_HAS_VIRTUAL_DESTRUCTOR_HPP
 #define BSL_HAS_VIRTUAL_DESTRUCTOR_HPP
 
-#include "integral_constant.hpp"
+#include "bool_constant.hpp"
 
 namespace bsl
 {
@@ -44,7 +44,8 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class has_virtual_destructor final : public integral_constant<bool, __has_virtual_destructor(T)>
+    class has_virtual_destructor final :    // --
+        public bool_constant<__has_virtual_destructor(T)>
     {};
 }
 

@@ -51,27 +51,27 @@ main()
 {
     using namespace bsl;
 
-    bsl::ut_scenario{"constructor / get"} = []() {
-        bsl::ut_given{} = []() {
-            bsl::int32 data{};
-            bsl::reference_wrapper rw{data};
-            bsl::ut_when{} = [&rw]() {
-                rw.get() = 42;
-                bsl::ut_then{} = [&rw]() {
-                    bsl::ut_check(rw.get() == 42);
-                };
-            };
-        };
-    };
+    // bsl::ut_scenario{"constructor / get"} = []() {
+    //     bsl::ut_given{} = []() {
+    //         bsl::int32 data{};
+    //         bsl::reference_wrapper rw{data};
+    //         bsl::ut_when{} = [&rw]() {
+    //             rw.get() = 42;
+    //             bsl::ut_then{} = [&rw]() {
+    //                 bsl::ut_check(rw.get() == 42);
+    //             };
+    //         };
+    //     };
+    // };
 
-    bsl::ut_scenario{"invoke"} = []() {
-        bsl::ut_given{} = []() {
-            bsl::reference_wrapper rw{func};
-            bsl::ut_then{} = [&rw]() {
-                bsl::ut_check(rw(42) == 42);
-            };
-        };
-    };
+    // bsl::ut_scenario{"invoke"} = []() {
+    //     bsl::ut_given{} = []() {
+    //         bsl::reference_wrapper rw{func};
+    //         bsl::ut_then{} = [&rw]() {
+    //             bsl::ut_check(rw(42) == 42);
+    //         };
+    //     };
+    // };
 
     return bsl::ut_success();
 }
