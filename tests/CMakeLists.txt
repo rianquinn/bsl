@@ -95,6 +95,7 @@ add_subdirectory(is_nothrow_default_constructible)
 add_subdirectory(is_nothrow_destructible)
 add_subdirectory(is_nothrow_move_assignable)
 add_subdirectory(is_nothrow_move_constructible)
+add_subdirectory(is_reference_wrapper)
 
 
 add_subdirectory(is_rvalue_reference)

@@ -25,28 +25,13 @@
 #ifndef BSL_DETAILS_INVOKE_IMPL_HPP
 #define BSL_DETAILS_INVOKE_IMPL_HPP
 
-#include "invoke_impl_fp.hpp"
-#include "invoke_impl_mfp_object.hpp"
-#include "invoke_impl_mfp_pointer.hpp"
-#include "invoke_impl_mfp_reference_wrapper.hpp"
-#include "invoke_impl_mop_object.hpp"
-#include "invoke_impl_mop_pointer.hpp"
-#include "invoke_impl_mop_reference_wrapper.hpp"
-
-#include "../decay.hpp"
-#include "../conditional.hpp"
-#include "../forward.hpp"
-#include "../is_base_of.hpp"
-#include "../is_member_function_pointer.hpp"
-#include "../is_member_object_pointer.hpp"
-#include "../is_reference_wrapper.hpp"
-#include "../remove_cvref.hpp"
+#include "invoke_impl_base.hpp"
 
 namespace bsl
 {
     namespace details
     {
-        /// @class bsl::details::invoke_impl_fp
+        /// @class bsl::details::invoke_impl
         ///
         /// <!-- description -->
         ///   @brief The "invoke" function is implemented by executing the
@@ -61,15 +46,11 @@ namespace bsl
         ///     using class logic instead of a constexpr-if statement as
         ///     documented by cppreference.
         ///
-        template<
-            typename FUNC,
-            typename T1,
-            bool is_mfp = is_member_function_pointer<remove_cvref_t<FUNC>>::value,
-            bool is_mop = is_member_object_pointer<remove_cvref_t<FUNC>>::value>
-        class invoke_impl final
+        template<typename FUNC, typename... TN>
+        class invoke_impl final : public invoke_impl_base<FUNC, void>
         {};
 
-        /// @class bsl::details::invoke_impl_fp
+        /// @class bsl::details::invoke_impl
         ///
         /// <!-- description -->
         ///   @brief The "invoke" function is implemented by executing the
@@ -84,61 +65,8 @@ namespace bsl
         ///     using class logic instead of a constexpr-if statement as
         ///     documented by cppreference.
         ///
-        template<typename FUNC, typename U, typename T1>
-        class invoke_impl<FUNC U::*, T1, true, false> final :
-            public conditional_t<
-                is_base_of<U, decay_t<T1>>::value,
-                invoke_impl_mfp_object,
-                conditional_t<
-                    is_reference_wrapper<decay_t<T1>>::value,
-                    invoke_impl_mfp_reference_wrapper,
-                    invoke_impl_mfp_pointer>>
-        {};
-
-        /// @class bsl::details::invoke_impl_fp
-        ///
-        /// <!-- description -->
-        ///   @brief The "invoke" function is implemented by executing the
-        ///     "call" function from invoke_impl. The invoke_impl class uses
-        ///     SFINAE to figure out which invoke_impl_xxx function to inherit
-        ///     from. If the compiler can find a valid invoke_impl_xxx, it will
-        ///     inherit from it, otherwise, it will pick the default invoke_impl
-        ///     implementation which is an empty class (i.e., it does not
-        ///     provide a call function). This will either result in a compiler
-        ///     error, or an SFINAE substitution error, which is used to
-        ///     implement is_invocable, which is why invoke is implemented
-        ///     using class logic instead of a constexpr-if statement as
-        ///     documented by cppreference.
-        ///
-        template<typename FUNC, typename U, typename T1>
-        class invoke_impl<FUNC U::*, T1, false, true> final :
-            public conditional_t<
-                is_base_of<U, decay_t<T1>>::value,
-                invoke_impl_mop_object,
-                conditional_t<
-                    is_reference_wrapper<decay_t<T1>>::value,
-                    invoke_impl_mop_reference_wrapper,
-                    invoke_impl_mop_pointer>>
-        {};
-
-        /// @class bsl::details::invoke_impl_fp
-        ///
-        /// <!-- description -->
-        ///   @brief The "invoke" function is implemented by executing the
-        ///     "call" function from invoke_impl. The invoke_impl class uses
-        ///     SFINAE to figure out which invoke_impl_xxx function to inherit
-        ///     from. If the compiler can find a valid invoke_impl_xxx, it will
-        ///     inherit from it, otherwise, it will pick the default invoke_impl
-        ///     implementation which is an empty class (i.e., it does not
-        ///     provide a call function). This will either result in a compiler
-        ///     error, or an SFINAE substitution error, which is used to
-        ///     implement is_invocable, which is why invoke is implemented
-        ///     using class logic instead of a constexpr-if statement as
-        ///     documented by cppreference.
-        ///
-        template<typename FUNC, typename T1>
-        class invoke_impl<FUNC, T1, false, false> final :  // --
-            public invoke_impl_fp
+        template<typename FUNC, typename T1, typename... TN>
+        class invoke_impl<FUNC, T1, TN...> final : public invoke_impl_base<FUNC, T1>
         {};
     }
 }

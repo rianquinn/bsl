@@ -249,6 +249,8 @@ namespace bsl
             return *m_ptr;
         }
 
+        constexpr operator T& () const noexcept { return *m_ptr; } // NOLINT
+
         /// <!-- description -->
         ///   @brief Invokes the reference_wrapper as if it were a function.
         ///   @include reference_wrapper/example_reference_wrapper_callable.hpp
