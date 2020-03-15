@@ -79,8 +79,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///
-            constexpr invoke_impl_base(
-                invoke_impl_base const &o) noexcept = default;
+            constexpr invoke_impl_base(invoke_impl_base const &o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief move constructor
@@ -92,8 +91,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
-            constexpr invoke_impl_base(
-                invoke_impl_base &&o) noexcept = default;
+            constexpr invoke_impl_base(invoke_impl_base &&o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief copy assignment
@@ -169,8 +167,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///
-            constexpr invoke_impl_base(
-                invoke_impl_base const &o) noexcept = default;
+            constexpr invoke_impl_base(invoke_impl_base const &o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief move constructor
@@ -182,8 +179,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
-            constexpr invoke_impl_base(
-                invoke_impl_base &&o) noexcept = default;
+            constexpr invoke_impl_base(invoke_impl_base &&o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief copy assignment
@@ -259,8 +255,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///
-            constexpr invoke_impl_base(
-                invoke_impl_base const &o) noexcept = default;
+            constexpr invoke_impl_base(invoke_impl_base const &o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief move constructor
@@ -272,8 +267,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
-            constexpr invoke_impl_base(
-                invoke_impl_base &&o) noexcept = default;
+            constexpr invoke_impl_base(invoke_impl_base &&o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief copy assignment
@@ -342,8 +336,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///
-            constexpr invoke_impl_base(
-                invoke_impl_base const &o) noexcept = default;
+            constexpr invoke_impl_base(invoke_impl_base const &o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief move constructor
@@ -355,8 +348,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
-            constexpr invoke_impl_base(
-                invoke_impl_base &&o) noexcept = default;
+            constexpr invoke_impl_base(invoke_impl_base &&o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief copy assignment

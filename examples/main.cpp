@@ -69,6 +69,8 @@
 #include "delegate/example_delegate_functor.hpp"
 #include "delegate/example_delegate_valid.hpp"
 #include "example_destroy_at_overview.hpp"
+#include "example_detected_or_overview.hpp"
+#include "example_detected_overview.hpp"
 #include "example_discard_overview.hpp"
 #include "example_disjunction_overview.hpp"
 #include "example_enable_if_overview.hpp"
@@ -85,6 +87,7 @@
 #include "example_exchange_overview.hpp"
 #include "example_extent_overview.hpp"
 #include "example_false_type_overview.hpp"
+#include "example_for_each_overview.hpp"
 #include "example_forward_overview.hpp"
 // #include "example_has_unique_object_representations_overview.hpp"
 #include "example_has_virtual_destructor_overview.hpp"
@@ -107,6 +110,7 @@
 #include "example_is_class_overview.hpp"
 #include "example_is_compound_overview.hpp"
 #include "example_is_const_overview.hpp"
+#include "example_is_constant_evaluated_overview.hpp"
 #include "example_is_constructible_overview.hpp"
 #include "example_is_convertible_overview.hpp"
 #include "example_is_copy_assignable_overview.hpp"
@@ -120,6 +124,8 @@
 #include "example_is_function_overview.hpp"
 #include "example_is_fundamental_overview.hpp"
 #include "example_is_integral_overview.hpp"
+#include "example_is_invocable_overview.hpp"
+#include "example_is_invocable_r_overview.hpp"
 #include "example_is_lvalue_reference_overview.hpp"
 #include "example_is_member_function_pointer_overview.hpp"
 #include "example_is_member_object_pointer_overview.hpp"
@@ -128,12 +134,17 @@
 #include "example_is_move_constructible_overview.hpp"
 #include "example_is_nothrow_assignable_overview.hpp"
 #include "example_is_nothrow_constructible_overview.hpp"
+#include "example_is_nothrow_convertible_overview.hpp"
 #include "example_is_nothrow_copy_assignable_overview.hpp"
 #include "example_is_nothrow_copy_constructible_overview.hpp"
 #include "example_is_nothrow_default_constructible_overview.hpp"
 #include "example_is_nothrow_destructible_overview.hpp"
+#include "example_is_nothrow_invocable_overview.hpp"
+#include "example_is_nothrow_invocable_r_overview.hpp"
 #include "example_is_nothrow_move_assignable_overview.hpp"
 #include "example_is_nothrow_move_constructible_overview.hpp"
+#include "example_is_nothrow_swappable_overview.hpp"
+#include "example_is_nothrow_swappable_with_overview.hpp"
 // // #include "example_is_nullptr_overview.hpp"
 // // #include "example_is_object_overview.hpp"
 // // #include "example_is_pod_overview.hpp"
@@ -245,6 +256,8 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_delegate_functor, "example_delegate_functor");
     example(&bsl::example_delegate_valid, "example_delegate_valid");
     example(&bsl::example_destroy_at_overview, "example_destroy_at_overview");
+    example(&bsl::example_detected_or_overview, "example_detected_or_overview");
+    example(&bsl::example_detected_overview, "example_detected_overview");
     example(&bsl::example_discard_overview, "example_discard_overview");
     example(&bsl::example_disjunction_overview, "example_disjunction_overview");
     example(&bsl::example_enable_if_overview, "example_enable_if_overview");
@@ -261,6 +274,7 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_exchange_overview, "example_exchange_overview");
     example(&bsl::example_extent_overview, "example_extent_overview");
     example(&bsl::example_false_type_overview, "example_false_type_overview");
+    example(&bsl::example_for_each_overview, "example_for_each_overview");
     example(&bsl::example_forward_overview, "example_forward_overview");
     // example(&bsl::example_has_unique_object_representations_overview, "example_has_unique_object_representations_overview");
     example(&bsl::example_has_virtual_destructor_overview, "example_has_virtual_destructor_overview");
@@ -283,6 +297,7 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_is_class_overview, "example_is_class_overview");
     example(&bsl::example_is_compound_overview, "example_is_compound_overview");
     example(&bsl::example_is_const_overview, "example_is_const_overview");
+    example(&bsl::example_is_constant_evaluated_overview, "example_is_constant_evaluated_overview");
     example(&bsl::example_is_constructible_overview, "example_is_constructible_overview");
     example(&bsl::example_is_convertible_overview, "example_is_convertible_overview");
     example(&bsl::example_is_copy_assignable_overview, "example_is_copy_assignable_overview");
@@ -296,6 +311,8 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_is_function_overview, "example_is_function_overview");
     example(&bsl::example_is_fundamental_overview, "example_is_fundamental_overview");
     example(&bsl::example_is_integral_overview, "example_is_integral_overview");
+    example(&bsl::example_is_invocable_overview, "example_is_invocable_overview");
+    example(&bsl::example_is_invocable_r_overview, "example_is_invocable_r_overview");
     example(&bsl::example_is_lvalue_reference_overview, "example_is_lvalue_reference_overview");
     example(&bsl::example_is_member_function_pointer_overview, "example_is_member_function_pointer_overview");
     example(&bsl::example_is_member_object_pointer_overview, "example_is_member_object_pointer_overview");
@@ -304,12 +321,17 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_is_move_constructible_overview, "example_is_move_constructible_overview");
     example(&bsl::example_is_nothrow_assignable_overview, "example_is_nothrow_assignable_overview");
     example(&bsl::example_is_nothrow_constructible_overview, "example_is_nothrow_constructible_overview");
+    example(&bsl::example_is_nothrow_convertible_overview, "example_is_nothrow_convertible_overview");
     example(&bsl::example_is_nothrow_copy_assignable_overview, "example_is_nothrow_copy_assignable_overview");
     example(&bsl::example_is_nothrow_copy_constructible_overview, "example_is_nothrow_copy_constructible_overview");
     example(&bsl::example_is_nothrow_default_constructible_overview, "example_is_nothrow_default_constructible_overview");
     example(&bsl::example_is_nothrow_destructible_overview, "example_is_nothrow_destructible_overview");
+    example(&bsl::example_is_nothrow_invocable_overview, "example_is_nothrow_invocable_overview");
+    example(&bsl::example_is_nothrow_invocable_r_overview, "example_is_nothrow_invocable_r_overview");
     example(&bsl::example_is_nothrow_move_assignable_overview, "example_is_nothrow_move_assignable_overview");
     example(&bsl::example_is_nothrow_move_constructible_overview, "example_is_nothrow_move_constructible_overview");
+    example(&bsl::example_is_nothrow_swappable_overview, "example_is_nothrow_swappable_overview");
+    example(&bsl::example_is_nothrow_swappable_with_overview, "example_is_nothrow_swappable_with_overview");
     // // example(&bsl::example_is_nullptr_overview, "example_is_nullptr_overview");
     // // example(&bsl::example_is_object_overview, "example_is_object_overview");
     // // example(&bsl::example_is_pod_overview, "example_is_pod_overview");

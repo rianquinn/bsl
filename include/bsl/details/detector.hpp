@@ -21,13 +21,17 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
+///
+/// @file detector.hpp
+///
 
-#ifndef BSL_DETAILS_DETECTOR_HPP
-#define BSL_DETAILS_DETECTOR_HPP
+#ifndef BSL_DETECTOR_HPP
+#define BSL_DETECTOR_HPP
 
-#include "../void_t.hpp"
-#include "../true_type.hpp"
 #include "../false_type.hpp"
+#include "../true_type.hpp"
+#include "../type_identity.hpp"
+#include "../void_t.hpp"
 
 namespace bsl
 {
@@ -36,27 +40,38 @@ namespace bsl
         /// @class bsl::detector
         ///
         /// <!-- description -->
-        ///   @brief If the provided operation is detected, provides the
-        ///     member constant value equal to true. Otherwise the member
-        ///     constant value is false.
-        ///   @include detector/overview.cpp
+        ///   @brief The alias template detector is an alias for an unspecified
+        ///     class type with two public member typedefs value_t and type,
+        ///     which are defined as follows:
+        ///     - If the template-id OP<ARGS...> denotes a valid type, then
+        ///       value_t is an alias for bsl::true_type, and type is an alias
+        ///       for OP<ARGS...>;
+        ///     - Otherwise, value_t is an alias for bsl::false_type and type is
+        ///       an alias for DEFAULT.
         ///
         /// <!-- template parameters -->
-        ///   @tparam Default unused
-        ///   @tparam Op the operation to detect
-        ///   @tparam Args the arguments to the operation to detect
+        ///   @tparam DEFAULT the default type to return when OP<ARGS...> is
+        ///     invalid
+        ///   @tparam VOID Always void (performs that actual detection)
+        ///   @tparam OP the operation to detect
+        ///   @tparam ARGS the arguments to the operation to detect
         ///
-        template<typename Default, typename, template<typename...> class Op, typename... Args>
-        class detector final : // --
-            public false_type
-        {};
+        template<typename DEFAULT, typename VOID, template<class...> class OP, typename... ARGS>
+        class detector final : public type_identity<DEFAULT>
+        {
+        public:
+            using value_t = false_type;
+        };
 
         /// @cond --
 
-        template<typename Default, template<typename...> class Op, typename... Args>
-        class detector<Default, bsl::void_t<Op<Args...>>, Op, Args...> final : // --
-            public true_type
-        {};
+        template<typename DEFAULT, template<class...> class OP, typename... ARGS>
+        class detector<DEFAULT, void_t<OP<ARGS...>>, OP, ARGS...> final :
+            public type_identity<OP<ARGS...>>
+        {
+        public:
+            using value_t = true_type;
+        };
 
         /// @endcond --
     }

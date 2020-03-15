@@ -22,35 +22,23 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file is_constant_evaluated.hpp
+/// @file detected.hpp
 ///
 
-#ifndef BSL_IS_CONSTANT_EVALUATED_HPP
-#define BSL_IS_CONSTANT_EVALUATED_HPP
+#ifndef BSL_DETECTED_HPP
+#define BSL_DETECTED_HPP
+
+#include "details/detector.hpp"
+#include "nonesuch.hpp"
 
 namespace bsl
 {
-    /// <!-- description -->
-    ///   @brief Detects whether the function call occurs within a
-    ///     constant-evaluated context. Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///   @include example_is_constant_evaluated_overview.hpp
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
-    /// <!-- inputs/outputs -->
-    ///   @return Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///
-    [[nodiscard]] constexpr bool
-    is_constant_evaluated() noexcept
-    {
-        return __builtin_is_constant_evaluated();
-    }
+    /// @brief The alias template detected_t is equivalent to typename
+    ///   detected_or<bsl::nonesuch, Op, Args...>::type. It is
+    ///   an alias for Op<Args...> if that template-id denotes a valid type;
+    ///   otherwise it is an alias for the class bsl::nonesuch.
+    template<template<class...> class Op, typename... Args>
+    using detected_t = typename details::detector<nonesuch, void, Op, Args...>::type;
 }
 
 #endif

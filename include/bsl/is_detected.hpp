@@ -28,18 +28,28 @@
 #ifndef BSL_IS_DETECTED_HPP
 #define BSL_IS_DETECTED_HPP
 
-#include "details/detector.hpp"
-#include "details/nonesuch.hpp"
+#include "detected.hpp"
+#include "is_convertible.hpp"
+#include "is_same.hpp"
 
 namespace bsl
 {
-    /// @brief used for detection in SFINAE
-    template<template<typename...> class Op, typename... Args>
-    using is_detected = typename details::detector<details::nonesuch, void, Op, Args...>;
+    /// @brief The alias template is_detected is equivalent to typename
+    ///   detected_or<bsl::nonesuch, Op, Args...>::value_t.
+    ///   It is an alias for bsl::true_type if the template-id Op<Args...>
+    ///   denotes a valid type; otherwise it is an alias for bsl::false_type.
+    template<template<class...> class Op, typename... Args>
+    using is_detected = typename details::detector<nonesuch, void, Op, Args...>::value_t;
 
-    /// @brief used for detection in SFINAE
-    template<typename Default, template<typename...> class Op, typename... Args>
-    using detected_or = typename details::detector<Default, void, Op, Args...>;
+    /// @brief The alias template is_detected_exact checks whether
+    ///   detected_t<Op, Args...> is Expected.
+    template<class Expected, template<class...> class Op, class... Args>
+    using is_detected_exact = is_same<Expected, detected_t<Op, Args...>>;
+
+    /// @brief The alias template is_detected_convertible checks whether
+    ///   detected_t<Op, Args...> is convertible to To.
+    template<class To, template<class...> class Op, class... Args>
+    using is_detected_convertible = is_convertible<detected_t<Op, Args...>, To>;
 }
 
 #endif

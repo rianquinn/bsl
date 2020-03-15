@@ -22,35 +22,34 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file is_constant_evaluated.hpp
+/// @file is_swappable.hpp
 ///
 
-#ifndef BSL_IS_CONSTANT_EVALUATED_HPP
-#define BSL_IS_CONSTANT_EVALUATED_HPP
+#ifndef BSL_IS_SWAPPABLE_HPP
+#define BSL_IS_SWAPPABLE_HPP
+
+#include "bool_constant.hpp"
+#include "add_lvalue_reference.hpp"
+#include "is_swappable_with.hpp"
 
 namespace bsl
 {
+    /// @class bsl::is_swappable
+    ///
     /// <!-- description -->
-    ///   @brief Detects whether the function call occurs within a
-    ///     constant-evaluated context. Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///   @include example_is_constant_evaluated_overview.hpp
+    ///   @brief If the provided type T is swappable, provides
+    ///     the member constant value equal to true. Otherwise the member
+    ///     constant value is false.
+    ///   @include example_is_swappable_overview.hpp
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
+    /// <!-- template parameters -->
+    ///   @tparam T the first type to query
     ///
-    /// <!-- inputs/outputs -->
-    ///   @return Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///
-    [[nodiscard]] constexpr bool
-    is_constant_evaluated() noexcept
-    {
-        return __builtin_is_constant_evaluated();
-    }
+    template<typename T>
+    class is_swappable final :
+        public bool_constant<
+            is_swappable_with<add_lvalue_reference_t<T>, add_lvalue_reference_t<T>>::value>
+    {};
 }
 
 #endif

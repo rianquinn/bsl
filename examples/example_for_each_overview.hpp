@@ -21,35 +21,37 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
-///
-/// @file is_constant_evaluated.hpp
-///
 
-#ifndef BSL_IS_CONSTANT_EVALUATED_HPP
-#define BSL_IS_CONSTANT_EVALUATED_HPP
+#ifndef EXAMPLE_FOREACH_OVERVIEW_HPP
+#define EXAMPLE_FOREACH_OVERVIEW_HPP
+
+#include <bsl/discard.hpp>
+#include <bsl/for_each.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
     /// <!-- description -->
-    ///   @brief Detects whether the function call occurs within a
-    ///     constant-evaluated context. Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///   @include example_is_constant_evaluated_overview.hpp
+    ///   @brief Provides the example's main function
     ///
     /// <!-- contracts -->
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @return Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///
-    [[nodiscard]] constexpr bool
-    is_constant_evaluated() noexcept
+    inline void
+    example_for_each_overview() noexcept
     {
-        return __builtin_is_constant_evaluated();
+        bsl::int32 t{};
+        bsl::int32 const expected{65};
+
+        bsl::for_each({23, 42}, [&t](auto &elem, auto i) noexcept {
+            bsl::discard(i);
+            t += elem;
+        });
+
+        if (t == expected) {
+            bsl::print("success\n");
+        }
     }
 }
 

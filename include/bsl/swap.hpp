@@ -28,16 +28,23 @@
 #ifndef BSL_SWAP_HPP
 #define BSL_SWAP_HPP
 
+#include "cstdint.hpp"
+#include "discard.hpp"
+#include "for_each.hpp"
 #include "move.hpp"
 #include "enable_if.hpp"
 #include "is_move_assignable.hpp"
 #include "is_move_constructible.hpp"
+#include "is_nothrow_move_assignable.hpp"
+#include "is_nothrow_move_constructible.hpp"
+
+// clang-format off
 
 namespace bsl
 {
     /// <!-- description -->
-    ///   @brief Exchanges the given values.
-    ///   @include swap/overview.cpp
+    ///   @brief Swaps the given values.
+    ///   @include example_swap_overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -45,81 +52,53 @@ namespace bsl
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type that defines the values being swapped
-    ///   @param lhs the value being swapped with b
-    ///   @param rhs the value being swapped with a
+    ///   @param lhs the value being swapped with rhs
+    ///   @param rhs the value being swapped with lhs
     ///
     template<
         typename T,
         enable_if_t<is_move_assignable<T>::value> = true,
         enable_if_t<is_move_constructible<T>::value> = true>
     constexpr void
-    swap(T &lhs, T &rhs) noexcept
+    swap(T &lhs, T &rhs) noexcept(
+        is_nothrow_move_constructible<T>::value &&
+        is_nothrow_move_assignable<T>::value)
     {
         T tmp{bsl::move(lhs)};
         lhs = bsl::move(rhs);
         rhs = bsl::move(tmp);
     }
+
+    /// <!-- description -->
+    ///   @brief Swaps the elements in two arrays
+    ///   @include example_swap_overview.hpp
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the type that defines the arrays being swapped
+    ///   @tparam N the size of the arrays
+    ///   @param lhs the value being swapped with rhs
+    ///   @param rhs the value being swapped with lhs
+    ///
+    template<
+        typename T,
+        bsl::uintmax N,
+        enable_if_t<is_move_assignable<T>::value> = true,
+        enable_if_t<is_move_constructible<T>::value> = true>
+    constexpr void
+    swap(T (&lhs)[N], T (&rhs)[N]) noexcept(    // NOLINT
+        is_nothrow_move_constructible<T>::value &&
+        is_nothrow_move_assignable<T>::value)
+    {
+        for_each(lhs, [&rhs](auto &elem, auto i) noexcept(swap(elem, rhs[i])) {    // NOLINT
+            swap(elem, rhs[i]);
+        });
+    }
 }
 
-//    template <typename T>
-//     constexpr auto swap(T& x, T& y) noexcept
-//         -> enable_if_ty<is_move_constructible_v<T> && is_move_assignable_v<T>>
-//     {
-//         auto t = T(bml::move(x));
-//         x = bml::move(y);
-//         y = bml::move(t);
-//     }
+// clang-format on
 
-//     template <typename T, ::ptrdiff_t N>
-//     constexpr auto swap(T (&x)[N], T (&y)[N]) noexcept -> enable_if_ty<is_swappable<T>::value>;
-
-//     // Forward declaration of the swap overload for array to allow swap_ranges to deal with nested
-//     // arrays.
-//     template <typename T>
-//     struct is_swappable;
-
-//     template <typename ForwardIt1, typename ForwardIt2>
-//     constexpr auto swap_ranges(ForwardIt1 first1, ForwardIt1 last1, ForwardIt2 first2) noexcept
-//         -> ForwardIt2
-//     {
-//         while (first1 != last1)
-//         {
-//             // Note: ADL for swap explicitly wanted here to find user-defined swaps.
-//             swap(*first1, *first2);
-
-//             static_cast<void>(++first1);
-//             static_cast<void>(++first2);
-//         }
-
-//         return first2;
-//     }
-
-//     template <typename T, ::ptrdiff_t N>
-//     constexpr auto swap(T (&x)[N], T (&y)[N]) noexcept -> enable_if_ty<is_swappable<T>::value>
-//     {
-//         static_cast<void>(bml::swap_ranges(x, x + N, y));
-//     }
-
-//     namespace detail::is_swappable_with_detail
-//     {
-//         // Note: ADL for swap is explicitly wanted here to find user-defined swaps.
-//         template <typename T, typename U>
-//         using check = decltype(swap(bml::declval<T>(), bml::declval<U>()));
-//     }
-
-//     template <typename T, typename U>
-//     struct is_swappable_with : bool_constant<
-//            is_detected_v<detail::is_swappable_with_detail::check, T, U>
-//         && is_detected_v<detail::is_swappable_with_detail::check, U, T>>
-//     {};
-
-//     template <typename T, typename U>
-//     inline constexpr auto is_swappable_with_v = bool(is_swappable_with<T, U>::value);
-
-//     template <typename T>
-//     struct is_swappable
-//         : is_swappable_with<add_lvalue_reference_ty<T>, add_lvalue_reference_ty<T>> {};
-
-//     template <typename T>
-//     inline constexpr auto is_swappable_v = bool(is_swappable<T>::value);
 #endif

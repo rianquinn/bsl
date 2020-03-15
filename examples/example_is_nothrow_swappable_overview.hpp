@@ -21,35 +21,28 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
-///
-/// @file is_constant_evaluated.hpp
-///
 
-#ifndef BSL_IS_CONSTANT_EVALUATED_HPP
-#define BSL_IS_CONSTANT_EVALUATED_HPP
+#ifndef EXAMPLE_IS_NOTHROW_SWAPPABLE_HPP
+#define EXAMPLE_IS_NOTHROW_SWAPPABLE_HPP
+
+#include <bsl/is_nothrow_swappable.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
     /// <!-- description -->
-    ///   @brief Detects whether the function call occurs within a
-    ///     constant-evaluated context. Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///   @include example_is_constant_evaluated_overview.hpp
+    ///   @brief Provides the example's main function
     ///
     /// <!-- contracts -->
     ///   @pre none
     ///   @post none
     ///
-    /// <!-- inputs/outputs -->
-    ///   @return Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///
-    [[nodiscard]] constexpr bool
-    is_constant_evaluated() noexcept
+    inline void
+    example_is_nothrow_swappable_overview() noexcept
     {
-        return __builtin_is_constant_evaluated();
+        if (bsl::is_nothrow_swappable<bool>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

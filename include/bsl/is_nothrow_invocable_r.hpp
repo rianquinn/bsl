@@ -22,35 +22,36 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file is_constant_evaluated.hpp
+/// @file is_nothrow_invocable_r.hpp
 ///
 
-#ifndef BSL_IS_CONSTANT_EVALUATED_HPP
-#define BSL_IS_CONSTANT_EVALUATED_HPP
+#ifndef BSL_IS_NOTHROW_INVOCABLE_R_HPP
+#define BSL_IS_NOTHROW_INVOCABLE_R_HPP
+
+#include "details/invoke_traits.hpp"
+#include "bool_constant.hpp"
 
 namespace bsl
 {
+    /// @class bsl::is_nothrow_invocable_r
+    ///
     /// <!-- description -->
-    ///   @brief Detects whether the function call occurs within a
-    ///     constant-evaluated context. Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///   @include example_is_constant_evaluated_overview.hpp
+    ///   @brief If the provided args form a nothrow callable, and is
+    ///     convertible to "R" (without throwing), provides the member constant
+    ///     value equal to true. Otherwise the member constant value is false.
+    ///   @include example_is_nothrow_invocable_r_overview.hpp
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
+    /// <!-- template parameters -->
+    ///   @tparam R the type that "FUNC" should be convertible to
+    ///   @tparam FUNC the type that defines the function being called
+    ///   @tparam TN the types that define the arguments passed to the
+    ///     provided function when called.
     ///
-    /// <!-- inputs/outputs -->
-    ///   @return Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///
-    [[nodiscard]] constexpr bool
-    is_constant_evaluated() noexcept
-    {
-        return __builtin_is_constant_evaluated();
-    }
+    template<typename R, typename FUNC, typename... TN>
+    class is_nothrow_invocable_r final :
+        public bool_constant<
+            details::invoke_traits<void, FUNC, TN...>::template m_is_nothrow_invocable_r<R>>
+    {};
 }
 
 #endif

@@ -22,35 +22,30 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file is_constant_evaluated.hpp
+/// @file detected_or.hpp
 ///
 
-#ifndef BSL_IS_CONSTANT_EVALUATED_HPP
-#define BSL_IS_CONSTANT_EVALUATED_HPP
+#ifndef BSL_DETECTED_OR_HPP
+#define BSL_DETECTED_OR_HPP
+
+#include "details/detector.hpp"
 
 namespace bsl
 {
-    /// <!-- description -->
-    ///   @brief Detects whether the function call occurs within a
-    ///     constant-evaluated context. Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///   @include example_is_constant_evaluated_overview.hpp
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
-    /// <!-- inputs/outputs -->
-    ///   @return Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///
-    [[nodiscard]] constexpr bool
-    is_constant_evaluated() noexcept
-    {
-        return __builtin_is_constant_evaluated();
-    }
+    /// @brief The alias template detected_or is an alias for an unspecified
+    ///   class type with two public member typedefs value_t and type, which
+    ///   are defined as follows:
+    ///   - If the template-id OP<ARGS...> denotes a valid type, then value_t
+    ///     is an alias for bsl::true_type, and type is an alias for
+    ///     OP<ARGS...>;
+    ///   - Otherwise, value_t is an alias for bsl::false_type and type is
+    ///     an alias for DEFAULT.
+    template<class Default, template<class...> class Op, class... Args>
+    using detected_or = details::detector<Default, void, Op, Args...>;
+
+    /// @brief a helper that reduces the verbosity of bsl::detected_or
+    template<typename Default, template<class...> class Op, typename... Args>
+    using detected_or_t = typename details::detector<Default, void, Op, Args...>::type;
 }
 
 #endif

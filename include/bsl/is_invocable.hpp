@@ -50,64 +50,6 @@ namespace bsl
     class is_invocable final :
         public bool_constant<details::invoke_traits<void, FUNC, TN...>::m_is_invocable>
     {};
-
-    /// @class bsl::is_nothrow_invocable
-    ///
-    /// <!-- description -->
-    ///   @brief If the provided args form a nothrow callable, provides the
-    ///     member constant value equal to true. Otherwise the member constant
-    ///     value is false.
-    ///   @include example_is_invocable_overview.hpp
-    ///
-    /// <!-- template parameters -->
-    ///   @tparam FUNC the type that defines the function being called
-    ///   @tparam TN the types that define the arguments passed to the
-    ///     provided function when called.
-    ///
-    template<typename FUNC, typename... TN>
-    class is_nothrow_invocable final :
-        public bool_constant<details::invoke_traits<void, FUNC, TN...>::m_is_nothrow_invocable>
-    {};
-
-    /// @class bsl::is_invocable_r
-    ///
-    /// <!-- description -->
-    ///   @brief If the provided args form a callable, and is convertible
-    ///     to "R", provides the member constant value equal to true. Otherwise
-    ///     the member constant value is false.
-    ///   @include example_is_invocable_overview.hpp
-    ///
-    /// <!-- template parameters -->
-    ///   @tparam R the type that "FUNC" should be convertible to
-    ///   @tparam FUNC the type that defines the function being called
-    ///   @tparam TN the types that define the arguments passed to the
-    ///     provided function when called.
-    ///
-    template<typename R, typename FUNC, typename... TN>
-    class is_invocable_r final :
-        public bool_constant<
-            details::invoke_traits<void, FUNC, TN...>::template m_is_invocable_r<R>>
-    {};
-
-    /// @class bsl::is_nothrow_invocable_r
-    ///
-    /// <!-- description -->
-    ///   @brief If the provided args form a nothrow callable, and is
-    ///     convertible to "R" (without throwing), provides the member constant
-    ///     value equal to true. Otherwise the member constant value is false.
-    ///   @include example_is_invocable_overview.hpp
-    ///
-    /// <!-- template parameters -->
-    ///   @tparam R the type that "FUNC" should be convertible to
-    ///   @tparam FUNC the type that defines the function being called
-    ///   @tparam TN the types that define the arguments passed to the
-    ///     provided function when called.
-    ///
-    template<typename R, typename FUNC, typename... TN>
-    class is_nothrow_invocable_r final :
-        public bool_constant<
-            details::invoke_traits<void, FUNC, TN...>::template m_is_nothrow_invocable_r<R>>
-    {};
 }
 
 #endif

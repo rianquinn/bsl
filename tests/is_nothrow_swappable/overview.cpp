@@ -21,36 +21,48 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
-///
-/// @file is_constant_evaluated.hpp
-///
 
-#ifndef BSL_IS_CONSTANT_EVALUATED_HPP
-#define BSL_IS_CONSTANT_EVALUATED_HPP
+#include <bsl/is_nothrow_swappable.hpp>
+#include <bsl/ut.hpp>
 
-namespace bsl
+namespace
 {
-    /// <!-- description -->
-    ///   @brief Detects whether the function call occurs within a
-    ///     constant-evaluated context. Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///   @include example_is_constant_evaluated_overview.hpp
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
-    /// <!-- inputs/outputs -->
-    ///   @return Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///
-    [[nodiscard]] constexpr bool
-    is_constant_evaluated() noexcept
-    {
-        return __builtin_is_constant_evaluated();
-    }
-}
+    struct mystruct1 final
+    {};
 
-#endif
+    struct mystruct2 final
+    {};
+
+    struct mystruct3 final
+    {};
+
+    void swap(mystruct1, mystruct1) noexcept;
+    void swap(mystruct2, mystruct2) noexcept = delete;
+    void swap(mystruct3, mystruct3);
+}
+/// <!-- description -->
+///   @brief Main function for this unit test. If a call to ut_check() fails
+///     the application will fast fail. If all calls to ut_check() pass, this
+///     function will successfully return with bsl::exit_success.
+///
+/// <!-- contracts -->
+///   @pre none
+///   @post none
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+bsl::exit_code
+main()
+{
+    using namespace bsl;
+
+    static_assert(is_nothrow_swappable<bool>::value);
+    static_assert(is_nothrow_swappable<mystruct1>::value);
+
+    static_assert(!is_nothrow_swappable<bool const>::value);
+    static_assert(!is_nothrow_swappable<mystruct2>::value);
+    static_assert(!is_nothrow_swappable<mystruct3>::value);
+
+    return bsl::ut_success();
+}

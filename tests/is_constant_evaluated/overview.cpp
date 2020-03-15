@@ -21,36 +21,35 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
+
+#include <bsl/is_constant_evaluated.hpp>
+#include <bsl/ut.hpp>
+
+/// <!-- description -->
+///   @brief Main function for this unit test. If a call to ut_check() fails
+///     the application will fast fail. If all calls to ut_check() pass, this
+///     function will successfully return with bsl::exit_success.
 ///
-/// @file foreach.hpp
+/// <!-- contracts -->
+///   @pre none
+///   @post none
 ///
-
-#ifndef BSL_FOREACH_HPP
-#define BSL_FOREACH_HPP
-
-#include "cstdint.hpp"
-#include "forward.hpp"
-
-namespace bsl
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+bsl::exit_code
+main()
 {
-    // A13-3-1 A8-4-9
-    template<typename T, bsl::uintmax N, typename FUNC>
-    constexpr void foreach (T (&array)[N], FUNC && func)    // PRQA S 2023, 4284  // NOLINT
-        noexcept(false)
-    {
-        for (bsl::uintmax i{0U}; i < N; ++i) {
-            bsl::forward<FUNC>(func)(array[i], i);
-        }
-    }
+    using namespace bsl;
+    static_assert(is_constant_evaluated());
 
-    template<typename T, bsl::uintmax N, typename FUNC>
-    constexpr void foreach (T const (&array)[N], FUNC && func)    // PRQA S 2023 // NOLINT
-        noexcept(false)
-    {
-        for (bsl::uintmax i{0U}; i < N; ++i) {
-            bsl::forward<FUNC>(func)(array[i], i);
-        }
-    }
+    bsl::ut_scenario{"runtime logic is not constant evaluated"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::ut_then{} = []() {
+                bsl::ut_check(!is_constant_evaluated());
+            };
+        };
+    };
+
+    return bsl::ut_success();
 }
-
-#endif

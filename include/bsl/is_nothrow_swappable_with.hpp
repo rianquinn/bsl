@@ -22,35 +22,34 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file is_constant_evaluated.hpp
+/// @file is_nothrow_swappable_with.hpp
 ///
 
-#ifndef BSL_IS_CONSTANT_EVALUATED_HPP
-#define BSL_IS_CONSTANT_EVALUATED_HPP
+#ifndef BSL_IS_NOTHROW_SWAPPABLE_WITH_HPP
+#define BSL_IS_NOTHROW_SWAPPABLE_WITH_HPP
+
+#include "details/swappable_traits.hpp"
+#include "bool_constant.hpp"
 
 namespace bsl
 {
+    /// @class bsl::is_nothrow_swappable_with
+    ///
     /// <!-- description -->
-    ///   @brief Detects whether the function call occurs within a
-    ///     constant-evaluated context. Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///   @include example_is_constant_evaluated_overview.hpp
+    ///   @brief If the provided type T and U are nothrow swappable, provides
+    ///     the member constant value equal to true. Otherwise the member
+    ///     constant value is false.
+    ///   @include example_is_nothrow_swappable_with_overview.hpp
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
+    /// <!-- template parameters -->
+    ///   @tparam T the first type to query
+    ///   @tparam U the second type to query
     ///
-    /// <!-- inputs/outputs -->
-    ///   @return Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///
-    [[nodiscard]] constexpr bool
-    is_constant_evaluated() noexcept
-    {
-        return __builtin_is_constant_evaluated();
-    }
+    template<typename T, typename U>
+    class is_nothrow_swappable_with final :
+        public bool_constant<
+            details::swappable_traits<void, void, T, U>::m_is_nothrow_swappable_with>
+    {};
 }
 
 #endif

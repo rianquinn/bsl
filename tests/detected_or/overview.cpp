@@ -21,36 +21,56 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
-///
-/// @file is_constant_evaluated.hpp
-///
 
-#ifndef BSL_IS_CONSTANT_EVALUATED_HPP
-#define BSL_IS_CONSTANT_EVALUATED_HPP
+#include <bsl/declval.hpp>
+#include <bsl/detected_or.hpp>
+#include <bsl/is_same.hpp>
 
-namespace bsl
+#include <bsl/ut.hpp>
+
+namespace
 {
-    /// <!-- description -->
-    ///   @brief Detects whether the function call occurs within a
-    ///     constant-evaluated context. Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///   @include example_is_constant_evaluated_overview.hpp
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
-    /// <!-- inputs/outputs -->
-    ///   @return Returns true if the evaluation of the
-    ///     call occurs within the evaluation of an expression or conversion
-    ///     that is manifestly constant-evaluated; otherwise returns false.
-    ///
-    [[nodiscard]] constexpr bool
-    is_constant_evaluated() noexcept
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunneeded-member-function"
+
+    class myclass final
     {
-        return __builtin_is_constant_evaluated();
-    }
+    public:
+        [[nodiscard]] constexpr bool
+        get() const noexcept    // NOLINT
+        {
+            return true;
+        }
+    };
+
+    template<typename T>
+    using get_type = decltype(bsl::declval<T &>().get());
+
+    template<typename T>
+    using set_type = decltype(bsl::declval<T &>().set());
+
+#pragma clang diagnostic pop
 }
 
-#endif
+/// <!-- description -->
+///   @brief Main function for this unit test. If a call to ut_check() fails
+///     the application will fast fail. If all calls to ut_check() pass, this
+///     function will successfully return with bsl::exit_success.
+///
+/// <!-- contracts -->
+///   @pre none
+///   @post none
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+bsl::exit_code
+main()
+{
+    using namespace bsl;
+
+    static_assert(is_same<detected_or_t<void, get_type, myclass>, get_type<myclass>>::value);
+    static_assert(is_same<detected_or_t<void, set_type, myclass>, void>::value);
+
+    return bsl::ut_success();
+}
