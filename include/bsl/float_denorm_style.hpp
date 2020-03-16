@@ -22,45 +22,33 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file new.hpp
+/// @file float_denorm_style.hpp
 ///
 
-#ifndef BSL_NEW_HPP
-#define BSL_NEW_HPP
+#ifndef BSL_FLOATING_DENORM_STYLE_HPP
+#define BSL_FLOATING_DENORM_STYLE_HPP
 
-#include "cstdint.hpp" 
-#include "discard.hpp"
+#include "cstdint.hpp"
 
-/// <!-- description -->
-///   @brief This function implements the placement new operator. Note that
-///     this function is passed a count and pointer, both of which are ignored.
-///   @include new/overview.cpp
-///
-///   SUPPRESSION: PRQA 2000 - false positive
-///   - We suppress this because M7-3-1 states that functions should not be
-///     defined in the global namespace. This is a false positive because
-///     C++ requires that the placement new function is defind in the global
-///     namespace.
-///
-///   SUPPRESSION: PRQA 2000 - false positive
-///   - We suppress this because M0-1-10 states that functions should be used
-///     if they are defined. This function is used by bsl::result and others,
-///     but PRQA is not able to detect this.
-///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
-///
-/// <!-- inputs/outputs -->
-///   @param count ignored
-///   @param ptr the ptr to return
-///   @return returns ptr
-///
-constexpr void *
-operator new(bsl::uintmax count, void *const ptr) noexcept    // PRQA S 2000, 1503
+namespace bsl
 {
-    bsl::discard(count);
-    return ptr;
+    /// @enum bsl::float_denorm_style
+    ///
+    /// <!-- description -->
+    ///   @brief Enumerates subnormal values for floating points.
+    ///
+    /// <!-- notes -->
+    ///   @note We do not support floating point numbers. This is only
+    ///     implemented for completeness. In most cases, if you attempt
+    ///     to use floating point numbers with the BSL, you will receive
+    ///     a compilation error.
+    ///
+    enum class float_denorm_style : bsl::uint32
+    {
+        denorm_indeterminate = -1,
+        denorm_absent = 0,
+        denorm_present = 1
+    };
 }
 
 #endif

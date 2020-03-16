@@ -43,7 +43,9 @@ namespace
             g_moved = true;
         }
 
-        myclass &operator=(myclass &&o) &noexcept
+        myclass &
+            operator=(myclass &&o) &
+            noexcept
         {
             bsl::discard(o);
             g_moved = true;
@@ -66,7 +68,9 @@ namespace
             g_moved = true;
         }
 
-        myclass_move_except &operator=(myclass_move_except &&o) &noexcept(false)
+        myclass_move_except &
+            operator=(myclass_move_except &&o) &
+            noexcept(false)
         {
             bsl::discard(o);
             g_moved = true;
@@ -81,7 +85,8 @@ namespace
         constexpr myclass_move_except_nocopy() noexcept = default;
         ~myclass_move_except_nocopy() noexcept = default;
         constexpr myclass_move_except_nocopy(myclass_move_except_nocopy const &) noexcept = delete;
-        constexpr myclass_move_except_nocopy &operator=(myclass_move_except_nocopy const &) &noexcept = delete;
+        constexpr myclass_move_except_nocopy &
+        operator=(myclass_move_except_nocopy const &) &noexcept = delete;
 
         myclass_move_except_nocopy(myclass_move_except_nocopy &&o) noexcept
         {
@@ -89,7 +94,9 @@ namespace
             g_moved = true;
         }
 
-        myclass_move_except_nocopy &operator=(myclass_move_except_nocopy &&o) &noexcept
+        myclass_move_except_nocopy &
+            operator=(myclass_move_except_nocopy &&o) &
+            noexcept
         {
             bsl::discard(o);
             g_moved = true;
@@ -115,7 +122,7 @@ bsl::exit_code
 main()
 {
     using namespace bsl;
-    bsl::set_ut_reset_handler([](){
+    bsl::set_ut_reset_handler([]() {
         g_moved = false;
     });
 

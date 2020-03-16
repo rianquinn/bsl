@@ -174,6 +174,7 @@
 #include "example_make_unsigned_overview.hpp"
 #include "example_move_if_noexcept_overview.hpp"
 #include "example_move_overview.hpp"
+#include "example_numeric_limits_overview.hpp"
 // #include "example_reference_wrapper_overview.hpp"
 // #include "example_remove_const_overview.hpp"
 // #include "example_remove_pointer_overview.hpp"
@@ -374,6 +375,7 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_make_unsigned_overview, "example_make_unsigned_overview");
     example(&bsl::example_move_if_noexcept_overview, "example_move_if_noexcept_overview");
     example(&bsl::example_move_overview, "example_move_overview");
+    example(&bsl::example_numeric_limits_overview, "example_numeric_limits_overview");
     // example(&bsl::example_reference_wrapper_overview, "example_reference_wrapper_overview");
     // example(&bsl::example_remove_const_overview, "example_remove_const_overview");
     // example(&bsl::example_remove_pointer_overview, "example_remove_pointer_overview");

@@ -22,11 +22,11 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// @file max_align_t.hpp
+/// @file max_align.hpp
 ///
 
-#ifndef BSL_MAX_ALIGN_T_HPP
-#define BSL_MAX_ALIGN_T_HPP
+#ifndef BSL_MAX_ALIGN_HPP
+#define BSL_MAX_ALIGN_HPP
 
 #include "cstdint.hpp"
 

@@ -21,46 +21,29 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
-///
-/// @file new.hpp
-///
 
-#ifndef BSL_NEW_HPP
-#define BSL_NEW_HPP
+#include <bsl/nonesuch.hpp>
+#include <bsl/is_empty.hpp>
 
-#include "cstdint.hpp" 
-#include "discard.hpp"
+#include <bsl/ut.hpp>
 
 /// <!-- description -->
-///   @brief This function implements the placement new operator. Note that
-///     this function is passed a count and pointer, both of which are ignored.
-///   @include new/overview.cpp
-///
-///   SUPPRESSION: PRQA 2000 - false positive
-///   - We suppress this because M7-3-1 states that functions should not be
-///     defined in the global namespace. This is a false positive because
-///     C++ requires that the placement new function is defind in the global
-///     namespace.
-///
-///   SUPPRESSION: PRQA 2000 - false positive
-///   - We suppress this because M0-1-10 states that functions should be used
-///     if they are defined. This function is used by bsl::result and others,
-///     but PRQA is not able to detect this.
+///   @brief Main function for this unit test. If a call to ut_check() fails
+///     the application will fast fail. If all calls to ut_check() pass, this
+///     function will successfully return with bsl::exit_success.
 ///
 /// <!-- contracts -->
 ///   @pre none
 ///   @post none
 ///
 /// <!-- inputs/outputs -->
-///   @param count ignored
-///   @param ptr the ptr to return
-///   @return returns ptr
+///   @return Always returns bsl::exit_success.
 ///
-constexpr void *
-operator new(bsl::uintmax count, void *const ptr) noexcept    // PRQA S 2000, 1503
+bsl::exit_code
+main()
 {
-    bsl::discard(count);
-    return ptr;
-}
+    using namespace bsl;
+    static_assert(is_empty<nonesuch>::value);
 
-#endif
+    return bsl::ut_success();
+}

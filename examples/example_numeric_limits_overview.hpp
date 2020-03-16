@@ -21,46 +21,29 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
-///
-/// @file new.hpp
-///
 
-#ifndef BSL_NEW_HPP
-#define BSL_NEW_HPP
+#ifndef EXAMPLE_NUMERIC_LIMITS_OVERVIEW_HPP
+#define EXAMPLE_NUMERIC_LIMITS_OVERVIEW_HPP
 
-#include "cstdint.hpp" 
-#include "discard.hpp"
+#include <bsl/numeric_limits.hpp>
+#include <bsl/print.hpp>
 
-/// <!-- description -->
-///   @brief This function implements the placement new operator. Note that
-///     this function is passed a count and pointer, both of which are ignored.
-///   @include new/overview.cpp
-///
-///   SUPPRESSION: PRQA 2000 - false positive
-///   - We suppress this because M7-3-1 states that functions should not be
-///     defined in the global namespace. This is a false positive because
-///     C++ requires that the placement new function is defind in the global
-///     namespace.
-///
-///   SUPPRESSION: PRQA 2000 - false positive
-///   - We suppress this because M0-1-10 states that functions should be used
-///     if they are defined. This function is used by bsl::result and others,
-///     but PRQA is not able to detect this.
-///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
-///
-/// <!-- inputs/outputs -->
-///   @param count ignored
-///   @param ptr the ptr to return
-///   @return returns ptr
-///
-constexpr void *
-operator new(bsl::uintmax count, void *const ptr) noexcept    // PRQA S 2000, 1503
+namespace bsl
 {
-    bsl::discard(count);
-    return ptr;
+    /// <!-- description -->
+    ///   @brief Provides the example's main function
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    inline void
+    example_numeric_limits_overview() noexcept
+    {
+        if (bsl::numeric_limits<bool>::is_integer) {
+            bsl::print("success\n");
+        }
+    }
 }
 
 #endif
