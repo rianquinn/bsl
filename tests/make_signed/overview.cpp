@@ -51,6 +51,6 @@ main()
     static_assert(is_same<make_signed_t<bsl::uint32 const>, bsl::int32 const>::value);
     static_assert(is_same<make_signed_t<bsl::uint64>, bsl::int64>::value);
     static_assert(is_same<make_signed_t<bsl::uint64 const>, bsl::int64 const>::value);
-\
+
     return bsl::ut_success();
 }

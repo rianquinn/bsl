@@ -22,10 +22,10 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef EXAMPLE_MOVE_OVERVIEW_HPP
-#define EXAMPLE_MOVE_OVERVIEW_HPP
+#ifndef EXAMPLE_MOVE_IF_NOEXCEPT_OVERVIEW_HPP
+#define EXAMPLE_MOVE_IF_NOEXCEPT_OVERVIEW_HPP
 
-#include <bsl/move.hpp>
+#include <bsl/move_if_noexcept.hpp>
 #include <bsl/print.hpp>
 
 namespace bsl
@@ -38,10 +38,10 @@ namespace bsl
     ///   @post none
     ///
     inline void
-    example_move_overview() noexcept
+    example_move_if_noexcept_overview() noexcept
     {
         bool val1{true};
-        bool &&val2{bsl::move(val1)};
+        bool &&val2{bsl::move_if_noexcept(val1)};
 
         if (val2) {
             bsl::print("success\n");

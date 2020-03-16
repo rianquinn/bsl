@@ -133,6 +133,9 @@ add_subdirectory(is_void)
 add_subdirectory(is_volatile)
 add_subdirectory(make_signed)
 add_subdirectory(make_unsigned)
+add_subdirectory(move)
+add_subdirectory(move_if_noexcept)
+add_subdirectory(nonesuch)
 
 
 

@@ -71,10 +71,10 @@ main()
 {
     using namespace bsl;
 
-    static_assert(is_unbounded_array<bool[]>::value);              // NOLINT
-    static_assert(is_unbounded_array<bool[][1]>::value);           // NOLINT
-    static_assert(is_unbounded_array<bool const[]>::value);        // NOLINT
-    static_assert(is_unbounded_array<bool const[][1]>::value);     // NOLINT
+    static_assert(is_unbounded_array<bool[]>::value);             // NOLINT
+    static_assert(is_unbounded_array<bool[][1]>::value);          // NOLINT
+    static_assert(is_unbounded_array<bool const[]>::value);       // NOLINT
+    static_assert(is_unbounded_array<bool const[][1]>::value);    // NOLINT
 
     static_assert(!is_unbounded_array<bool>::value);
     static_assert(!is_unbounded_array<bool const>::value);

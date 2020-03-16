@@ -46,7 +46,7 @@ namespace bsl
     ///
     template<typename T>
     class is_trivially_destructible final :
-        public bool_constant<is_destructible<T>::value && __has_trivial_destructor(T)>
+        public bool_constant<is_destructible<T>::value &&__has_trivial_destructor(T)>
     {};
 }
 

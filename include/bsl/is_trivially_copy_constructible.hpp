@@ -47,7 +47,8 @@ namespace bsl
     ///
     template<typename T>
     class is_trivially_copy_constructible final :
-        public bool_constant<__is_trivially_constructible(T, add_lvalue_reference_t<add_const_t<T>>)>
+        public bool_constant<__is_trivially_constructible(
+            T, add_lvalue_reference_t<add_const_t<T>>)>
     {};
 }
 

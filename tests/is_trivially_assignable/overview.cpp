@@ -333,7 +333,8 @@ main()
     static_assert(!is_trivially_assignable<myclass_copy_only, myclass_copy_only *>::value);
     static_assert(!is_trivially_assignable<myclass_copy_only, myclass_copy_only const *>::value);
     static_assert(!is_trivially_assignable<myclass_copy_only, myclass_copy_only *const>::value);
-    static_assert(!is_trivially_assignable<myclass_copy_only, myclass_copy_only const *const>::value);
+    static_assert(
+        !is_trivially_assignable<myclass_copy_only, myclass_copy_only const *const>::value);
 
     static_assert(!is_trivially_assignable<myclass_copy_only &, myclass_copy_only>::value);
     static_assert(is_trivially_assignable<myclass_copy_only &, myclass_copy_only const>::value);
@@ -352,7 +353,8 @@ main()
     static_assert(!is_trivially_assignable<myclass_copy_only &&, myclass_copy_only &>::value);
     static_assert(!is_trivially_assignable<myclass_copy_only &&, myclass_copy_only &&>::value);
     static_assert(!is_trivially_assignable<myclass_copy_only &&, myclass_copy_only const &>::value);
-    static_assert(!is_trivially_assignable<myclass_copy_only &&, myclass_copy_only const &&>::value);
+    static_assert(
+        !is_trivially_assignable<myclass_copy_only &&, myclass_copy_only const &&>::value);
     static_assert(!is_trivially_assignable<myclass_copy_only &&, myclass_copy_only *>::value);
     static_assert(!is_trivially_assignable<myclass_copy_only &&, myclass_copy_only const *>::value);
     static_assert(!is_trivially_assignable<myclass_copy_only &&, myclass_copy_only *const>::value);
@@ -368,7 +370,8 @@ main()
     static_assert(!is_trivially_assignable<myclass_move_only, myclass_move_only *>::value);
     static_assert(!is_trivially_assignable<myclass_move_only, myclass_move_only const *>::value);
     static_assert(!is_trivially_assignable<myclass_move_only, myclass_move_only *const>::value);
-    static_assert(!is_trivially_assignable<myclass_move_only, myclass_move_only const *const>::value);
+    static_assert(
+        !is_trivially_assignable<myclass_move_only, myclass_move_only const *const>::value);
 
     static_assert(is_trivially_assignable<myclass_move_only &, myclass_move_only>::value);
     static_assert(!is_trivially_assignable<myclass_move_only &, myclass_move_only const>::value);
@@ -387,7 +390,8 @@ main()
     static_assert(!is_trivially_assignable<myclass_move_only &&, myclass_move_only &>::value);
     static_assert(!is_trivially_assignable<myclass_move_only &&, myclass_move_only &&>::value);
     static_assert(!is_trivially_assignable<myclass_move_only &&, myclass_move_only const &>::value);
-    static_assert(!is_trivially_assignable<myclass_move_only &&, myclass_move_only const &&>::value);
+    static_assert(
+        !is_trivially_assignable<myclass_move_only &&, myclass_move_only const &&>::value);
     static_assert(!is_trivially_assignable<myclass_move_only &&, myclass_move_only *>::value);
     static_assert(!is_trivially_assignable<myclass_move_only &&, myclass_move_only const *>::value);
     static_assert(!is_trivially_assignable<myclass_move_only &&, myclass_move_only *const>::value);
@@ -403,7 +407,8 @@ main()
     static_assert(!is_trivially_assignable<myclass_no_assign, myclass_no_assign *>::value);
     static_assert(!is_trivially_assignable<myclass_no_assign, myclass_no_assign const *>::value);
     static_assert(!is_trivially_assignable<myclass_no_assign, myclass_no_assign *const>::value);
-    static_assert(!is_trivially_assignable<myclass_no_assign, myclass_no_assign const *const>::value);
+    static_assert(
+        !is_trivially_assignable<myclass_no_assign, myclass_no_assign const *const>::value);
 
     static_assert(!is_trivially_assignable<myclass_no_assign &, myclass_no_assign>::value);
     static_assert(!is_trivially_assignable<myclass_no_assign &, myclass_no_assign const>::value);
@@ -422,7 +427,8 @@ main()
     static_assert(!is_trivially_assignable<myclass_no_assign &&, myclass_no_assign &>::value);
     static_assert(!is_trivially_assignable<myclass_no_assign &&, myclass_no_assign &&>::value);
     static_assert(!is_trivially_assignable<myclass_no_assign &&, myclass_no_assign const &>::value);
-    static_assert(!is_trivially_assignable<myclass_no_assign &&, myclass_no_assign const &&>::value);
+    static_assert(
+        !is_trivially_assignable<myclass_no_assign &&, myclass_no_assign const &&>::value);
     static_assert(!is_trivially_assignable<myclass_no_assign &&, myclass_no_assign *>::value);
     static_assert(!is_trivially_assignable<myclass_no_assign &&, myclass_no_assign const *>::value);
     static_assert(!is_trivially_assignable<myclass_no_assign &&, myclass_no_assign *const>::value);
@@ -460,7 +466,8 @@ main()
     static_assert(!is_trivially_assignable<myclass_except &&, myclass_except *>::value);
     static_assert(!is_trivially_assignable<myclass_except &&, myclass_except const *>::value);
     static_assert(!is_trivially_assignable<myclass_except &&, myclass_except *const>::value);
-    static_assert(!is_trivially_assignable<myclass_except &&, myclass_no_assign const *const>::value);
+    static_assert(
+        !is_trivially_assignable<myclass_except &&, myclass_no_assign const *const>::value);
 
     return bsl::ut_success();
 }

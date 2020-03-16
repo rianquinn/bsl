@@ -22,31 +22,28 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef EXAMPLE_MOVE_OVERVIEW_HPP
-#define EXAMPLE_MOVE_OVERVIEW_HPP
+#include <bsl/nonesuch.hpp>
+#include <bsl/is_empty.hpp>
 
-#include <bsl/move.hpp>
-#include <bsl/print.hpp>
+#include <bsl/ut.hpp>
 
-namespace bsl
+/// <!-- description -->
+///   @brief Main function for this unit test. If a call to ut_check() fails
+///     the application will fast fail. If all calls to ut_check() pass, this
+///     function will successfully return with bsl::exit_success.
+///
+/// <!-- contracts -->
+///   @pre none
+///   @post none
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+bsl::exit_code
+main()
 {
-    /// <!-- description -->
-    ///   @brief Provides the example's main function
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
-    inline void
-    example_move_overview() noexcept
-    {
-        bool val1{true};
-        bool &&val2{bsl::move(val1)};
+    using namespace bsl;
+    static_assert(is_empty<nonesuch>::value);
 
-        if (val2) {
-            bsl::print("success\n");
-        }
-    }
+    return bsl::ut_success();
 }
-
-#endif
