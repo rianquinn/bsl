@@ -28,25 +28,25 @@
 #ifndef BSL_IS_STANDARD_LAYOUT_HPP
 #define BSL_IS_STANDARD_LAYOUT_HPP
 
+#include "bool_constant.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_standard_layout
     ///
     /// <!-- description -->
-    ///   @brief If the provided type has a standard layout, provides the member
-    ///     constant value equal to true. Otherwise the member constant value
-    ///     is false.
-    ///   @include is_standard_layout/overview.cpp
+    ///   @brief If the provided type is a standard layout type, provides the
+    ///     member constant value equal to true. Otherwise the member constant
+    ///     value is false.
+    ///   @include example_is_standard_layout_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_standard_layout final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_standard_layout(T)};
-    };
+    class is_standard_layout final :    // --
+        public bool_constant<__is_standard_layout(T)>
+    {};
 }
 
 #endif

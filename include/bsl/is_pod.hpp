@@ -28,6 +28,8 @@
 #ifndef BSL_IS_POD_HPP
 #define BSL_IS_POD_HPP
 
+#include "bool_constant.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_pod
@@ -36,17 +38,15 @@ namespace bsl
     ///   @brief If the provided type is a POD type, provides the member
     ///     constant value equal to true. Otherwise the member constant value
     ///     is false.
-    ///   @include is_pod/overview.cpp
+    ///   @include example_is_pod_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_pod final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_pod(T)};
-    };
+    class is_pod final :    // --
+        public bool_constant<__is_pod(T)>
+    {};
 }
 
 #endif

@@ -26,6 +26,7 @@
 #define EXAMPLE_IS_SAME_OVERVIEW_HPP
 
 #include <bsl/is_same.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -39,9 +40,9 @@ namespace bsl
     inline void
     example_is_same_overview() noexcept
     {
-        static_assert(bsl::is_same<bool, bool>::value);
-        static_assert(!bsl::is_same<bool, void>::value);
-        static_assert(!bsl::is_same<bool, bool const>::value);
+        if (bsl::is_same<bool, bool>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

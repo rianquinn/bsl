@@ -44,7 +44,7 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class is_class final : // --
+    class is_class final :    // --
         public bool_constant<__is_class(T)>
     {};
 }

@@ -49,8 +49,8 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class is_nothrow_default_constructible final : // --
-        public bool_constant<__is_nothrow_constructible(T)> // PRQA S 0605
+    class is_nothrow_default_constructible final :    // --
+        public bool_constant<__is_nothrow_constructible(T)>    // PRQA S 0605
     {};
 }
 

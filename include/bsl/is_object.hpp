@@ -28,8 +28,11 @@
 #ifndef BSL_IS_OBJECT_HPP
 #define BSL_IS_OBJECT_HPP
 
-#include "is_scalar.hpp"
+#include "bool_constant.hpp"
+#include "is_array.hpp"
 #include "is_class.hpp"
+#include "is_scalar.hpp"
+#include "is_union.hpp"
 
 namespace bsl
 {
@@ -39,17 +42,19 @@ namespace bsl
     ///   @brief If the provided type is an object type, provides the member
     ///     constant value equal to true. Otherwise the member constant value
     ///     is false.
-    ///   @include is_object/overview.cpp
+    ///   @include example_is_object_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_object final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{is_scalar<T>::value || is_class<T>::value};
-    };
+    class is_object final :
+        public bool_constant<         // --
+            is_scalar<T>::value ||    // --
+            is_array<T>::value ||     // --
+            is_union<T>::value ||     // --
+            is_class<T>::value>
+    {};
 }
 
 #endif

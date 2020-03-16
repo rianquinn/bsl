@@ -44,7 +44,7 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class is_enum final : // --
+    class is_enum final :    // --
         public bool_constant<__is_enum(T)>
     {};
 }

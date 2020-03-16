@@ -44,7 +44,7 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class is_aggregate final : // --
+    class is_aggregate final :    // --
         public bool_constant<__is_aggregate(T)>
     {};
 }

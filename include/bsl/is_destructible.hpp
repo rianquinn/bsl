@@ -86,7 +86,7 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class is_destructible final : // --
+    class is_destructible final :    // --
         public bool_constant<details::check_is_destructible<T>()>
     {};
 }

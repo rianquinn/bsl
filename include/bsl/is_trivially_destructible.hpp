@@ -28,6 +28,7 @@
 #ifndef BSL_IS_TRIVIALLY_DESTRUCTIBLE_HPP
 #define BSL_IS_TRIVIALLY_DESTRUCTIBLE_HPP
 
+#include "bool_constant.hpp"
 #include "is_destructible.hpp"
 
 namespace bsl
@@ -38,17 +39,15 @@ namespace bsl
     ///   @brief If the provided type is trivially destructible, provides the
     ///     member constant value equal to true. Otherwise the member constant
     ///     value is false.
-    ///   @include is_trivially_destructible/overview.cpp
+    ///   @include example_is_trivially_destructible_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_trivially_destructible final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{is_destructible<T>::value && __has_trivial_destructor(T)};
-    };
+    class is_trivially_destructible final :
+        public bool_constant<is_destructible<T>::value && __has_trivial_destructor(T)>
+    {};
 }
 
 #endif

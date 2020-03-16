@@ -39,7 +39,7 @@ namespace bsl
     ///   @brief If the provided type is an signed type (taking into account
     ///     const qualifications), Provides the member typedef type which is
     ///     the same as T, except that the type is unsigned
-    ///   @include make_unsigned/overview.cpp
+    ///   @include example_make_unsigned_overview.hpp
     ///
     /// <!-- notes -->
     ///   @note We only support the cstdint.hpp basic fixed-width types

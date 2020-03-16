@@ -44,7 +44,7 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T, typename... Args>
-    class is_constructible final : // --
+    class is_constructible final :    // --
         public bool_constant<__is_constructible(T, Args...)>
     {};
 }

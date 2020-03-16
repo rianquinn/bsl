@@ -28,28 +28,25 @@
 #ifndef BSL_IS_TRIVIAL_HPP
 #define BSL_IS_TRIVIAL_HPP
 
+#include "bool_constant.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_trivial
     ///
     /// <!-- description -->
-    ///   @brief If the provided type is a trivial type, provides the member
-    ///     constant value equal to true. Otherwise the member constant value
-    ///     is false.
-    ///   @include example_class_pod.hpp
-    ///   @include example_class_base.hpp
-    ///   @include example_class_subclass.hpp
-    ///   @include is_trivial/overview.cpp
+    ///   @brief If the provided type is a trivial type, provides the
+    ///     member constant value equal to true. Otherwise the member constant
+    ///     value is false.
+    ///   @include example_is_trivial_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_trivial final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{__is_trivial(T)};
-    };
+    class is_trivial final :    // --
+        public bool_constant<__is_trivial(T)>
+    {};
 }
 
 #endif

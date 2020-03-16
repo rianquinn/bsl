@@ -145,29 +145,41 @@
 #include "example_is_nothrow_move_constructible_overview.hpp"
 #include "example_is_nothrow_swappable_overview.hpp"
 #include "example_is_nothrow_swappable_with_overview.hpp"
-// // #include "example_is_nullptr_overview.hpp"
-// // #include "example_is_object_overview.hpp"
-// // #include "example_is_pod_overview.hpp"
-// // #include "example_is_pointer_overview.hpp"
-// // #include "example_is_reference_overview.hpp"
-// #include "example_is_rvalue_reference_overview.hpp"
-// // #include "example_is_same_overview.hpp"
-// // #include "example_is_scalar_overview.hpp"
-// // #include "example_is_signed_overview.hpp"
-// // #include "example_is_standard_layout_overview.hpp"
-// // #include "example_is_trivial_overview.hpp"
-// // #include "example_is_unsigned_overview.hpp"
-// // #include "example_is_void_overview.hpp"
-// // #include "example_make_signed_overview.hpp"
-// // #include "example_make_unsigned_overview.hpp"
-// // #include "example_move_overview.hpp"
+#include "example_is_null_pointer_overview.hpp"
+#include "example_is_object_overview.hpp"
+#include "example_is_pod_overview.hpp"
+#include "example_is_pointer_overview.hpp"
+#include "example_is_polymorphic_overview.hpp"
+#include "example_is_reference_overview.hpp"
+#include "example_is_reference_wrapper_overview.hpp"
+#include "example_is_rvalue_reference_overview.hpp"
+#include "example_is_same_overview.hpp"
+#include "example_is_scalar_overview.hpp"
+#include "example_is_signed_overview.hpp"
+#include "example_is_standard_layout_overview.hpp"
+#include "example_is_trivial_overview.hpp"
+#include "example_is_trivially_assignable_overview.hpp"
+#include "example_is_trivially_constructible_overview.hpp"
+#include "example_is_trivially_copy_assignable_overview.hpp"
+#include "example_is_trivially_copy_constructible_overview.hpp"
+#include "example_is_trivially_copyable_overview.hpp"
+#include "example_is_trivially_default_constructible_overview.hpp"
+#include "example_is_trivially_destructible_overview.hpp"
+#include "example_is_trivially_move_assignable_overview.hpp"
+#include "example_is_trivially_move_constructible_overview.hpp"
+#include "example_is_unbounded_array_overview.hpp"
+#include "example_is_unsigned_overview.hpp"
+#include "example_is_void_overview.hpp"
+#include "example_make_signed_overview.hpp"
+#include "example_make_unsigned_overview.hpp"
+// #include "example_move_overview.hpp"
 // #include "example_reference_wrapper_overview.hpp"
-// // #include "example_remove_const_overview.hpp"
-// // #include "example_remove_pointer_overview.hpp"
-// // #include "example_remove_reference_overview.hpp"
+// #include "example_remove_const_overview.hpp"
+// #include "example_remove_pointer_overview.hpp"
+// #include "example_remove_reference_overview.hpp"
 // #include "example_swap_overview.hpp"
-// // #include "example_type_identity_overview.hpp"
-// // #include "example_underlying_type_overview.hpp"
+// #include "example_type_identity_overview.hpp"
+// #include "example_underlying_type_overview.hpp"
 
 namespace
 {
@@ -332,29 +344,41 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_is_nothrow_move_constructible_overview, "example_is_nothrow_move_constructible_overview");
     example(&bsl::example_is_nothrow_swappable_overview, "example_is_nothrow_swappable_overview");
     example(&bsl::example_is_nothrow_swappable_with_overview, "example_is_nothrow_swappable_with_overview");
-    // // example(&bsl::example_is_nullptr_overview, "example_is_nullptr_overview");
-    // // example(&bsl::example_is_object_overview, "example_is_object_overview");
-    // // example(&bsl::example_is_pod_overview, "example_is_pod_overview");
-    // // example(&bsl::example_is_pointer_overview, "example_is_pointer_overview");
-    // // example(&bsl::example_is_reference_overview, "example_is_reference_overview");
-    // example(&bsl::example_is_rvalue_reference_overview, "example_is_rvalue_reference_overview");
-    // // example(&bsl::example_is_same_overview, "example_is_same_overview");
-    // // example(&bsl::example_is_scalar_overview, "example_is_scalar_overview");
-    // // example(&bsl::example_is_signed_overview, "example_is_signed_overview");
-    // // example(&bsl::example_is_standard_layout_overview, "example_is_standard_layout_overview");
-    // // example(&bsl::example_is_trivial_overview, "example_is_trivial_overview");
-    // // example(&bsl::example_is_unsigned_overview, "example_is_unsigned_overview");
-    // // example(&bsl::example_is_void_overview, "example_is_void_overview");
-    // // example(&bsl::example_make_signed_overview, "example_make_signed_overview");
-    // // example(&bsl::example_make_unsigned_overview, "example_make_unsigned_overview");
-    // // example(&bsl::example_move_overview, "example_move_overview");
+    example(&bsl::example_is_null_pointer_overview, "example_is_null_pointer_overview");
+    example(&bsl::example_is_object_overview, "example_is_object_overview");
+    example(&bsl::example_is_pod_overview, "example_is_pod_overview");
+    example(&bsl::example_is_pointer_overview, "example_is_pointer_overview");
+    example(&bsl::example_is_polymorphic_overview, "example_is_polymorphic_overview");
+    example(&bsl::example_is_reference_overview, "example_is_reference_overview");
+    example(&bsl::example_is_reference_wrapper_overview, "example_is_reference_wrapper_overview");
+    example(&bsl::example_is_rvalue_reference_overview, "example_is_rvalue_reference_overview");
+    example(&bsl::example_is_same_overview, "example_is_same_overview");
+    example(&bsl::example_is_scalar_overview, "example_is_scalar_overview");
+    example(&bsl::example_is_signed_overview, "example_is_signed_overview");
+    example(&bsl::example_is_standard_layout_overview, "example_is_standard_layout_overview");
+    example(&bsl::example_is_trivial_overview, "example_is_trivial_overview");
+    example(&bsl::example_is_trivially_assignable_overview, "example_is_trivially_assignable_overview");
+    example(&bsl::example_is_trivially_constructible_overview, "example_is_trivially_constructible_overview");
+    example(&bsl::example_is_trivially_copy_assignable_overview, "example_is_trivially_copy_assignable_overview");
+    example(&bsl::example_is_trivially_copy_constructible_overview, "example_is_trivially_copy_constructible_overview");
+    example(&bsl::example_is_trivially_copyable_overview, "example_is_trivially_copyable_overview");
+    example(&bsl::example_is_trivially_default_constructible_overview, "example_is_trivially_default_constructible_overview");
+    example(&bsl::example_is_trivially_destructible_overview, "example_is_trivially_destructible_overview");
+    example(&bsl::example_is_trivially_move_assignable_overview, "example_is_trivially_move_assignable_overview");
+    example(&bsl::example_is_trivially_move_constructible_overview, "example_is_trivially_move_constructible_overview");
+    example(&bsl::example_is_unbounded_array_overview, "example_is_unbounded_array_overview");
+    example(&bsl::example_is_unsigned_overview, "example_is_unsigned_overview");
+    example(&bsl::example_is_void_overview, "example_is_void_overview");
+    example(&bsl::example_make_signed_overview, "example_make_signed_overview");
+    example(&bsl::example_make_unsigned_overview, "example_make_unsigned_overview");
+    // example(&bsl::example_move_overview, "example_move_overview");
     // example(&bsl::example_reference_wrapper_overview, "example_reference_wrapper_overview");
-    // // example(&bsl::example_remove_const_overview, "example_remove_const_overview");
-    // // example(&bsl::example_remove_pointer_overview, "example_remove_pointer_overview");
-    // // example(&bsl::example_remove_reference_overview, "example_remove_reference_overview");
+    // example(&bsl::example_remove_const_overview, "example_remove_const_overview");
+    // example(&bsl::example_remove_pointer_overview, "example_remove_pointer_overview");
+    // example(&bsl::example_remove_reference_overview, "example_remove_reference_overview");
     // example(&bsl::example_swap_overview, "example_swap_overview");
-    // // example(&bsl::example_type_identity_overview, "example_type_identity_overview");
-    // // example(&bsl::example_underlying_type_overview, "example_underlying_type_overview");
+    // example(&bsl::example_type_identity_overview, "example_type_identity_overview");
+    // example(&bsl::example_underlying_type_overview, "example_underlying_type_overview");
 
     // clang-format on
 

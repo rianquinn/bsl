@@ -44,7 +44,7 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T, typename U>
-    class is_assignable final : // --
+    class is_assignable final :    // --
         public bool_constant<__is_assignable(T, U)>
     {};
 }

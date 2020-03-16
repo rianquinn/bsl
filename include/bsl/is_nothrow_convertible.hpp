@@ -91,7 +91,7 @@ namespace bsl
         ///
         template<typename From, typename To>
         auto test_is_nothrow_convertible2(bsl::int32 ignored) noexcept -> bool_constant<
-            noexcept(declval<void(&)(To) noexcept>()(declval<From>()))>;    // NOLINT
+            noexcept(declval<void (&)(To) noexcept>()(declval<From>()))>;    // NOLINT
 
         /// <!-- description -->
         ///   @brief Tests whether or not the provided to can be converted from
@@ -152,7 +152,7 @@ namespace bsl
     ///   @tparam To the type to convert from
     ///
     template<typename From, typename To>
-    class is_nothrow_convertible final : // --
+    class is_nothrow_convertible final :    // --
         public bool_constant<details::check_is_nothrow_convertible<From, To>()>
     {};
 }

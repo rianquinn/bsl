@@ -28,7 +28,10 @@
 #ifndef BSL_IS_SIGNED_HPP
 #define BSL_IS_SIGNED_HPP
 
+#include "bool_constant.hpp"
 #include "cstdint.hpp"
+#include "is_floating_point.hpp"
+#include "true_type.hpp"
 
 namespace bsl
 {
@@ -38,7 +41,7 @@ namespace bsl
     ///   @brief If the provided type is a signed type (taking into account
     ///     const qualifications), provides the member constant value
     ///     equal to true. Otherwise the member constant value is false.
-    ///   @include is_signed/overview.cpp
+    ///   @include example_is_signed_overview.hpp
     ///
     /// <!-- notes -->
     ///   @note We only support the cstdint.hpp basic fixed-width types
@@ -50,69 +53,43 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_signed final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{false};
-    };
+    class is_signed final :    // --
+        public bool_constant<is_floating_point<T>::value>
+    {};
 
     /// @cond --
 
     template<>
-    struct is_signed<bsl::int8> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_signed<bsl::int8> final : public true_type
+    {};
 
     template<>
-    struct is_signed<bsl::int8 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_signed<bsl::int8 const> final : public true_type
+    {};
 
     template<>
-    struct is_signed<bsl::int16> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_signed<bsl::int16> final : public true_type
+    {};
 
     template<>
-    struct is_signed<bsl::int16 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_signed<bsl::int16 const> final : public true_type
+    {};
 
     template<>
-    struct is_signed<bsl::int32> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_signed<bsl::int32> final : public true_type
+    {};
 
     template<>
-    struct is_signed<bsl::int32 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_signed<bsl::int32 const> final : public true_type
+    {};
 
     template<>
-    struct is_signed<bsl::int64> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_signed<bsl::int64> final : public true_type
+    {};
 
     template<>
-    struct is_signed<bsl::int64 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_signed<bsl::int64 const> final : public true_type
+    {};
 
     /// @endcond --
 }

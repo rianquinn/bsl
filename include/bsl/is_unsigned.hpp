@@ -29,16 +29,18 @@
 #define BSL_IS_UNSIGNED_HPP
 
 #include "cstdint.hpp"
+#include "true_type.hpp"
+#include "false_type.hpp"
 
 namespace bsl
 {
     /// @class bsl::is_unsigned
     ///
     /// <!-- description -->
-    ///   @brief If the provided type is a signed type (taking into account
+    ///   @brief If the provided type is a unsigned type (taking into account
     ///     const qualifications), provides the member constant value
     ///     equal to true. Otherwise the member constant value is false.
-    ///   @include is_unsigned/overview.cpp
+    ///   @include example_is_unsigned_overview.hpp
     ///
     /// <!-- notes -->
     ///   @note We only support the cstdint.hpp basic fixed-width types
@@ -50,69 +52,50 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_unsigned final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{false};
-    };
+    class is_unsigned final : public false_type
+    {};
 
     /// @cond --
 
     template<>
-    struct is_unsigned<bsl::uint8> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_unsigned<bool> final : public true_type
+    {};
 
     template<>
-    struct is_unsigned<bsl::uint8 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_unsigned<bool const> final : public true_type
+    {};
 
     template<>
-    struct is_unsigned<bsl::uint16> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_unsigned<bsl::uint8> final : public true_type
+    {};
 
     template<>
-    struct is_unsigned<bsl::uint16 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_unsigned<bsl::uint8 const> final : public true_type
+    {};
 
     template<>
-    struct is_unsigned<bsl::uint32> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_unsigned<bsl::uint16> final : public true_type
+    {};
 
     template<>
-    struct is_unsigned<bsl::uint32 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_unsigned<bsl::uint16 const> final : public true_type
+    {};
 
     template<>
-    struct is_unsigned<bsl::uint64> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_unsigned<bsl::uint32> final : public true_type
+    {};
 
     template<>
-    struct is_unsigned<bsl::uint64 const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_unsigned<bsl::uint32 const> final : public true_type
+    {};
+
+    template<>
+    class is_unsigned<bsl::uint64> final : public true_type
+    {};
+
+    template<>
+    class is_unsigned<bsl::uint64 const> final : public true_type
+    {};
 
     /// @endcond --
 }

@@ -28,7 +28,8 @@
 #ifndef BSL_IS_SCALAR_HPP
 #define BSL_IS_SCALAR_HPP
 
-#include "is_integral.hpp"
+#include "bool_constant.hpp"
+#include "is_arithmetic.hpp"
 #include "is_enum.hpp"
 #include "is_pointer.hpp"
 #include "is_member_pointer.hpp"
@@ -42,21 +43,20 @@ namespace bsl
     ///   @brief If the provided type is a scalar type, provides the member
     ///     constant value equal to true. Otherwise the member constant value
     ///     is false.
-    ///   @include is_scalar/overview.cpp
+    ///   @include example_is_scalar_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_scalar final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{is_integral<T>::value ||          // --
-                                    is_enum<T>::value ||              // --
-                                    is_pointer<T>::value ||           // --
-                                    is_member_pointer<T>::value ||    // --
-                                    is_null_pointer<T>::value};
-    };
+    class is_scalar final :
+        public bool_constant<                 // --
+            is_arithmetic<T>::value ||        // --
+            is_enum<T>::value ||              // --
+            is_pointer<T>::value ||           // --
+            is_member_pointer<T>::value ||    // --
+            is_null_pointer<T>::value>
+    {};
 }
 
 #endif

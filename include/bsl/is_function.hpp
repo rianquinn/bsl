@@ -46,7 +46,7 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class is_function final : // --
+    class is_function final :    // --
         public bool_constant<(!is_const<T const>::value) && (!is_reference<T>::value)>
     {};
 }

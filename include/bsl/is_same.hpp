@@ -28,35 +28,31 @@
 #ifndef BSL_IS_SAME_HPP
 #define BSL_IS_SAME_HPP
 
+#include "true_type.hpp"
+#include "false_type.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_same
     ///
     /// <!-- description -->
-    ///   @brief If LHS and RHS name the same type (taking into account
-    ///     const/volatile qualifications), provides the member constant value
-    ///     equal to true. Otherwise the member constant value is false.
-    ///   @include is_same/overview.cpp
+    ///   @brief If the provided types are the same, provides the member
+    ///     constant value equal to true. Otherwise the member constant value
+    ///     is false.
+    ///   @include example_is_same_overview.hpp
     ///
     /// <!-- template parameters -->
-    ///   @tparam LHS the left hand side of the comparison
-    ///   @tparam RHS the right hand side of the comparison
+    ///   @tparam T the type to query
     ///
-    template<typename LHS, typename RHS>
-    struct is_same final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{false};
-    };
+    template<typename T, typename U>
+    class is_same final : public false_type
+    {};
 
     /// @cond --
 
     template<typename T>
-    struct is_same<T, T> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_same<T, T> final : public true_type
+    {};
 
     /// @endcond --
 }

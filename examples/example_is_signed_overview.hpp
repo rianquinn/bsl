@@ -25,9 +25,8 @@
 #ifndef EXAMPLE_IS_SIGNED_OVERVIEW_HPP
 #define EXAMPLE_IS_SIGNED_OVERVIEW_HPP
 
-#include <bsl/cstdint.hpp>
 #include <bsl/is_signed.hpp>
-#include <bsl/make_signed.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -41,84 +40,9 @@ namespace bsl
     inline void
     example_is_signed_overview() noexcept
     {
-        static_assert(bsl::is_signed<bsl::int8>::value);
-        static_assert(bsl::is_signed<bsl::int16>::value);
-        static_assert(bsl::is_signed<bsl::int32>::value);
-        static_assert(bsl::is_signed<bsl::int64>::value);
-        static_assert(bsl::is_signed<bsl::int8 const>::value);
-        static_assert(bsl::is_signed<bsl::int16 const>::value);
-        static_assert(bsl::is_signed<bsl::int32 const>::value);
-        static_assert(bsl::is_signed<bsl::int64 const>::value);
-
-        static_assert(!bsl::is_signed<bsl::uint8>::value);
-        static_assert(!bsl::is_signed<bsl::uint16>::value);
-        static_assert(!bsl::is_signed<bsl::uint32>::value);
-        static_assert(!bsl::is_signed<bsl::uint64>::value);
-        static_assert(!bsl::is_signed<bsl::uint8 const>::value);
-        static_assert(!bsl::is_signed<bsl::uint16 const>::value);
-        static_assert(!bsl::is_signed<bsl::uint32 const>::value);
-        static_assert(!bsl::is_signed<bsl::uint64 const>::value);
-
-        static_assert(bsl::is_signed<bsl::int_least8>::value);
-        static_assert(bsl::is_signed<bsl::int_least16>::value);
-        static_assert(bsl::is_signed<bsl::int_least32>::value);
-        static_assert(bsl::is_signed<bsl::int_least64>::value);
-        static_assert(bsl::is_signed<bsl::int_least8 const>::value);
-        static_assert(bsl::is_signed<bsl::int_least16 const>::value);
-        static_assert(bsl::is_signed<bsl::int_least32 const>::value);
-        static_assert(bsl::is_signed<bsl::int_least64 const>::value);
-
-        static_assert(!bsl::is_signed<bsl::uint_least8>::value);
-        static_assert(!bsl::is_signed<bsl::uint_least16>::value);
-        static_assert(!bsl::is_signed<bsl::uint_least32>::value);
-        static_assert(!bsl::is_signed<bsl::uint_least64>::value);
-        static_assert(!bsl::is_signed<bsl::uint_least8 const>::value);
-        static_assert(!bsl::is_signed<bsl::uint_least16 const>::value);
-        static_assert(!bsl::is_signed<bsl::uint_least32 const>::value);
-        static_assert(!bsl::is_signed<bsl::uint_least64 const>::value);
-
-        static_assert(bsl::is_signed<bsl::int_fast8>::value);
-        static_assert(bsl::is_signed<bsl::int_fast16>::value);
-        static_assert(bsl::is_signed<bsl::int_fast32>::value);
-        static_assert(bsl::is_signed<bsl::int_fast64>::value);
-        static_assert(bsl::is_signed<bsl::int_fast8 const>::value);
-        static_assert(bsl::is_signed<bsl::int_fast16 const>::value);
-        static_assert(bsl::is_signed<bsl::int_fast32 const>::value);
-        static_assert(bsl::is_signed<bsl::int_fast64 const>::value);
-
-        static_assert(!bsl::is_signed<bsl::uint_fast8>::value);
-        static_assert(!bsl::is_signed<bsl::uint_fast16>::value);
-        static_assert(!bsl::is_signed<bsl::uint_fast32>::value);
-        static_assert(!bsl::is_signed<bsl::uint_fast64>::value);
-        static_assert(!bsl::is_signed<bsl::uint_fast8 const>::value);
-        static_assert(!bsl::is_signed<bsl::uint_fast16 const>::value);
-        static_assert(!bsl::is_signed<bsl::uint_fast32 const>::value);
-        static_assert(!bsl::is_signed<bsl::uint_fast64 const>::value);
-
-        static_assert(bsl::is_signed<bsl::intptr>::value);
-        static_assert(!bsl::is_signed<bsl::uintptr>::value);
-        static_assert(bsl::is_signed<bsl::intptr const>::value);
-        static_assert(!bsl::is_signed<bsl::uintptr const>::value);
-
-        static_assert(bsl::is_signed<bsl::intmax>::value);
-        static_assert(!bsl::is_signed<bsl::uintmax>::value);
-        static_assert(bsl::is_signed<bsl::intmax const>::value);
-        static_assert(!bsl::is_signed<bsl::uintmax const>::value);
-
-        static_assert(!bsl::is_signed<bool>::value);
-        static_assert(!bsl::is_signed<bool const>::value);
-
-        static_assert(!bsl::is_signed<void>::value);
-        static_assert(!bsl::is_signed<void const>::value);
-
-        static_assert(bsl::is_signed<bsl::make_signed_t<bsl::uint8>>::value);
-        static_assert(bsl::is_signed<bsl::make_signed_t<bsl::uint16>>::value);
-        static_assert(bsl::is_signed<bsl::make_signed_t<bsl::uint32>>::value);
-        static_assert(bsl::is_signed<bsl::make_signed_t<bsl::uint64>>::value);
-        static_assert(bsl::is_signed<bsl::make_signed_t<bsl::uint8 const>>::value);
-        static_assert(bsl::is_signed<bsl::make_signed_t<bsl::uint16 const>>::value);
-        static_assert(bsl::is_signed<bsl::make_signed_t<bsl::uint32 const>>::value);
-        static_assert(bsl::is_signed<bsl::make_signed_t<bsl::uint64 const>>::value);
+        if (bsl::is_signed<bsl::int32>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

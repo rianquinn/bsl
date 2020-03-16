@@ -33,6 +33,7 @@
 
 namespace bsl
 {
+    /// @brief reference_wrapper prototype
     template<typename T>
     class reference_wrapper;
 

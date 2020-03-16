@@ -72,7 +72,7 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class is_member_object_pointer final : // --
+    class is_member_object_pointer final :    // --
         public bool_constant<details::check_is_member_object_pointer<T>()>
     {};
 }

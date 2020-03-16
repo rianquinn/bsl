@@ -26,6 +26,7 @@
 #define EXAMPLE_IS_OBJECT_OVERVIEW_HPP
 
 #include <bsl/is_object.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -38,7 +39,11 @@ namespace bsl
     ///
     inline void
     example_is_object_overview() noexcept
-    {}
+    {
+        if (bsl::is_object<bool>::value) {
+            bsl::print("success\n");
+        }
+    }
 }
 
 #endif

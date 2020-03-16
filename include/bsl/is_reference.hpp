@@ -28,41 +28,35 @@
 #ifndef BSL_IS_REFERENCE_HPP
 #define BSL_IS_REFERENCE_HPP
 
+#include "true_type.hpp"
+#include "false_type.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_reference
     ///
     /// <!-- description -->
-    ///   @brief If the provided type is qualified as a reference, provides the
-    ///     member constant value equal to true. Otherwise the member constant
-    ///     value is false.
-    ///   @include is_reference/overview.cpp
+    ///   @brief If the provided type is a reference type (taking into account
+    ///     const qualifications), provides the member constant value
+    ///     equal to true. Otherwise the member constant value is false.
+    ///   @include example_is_reference_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_reference final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{false};
-    };
+    class is_reference final : public false_type
+    {};
 
     /// @cond --
 
     template<typename T>
-    struct is_reference<T &> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_reference<T &> final : public true_type
+    {};
 
     template<typename T>
-    struct is_reference<T &&> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_reference<T &&> final : public true_type
+    {};
 
     /// @endcond --
 }

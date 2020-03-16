@@ -52,12 +52,12 @@ namespace bsl
     /// @cond --
 
     template<typename T, typename U>
-    class is_member_function_pointer<T U::*> final : // --
+    class is_member_function_pointer<T U::*> final :    // --
         public bool_constant<is_function<T>::value>
     {};
 
     template<typename T, typename U>
-    class is_member_function_pointer<T U::*const> final : // --
+    class is_member_function_pointer<T U::*const> final :    // --
         public bool_constant<is_function<T>::value>
     {};
 

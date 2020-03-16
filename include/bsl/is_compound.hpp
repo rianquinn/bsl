@@ -45,7 +45,7 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class is_compound final : // --
+    class is_compound final :    // --
         public bool_constant<!is_fundamental<T>::value>
     {};
 }

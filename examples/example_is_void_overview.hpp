@@ -39,9 +39,9 @@ namespace bsl
     inline void
     example_is_void_overview() noexcept
     {
-        static_assert(bsl::is_void<void>::value);
-        static_assert(bsl::is_void<void const>::value);
-        static_assert(!bsl::is_void<bool>::value);
+        if (bsl::is_void<void>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

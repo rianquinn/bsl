@@ -25,9 +25,8 @@
 #ifndef EXAMPLE_IS_SCALAR_OVERVIEW_HPP
 #define EXAMPLE_IS_SCALAR_OVERVIEW_HPP
 
-#include <bsl/cstddef.hpp>
-#include <bsl/cstdint.hpp>
 #include <bsl/is_scalar.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -40,12 +39,10 @@ namespace bsl
     ///
     inline void
     example_is_scalar_overview() noexcept
-    {    // static_assert(bsl::is_scalar<bsl::uint64>::value);
-        // static_assert(bsl::is_scalar<bsl::exit_code>::value);
-        // static_assert(bsl::is_scalar<bool *>::value);
-        // static_assert(bsl::is_scalar<bool(bsl::arguments::*)>::value);
-        // static_assert(bsl::is_scalar<bsl::nullptr_t>::value);
-        // static_assert(!bsl::is_scalar<bsl::arguments>::value);
+    {
+        if (bsl::is_scalar<bool>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

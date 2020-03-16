@@ -26,8 +26,7 @@
 #define EXAMPLE_IS_STANDARD_LAYOUT_OVERVIEW_HPP
 
 #include <bsl/is_standard_layout.hpp>
-#include "example_class_pod.hpp"
-#include "example_class_subclass.hpp"
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -41,14 +40,9 @@ namespace bsl
     inline void
     example_is_standard_layout_overview() noexcept
     {
-        static_assert(!bsl::is_standard_layout<example_class_subclass>::value);
-
-        // TODO: --
-        //
-        // Currently we do not show the opposite case as PRQA cannot handle
-        // this. Once PRQA addresses this issue, we can add the rest of this
-        // example.
-        //
+        if (bsl::is_standard_layout<bool>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

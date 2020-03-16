@@ -28,6 +28,9 @@
 #ifndef BSL_IS_NULL_POINTER_HPP
 #define BSL_IS_NULL_POINTER_HPP
 
+#include "true_type.hpp"
+#include "false_type.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_null_pointer
@@ -36,33 +39,24 @@ namespace bsl
     ///   @brief If the provided type is a nullptr type (taking into account
     ///     const qualifications), provides the member constant value
     ///     equal to true. Otherwise the member constant value is false.
-    ///   @include is_null_pointer/overview.cpp
+    ///   @include example_is_null_pointer_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_null_pointer final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{false};
-    };
+    class is_null_pointer final : public false_type
+    {};
 
     /// @cond --
 
     template<>
-    struct is_null_pointer<decltype(nullptr)> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_null_pointer<decltype(nullptr)> final : public true_type
+    {};
 
     template<>
-    struct is_null_pointer<decltype(nullptr) const> final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_null_pointer<decltype(nullptr) const> final : public true_type
+    {};
 
     /// @endcond --
 }

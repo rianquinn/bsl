@@ -46,7 +46,7 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class is_arithmetic final : // --
+    class is_arithmetic final :    // --
         public bool_constant<is_integral<T>::value || is_floating_point<T>::value>
     {};
 }

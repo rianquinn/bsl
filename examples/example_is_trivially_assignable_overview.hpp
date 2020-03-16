@@ -22,11 +22,11 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef EXAMPLE_IS_NULLPTR_OVERVIEW_HPP
-#define EXAMPLE_IS_NULLPTR_OVERVIEW_HPP
+#ifndef EXAMPLE_IS_TRIVIALLY_ASSIGNABLE_OVERVIEW_HPP
+#define EXAMPLE_IS_TRIVIALLY_ASSIGNABLE_OVERVIEW_HPP
 
-#include <bsl/cstddef.hpp>
-#include <bsl/is_null_pointer.hpp>
+#include <bsl/is_trivially_assignable.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -38,11 +38,11 @@ namespace bsl
     ///   @post none
     ///
     inline void
-    example_is_nullptr_overview() noexcept
+    example_is_trivially_assignable_overview() noexcept
     {
-        static_assert(bsl::is_null_pointer<bsl::nullptr_t>::value);
-        static_assert(bsl::is_null_pointer<bsl::nullptr_t const>::value);
-        static_assert(!bsl::is_null_pointer<bool>::value);
+        if (bsl::is_trivially_assignable<bool &, bool>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

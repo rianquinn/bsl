@@ -28,6 +28,10 @@
 #ifndef BSL_IS_UNBOUNDED_ARRAY_HPP
 #define BSL_IS_UNBOUNDED_ARRAY_HPP
 
+#include "cstdint.hpp"
+#include "true_type.hpp"
+#include "false_type.hpp"
+
 namespace bsl
 {
     /// @class bsl::is_unbounded_array
@@ -36,26 +40,20 @@ namespace bsl
     ///   @brief If the provided type is an unbounded array, provides the
     ///     member constant value equal to true. Otherwise the member constant
     ///     value is false.
-    ///   @include is_unbounded_array/overview.cpp
+    ///   @include example_is_unbounded_array_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    struct is_unbounded_array final
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{false};
-    };
+    class is_unbounded_array final : public false_type
+    {};
 
     /// @cond --
 
     template<typename T>
-    struct is_unbounded_array<T[]> final    // NOLINT
-    {
-        /// @brief the boolean that answers the type trait query
-        static constexpr bool value{true};
-    };
+    class is_unbounded_array<T[]> final : public true_type    // NOLINT
+    {};
 
     /// @endcond --
 }

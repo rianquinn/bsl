@@ -51,8 +51,8 @@ namespace bsl
     ///   @tparam U the type to query
     ///
     template<typename T, typename U>
-    class is_base_of final : // --
-        public bool_constant<__is_base_of(T, U)> // PRQA S 3702
+    class is_base_of final :    // --
+        public bool_constant<__is_base_of(T, U)>    // PRQA S 3702
     {};
 }
 

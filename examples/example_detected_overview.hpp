@@ -46,8 +46,7 @@ namespace bsl
     inline void
     example_detected_overview() noexcept
     {
-        using example_detected_or_type =
-            bsl::detected_t<example_detected_or, example_class_base>;
+        using example_detected_or_type = bsl::detected_t<example_detected_or, example_class_base>;
 
         if (is_same<example_detected_or_type, bsl::nonesuch>::value) {
             bsl::print("success\n");
