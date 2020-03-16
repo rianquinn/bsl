@@ -41,15 +41,17 @@ namespace bsl
     inline void
     example_for_each_overview() noexcept
     {
-        bsl::int32 t{};
-        bsl::int32 const expected{65};
+        constexpr bsl::int32 v1{23};
+        constexpr bsl::int32 v2{42};
+        constexpr bsl::int32 expected{65};
 
-        bsl::for_each({23, 42}, [&t](auto &elem, auto i) noexcept {
+        bsl::int32 t{};
+        bsl::for_each({v1, v2}, [&t](auto const &elem, auto i) noexcept {
             bsl::discard(i);
             t += elem;
         });
 
-        if (t == expected) {
+        if (expected == t) {
             bsl::print("success\n");
         }
     }

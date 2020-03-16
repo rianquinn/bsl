@@ -110,7 +110,7 @@
 #include "example_is_class_overview.hpp"
 #include "example_is_compound_overview.hpp"
 #include "example_is_const_overview.hpp"
-#include "example_is_constant_evaluated_overview.hpp"
+// #include "example_is_constant_evaluated_overview.hpp"
 #include "example_is_constructible_overview.hpp"
 #include "example_is_convertible_overview.hpp"
 #include "example_is_copy_assignable_overview.hpp"
@@ -297,7 +297,7 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_is_class_overview, "example_is_class_overview");
     example(&bsl::example_is_compound_overview, "example_is_compound_overview");
     example(&bsl::example_is_const_overview, "example_is_const_overview");
-    example(&bsl::example_is_constant_evaluated_overview, "example_is_constant_evaluated_overview");
+    // example(&bsl::example_is_constant_evaluated_overview, "example_is_constant_evaluated_overview");
     example(&bsl::example_is_constructible_overview, "example_is_constructible_overview");
     example(&bsl::example_is_convertible_overview, "example_is_convertible_overview");
     example(&bsl::example_is_copy_assignable_overview, "example_is_copy_assignable_overview");
