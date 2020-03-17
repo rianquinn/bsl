@@ -65,7 +65,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the ability to return T or E from a function,
     ///     ensuring that T is only created if an error is not present.
-    ///   @include result/overview.cpp
+    ///   @include example_result_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the nullable type
@@ -125,7 +125,7 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Constructs a bsl::result that contains T,
         ///     by copying "t"
-        ///   @include result/constructor_copy.cpp
+        ///   @include result/example_result_t_copy_constructor.hpp
         ///
         ///   SUPPRESSION: PRQA 2023 - exception required
         ///   - We suppress this because A13-3-1 states that you should not
@@ -154,7 +154,6 @@ namespace bsl
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the value being copied
-        ///   @return a new bsl::result
         ///
         /// <!-- exceptions -->
         ///   @throw throws if T's copy constructor throws
@@ -166,7 +165,7 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Constructs a bsl::result that contains T,
         ///     by moving "t"
-        ///   @include result/constructor_move.cpp
+        ///   @include result/example_result_t_move_constructor.hpp
         ///
         ///   SUPPRESSION: PRQA 2023 - exception required
         ///   - We suppress this because A13-3-1 states that you should not
@@ -195,7 +194,6 @@ namespace bsl
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the value being moved
-        ///   @return a new bsl::result
         ///
         /// <!-- exceptions -->
         ///   @throw throws if T's copy constructor throws
@@ -207,7 +205,7 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Constructs a bsl::result that contains T by constructing
         ///     T in place.
-        ///   @include result/constructor_in_place.cpp
+        ///   @include result/example_result_t_in_place_constructor.hpp
         ///
         ///   SUPPRESSION: PRQA 2023 - exception required
         ///   - We suppress this because A13-3-1 states that you should not
@@ -245,7 +243,7 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Constructs a bsl::result that contains E,
         ///     by copying "e"
-        ///   @include result/constructor_errc_copy.cpp
+        ///   @include result/example_result_errc_copy_constructor.hpp
         ///
         ///   SUPPRESSION: PRQA 2023 - exception required
         ///   - We suppress this because A13-3-1 states that you should not
@@ -288,7 +286,7 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Constructs a bsl::result that contains E,
         ///     by moving "e"
-        ///   @include result/constructor_errc_move.cpp
+        ///   @include result/example_result_errc_move_constructor.hpp
         ///
         ///   SUPPRESSION: PRQA 2023 - exception required
         ///   - We suppress this because A13-3-1 states that you should not
@@ -316,7 +314,6 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param e the error code being moved
         ///   @param sloc the source location of the error
-        ///   @return a new bsl::result
         ///
         /// <!-- exceptions -->
         ///   @throw throws if E's copy constructor throws
@@ -331,7 +328,7 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief copy constructor
-        ///   @include result/constructor_copy.cpp
+        ///   @include result/example_result_copy_constructor.hpp
         ///
         ///   SUPPRESSION: PRQA 4285 - false positive
         ///   - We suppress this because A12-8-1 states a copy/move should
@@ -384,7 +381,7 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief move constructor
-        ///   @include result/constructor_move.cpp
+        ///   @include result/example_result_move_constructor.hpp
         ///
         ///   SUPPRESSION: PRQA 4285 - false positive
         ///   - We suppress this because A12-8-1 states a copy/move should
@@ -472,7 +469,7 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief copy assignment
-        ///   @include result/assignment_copy.cpp
+        ///   @include result/example_result_copy_assignment.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -496,7 +493,7 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief move assignment
-        ///   @include result/assignment_move.cpp
+        ///   @include result/example_result_move_assignment.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -518,7 +515,7 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns a handle to T if this object contains T,
         ///     otherwise it returns a nullptr.
-        ///   @include result/get_if.cpp
+        ///   @include result/example_result_get_if.hpp
         ///
         ///   SUPPRESSION: PRQA 4024 - false positive - non-automated
         ///   - We suppress this because A9-3-1 states that a class should
@@ -561,7 +558,7 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns a handle to T if this object contains T,
         ///     otherwise it returns a nullptr.
-        ///   @include result/get_if.cpp
+        ///   @include result/example_result_get_if.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -594,7 +591,7 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns an error code if this object contains E,
         ///     otherwise it returns "fallback".
-        ///   @include result/errc.cpp
+        ///   @include result/example_result_errc.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -619,7 +616,7 @@ namespace bsl
         ///   @brief Returns true if the bsl::result contains T,
         ///     otherwise, if the bsl::result contains an error code,
         ///     returns false.
-        ///   @include result/success.cpp
+        ///   @include result/example_result_success.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns true if the bsl::result contains T,
@@ -636,7 +633,7 @@ namespace bsl
         ///   @brief Returns true if the bsl::result contains E,
         ///     otherwise, if the bsl::result contains T,
         ///     returns false.
-        ///   @include result/failure.cpp
+        ///   @include result/example_result_failure.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns true if the bsl::result contains E,
@@ -677,8 +674,8 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief Returns true if the lhs is equal to the rhs, false otherwise
-    ///   @include errc_type/example_errc_type_equals.hpp
-    ///   @related bsl::errc_type
+        ///   @include result/example_result_equals.hpp
+    ///   @related bsl::result
     ///
     /// <!-- inputs/outputs -->
     ///   @param lhs the left hand side of the operator
@@ -702,8 +699,8 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief Returns false if the lhs is equal to the rhs, true otherwise
-    ///   @include errc_type/example_errc_type_not_equals.hpp
-    ///   @related bsl::errc_type
+        ///   @include result/example_result_not_equals.hpp
+    ///   @related bsl::result
     ///
     /// <!-- inputs/outputs -->
     ///   @param lhs the left hand side of the operator

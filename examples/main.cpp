@@ -194,6 +194,22 @@
 #include "example_remove_extent_overview.hpp"
 #include "example_remove_pointer_overview.hpp"
 #include "example_remove_reference_overview.hpp"
+#include "example_result_overview.hpp"
+#include "result/example_result_copy_assignment.hpp"
+#include "result/example_result_copy_constructor.hpp"
+#include "result/example_result_equals.hpp"
+#include "result/example_result_errc_copy_constructor.hpp"
+#include "result/example_result_errc_move_constructor.hpp"
+#include "result/example_result_errc.hpp"
+#include "result/example_result_failure.hpp"
+#include "result/example_result_get_if.hpp"
+#include "result/example_result_move_assignment.hpp"
+#include "result/example_result_move_constructor.hpp"
+#include "result/example_result_not_equals.hpp"
+#include "result/example_result_success.hpp"
+#include "result/example_result_t_copy_constructor.hpp"
+#include "result/example_result_t_in_place_constructor.hpp"
+#include "result/example_result_t_move_constructor.hpp"
 #include "example_source_location_overview.hpp"
 #include "source_location/example_source_location_current.hpp"
 #include "source_location/example_source_location_default_constructor.hpp"
@@ -420,6 +436,22 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_remove_extent_overview, "example_remove_extent_overview");
     example(&bsl::example_remove_pointer_overview, "example_remove_pointer_overview");
     example(&bsl::example_remove_reference_overview, "example_remove_reference_overview");
+    example(&bsl::example_result_overview, "example_result_overview");
+    example(&bsl::example_result_copy_assignment, "example_result_copy_assignment");
+    example(&bsl::example_result_copy_constructor, "example_result_copy_constructor");
+    example(&bsl::example_result_equals, "example_result_equals");
+    example(&bsl::example_result_errc_copy_constructor, "example_result_errc_copy_constructor");
+    example(&bsl::example_result_errc_move_constructor, "example_result_errc_move_constructor");
+    example(&bsl::example_result_errc, "example_result_errc");
+    example(&bsl::example_result_failure, "example_result_failure");
+    example(&bsl::example_result_get_if, "example_result_get_if");
+    example(&bsl::example_result_move_assignment, "example_result_move_assignment");
+    example(&bsl::example_result_move_constructor, "example_result_move_constructor");
+    example(&bsl::example_result_not_equals, "example_result_not_equals");
+    example(&bsl::example_result_success, "example_result_success");
+    example(&bsl::example_result_t_copy_constructor, "example_result_t_copy_constructor");
+    example(&bsl::example_result_t_in_place_constructor, "example_result_t_in_place_constructor");
+    example(&bsl::example_result_t_move_constructor, "example_result_t_move_constructor");
     example(&bsl::example_source_location_overview, "example_source_location_overview");
     example(&bsl::example_source_location_current, "example_source_location_current");
     example(&bsl::example_source_location_default_constructor, "example_source_location_default_constructor");
