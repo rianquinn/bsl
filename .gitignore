@@ -56,3 +56,4 @@
 build/
 site/
 .scannerwork
+doxygen_output/
