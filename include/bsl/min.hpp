@@ -28,6 +28,8 @@
 #ifndef BSL_MIN_HPP
 #define BSL_MIN_HPP
 
+#include "forward.hpp"
+
 namespace bsl
 {
     /// <!-- description -->
@@ -62,16 +64,17 @@ namespace bsl
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type that defines both a and b
+    ///   @tparam COMPARE The type that defines the compare function
     ///   @param a the first parameter to compare
     ///   @param b the second parameter to compare
-    ///   @param Compare A function that returns true if b is less than a.
+    ///   @param comp A function that returns true if b is less than a.
     ///   @return Returns a if a is smaller than b, otherwise returns b.
     ///
-    template<typename T, typename Compare>
+    template<typename T, typename COMPARE>
     constexpr T const &
-    min(T const &a, T const &b, Compare comp)
+    min(T const &a, T const &b, COMPARE &&comp)
     {
-        return (comp(b, a)) ? b : a;
+        return (bsl::forward<COMPARE>(comp)(b, a)) ? b : a;
     }
 }
 

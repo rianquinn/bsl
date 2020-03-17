@@ -32,8 +32,8 @@
 
 namespace bsl
 {
-    /// @brief Utility that maps a sequence of any types to the type void
-    using max_align_t = bsl::uint64;
+    /// @brief Max scalar type alignment
+    using max_align_t = bsl::uintmax;
 }
 
 #endif

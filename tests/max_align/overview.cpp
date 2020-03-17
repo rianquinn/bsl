@@ -22,9 +22,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/nonesuch.hpp>
-#include <bsl/is_empty.hpp>
-
+#include <bsl/max_align.hpp>
 #include <bsl/ut.hpp>
 
 /// <!-- description -->
@@ -43,7 +41,7 @@ bsl::exit_code
 main()
 {
     using namespace bsl;
-    static_assert(is_empty<nonesuch>::value);
+    static_assert(alignof(bsl::max_align_t) >= alignof(bsl::uintmax));
 
     return bsl::ut_success();
 }
