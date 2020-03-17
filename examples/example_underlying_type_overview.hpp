@@ -25,8 +25,10 @@
 #ifndef EXAMPLE_UNDERLYING_TYPE_OVERVIEW_HPP
 #define EXAMPLE_UNDERLYING_TYPE_OVERVIEW_HPP
 
-#include <bsl/is_same.hpp>
 #include <bsl/underlying_type.hpp>
+#include <bsl/is_same.hpp>
+#include <bsl/print.hpp>
+
 #include "example_enum.hpp"
 
 namespace bsl
@@ -41,7 +43,9 @@ namespace bsl
     inline void
     example_underlying_type_overview() noexcept
     {
-        // static_assert(bsl::is_same<bsl::underlying_type_t<bsl::exit_code>, bsl::int32>::value);
+        if (bsl::is_same<underlying_type_t<example_enum>, bsl::int32>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

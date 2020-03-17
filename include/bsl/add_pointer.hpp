@@ -37,7 +37,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the member typedef type which is the same as T,
     ///     except that a topmost pointer is added.
-    ///   @include example_add_pointer_overview.cpp
+    ///   @include example_add_pointer_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to add an pointer to
@@ -50,7 +50,7 @@ namespace bsl
     template<typename T>
     using add_pointer_t = typename add_pointer<T>::type;
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     class add_pointer<T &> final : public type_identity<T *>
@@ -60,7 +60,7 @@ namespace bsl
     class add_pointer<T &&> final : public type_identity<T *>
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

@@ -43,7 +43,7 @@ namespace bsl
     ///     compile-time sequence of integers. When used as an argument to a
     ///     function template, the parameter pack Ints can be deduced and used
     ///     in pack expansion.
-    ///   @include example_integer_sequence_overview.cpp
+    ///   @include example_integer_sequence_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type that defines the sequence of integers
@@ -55,7 +55,7 @@ namespace bsl
     public:
         /// <!-- description -->
         ///   @brief Equivalent to sizeof...(INTS)
-        ///   @include integer_sequence/example_integer_sequence_size.cpp
+        ///   @include integer_sequence/example_integer_sequence_size.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -72,7 +72,7 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief Returns the max integer in the sequence
-        ///   @include integer_sequence/example_integer_sequence_max.cpp
+        ///   @include integer_sequence/example_integer_sequence_max.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -89,7 +89,7 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief Returns the min integer in the sequence
-        ///   @include integer_sequence/example_integer_sequence_min.cpp
+        ///   @include integer_sequence/example_integer_sequence_min.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none

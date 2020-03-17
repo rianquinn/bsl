@@ -46,22 +46,18 @@ namespace bsl
     ///     to mark a parameter or return as unused which is all that this
     ///     is doing in a less verbose, more self-documenting way.
     ///
-    ///   SUPPRESSION: PRQA 2028 - exception required
-    ///   - We suppress this because A2-7-3 states that all arguments should
-    ///     be documented. Instead of using a static_cast, we ignore the
-    ///     argument as there is no way to static_cast a parameter pack
-    ///     without recursion.
-    ///
     /// <!-- contracts -->
     ///   @pre none
     ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam ARGS the types that define the provided arguments to ignore
+    ///   @param args the arguments to ignore
+    ///   @return N/A, returns void
     ///
     template<typename... ARGS>
     constexpr void
-    discard(ARGS &&...) noexcept    // PRQA S 4649, 2028 // NOLINT
+    discard(ARGS &&...args) noexcept    // PRQA S 4649 // NOLINT
     {}
 }
 

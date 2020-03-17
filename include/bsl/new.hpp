@@ -28,13 +28,12 @@
 #ifndef BSL_NEW_HPP
 #define BSL_NEW_HPP
 
-#include "cstdint.hpp" 
+#include "cstdint.hpp"
 #include "discard.hpp"
 
 /// <!-- description -->
 ///   @brief This function implements the placement new operator. Note that
 ///     this function is passed a count and pointer, both of which are ignored.
-///   @include new/overview.cpp
 ///
 ///   SUPPRESSION: PRQA 2000 - false positive
 ///   - We suppress this because M7-3-1 states that functions should not be

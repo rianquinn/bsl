@@ -52,13 +52,13 @@ namespace bsl
     template<bool B, typename T, typename F>
     using conditional_t = typename conditional<B, T, F>::type;
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T, typename F>
     class conditional<false, T, F> final : public type_identity<F>
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

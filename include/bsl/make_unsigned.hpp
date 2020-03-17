@@ -58,7 +58,7 @@ namespace bsl
     template<typename T>
     using make_unsigned_t = typename make_unsigned<T>::type;
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<>
     class make_unsigned<bsl::int8> final : public type_identity<bsl::uint8>
@@ -92,7 +92,7 @@ namespace bsl
     class make_unsigned<bsl::int64 const> final : public type_identity<bsl::uint64 const>
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

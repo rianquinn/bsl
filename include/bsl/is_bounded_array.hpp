@@ -49,13 +49,13 @@ namespace bsl
     class is_bounded_array final : public false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T, bsl::uintmax N>
     class is_bounded_array<T[N]> final : public true_type    // NOLINT
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

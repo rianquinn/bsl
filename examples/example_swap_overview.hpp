@@ -26,6 +26,7 @@
 #define EXAMPLE_SWAP_OVERVIEW_HPP
 
 #include <bsl/swap.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -38,7 +39,15 @@ namespace bsl
     ///
     inline void
     example_swap_overview() noexcept
-    {}
+    {
+        bool val1{};
+        bool val2{true};
+        bsl::swap(val1, val2);
+
+        if (val1) {
+            bsl::print("success\n");
+        }
+    }
 }
 
 #endif

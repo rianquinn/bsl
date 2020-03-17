@@ -34,6 +34,7 @@ namespace bsl
     ///
     /// <!-- description -->
     ///   @brief Provides the member typedef "value_type" that names T.
+    ///   @include example_value_type_identity_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type that defines the member typedef "value_type"
@@ -119,7 +120,7 @@ namespace bsl
 
     /// @brief a helper that reduces the verbosity of bsl::value_type_identity
     template<typename T>
-    using value_type_identity_t = typename value_type_identity<T>::type;
+    using value_type_identity_t = typename value_type_identity<T>::value_type;
 }
 
 #endif

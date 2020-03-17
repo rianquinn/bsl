@@ -48,13 +48,13 @@ namespace bsl
     class is_lvalue_reference final : public false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     class is_lvalue_reference<T &> final : public true_type
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

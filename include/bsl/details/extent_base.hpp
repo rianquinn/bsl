@@ -32,7 +32,7 @@ namespace bsl
 {
     namespace details
     {
-        /// @class
+        /// @class bsl::details::extent_base
         ///
         /// <!-- description -->
         ///   @brief Implements bsl::extent. This is needed so that bsl::extent
@@ -108,7 +108,7 @@ namespace bsl
             ~extent_base() noexcept = default;
         };
 
-        /// @cond --
+        /// @cond doxygen off
 
         template<typename T>
         class extent_base<T[], 0> : public integral_constant<bsl::uintmax, 0>    // NOLINT
@@ -374,7 +374,7 @@ namespace bsl
             ~extent_base() noexcept = default;
         };
 
-        /// @endcond --
+        /// @endcond doxygen on
     }
 }
 

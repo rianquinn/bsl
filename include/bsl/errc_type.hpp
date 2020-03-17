@@ -35,7 +35,7 @@
 
 namespace bsl
 {
-    /// @class
+    /// @class bsl::errc_type
     ///
     /// <!-- description -->
     ///   @brief Defines an error code. We do not use the same pattern as the
@@ -278,6 +278,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Returns true if the lhs is equal to the rhs, false otherwise
     ///   @include errc_type/example_errc_type_equals.hpp
+    ///   @related bsl::errc_type
     ///
     /// <!-- inputs/outputs -->
     ///   @param lhs the left hand side of the operator
@@ -294,6 +295,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Returns false if the lhs is equal to the rhs, true otherwise
     ///   @include errc_type/example_errc_type_not_equals.hpp
+    ///   @related bsl::errc_type
     ///
     /// <!-- inputs/outputs -->
     ///   @param lhs the left hand side of the operator

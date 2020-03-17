@@ -25,24 +25,12 @@
 #ifndef EXAMPLE_TYPE_IDENTITY_OVERVIEW_HPP
 #define EXAMPLE_TYPE_IDENTITY_OVERVIEW_HPP
 
-#include <bsl/is_bool.hpp>
-#include <bsl/is_void.hpp>
 #include <bsl/type_identity.hpp>
+#include <bsl/is_same.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
-    /// @class myclass
-    ///
-    /// <!-- description -->
-    ///   @brief An example class that inherits type_identity
-    ///
-    /// <!-- template parameters -->
-    ///   @tparam T any type
-    ///
-    template<typename T>
-    class myclass final : public bsl::type_identity<T>
-    {};
-
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
@@ -53,8 +41,9 @@ namespace bsl
     inline void
     example_type_identity_overview() noexcept
     {
-        static_assert(bsl::is_bool<myclass<bool>::type>::value);
-        static_assert(bsl::is_void<myclass<void>::type>::value);
+        if (bsl::is_same<type_identity_t<bool>, bool>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

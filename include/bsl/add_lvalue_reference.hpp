@@ -63,7 +63,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the member typedef type which is the same as T,
     ///     except that a topmost lvalue reference is added.
-    ///   @include example_add_lvalue_reference_overview.cpp
+    ///   @include example_add_lvalue_reference_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to add an lvalue reference to

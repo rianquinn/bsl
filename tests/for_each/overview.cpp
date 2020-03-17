@@ -23,6 +23,7 @@
 /// SOFTWARE.
 
 #include <bsl/for_each.hpp>
+#include <bsl/discard.hpp>
 #include <bsl/ut.hpp>
 
 namespace

@@ -60,7 +60,7 @@ namespace bsl
         };
     }
 
-    /// @class bsl::details::result
+    /// @class bsl::result
     ///
     /// <!-- description -->
     ///   @brief Provides the ability to return T or E from a function,
@@ -674,6 +674,48 @@ namespace bsl
             E m_e;
         };
     };
+
+    /// <!-- description -->
+    ///   @brief Returns true if the lhs is equal to the rhs, false otherwise
+    ///   @include errc_type/example_errc_type_equals.hpp
+    ///   @related bsl::errc_type
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @param lhs the left hand side of the operator
+    ///   @param rhs the right hand side of the operator
+    ///   @return Returns true if the lhs is equal to the rhs, false otherwise
+    ///
+    template<typename T, typename E>
+    constexpr bool
+    operator==(result<T, E> const &lhs, result<T, E> const &rhs) noexcept
+    {
+        if (lhs.success() != rhs.success()) {
+            return false;
+        }
+
+        if (lhs.success()) {
+            return *lhs.get_if() == *rhs.get_if();
+        }
+
+        return lhs.errc() == rhs.errc();
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns false if the lhs is equal to the rhs, true otherwise
+    ///   @include errc_type/example_errc_type_not_equals.hpp
+    ///   @related bsl::errc_type
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @param lhs the left hand side of the operator
+    ///   @param rhs the right hand side of the operator
+    ///   @return Returns false if the lhs is equal to the rhs, true otherwise
+    ///
+    template<typename T, typename E>
+    constexpr bool
+    operator!=(result<T, E> const &lhs, result<T, E> const &rhs) noexcept
+    {
+        return !(lhs == rhs);
+    }
 }
 
 #endif

@@ -32,7 +32,7 @@
 
 namespace bsl
 {
-    /// @class bsl::in_place
+    /// @class bsl::in_place_t
     ///
     /// <!-- description -->
     ///   @brief bsl::in_place, bsl::in_place_type, and bsl::in_place_index
@@ -59,7 +59,7 @@ namespace bsl
     /// @brief reduces the verbosity of bsl::in_place_t
     constexpr in_place_t in_place{};
 
-    /// @class bsl::in_place_type
+    /// @class bsl::in_place_type_t
     ///
     /// <!-- description -->
     ///   @brief bsl::in_place, bsl::in_place_type, and bsl::in_place_index
@@ -87,7 +87,7 @@ namespace bsl
         explicit constexpr in_place_type_t() noexcept = default;
     };
 
-    /// @class bsl::in_place_index
+    /// @class bsl::in_place_index_t
     ///
     /// <!-- description -->
     ///   @brief bsl::in_place, bsl::in_place_type, and bsl::in_place_index

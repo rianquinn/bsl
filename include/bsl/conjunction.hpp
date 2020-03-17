@@ -37,18 +37,18 @@ namespace bsl
     /// @class bsl::conjunction
     ///
     /// <!-- description -->
-    ///   @brief Provides the member typedef type which is the same as T,
-    ///     except that a topmost const qualifier is added.
+    ///   @brief Forms the logical conjunction of the type traits B...,
+    ///     effectively performing a logical AND on the sequence of traits
     ///   @include example_conjunction_overview.hpp
     ///
     /// <!-- template parameters -->
-    ///   @tparam T the type to add a const qualifier to
+    ///   @tparam BN a list of bool_constant types
     ///
-    template<typename...>
+    template<typename... BN>
     class conjunction final : true_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename B1>
     class conjunction<B1> final : public bool_constant<B1::value>
@@ -62,7 +62,7 @@ namespace bsl
             bool_constant<B1::value>>
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

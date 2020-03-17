@@ -64,6 +64,16 @@ main()
         };
     };
 
+    bsl::ut_scenario{"const constructor / get"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::int32 const data{42};
+            bsl::reference_wrapper rw{data};
+            bsl::ut_then{} = [&rw]() {
+                bsl::ut_check(rw.get() == 42);
+            };
+        };
+    };
+
     bsl::ut_scenario{"invoke"} = []() {
         bsl::ut_given{} = []() {
             bsl::reference_wrapper rw{func};

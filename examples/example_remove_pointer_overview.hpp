@@ -25,10 +25,9 @@
 #ifndef EXAMPLE_REMOVE_POINTER_OVERVIEW_HPP
 #define EXAMPLE_REMOVE_POINTER_OVERVIEW_HPP
 
-#include <bsl/is_same.hpp>
-#include <bsl/is_pointer.hpp>
-#include <bsl/add_pointer.hpp>
 #include <bsl/remove_pointer.hpp>
+#include <bsl/is_same.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -42,29 +41,9 @@ namespace bsl
     inline void
     example_remove_pointer_overview() noexcept
     {
-        static_assert(!bsl::is_pointer<bool>::value);
-        static_assert(!bsl::is_pointer<bool &>::value);
-        static_assert(!bsl::is_pointer<bool &&>::value);
-
-        static_assert(bsl::is_pointer<bsl::add_pointer_t<bool>>::value);
-        static_assert(bsl::is_pointer<bsl::add_pointer_t<bool &>>::value);
-        static_assert(bsl::is_pointer<bsl::add_pointer_t<bool &&>>::value);
-        static_assert(bsl::is_pointer<bsl::add_pointer_t<bool const>>::value);
-        static_assert(bsl::is_pointer<bsl::add_pointer_t<bool const &>>::value);
-
-        static_assert(bsl::is_same<bsl::add_pointer_t<bool>, bool *>::value);
-        static_assert(bsl::is_same<bsl::add_pointer_t<bool &>, bool *>::value);
-        static_assert(bsl::is_same<bsl::add_pointer_t<bool &&>, bool *>::value);
-        static_assert(bsl::is_same<bsl::add_pointer_t<bool const>, bool const *>::value);
-        static_assert(bsl::is_same<bsl::add_pointer_t<bool const &>, bool const *>::value);
-
-        static_assert(!bsl::is_pointer<bsl::remove_pointer_t<bool *>>::value);
-        static_assert(!bsl::is_pointer<bsl::remove_pointer_t<bool *const>>::value);
-        static_assert(!bsl::is_pointer<bsl::remove_pointer_t<bool const *const>>::value);
-
-        static_assert(bsl::is_same<bsl::remove_pointer_t<bool *>, bool>::value);
-        static_assert(bsl::is_same<bsl::remove_pointer_t<bool const *>, bool const>::value);
-        static_assert(bsl::is_same<bsl::remove_pointer_t<bool const *const>, bool const>::value);
+        if (bsl::is_same<bsl::remove_pointer_t<void *>, void>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

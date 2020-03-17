@@ -39,7 +39,7 @@ namespace bsl
     ///   @brief If the provided type is a class type, provides the member
     ///     constant value equal to true. Otherwise the member constant value
     ///     is false.
-    ///   @include example_has_unique_object_representations_overview.cpp
+    ///   @include example_has_unique_object_representations_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query

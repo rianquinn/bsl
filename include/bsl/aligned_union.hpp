@@ -40,7 +40,7 @@ namespace bsl
     ///   @brief Implements the std::aligned_union interface. The
     ///     only real difference is we use "m_data" instead of "data" to
     ///     represent the member variable name.
-    ///   @include example_aligned_union_overview.cpp
+    ///   @include example_aligned_union_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam GUARD used to prevent you from creating an aligned_union
@@ -53,6 +53,8 @@ namespace bsl
     struct aligned_union final
     {
         static_assert(sizeof...(TYPES) > 0, "empty aligned_union is not supported");
+
+        /// @brief the alignment of the union.
         static constexpr bsl::uintmax alignment_value{index_sequence<alignof(TYPES)...>::max()};
 
         /// @class bsl::aligned_union::type
@@ -62,6 +64,7 @@ namespace bsl
         ///
         struct type
         {
+            /// @brief defines the storage component of the bsl::aligned_union
             alignas(alignment_value) byte m_data[    // NOLINT
                 index_sequence<LEN, sizeof(TYPES)...>::max()];
         };

@@ -23,6 +23,7 @@
 /// SOFTWARE.
 
 #include <bsl/move_if_noexcept.hpp>
+#include <bsl/discard.hpp>
 #include <bsl/ut.hpp>
 
 namespace

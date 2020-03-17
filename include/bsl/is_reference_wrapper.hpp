@@ -52,7 +52,7 @@ namespace bsl
     class is_reference_wrapper final : public false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     class is_reference_wrapper<reference_wrapper<T>> final : public true_type
@@ -62,7 +62,7 @@ namespace bsl
     class is_reference_wrapper<reference_wrapper<T> const> final : public true_type
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

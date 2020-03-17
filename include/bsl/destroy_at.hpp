@@ -41,6 +41,7 @@ namespace bsl
     /// <!-- inputs/outputs -->
     ///   @tparam T defines the type pointer to by ptr
     ///   @param ptr a pointer to the object to destroy
+    ///   @return N/A, returns void
     ///
     /// <!-- exceptions -->
     ///   @throw throws if T throws during destruction

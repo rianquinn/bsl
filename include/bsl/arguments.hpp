@@ -38,7 +38,6 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Encapsulates the argc, argv arguments that are passed to
     ///     traditional C applications using a bsl::span
-    ///   @include arguments/overview.cpp
     ///
     class arguments final
     {
@@ -46,7 +45,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Creates a bsl::arguments object given a provided argc
         ///     and argv.
-        ///   @include arguments/constructor_argc_argv.cpp
         ///
         /// <!-- contracts -->
         ///   @pre none

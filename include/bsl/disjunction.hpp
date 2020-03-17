@@ -36,18 +36,18 @@ namespace bsl
     /// @class bsl::disjunction
     ///
     /// <!-- description -->
-    ///   @brief Provides the member typedef type which is the same as T,
-    ///     except that a topmost const qualifier is added.
-    ///   @include example_disjunction_overview.cpp
+    ///   @brief Forms the logical disjunction of the type traits B...,
+    ///     effectively performing a logical OR on the sequence of traits
+    ///   @include example_disjunction_overview.hpp
     ///
     /// <!-- template parameters -->
-    ///   @tparam T the type to add a const qualifier to
+    ///   @tparam BN a list of bool_constant types
     ///
     template<typename...>
     class disjunction final : false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename B1>
     class disjunction<B1> final : public bool_constant<B1::value>
@@ -61,7 +61,7 @@ namespace bsl
             bool_constant<disjunction<BN...>::value>>
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

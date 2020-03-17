@@ -37,7 +37,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the member typedef type which is the same as T,
     ///     except that its topmost reference is removed.
-    ///   @include remove_reference/overview.cpp
+    ///   @include example_remove_reference_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to remove the reference from
@@ -50,7 +50,7 @@ namespace bsl
     template<typename T>
     using remove_reference_t = typename remove_reference<T>::type;
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     struct remove_reference<T &> final : public type_identity<T>
@@ -60,7 +60,7 @@ namespace bsl
     struct remove_reference<T &&> final : public type_identity<T>
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

@@ -45,7 +45,7 @@ namespace bsl
     ///     that C++ in general is deprectating the use of volatile.
     ///
     /// <!-- template parameters -->
-    ///   @tparam T the type to add a const qualifier to
+    ///   @tparam T the type to add a volatile qualifier to
     ///
     template<typename T>
     class add_volatile final : public type_identity<T volatile>
@@ -57,7 +57,7 @@ namespace bsl
     template<typename T>
     using add_volatile_t = typename add_volatile<T>::type;
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     class add_volatile<T volatile> final : public type_identity<T volatile>
@@ -65,7 +65,7 @@ namespace bsl
         static_assert(sizeof(T) != sizeof(T), "volatile not supported");
     };
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

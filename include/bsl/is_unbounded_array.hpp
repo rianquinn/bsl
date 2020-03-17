@@ -49,13 +49,13 @@ namespace bsl
     class is_unbounded_array final : public false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     class is_unbounded_array<T[]> final : public true_type    // NOLINT
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

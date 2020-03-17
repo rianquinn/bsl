@@ -54,6 +54,7 @@ namespace bsl
     ///   @tparam T the type that defines the values being swapped
     ///   @param lhs the value being swapped with rhs
     ///   @param rhs the value being swapped with lhs
+    ///   @return N/A, returns void
     ///
     template<
         typename T,
@@ -82,6 +83,7 @@ namespace bsl
     ///   @tparam N the size of the arrays
     ///   @param lhs the value being swapped with rhs
     ///   @param rhs the value being swapped with lhs
+    ///   @return N/A, returns void
     ///
     template<
         typename T,

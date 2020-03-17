@@ -48,13 +48,13 @@ namespace bsl
     class is_same final : public false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     class is_same<T, T> final : public true_type
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

@@ -38,7 +38,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the member typedef type which is the same as T,
     ///     except that its topmost extent is removed.
-    ///   @include remove_all_extents/overview.cpp
+    ///   @include example_remove_all_extents_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to remove the extent from
@@ -51,7 +51,7 @@ namespace bsl
     template<typename T>
     using remove_all_extents_t = typename remove_all_extents<T>::type;
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     struct remove_all_extents<T[]> final : // NOLINT
@@ -63,7 +63,7 @@ namespace bsl
         public type_identity<typename remove_all_extents<T>::type>
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

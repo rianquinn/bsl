@@ -29,11 +29,9 @@
 
 #include "color.hpp"
 #include "cstr_type.hpp"
-#include "discard.hpp"
 #include "exit_code.hpp"
 #include "forward.hpp"
-#include "move.hpp"
-#include "new.hpp"
+#include "invoke.hpp"
 #include "print.hpp"
 #include "source_location.hpp"
 
@@ -41,27 +39,57 @@ namespace bsl
 {
     namespace details
     {
-        using ut_test_handler_type = void (*)();
+        /// @brief defines the reset handler function type
+        using ut_reset_handler_type = void (*)();
 
-        template<typename T = void>
-        cstr_type &
-        ut_current_test_case() noexcept
+        /// <!-- description -->
+        ///   @brief Returns a reference to the name of the current test
+        ///     case.
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a reference to the name of the current test
+        ///     case.
+        ///
+        inline cstr_type &
+        ut_current_test_case_name() noexcept
         {
-            static cstr_type s_ut_current_test_case{};
-            return s_ut_current_test_case;
+            static cstr_type s_ut_current_test_case_name{};
+            return s_ut_current_test_case_name;
         }
 
-        template<typename T = void>
-        ut_test_handler_type &
+        /// <!-- description -->
+        ///   @brief Returns a reference to the reset handler function
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a reference to the reset handler function
+        ///
+        inline ut_reset_handler_type &
         ut_reset_handler() noexcept
         {
-            static ut_test_handler_type s_ut_reset_handler{};
+            static ut_reset_handler_type s_ut_reset_handler{};
             return s_ut_reset_handler;
         }
 
-        template<typename T = void>
-        void
-        ut_output_here(sloc_type const &sloc) noexcept
+        /// <!-- description -->
+        ///   @brief Prints the current source location to the console.
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param sloc the current source location to print
+        ///
+        inline void
+        ut_print_here(sloc_type const &sloc) noexcept
         {
             bsl::print("  --> ");
             bsl::print("%s%s%s", yellow, sloc.file_name(), reset_color);
@@ -71,108 +99,158 @@ namespace bsl
         }
     }
 
+    /// @class bsl::ut_scenario
+    ///
+    /// <!-- description -->
+    ///   @brief Defines a unit test scenario. A scenario defines a user
+    ///     story, describing the "scenario" being tested. A scenario
+    ///     should be paired with ut_given, ut_when and ut_then to define
+    ///     the scenario in english.
+    ///
     class ut_scenario final
     {
     public:
+        /// <!-- description -->
+        ///   @brief Constructs a scenario
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param name the name of the scenario (i.e., test case)
+        ///
         explicit constexpr ut_scenario(cstr_type const &name) noexcept    // --
             : m_name{name}
         {}
 
+        /// <!-- description -->
+        ///   @brief Executes a lambda function as the body of the
+        ///     scenario.
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam FUNC the type of lambda being executed
+        ///   @param func the lambda being executed
+        ///   @return Returns a reference to the scenario.
+        ///
         template<typename FUNC>
         [[maybe_unused]] constexpr ut_scenario &
         operator=(FUNC &&func) noexcept
         {
-            details::ut_current_test_case() = m_name;
+            details::ut_current_test_case_name() = m_name;
 
-            bsl::forward<FUNC>(func)();
+            bsl::invoke(bsl::forward<FUNC>(func));
             if (nullptr != details::ut_reset_handler()) {
                 details::ut_reset_handler()();
             }
 
-            details::ut_current_test_case() = nullptr;
+            details::ut_current_test_case_name() = nullptr;
             return *this;
         }
 
-        constexpr ut_scenario(ut_scenario const &o) noexcept = delete;
-        constexpr ut_scenario(ut_scenario &&o) noexcept = delete;
-
-        [[maybe_unused]] constexpr ut_scenario &operator=(ut_scenario const &o) &noexcept = delete;
-        [[maybe_unused]] constexpr ut_scenario &operator=(ut_scenario &&o) &noexcept = delete;
-
-        ~ut_scenario() noexcept = default;
-
     private:
+        /// @brief stores the name of the scenario
         cstr_type m_name;
     };
 
+    /// @class bsl::ut_given
+    ///
+    /// <!-- description -->
+    ///   @brief Defines the initial state of a unit test scenario including
+    ///     the creation of any objects that might participate in the
+    ///     unit test.
+    ///
     class ut_given final
     {
     public:
-        constexpr ut_given() noexcept = default;
-
+        /// <!-- description -->
+        ///   @brief Executes a lambda function as the body of the
+        ///     "given" portion of the scenario.
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam FUNC the type of lambda being executed
+        ///   @param func the lambda being executed
+        ///   @return Returns a reference to the ut_given.
+        ///
         template<typename FUNC>
         [[maybe_unused]] constexpr ut_given &
         operator=(FUNC &&func) noexcept
         {
-            bsl::forward<FUNC>(func)();
-            return *this;    // PRQA S 2880
+            bsl::invoke(bsl::forward<FUNC>(func));
+            return *this;
         }
-
-        constexpr ut_given(ut_given const &o) noexcept = delete;
-        constexpr ut_given(ut_given &&o) noexcept = delete;
-
-        [[maybe_unused]] constexpr ut_given &operator=(ut_given const &o) &noexcept = delete;
-        [[maybe_unused]] constexpr ut_given &operator=(ut_given &&o) &noexcept = delete;
-
-        ~ut_given() noexcept = default;
     };
 
+    /// @class bsl::ut_when
+    ///
+    /// <!-- description -->
+    ///   @brief Defines the "action" of a unit test scenario
+    ///
     class ut_when final
     {
     public:
-        constexpr ut_when() noexcept = default;
-
+        /// <!-- description -->
+        ///   @brief Executes a lambda function as the body of the
+        ///     "when" portion of the scenario.
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam FUNC the type of lambda being executed
+        ///   @param func the lambda being executed
+        ///   @return Returns a reference to the ut_when.
+        ///
         template<typename FUNC>
         [[maybe_unused]] constexpr ut_when &
         operator=(FUNC &&func) noexcept
         {
-            bsl::forward<FUNC>(func)();
-            return *this;    // PRQA S 2880
+            bsl::invoke(bsl::forward<FUNC>(func));
+            return *this;
         }
-
-        constexpr ut_when(ut_when const &o) noexcept = delete;
-        constexpr ut_when(ut_when &&o) noexcept = delete;
-
-        [[maybe_unused]] constexpr ut_when &operator=(ut_when const &o) &noexcept = delete;
-        [[maybe_unused]] constexpr ut_when &operator=(ut_when &&o) &noexcept = delete;
-
-        ~ut_when() noexcept = default;
     };
 
+    /// @class bsl::ut_then
+    ///
+    /// <!-- description -->
+    ///   @brief Defines the expected "result" of a unit test scenario.
+    ///
     class ut_then final
     {
     public:
-        constexpr ut_then() noexcept = default;
-
+        /// <!-- description -->
+        ///   @brief Executes a lambda function as the body of the
+        ///     "then" portion of the scenario.
+        ///
+        /// <!-- contracts -->
+        ///   @pre none
+        ///   @post none
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam FUNC the type of lambda being executed
+        ///   @param func the lambda being executed
+        ///   @return Returns a reference to the ut_then.
+        ///
         template<typename FUNC>
         [[maybe_unused]] constexpr ut_then &
         operator=(FUNC &&func) noexcept
         {
-            bsl::forward<FUNC>(func)();
+            bsl::invoke(bsl::forward<FUNC>(func));
             if (nullptr != details::ut_reset_handler()) {
                 details::ut_reset_handler()();
             }
 
-            return *this;    // PRQA S 2880
+            return *this;
         }
-
-        constexpr ut_then(ut_then const &o) noexcept = delete;
-        constexpr ut_then(ut_then &&o) noexcept = delete;
-
-        [[maybe_unused]] constexpr ut_then &operator=(ut_then const &o) &noexcept = delete;
-        [[maybe_unused]] constexpr ut_then &operator=(ut_then &&o) &noexcept = delete;
-
-        ~ut_then() noexcept = default;
     };
 
     /// <!-- description -->
@@ -186,9 +264,8 @@ namespace bsl
     /// <!-- inputs/outputs -->
     ///   @param hdlr the handler to register as the reset handler
     ///
-    template<typename T = void>
-    void
-    set_ut_reset_handler(details::ut_test_handler_type const hdlr) noexcept
+    inline void
+    set_ut_reset_handler(details::ut_reset_handler_type const hdlr) noexcept
     {
         details::ut_reset_handler() = hdlr;
     }
@@ -203,8 +280,7 @@ namespace bsl
     /// <!-- inputs/outputs -->
     ///   @return returns bsl::exit_success
     ///
-    template<typename T = void>
-    bsl::exit_code
+    inline bsl::exit_code
     ut_success() noexcept
     {
         bsl::print("%s%s%s\n", green, "All tests passed", reset_color);
@@ -212,7 +288,7 @@ namespace bsl
     }
 
     /// <!-- description -->
-    ///   @brief Outputs a message and returns bsl::exit_success
+    ///   @brief Outputs a message and returns bsl::exit_failure
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -222,17 +298,16 @@ namespace bsl
     ///   @param sloc used to identify the location in the unit test that a
     ///     check failed.
     ///
-    template<typename T = void>
-    void
+    inline void
     ut_failure(sloc_type const &sloc = here()) noexcept
     {
         bsl::print("%s%s%s ", red, "[UNIT TEST FAILED]", reset_color);
         bsl::print("in test case \"");
-        bsl::print("%s%s%s", magenta, details::ut_current_test_case(), reset_color);
+        bsl::print("%s%s%s", magenta, details::ut_current_test_case_name(), reset_color);
         bsl::print("\"\n");
-        details::ut_output_here(sloc);
+        details::ut_print_here(sloc);
 
-        exit(EXIT_FAILURE);    // PRQA S 5024
+        exit(bsl::exit_failure);
     }
 
     /// <!-- description -->
@@ -250,18 +325,17 @@ namespace bsl
     ///     check failed.
     ///   @return returns test
     ///
-    template<typename T = void>
-    [[maybe_unused]] bool
-    ut_check(const bool test, sloc_type const &sloc = here()) noexcept
+    [[maybe_unused]] inline bool
+    ut_check(bool const test, sloc_type const &sloc = here()) noexcept
     {
         if (!test) {
             bsl::print("%s%s%s ", red, "[CHECK FAILED]", reset_color);
             bsl::print("in test case \"");
-            bsl::print("%s%s%s", magenta, details::ut_current_test_case(), reset_color);
+            bsl::print("%s%s%s", magenta, details::ut_current_test_case_name(), reset_color);
             bsl::print("\"\n");
-            details::ut_output_here(sloc);
+            details::ut_print_here(sloc);
 
-            exit(EXIT_FAILURE);    // PRQA S 5024
+            exit(EXIT_FAILURE);
         }
 
         return test;

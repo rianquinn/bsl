@@ -55,7 +55,7 @@ namespace bsl
     class is_unsigned final : public false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<>
     class is_unsigned<bool> final : public true_type
@@ -97,7 +97,7 @@ namespace bsl
     class is_unsigned<bsl::uint64 const> final : public true_type
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

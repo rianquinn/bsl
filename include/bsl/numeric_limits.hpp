@@ -254,7 +254,7 @@ namespace bsl
         }
     };
 
-    /// @cond --
+    /// @cond doxygen off
 
     /// @class bsl::numeric_limits
     ///
@@ -2230,7 +2230,7 @@ namespace bsl
         // long double not supported
     };
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

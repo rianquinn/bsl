@@ -40,7 +40,6 @@ namespace bsl
     ///     If an error occurs, it is ignored and the function returns. Also,
     ///     if fputs() is not defined, you must define it as this function
     ///     uses fputs() to actually output to the console.
-    ///   @include example_print__overview.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none
@@ -50,6 +49,7 @@ namespace bsl
     ///   @tparam ARGS defines the types of arguments passed to this function
     ///   @param fmt the format string that defines what to print
     ///   @param args the associated arguments for the given format string
+    ///   @return N/A, returns void
     ///
     template<typename CharT, bsl::uintmax N, typename... ARGS>
     constexpr void

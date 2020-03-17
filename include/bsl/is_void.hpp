@@ -48,7 +48,7 @@ namespace bsl
     class is_void final : public false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<>
     class is_void<void> final : public true_type
@@ -58,7 +58,7 @@ namespace bsl
     class is_void<void const> final : public true_type
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

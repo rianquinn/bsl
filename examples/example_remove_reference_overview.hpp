@@ -25,12 +25,9 @@
 #ifndef EXAMPLE_REMOVE_REFERENCE_OVERVIEW_HPP
 #define EXAMPLE_REMOVE_REFERENCE_OVERVIEW_HPP
 
-#include <bsl/is_reference.hpp>
-#include <bsl/is_lvalue_reference.hpp>
-#include <bsl/is_rvalue_reference.hpp>
-#include <bsl/add_lvalue_reference.hpp>
-#include <bsl/add_rvalue_reference.hpp>
 #include <bsl/remove_reference.hpp>
+#include <bsl/is_same.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -44,39 +41,9 @@ namespace bsl
     inline void
     example_remove_reference_overview() noexcept
     {
-        static_assert(!bsl::is_reference<bool>::value);
-        static_assert(!bsl::is_lvalue_reference<bool>::value);
-        static_assert(!bsl::is_rvalue_reference<bool>::value);
-
-        static_assert(bsl::is_reference<bsl::add_lvalue_reference_t<bool>>::value);
-        static_assert(bsl::is_reference<bsl::add_lvalue_reference_t<bool &>>::value);
-        static_assert(bsl::is_reference<bsl::add_lvalue_reference_t<bool &&>>::value);
-        static_assert(bsl::is_lvalue_reference<bsl::add_lvalue_reference_t<bool>>::value);
-        static_assert(bsl::is_lvalue_reference<bsl::add_lvalue_reference_t<bool &>>::value);
-        static_assert(bsl::is_lvalue_reference<bsl::add_lvalue_reference_t<bool &&>>::value);
-        static_assert(!bsl::is_rvalue_reference<bsl::add_lvalue_reference_t<bool>>::value);
-        static_assert(!bsl::is_rvalue_reference<bsl::add_lvalue_reference_t<bool &>>::value);
-        static_assert(!bsl::is_rvalue_reference<bsl::add_lvalue_reference_t<bool &&>>::value);
-
-        static_assert(bsl::is_reference<bsl::add_rvalue_reference_t<bool>>::value);
-        static_assert(bsl::is_reference<bsl::add_rvalue_reference_t<bool &>>::value);
-        static_assert(bsl::is_reference<bsl::add_rvalue_reference_t<bool &&>>::value);
-        static_assert(!bsl::is_lvalue_reference<bsl::add_rvalue_reference_t<bool>>::value);
-        static_assert(bsl::is_lvalue_reference<bsl::add_rvalue_reference_t<bool &>>::value);
-        static_assert(!bsl::is_lvalue_reference<bsl::add_rvalue_reference_t<bool &&>>::value);
-        static_assert(bsl::is_rvalue_reference<bsl::add_rvalue_reference_t<bool>>::value);
-        static_assert(!bsl::is_rvalue_reference<bsl::add_rvalue_reference_t<bool &>>::value);
-        static_assert(bsl::is_rvalue_reference<bsl::add_rvalue_reference_t<bool &&>>::value);
-
-        static_assert(!bsl::is_lvalue_reference<bsl::remove_reference_t<bool>>::value);
-        static_assert(!bsl::is_lvalue_reference<bsl::remove_reference_t<bool &>>::value);
-        static_assert(!bsl::is_lvalue_reference<bsl::remove_reference_t<bool &&>>::value);
-        static_assert(!bsl::is_rvalue_reference<bsl::remove_reference_t<bool>>::value);
-        static_assert(!bsl::is_rvalue_reference<bsl::remove_reference_t<bool &>>::value);
-        static_assert(!bsl::is_rvalue_reference<bsl::remove_reference_t<bool &&>>::value);
-
-        static_assert(!bsl::is_reference<bsl::add_lvalue_reference_t<void>>::value);
-        static_assert(!bsl::is_reference<bsl::add_rvalue_reference_t<void>>::value);
+        if (bsl::is_same<bsl::remove_reference_t<bool &>, bool>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

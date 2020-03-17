@@ -48,13 +48,13 @@ namespace bsl
     class is_const final : public false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     class is_const<T const> final : public true_type
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

@@ -40,11 +40,14 @@
 
 namespace bsl
 {
+    /// @cond doxygen off
+
+    /// @brief delegate prototype
     template<typename>
     class delegate;
 
-    /// @class bsl::delegate
-    ///
+    /// @endcond doxygen on
+
     /// <!-- description -->
     ///   @brief Implements a simplified version of std::function. Unlike
     ///     std::function, a bsl::delegate has the following differences:
@@ -223,6 +226,8 @@ namespace bsl
         }
     };
 
+    /// @cond doxygen off
+
     /// @class bsl::delegate
     ///
     /// <!-- description -->
@@ -400,7 +405,7 @@ namespace bsl
         }
     };
 
-    /// @class bsl::delegate
+    /// @class bsl::delegate<void(ARGS...)>
     ///
     /// <!-- description -->
     ///   @brief Implements a simplified version of std::function. Unlike
@@ -576,7 +581,7 @@ namespace bsl
         }
     };
 
-    /// @class bsl::delegate
+    /// @class bsl::delegate<void(ARGS...) noexcept>
     ///
     /// <!-- description -->
     ///   @brief Implements a simplified version of std::function. Unlike
@@ -801,6 +806,8 @@ namespace bsl
     /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename... ARGS>
     delegate(T const &t, void (U::*)(ARGS...) const noexcept)->delegate<void(ARGS...) noexcept>;
+
+    /// @endcond doxygen on
 }
 
 #endif

@@ -26,8 +26,8 @@
 #define EXAMPLE_CONJUNCTION_OVERVIEW_HPP
 
 #include <bsl/conjunction.hpp>
-#include <bsl/is_void.hpp>
 #include <bsl/is_bool.hpp>
+#include <bsl/is_void.hpp>
 #include <bsl/print.hpp>
 
 namespace bsl

@@ -38,13 +38,14 @@ namespace bsl
     ///   @brief If T is a complete enumeration type, provides a member typedef
     ///     type that names the underlying type of T.
     ///   @include example_enum.hpp
-    ///   @include underlying_type/overview.cpp
+    ///   @include example_underlying_type_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class underlying_type final : public type_identity<__underlying_type(T)>
+    class underlying_type final :    // --
+        public type_identity<__underlying_type(T)>
     {};
 
     /// @brief a helper that reduces the verbosity of bsl::underlying_type

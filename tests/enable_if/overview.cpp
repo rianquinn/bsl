@@ -23,6 +23,7 @@
 /// SOFTWARE.
 
 #include <bsl/enable_if.hpp>
+#include <bsl/discard.hpp>
 #include <bsl/is_same.hpp>
 
 #include <bsl/ut.hpp>

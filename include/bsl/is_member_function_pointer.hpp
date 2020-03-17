@@ -49,7 +49,7 @@ namespace bsl
     class is_member_function_pointer final : public false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T, typename U>
     class is_member_function_pointer<T U::*> final :    // --
@@ -61,7 +61,7 @@ namespace bsl
         public bool_constant<is_function<T>::value>
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

@@ -55,7 +55,7 @@ namespace bsl
     class is_integral final : public false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<>
     class is_integral<bool> final : public true_type
@@ -129,7 +129,7 @@ namespace bsl
     class is_integral<bsl::uint64 const> final : public true_type
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

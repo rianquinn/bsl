@@ -25,9 +25,9 @@
 #ifndef EXAMPLE_REMOVE_CONST_OVERVIEW_HPP
 #define EXAMPLE_REMOVE_CONST_OVERVIEW_HPP
 
-#include <bsl/is_const.hpp>
-#include <bsl/add_const.hpp>
 #include <bsl/remove_const.hpp>
+#include <bsl/is_same.hpp>
+#include <bsl/print.hpp>
 
 namespace bsl
 {
@@ -41,10 +41,9 @@ namespace bsl
     inline void
     example_remove_const_overview() noexcept
     {
-        static_assert(bsl::is_const<bsl::add_const_t<bool>>::value);
-        static_assert(bsl::is_const<bsl::add_const_t<bool const>>::value);
-        static_assert(!bsl::is_const<bsl::remove_const_t<bool>>::value);
-        static_assert(!bsl::is_const<bsl::remove_const_t<bool const>>::value);
+        if (bsl::is_same<bsl::remove_const_t<bool const>, bool>::value) {
+            bsl::print("success\n");
+        }
     }
 }
 

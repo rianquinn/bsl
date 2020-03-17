@@ -44,6 +44,7 @@ namespace bsl
 {
     namespace details
     {
+        /// @brief used to detect the presence of a destructor in T
         template<typename T>
         using is_nothrow_destructible_type = decltype(bsl::declval<T &>().~T());
 

@@ -63,7 +63,7 @@ namespace bsl
             using value_t = false_type;
         };
 
-        /// @cond --
+        /// @cond doxygen off
 
         template<typename DEFAULT, template<class...> class OP, typename... ARGS>
         class detector<DEFAULT, void_t<OP<ARGS...>>, OP, ARGS...> final :
@@ -73,7 +73,7 @@ namespace bsl
             using value_t = true_type;
         };
 
-        /// @endcond --
+        /// @endcond doxygen on
     }
 }
 

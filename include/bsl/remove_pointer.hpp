@@ -37,7 +37,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the member typedef type which is the same as T,
     ///     except that its topmost pointer is removed.
-    ///   @include remove_pointer/overview.cpp
+    ///   @include example_remove_pointer_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to remove the pointer from
@@ -50,7 +50,7 @@ namespace bsl
     template<typename T>
     using remove_pointer_t = typename remove_pointer<T>::type;
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     struct remove_pointer<T *> final : public type_identity<T>
@@ -60,7 +60,7 @@ namespace bsl
     struct remove_pointer<T *const> final : public type_identity<T>
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

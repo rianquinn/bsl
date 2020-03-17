@@ -40,7 +40,7 @@ namespace bsl
     ///   @brief Provides the member typedef type which is the type that is
     ///     common between all provided types. For more information, please
     ///     see std::common_type
-    ///   @include example_common_type_overview.cpp
+    ///   @include example_common_type_overview.hpp
     ///
     template<typename...>
     class common_type;
@@ -49,7 +49,7 @@ namespace bsl
     template<typename... T>
     using common_type_t = typename common_type<T...>::type;
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     class common_type<T> final : public type_identity<decay_t<T>>
@@ -65,7 +65,7 @@ namespace bsl
         public type_identity<common_type_t<common_type_t<T1, T2>, R...>>
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

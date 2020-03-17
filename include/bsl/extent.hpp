@@ -32,7 +32,7 @@
 
 namespace bsl
 {
-    /// @class bsl::add_pointer
+    /// @class bsl::extent
     ///
     /// <!-- description -->
     ///   @brief If T is an array type, provides the member constant value
@@ -40,7 +40,7 @@ namespace bsl
     ///     array, if N is in [0, std::rank<T>::value). For any other type, or
     ///     if T is an array of unknown bound along its first dimension and N
     ///     is 0, value is 0.
-    ///   @include example_extent_overview.cpp
+    ///   @include example_extent_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to get the extent from

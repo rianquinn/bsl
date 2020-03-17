@@ -57,7 +57,7 @@ namespace bsl
         public bool_constant<is_floating_point<T>::value>
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<>
     class is_signed<bsl::int8> final : public true_type
@@ -91,7 +91,7 @@ namespace bsl
     class is_signed<bsl::int64 const> final : public true_type
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

@@ -31,7 +31,6 @@
 #include <limits.h>    // NOLINT
 
 namespace bsl
-{
-}
+{}
 
 #endif

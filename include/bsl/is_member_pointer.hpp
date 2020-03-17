@@ -48,7 +48,7 @@ namespace bsl
     class is_member_pointer final : public false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T, typename U>
     class is_member_pointer<T U::*> final : public true_type
@@ -58,7 +58,7 @@ namespace bsl
     class is_member_pointer<T U::*const> final : public true_type
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

@@ -36,7 +36,7 @@ namespace bsl
     ///   @brief Used to indicate that an object "val" may be "moved from",
     ///     i.e. allowing the efficient transfer of resources from "val" to
     ///     another object.
-    ///   @include move/overview.cpp
+    ///   @include example_move_overview.hpp
     ///
     ///   SUPPRESSION: PRQA 4624 - false positive
     ///   - We suppress this because A7-5-1 states that a function shall not

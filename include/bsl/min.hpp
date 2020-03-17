@@ -74,7 +74,7 @@ namespace bsl
     constexpr T const &
     min(T const &a, T const &b, COMPARE &&comp)
     {
-        return (bsl::forward<COMPARE>(comp)(b, a)) ? b : a;
+        return (bsl::forward<COMPARE>(comp)(a, b)) ? b : a;
     }
 }
 

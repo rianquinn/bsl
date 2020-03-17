@@ -78,7 +78,7 @@ namespace bsl
         void FUN(T &&val) = delete;
     }
 
-    /// @class
+    /// @class bsl::reference_wrapper
     ///
     /// <!-- description -->
     ///   @brief bsl::reference_wrapper is a class template that wraps a
@@ -251,7 +251,7 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief Invokes the reference_wrapper as if it were a function.
-        ///   @include reference_wrapper/example_reference_wrapper_callable.hpp
+        ///   @include reference_wrapper/example_reference_wrapper_functor.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none

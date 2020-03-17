@@ -48,7 +48,7 @@ namespace bsl
     class is_pointer final : public false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     class is_pointer<T *> final : public true_type
@@ -58,7 +58,7 @@ namespace bsl
     class is_pointer<T *const> final : public true_type
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

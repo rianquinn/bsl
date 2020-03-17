@@ -37,7 +37,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the member typedef type which is the same as T,
     ///     except that a topmost const qualifier is added.
-    ///   @include example_add_const_overview.cpp
+    ///   @include example_add_const_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to add a const qualifier to
@@ -50,13 +50,13 @@ namespace bsl
     template<typename T>
     using add_const_t = typename add_const<T>::type;
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     class add_const<T const> final : public type_identity<T const>
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

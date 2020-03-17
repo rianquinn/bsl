@@ -37,7 +37,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the member constant value equal to the alignment
     ///     of T.
-    ///   @include example_alignment_of_overview.cpp
+    ///   @include example_alignment_of_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query

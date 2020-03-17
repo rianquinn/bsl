@@ -37,7 +37,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the member typedef type which is the same as T,
     ///     except that its topmost const qualifier is removed.
-    ///   @include remove_const/overview.cpp
+    ///   @include example_remove_const_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to remove the const qualifier from
@@ -50,13 +50,13 @@ namespace bsl
     template<typename T>
     using remove_const_t = typename remove_const<T>::type;
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     struct remove_const<T const> final : public type_identity<T>
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

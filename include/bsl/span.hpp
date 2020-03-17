@@ -29,20 +29,20 @@
 
 namespace bsl
 {
-    template<typename T>
-    class span final : public view<T>
-    {
-        constexpr span() noexcept = default;
+    // template<typename T>
+    // class span final : public view<T>
+    // {
+    //     constexpr span() noexcept = default;
 
-        template<bsl::uintmax N>
-        explicit constexpr span(T (&arr)[N]) noexcept    // --
-            : view<T>{arr}
-        {}
+    //     template<bsl::uintmax N>
+    //     explicit constexpr span(T (&arr)[N]) noexcept    // --
+    //         : view<T>{arr}
+    //     {}
 
-        explicit constexpr span(T *const data, bsl::uintmax size) noexcept    // --
-            : view<T>{data, size}
-        {}
-    };
+    //     explicit constexpr span(T *const data, bsl::uintmax size) noexcept    // --
+    //         : view<T>{data, size}
+    //     {}
+    // };
 }
 
 #endif

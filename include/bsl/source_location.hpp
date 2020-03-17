@@ -40,7 +40,7 @@ namespace bsl
     ///     change how the code is compiled or used, with the exception that
     ///     we do not include the column() as this does not seem to be
     ///     implemented by any compilers yet.
-    ///   @include source_location/overview.cpp
+    ///   @include example_source_location_overview.hpp
     ///
     class source_location final
     {
@@ -77,7 +77,7 @@ namespace bsl
         ///   @brief Creates a default constructed source location. By default,
         ///     a source location's file name is "unknown", the function name
         ///     is "unknown" and the line location is "-1".
-        ///   @include source_location/constructor.cpp
+        ///   @include source_location/example_source_location_default_constructor.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -92,7 +92,7 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Constructs a new source_location object corresponding to
         ///     the location of the call site.
-        ///   @include source_location/current.cpp
+        ///   @include source_location/example_source_location_current.hpp
         ///
         /// <!-- notes -->
         ///   @note You should not set the parameters manually. Instead,
@@ -130,7 +130,7 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the file name associated with the
         ///     bsl::source_location
-        ///   @include source_location/file_name.cpp
+        ///   @include source_location/example_source_location_file_name.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -148,7 +148,7 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the function name associated with the
         ///     bsl::source_location
-        ///   @include source_location/function_name.cpp
+        ///   @include source_location/example_source_location_function_name.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -166,7 +166,7 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the line location associated with the
         ///     bsl::source_location
-        ///   @include source_location/line.cpp
+        ///   @include source_location/example_source_location_line.hpp
         ///
         /// <!-- contracts -->
         ///   @pre none
@@ -195,7 +195,7 @@ namespace bsl
     ///     bsl::source_location::current() to help reduce how large this
     ///     code must be. They are equivalent, and should not produce any
     ///     additional overhead in release mode.
-    ///   @include source_location/here.cpp
+        ///   @include source_location/example_source_location_here.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none

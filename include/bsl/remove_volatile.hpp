@@ -55,7 +55,7 @@ namespace bsl
     template<typename T>
     using remove_volatile_t = typename remove_volatile<T>::type;
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     struct remove_volatile<T volatile> final : public type_identity<T>
@@ -63,7 +63,7 @@ namespace bsl
         static_assert(sizeof(T) != sizeof(T), "volatile not supported");
     };
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

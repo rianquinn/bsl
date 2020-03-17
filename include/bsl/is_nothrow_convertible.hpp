@@ -139,7 +139,7 @@ namespace bsl
         }
     }
 
-    /// @class bsl::is_const
+    /// @class bsl::is_nothrow_convertible
     ///
     /// <!-- description -->
     ///   @brief If the provided type is convertible from "From" to "To",

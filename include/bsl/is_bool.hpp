@@ -48,7 +48,7 @@ namespace bsl
     class is_bool final : public false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<>
     class is_bool<bool> final : public true_type
@@ -58,7 +58,7 @@ namespace bsl
     class is_bool<bool const> final : public true_type
     {};
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif

@@ -23,6 +23,7 @@
 /// SOFTWARE.
 
 #include <bsl/is_aggregate.hpp>
+#include <bsl/discard.hpp>
 #include <bsl/ut.hpp>
 
 namespace

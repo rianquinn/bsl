@@ -23,9 +23,9 @@
 /// SOFTWARE.
 
 #include <bsl/conjunction.hpp>
-#include <bsl/is_void.hpp>
 #include <bsl/is_bool.hpp>
 #include <bsl/is_same.hpp>
+#include <bsl/is_void.hpp>
 
 #include <bsl/ut.hpp>
 

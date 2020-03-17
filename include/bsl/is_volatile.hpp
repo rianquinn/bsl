@@ -53,7 +53,7 @@ namespace bsl
     class is_volatile final : public false_type
     {};
 
-    /// @cond --
+    /// @cond doxygen off
 
     template<typename T>
     class is_volatile<T volatile> final : public true_type
@@ -61,7 +61,7 @@ namespace bsl
         static_assert(sizeof(T) != sizeof(T), "volatile not supported");
     };
 
-    /// @endcond --
+    /// @endcond doxygen on
 }
 
 #endif
