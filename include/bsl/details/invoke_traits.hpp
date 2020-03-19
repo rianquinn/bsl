@@ -168,7 +168,6 @@ namespace bsl
         ///     allowing invoke_result to be used in SFINAE.
         ///
         /// <!-- template parameters -->
-        ///   @tparam AlwaysVoid is always "void"
         ///   @tparam FUNC the type that defines the function being called
         ///   @tparam TN the types that define the arguments passed to the
         ///     provided function when called.

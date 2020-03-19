@@ -45,9 +45,8 @@ namespace bsl
     /// <!-- template parameters -->
     ///   @tparam GUARD used to prevent you from creating an aligned_union
     ///     and not an aligned_union_t
-    ///   @tparam N the size of the storage buffer in bytes
-    ///   @tparam A the alignment of the sotrage buffer. This defaults to
-    ///     0, which means this is "unaligned" by default.
+    ///   @tparam LEN the size of the storage buffer in bytes
+    ///   @tparam TYPES the types that make up the union
     ///
     template<typename GUARD, bsl::uintmax LEN, typename... TYPES>
     struct aligned_union final

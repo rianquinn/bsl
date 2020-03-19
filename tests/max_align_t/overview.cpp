@@ -38,7 +38,7 @@
 ///   @return Always returns bsl::exit_success.
 ///
 bsl::exit_code
-main()
+main() noexcept
 {
     using namespace bsl;
     static_assert(alignof(bsl::max_align_t) >= alignof(bsl::uintmax));

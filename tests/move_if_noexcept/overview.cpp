@@ -28,6 +28,10 @@
 
 namespace
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunneeded-member-function"
+#pragma clang diagnostic ignored "-Wunused-member-function"
+
     bool g_moved{};
 
     class myclass final
@@ -105,6 +109,8 @@ namespace
             return *this;
         }
     };
+
+#pragma clang diagnostic pop
 }
 
 /// <!-- description -->
@@ -120,7 +126,7 @@ namespace
 ///   @return Always returns bsl::exit_success.
 ///
 bsl::exit_code
-main()
+main() noexcept
 {
     using namespace bsl;
     bsl::set_ut_reset_handler([]() {

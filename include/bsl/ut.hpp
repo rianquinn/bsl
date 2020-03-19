@@ -32,6 +32,7 @@
 #include "exit_code.hpp"
 #include "forward.hpp"
 #include "invoke.hpp"
+#include "main.hpp"
 #include "print.hpp"
 #include "source_location.hpp"
 
@@ -298,7 +299,7 @@ namespace bsl
     ///   @param sloc used to identify the location in the unit test that a
     ///     check failed.
     ///
-    inline void
+    [[noreturn]] inline void
     ut_failure(sloc_type const &sloc = here()) noexcept
     {
         bsl::print("%s%s%s ", red, "[UNIT TEST FAILED]", reset_color);

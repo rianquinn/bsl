@@ -28,6 +28,9 @@
 
 namespace
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunneeded-internal-declaration"
+
     // clang-format off
 
     constexpr void
@@ -46,10 +49,10 @@ namespace
 
     template<bsl::uintmax N>
     [[nodiscard]] constexpr bsl::int32
-    test_array(bsl::int32 (&array)[N]) noexcept // NOLINT
+    test_array(bsl::int32 (&array)[N]) noexcept    // NOLINT
     {
         bsl::int32 answer{};
-        bsl::for_each (array, [&answer](auto &elem, auto index) {
+        bsl::for_each(array, [&answer](auto &elem, auto index) {
             bsl::discard(index);
             answer += elem;
         });
@@ -59,10 +62,62 @@ namespace
 
     template<bsl::uintmax N>
     [[nodiscard]] constexpr bsl::int32
-    test_array(bsl::int32 const (&array)[N]) noexcept // NOLINT
+    test_array(bsl::int32 const (&array)[N]) noexcept    // NOLINT
     {
         bsl::int32 answer{};
-        bsl::for_each (array, [&answer](auto const &elem, auto index) {
+        bsl::for_each(array, [&answer](auto const &elem, auto index) {
+            bsl::discard(index);
+            answer += elem;
+        });
+
+        return answer;
+    }
+
+    template<bsl::uintmax N>
+    [[nodiscard]] constexpr bsl::int32
+    test_array_ptr(bsl::int32 (&array)[N]) noexcept    // NOLINT
+    {
+        bsl::int32 answer{};
+         bsl::for_each(array, N, [&answer](auto &elem, auto index) {    // NOLINT
+            bsl::discard(index);
+            answer += elem;
+        });
+
+        return answer;
+    }
+
+    template<bsl::uintmax N>
+    [[nodiscard]] constexpr bsl::int32
+    test_array_ptr(bsl::int32 const (&array)[N]) noexcept    // NOLINT
+    {
+        bsl::int32 answer{};
+        bsl::for_each(array, N, [&answer](auto const &elem, auto index) {    // NOLINT
+            bsl::discard(index);
+            answer += elem;
+        });
+
+        return answer;
+    }
+
+    [[nodiscard]] constexpr bsl::int32
+    test_array_ptr_nullptr() noexcept    // NOLINT
+    {
+        bsl::int32 *array{};
+        bsl::int32 answer{};
+        bsl::for_each(array, 6, [&answer](auto &elem, auto index) {    // NOLINT
+            bsl::discard(index);
+            answer += elem;
+        });
+
+        return answer;
+    }
+
+    template<bsl::uintmax N>
+    [[nodiscard]] constexpr bsl::int32
+    test_array_ptr_0_size(bsl::int32 const (&array)[N]) noexcept    // NOLINT
+    {
+        bsl::int32 answer{};
+        bsl::for_each(array, 0, [&answer](auto &elem, auto index) {    // NOLINT
             bsl::discard(index);
             answer += elem;
         });
@@ -71,6 +126,8 @@ namespace
     }
 
     // clang-format on
+
+#pragma clang diagnostic pop
 }
 
 /// <!-- description -->
@@ -86,7 +143,7 @@ namespace
 ///   @return Always returns bsl::exit_success.
 ///
 bsl::exit_code
-main()
+main() noexcept
 {
     using namespace bsl;
 
@@ -95,24 +152,75 @@ main()
             bsl::int32 array[1]{42};                       // NOLINT
             bsl::ut_then{} = [&array]() {                  // NOLINT
                 bsl::ut_check(test_array(array) == 42);    // NOLINT
+                static_assert(test_array({42}) == 42);     // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[1]{42};                           // NOLINT
+            bsl::ut_then{} = [&array]() {                      // NOLINT
+                bsl::ut_check(test_array_ptr(array) == 42);    // NOLINT
+                static_assert(test_array_ptr({42}) == 42);     // NOLINT
             };
         };
     };
 
     bsl::ut_scenario{"for_each array size 6"} = []() {
         bsl::ut_given{} = []() {
-            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};      // NOLINT
-            bsl::ut_then{} = [&array]() {                   // NOLINT
-                bsl::ut_check(test_array(array) == 108);    // NOLINT
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                       // NOLINT
+            bsl::ut_then{} = [&array]() {                                    // NOLINT
+                bsl::ut_check(test_array(array) == 108);                     // NOLINT
+                static_assert(test_array({4, 8, 15, 16, 23, 42}) == 108);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                           // NOLINT
+            bsl::ut_then{} = [&array]() {                                        // NOLINT
+                bsl::ut_check(test_array_ptr(array) == 108);                     // NOLINT
+                static_assert(test_array_ptr({4, 8, 15, 16, 23, 42}) == 108);    // NOLINT
             };
         };
     };
 
-    static_assert(test_array({42}) == 42);                       // NOLINT
-    static_assert(test_array({4, 8, 15, 16, 23, 42}) == 108);    // NOLINT
+    bsl::ut_scenario{"except"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                       // NOLINT
+            bsl::ut_then{} = []() {                                          // NOLINT
+                static_assert(!noexcept(for_each(array, test_func2)));       // NOLINT
+                static_assert(!noexcept(for_each(array, 6, test_func2)));    // NOLINT
+            };
+        };
+    };
 
-    static_assert(noexcept(for_each({42}, test_func1)));
-    static_assert(!noexcept(for_each({42}, test_func2)));
+    bsl::ut_scenario{"noexcept"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                      // NOLINT
+            bsl::ut_then{} = []() {                                         // NOLINT
+                static_assert(noexcept(for_each(array, test_func1)));       // NOLINT
+                static_assert(noexcept(for_each(array, 6, test_func1)));    // NOLINT
+            };
+        };
+    };
+
+    bsl::ut_scenario{"nullptr"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::ut_then{} = []() {                              // NOLINT
+                bsl::ut_check(test_array_ptr_nullptr() == 0);    // NOLINT
+                static_assert(test_array_ptr_nullptr() == 0);    // NOLINT
+            };
+        };
+    };
+
+    bsl::ut_scenario{"0 size"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                                // NOLINT
+            bsl::ut_then{} = [&array]() {                                             // NOLINT
+                bsl::ut_check(test_array_ptr_0_size(array) == 0);                     // NOLINT
+                static_assert(test_array_ptr_0_size({4, 8, 15, 16, 23, 42}) == 0);    // NOLINT
+            };
+        };
+    };
 
     return bsl::ut_success();
 }

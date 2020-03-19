@@ -398,16 +398,18 @@ endif()
 
 string(APPEND CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} "
+    "-ffreestanding "
     "-fno-exceptions "
     "-fno-rtti "
     "-fcomment-block-commands=include "
     "-fcomment-block-commands=cond "
     "-fcomment-block-commands=endcond "
-    # "-Weverything "
-    # "-Wno-c++98-compat "
-    # "-Wno-padded "
-    # "-Wno-weak-vtables "
-    # "-Wno-ctad-maybe-unsupported "
+    "-Weverything "
+    "-Wno-c++98-compat "
+    "-Wno-c++98-compat-pedantic "
+    "-Wno-padded "
+    "-Wno-weak-vtables "
+    "-Wno-ctad-maybe-unsupported "
 )
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -Werror")

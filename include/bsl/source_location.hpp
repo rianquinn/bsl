@@ -195,7 +195,7 @@ namespace bsl
     ///     bsl::source_location::current() to help reduce how large this
     ///     code must be. They are equivalent, and should not produce any
     ///     additional overhead in release mode.
-        ///   @include source_location/example_source_location_here.hpp
+    ///   @include source_location/example_source_location_here.hpp
     ///
     /// <!-- contracts -->
     ///   @pre none

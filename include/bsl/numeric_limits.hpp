@@ -91,7 +91,6 @@ namespace bsl
         /// @brief stores whether or T detected tinyness before rounding
         static constexpr bool tinyness_before{false};
 
-        /// @brief stores the
         /// <!-- description -->
         ///   @brief Returns the min value of T
         ///   @include example_numeric_limits_overview.hpp
@@ -109,7 +108,6 @@ namespace bsl
             return {};
         }
 
-        /// @brief stores the
         /// <!-- description -->
         ///   @brief Returns the lowest value of T
         ///   @include example_numeric_limits_overview.hpp
@@ -127,7 +125,6 @@ namespace bsl
             return {};
         }
 
-        /// @brief stores the
         /// <!-- description -->
         ///   @brief Returns the max value of T
         ///   @include example_numeric_limits_overview.hpp
@@ -145,7 +142,6 @@ namespace bsl
             return {};
         }
 
-        /// @brief stores the
         /// <!-- description -->
         ///   @brief Returns the floating point resolution
         ///   @include example_numeric_limits_overview.hpp
@@ -163,7 +159,6 @@ namespace bsl
             return {};
         }
 
-        /// @brief stores the
         /// <!-- description -->
         ///   @brief Returns the rounding error of T
         ///   @include example_numeric_limits_overview.hpp
@@ -181,7 +176,6 @@ namespace bsl
             return {};
         }
 
-        /// @brief stores the
         /// <!-- description -->
         ///   @brief Returns the value of infinity for T
         ///   @include example_numeric_limits_overview.hpp
@@ -199,7 +193,6 @@ namespace bsl
             return {};
         }
 
-        /// @brief stores the
         /// <!-- description -->
         ///   @brief Returns the quiet NaN value for T
         ///   @include example_numeric_limits_overview.hpp
@@ -217,7 +210,6 @@ namespace bsl
             return {};
         }
 
-        /// @brief stores the
         /// <!-- description -->
         ///   @brief Returns the signaling NaN value for T
         ///   @include example_numeric_limits_overview.hpp
@@ -235,7 +227,6 @@ namespace bsl
             return {};
         }
 
-        /// @brief stores the
         /// <!-- description -->
         ///   @brief Returns the smallest subnormal value for T
         ///   @include example_numeric_limits_overview.hpp

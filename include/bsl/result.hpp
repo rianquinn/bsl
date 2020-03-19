@@ -674,7 +674,7 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief Returns true if the lhs is equal to the rhs, false otherwise
-        ///   @include result/example_result_equals.hpp
+    ///   @include result/example_result_equals.hpp
     ///   @related bsl::result
     ///
     /// <!-- inputs/outputs -->
@@ -699,7 +699,7 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief Returns false if the lhs is equal to the rhs, true otherwise
-        ///   @include result/example_result_not_equals.hpp
+    ///   @include result/example_result_not_equals.hpp
     ///   @related bsl::result
     ///
     /// <!-- inputs/outputs -->

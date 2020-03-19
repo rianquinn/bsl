@@ -40,7 +40,7 @@
 ///   @return Always returns bsl::exit_success.
 ///
 bsl::exit_code
-main()
+main() noexcept
 {
     using namespace bsl;
     static_assert(is_same<type_identity<bool>::type, bool>::value);

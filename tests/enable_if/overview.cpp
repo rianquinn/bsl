@@ -152,7 +152,7 @@ namespace
 ///   @return Always returns bsl::exit_success.
 ///
 bsl::exit_code
-main()
+main() noexcept
 {
     using namespace bsl;
 

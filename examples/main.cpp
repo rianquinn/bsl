@@ -25,6 +25,7 @@
 #include <bsl/cstr_type.hpp>
 #include <bsl/exit_code.hpp>
 #include <bsl/delegate.hpp>
+#include <bsl/main.hpp>
 #include <bsl/print.hpp>
 
 #include "example_add_const_overview.hpp"
@@ -54,6 +55,20 @@
 #include "byte/example_byte_to_integer.hpp"
 #include "byte/example_byte_xor_assign.hpp"
 #include "byte/example_byte_xor.hpp"
+#include "example_char_traits_overview.hpp"
+#include "char_traits/example_char_traits_assign.hpp"
+#include "char_traits/example_char_traits_compare.hpp"
+#include "char_traits/example_char_traits_copy.hpp"
+#include "char_traits/example_char_traits_eof.hpp"
+#include "char_traits/example_char_traits_eq_int_type.hpp"
+#include "char_traits/example_char_traits_eq.hpp"
+#include "char_traits/example_char_traits_find.hpp"
+#include "char_traits/example_char_traits_length.hpp"
+#include "char_traits/example_char_traits_lt.hpp"
+#include "char_traits/example_char_traits_move.hpp"
+#include "char_traits/example_char_traits_not_eof.hpp"
+#include "char_traits/example_char_traits_to_char_type.hpp"
+#include "char_traits/example_char_traits_to_int_type.hpp"
 #include "example_color_overview.hpp"
 #include "example_common_type_overview.hpp"
 #include "example_conditional_overview.hpp"
@@ -261,12 +276,8 @@ namespace
 ///   @return 0 on success, non-0 on failure
 ///
 bsl::exit_code
-main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
+main() noexcept
 {
-    if ((0 == argc) || (nullptr == argv)) {
-        return bsl::exit_failure;
-    }
-
     // clang-format off
 
     example(&bsl::example_add_const_overview, "example_add_const_overview");
@@ -296,6 +307,20 @@ main(bsl::int32 const argc, bsl::cstr_type const *const argv) noexcept
     example(&bsl::example_byte_to_integer, "example_byte_to_integer");
     example(&bsl::example_byte_xor_assign, "example_byte_xor_assign");
     example(&bsl::example_byte_xor, "example_byte_xor");
+    example(&bsl::example_char_traits_overview, "example_char_traits_overview");
+    example(&bsl::example_char_traits_assign, "example_char_traits_assign");
+    example(&bsl::example_char_traits_compare, "example_char_traits_compare");
+    example(&bsl::example_char_traits_copy, "example_char_traits_copy");
+    example(&bsl::example_char_traits_eof, "example_char_traits_eof");
+    example(&bsl::example_char_traits_eq_int_type, "example_char_traits_eq_int_type");
+    example(&bsl::example_char_traits_eq, "example_char_traits_eq");
+    example(&bsl::example_char_traits_find, "example_char_traits_find");
+    example(&bsl::example_char_traits_length, "example_char_traits_length");
+    example(&bsl::example_char_traits_lt, "example_char_traits_lt");
+    example(&bsl::example_char_traits_move, "example_char_traits_move");
+    example(&bsl::example_char_traits_not_eof, "example_char_traits_not_eof");
+    example(&bsl::example_char_traits_to_char_type, "example_char_traits_to_char_type");
+    example(&bsl::example_char_traits_to_int_type, "example_char_traits_to_int_type");
     example(&bsl::example_color_overview, "example_color_overview");
     example(&bsl::example_common_type_overview, "example_common_type_overview");
     example(&bsl::example_conditional_overview, "example_conditional_overview");

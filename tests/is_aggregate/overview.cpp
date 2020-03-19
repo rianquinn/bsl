@@ -103,7 +103,7 @@ namespace
 ///   @return Always returns bsl::exit_success.
 ///
 bsl::exit_code
-main()
+main() noexcept
 {
     using namespace bsl;
     bsl::discard(myclass_nonaggregate1{}.get());

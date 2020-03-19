@@ -40,7 +40,7 @@ namespace bsl
     ///   @include example_negation_overview.hpp
     ///
     /// <!-- template parameters -->
-    ///   @tparam BN a list of bool_constant types
+    ///   @tparam B the boolean type to negate
     ///
     template<typename B>
     class negation final :    // --

@@ -27,6 +27,9 @@
 
 namespace
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunneeded-member-function"
+
     class myclass1 final
     {
     public:
@@ -36,6 +39,9 @@ namespace
         constexpr myclass1 &operator=(myclass1 const &) &noexcept = default;
         constexpr myclass1(myclass1 &&) noexcept = default;
         constexpr myclass1 &operator=(myclass1 &&) &noexcept = default;
+
+        explicit constexpr myclass1(bool val) noexcept : data{val}
+        {}
 
         bool data{};    // NOLINT
     };
@@ -50,6 +56,9 @@ namespace
         constexpr myclass2(myclass2 &&) noexcept(false) = default;
         constexpr myclass2 &operator=(myclass2 &&) &noexcept = default;
 
+        explicit constexpr myclass2(bool val) noexcept : data{val}
+        {}
+
         bool data{};    // NOLINT
     };
 
@@ -63,6 +72,9 @@ namespace
         constexpr myclass3(myclass3 &&) noexcept = default;
         constexpr myclass3 &operator=(myclass3 &&) & noexcept(false) = default;
 
+        explicit constexpr myclass3(bool val) noexcept : data{val}
+        {}
+
         bool data{};    // NOLINT
     };
 
@@ -75,6 +87,9 @@ namespace
         constexpr myclass4 &operator=(myclass4 const &) &noexcept = default;
         constexpr myclass4(myclass4 &&) noexcept(false) = default;
         constexpr myclass4 &operator=(myclass4 &&) & noexcept(false) = default;
+
+        explicit constexpr myclass4(bool val) noexcept : data{val}
+        {}
 
         bool data{};    // NOLINT
     };
@@ -138,6 +153,8 @@ namespace
 
         return val1.data;
     }
+
+#pragma clang diagnostic push
 }
 
 /// <!-- description -->
@@ -153,7 +170,7 @@ namespace
 ///   @return Always returns bsl::exit_success.
 ///
 bsl::exit_code
-main()
+main() noexcept
 {
     using namespace bsl;
 

@@ -72,7 +72,6 @@ namespace bsl
     ///   @tparam ARGS the types of args to initialize T with
     ///   @param ptr a pointer to the object to initialize
     ///   @param args the args to initialize T with
-    ///   @return N/A, returns void
     ///
     /// <!-- exceptions -->
     ///   @throw throws if T throws during construction

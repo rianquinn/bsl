@@ -29,6 +29,9 @@
 
 namespace
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-member-function"
+
     [[nodiscard]] constexpr bool
     test_func(bool val)
     {
@@ -74,6 +77,8 @@ namespace
 
     constexpr bsl::reference_wrapper<test_final const> g_rw_test_final{g_test_final};
     constexpr bsl::reference_wrapper<test_noexcept const> g_rw_test_noexcept{g_test_noexcept};
+
+#pragma clang diagnostic pop
 }
 
 /// <!-- description -->
@@ -89,7 +94,7 @@ namespace
 ///   @return Always returns bsl::exit_success.
 ///
 bsl::exit_code
-main()
+main() noexcept
 {
     using namespace bsl;
 

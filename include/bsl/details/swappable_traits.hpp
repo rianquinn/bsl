@@ -54,7 +54,7 @@ namespace bsl
         ///
         /// <!-- template parameters -->
         ///   @tparam AlwaysVoid1 is always "void"
-        ///   @tparam AlwaysVoid1 is always "void"
+        ///   @tparam AlwaysVoid2 is always "void"
         ///   @tparam T the first type to query
         ///   @tparam U the second type to query
         ///
@@ -146,8 +146,6 @@ namespace bsl
         ///     is still supported.
         ///
         /// <!-- template parameters -->
-        ///   @tparam AlwaysVoid1 is always "void"
-        ///   @tparam AlwaysVoid1 is always "void"
         ///   @tparam T the first type to query
         ///   @tparam U the second type to query
         ///

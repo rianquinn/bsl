@@ -43,7 +43,7 @@ namespace bsl
     /// <!-- template parameters -->
     ///   @tparam BN a list of bool_constant types
     ///
-    template<typename...>
+    template<typename... BN>
     class disjunction final : false_type
     {};
 

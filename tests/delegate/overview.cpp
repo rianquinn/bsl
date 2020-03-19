@@ -131,7 +131,7 @@ namespace
 ///   @return Always returns bsl::exit_success.
 ///
 bsl::exit_code
-main()
+main() noexcept
 {
     using namespace bsl;
     bsl::set_ut_reset_handler(&reset_handler);

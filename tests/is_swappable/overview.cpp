@@ -27,6 +27,9 @@
 
 namespace
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunneeded-internal-declaration"
+
     struct mystruct1 final
     {};
 
@@ -39,7 +42,10 @@ namespace
     void swap(mystruct1, mystruct1) noexcept;
     void swap(mystruct2, mystruct2) noexcept = delete;
     void swap(mystruct3, mystruct3);
+
+#pragma clang diagnostic pop
 }
+
 /// <!-- description -->
 ///   @brief Main function for this unit test. If a call to ut_check() fails
 ///     the application will fast fail. If all calls to ut_check() pass, this
@@ -53,7 +59,7 @@ namespace
 ///   @return Always returns bsl::exit_success.
 ///
 bsl::exit_code
-main()
+main() noexcept
 {
     using namespace bsl;
 

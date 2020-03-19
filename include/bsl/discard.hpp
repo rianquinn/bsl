@@ -28,6 +28,9 @@
 #ifndef BSL_DISCARD_HPP
 #define BSL_DISCARD_HPP
 
+#pragma clang diagnostic push                            // PRQA S 1-10000 // NOLINT
+#pragma clang diagnostic ignored "-Wunused-parameter"    // PRQA S 1-10000 // NOLINT
+
 namespace bsl
 {
     /// <!-- description -->
@@ -53,12 +56,13 @@ namespace bsl
     /// <!-- inputs/outputs -->
     ///   @tparam ARGS the types that define the provided arguments to ignore
     ///   @param args the arguments to ignore
-    ///   @return N/A, returns void
     ///
     template<typename... ARGS>
     constexpr void
-    discard(ARGS &&...args) noexcept    // PRQA S 4649 // NOLINT
+    discard(ARGS &&... args) noexcept    // PRQA S 4649 // NOLINT
     {}
 }
+
+#pragma clang diagnostic pop    // PRQA S 1-10000 // NOLINT
 
 #endif
