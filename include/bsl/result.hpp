@@ -97,24 +97,24 @@ namespace bsl
         {
             if (details::result_type::contains_t == lhs.m_which) {
                 if (details::result_type::contains_t == rhs.m_which) {
-                    bsl::swap(lhs.m_t, rhs.m_t);
+                    bsl::swap(lhs.m_t, rhs.m_t);    // NOLINT
                 }
                 else {
-                    E tmp_e{bsl::move(rhs.m_e)};
-                    construct_at<T>(&rhs.m_t, bsl::move(lhs.m_t));
-                    destroy_at(&lhs.m_t);
-                    construct_at<E>(&lhs.m_e, bsl::move(tmp_e));
+                    E tmp_e{bsl::move(rhs.m_e)};                      // NOLINT
+                    construct_at<T>(&rhs.m_t, bsl::move(lhs.m_t));    // NOLINT
+                    destroy_at(&lhs.m_t);                             // NOLINT
+                    construct_at<E>(&lhs.m_e, bsl::move(tmp_e));      // NOLINT
                 }
             }
             else {
                 if (details::result_type::contains_t == rhs.m_which) {
-                    E tmp_e{bsl::move(lhs.m_e)};
-                    construct_at<T>(&lhs.m_t, bsl::move(rhs.m_t));
-                    destroy_at(&rhs.m_t);
-                    construct_at<E>(&rhs.m_e, bsl::move(tmp_e));
+                    E tmp_e{bsl::move(lhs.m_e)};                      // NOLINT
+                    construct_at<T>(&lhs.m_t, bsl::move(rhs.m_t));    // NOLINT
+                    destroy_at(&rhs.m_t);                             // NOLINT
+                    construct_at<E>(&rhs.m_e, bsl::move(tmp_e));      // NOLINT
                 }
                 else {
-                    bsl::swap(lhs.m_e, rhs.m_e);
+                    bsl::swap(lhs.m_e, rhs.m_e);    // NOLINT
                 }
             }
 
@@ -372,10 +372,10 @@ namespace bsl
             : m_which{o.m_which}                             // PRQA S 4050
         {
             if (details::result_type::contains_t == m_which) {
-                construct_at<T>(&m_t, o.m_t);
+                construct_at<T>(&m_t, o.m_t);    // NOLINT
             }
             else {
-                construct_at<E>(&m_e, o.m_e);
+                construct_at<E>(&m_e, o.m_e);    // NOLINT
             }
         }
 
@@ -422,10 +422,10 @@ namespace bsl
             : m_which{o.m_which}                 // PRQA S 4050
         {
             if (details::result_type::contains_t == m_which) {
-                construct_at<T>(&m_t, bsl::move(o.m_t));
+                construct_at<T>(&m_t, bsl::move(o.m_t));    // NOLINT
             }
             else {
-                construct_at<E>(&m_e, bsl::move(o.m_e));
+                construct_at<E>(&m_e, bsl::move(o.m_e));    // NOLINT
             }
         }
 
@@ -463,7 +463,7 @@ namespace bsl
         ~result() noexcept
         {
             if (details::result_type::contains_t == m_which) {
-                destroy_at(&m_t);
+                destroy_at(&m_t);    // NOLINT
             }
         }
 
@@ -539,7 +539,7 @@ namespace bsl
             noexcept
         {
             if (details::result_type::contains_t == m_which) {
-                return &m_t;    // PRQA S 4024
+                return &m_t;    // PRQA S 4024 // NOLINT
             }
 
             return nullptr;
@@ -572,7 +572,7 @@ namespace bsl
         get_if() const &noexcept
         {
             if (details::result_type::contains_t == m_which) {
-                return &m_t;
+                return &m_t;    // NOLINT
             }
 
             return nullptr;
@@ -606,7 +606,7 @@ namespace bsl
         errc(E const &fallback = E{}) const noexcept
         {
             if (details::result_type::contains_e == m_which) {
-                return m_e;
+                return m_e;    // NOLINT
             }
 
             return fallback;

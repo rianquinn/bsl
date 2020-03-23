@@ -24,14 +24,13 @@
 
 #include <bsl/for_each.hpp>
 #include <bsl/discard.hpp>
+#include <bsl/numeric_limits.hpp>
 #include <bsl/ut.hpp>
 
 namespace
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunneeded-internal-declaration"
-
-    // clang-format off
 
     constexpr void
     test_func1(bsl::int32 const &elem, bsl::uintmax index) noexcept
@@ -48,8 +47,8 @@ namespace
     }
 
     template<bsl::uintmax N>
-    [[nodiscard]] constexpr bsl::int32
-    test_array(bsl::int32 (&array)[N]) noexcept    // NOLINT
+    [[nodiscard]] constexpr bsl::int32                 // --
+        test_array(bsl::int32 (&array)[N]) noexcept    // NOLINT
     {
         bsl::int32 answer{};
         bsl::for_each(array, [&answer](auto &elem, auto index) {
@@ -61,7 +60,36 @@ namespace
     }
 
     template<bsl::uintmax N>
-    [[nodiscard]] constexpr bsl::int32
+    [[nodiscard]] constexpr bsl::int32                                       // --
+    test_array_p(bsl::int32 (&array)[N], bsl::uintmax const pos) noexcept    // NOLINT
+    {
+        bsl::int32 answer{};
+        bsl::for_each(array, pos, [&answer](auto &elem, auto index) {
+            bsl::discard(index);
+            answer += elem;
+        });
+
+        return answer;
+    }
+
+    template<bsl::uintmax N>
+    [[nodiscard]] constexpr bsl::int32    // --
+    test_array_pc(                        // --
+        bsl::int32 (&array)[N],           // NOLINT
+        bsl::uintmax const pos,           // --
+        bsl::uintmax const count) noexcept
+    {
+        bsl::int32 answer{};
+        bsl::for_each(array, pos, count, [&answer](auto &elem, auto index) {
+            bsl::discard(index);
+            answer += elem;
+        });
+
+        return answer;
+    }
+
+    template<bsl::uintmax N>
+    [[nodiscard]] constexpr bsl::int32                   // --
     test_array(bsl::int32 const (&array)[N]) noexcept    // NOLINT
     {
         bsl::int32 answer{};
@@ -74,11 +102,11 @@ namespace
     }
 
     template<bsl::uintmax N>
-    [[nodiscard]] constexpr bsl::int32
-    test_array_ptr(bsl::int32 (&array)[N]) noexcept    // NOLINT
+    [[nodiscard]] constexpr bsl::int32                                             // --
+    test_array_p(bsl::int32 const (&array)[N], bsl::uintmax const pos) noexcept    // NOLINT
     {
         bsl::int32 answer{};
-         bsl::for_each(array, N, [&answer](auto &elem, auto index) {    // NOLINT
+        bsl::for_each(array, pos, [&answer](auto const &elem, auto index) {
             bsl::discard(index);
             answer += elem;
         });
@@ -87,45 +115,20 @@ namespace
     }
 
     template<bsl::uintmax N>
-    [[nodiscard]] constexpr bsl::int32
-    test_array_ptr(bsl::int32 const (&array)[N]) noexcept    // NOLINT
+    [[nodiscard]] constexpr bsl::int32    // --
+    test_array_pc(                        // --
+        bsl::int32 const (&array)[N],     // NOLINT
+        bsl::uintmax const pos,           // --
+        bsl::uintmax const count) noexcept
     {
         bsl::int32 answer{};
-        bsl::for_each(array, N, [&answer](auto const &elem, auto index) {    // NOLINT
+        bsl::for_each(array, pos, count, [&answer](auto const &elem, auto index) {
             bsl::discard(index);
             answer += elem;
         });
 
         return answer;
     }
-
-    [[nodiscard]] constexpr bsl::int32
-    test_array_ptr_nullptr() noexcept    // NOLINT
-    {
-        bsl::int32 *array{};
-        bsl::int32 answer{};
-        bsl::for_each(array, 6, [&answer](auto &elem, auto index) {    // NOLINT
-            bsl::discard(index);
-            answer += elem;
-        });
-
-        return answer;
-    }
-
-    template<bsl::uintmax N>
-    [[nodiscard]] constexpr bsl::int32
-    test_array_ptr_0_size(bsl::int32 const (&array)[N]) noexcept    // NOLINT
-    {
-        bsl::int32 answer{};
-        bsl::for_each(array, 0, [&answer](auto &elem, auto index) {    // NOLINT
-            bsl::discard(index);
-            answer += elem;
-        });
-
-        return answer;
-    }
-
-    // clang-format on
 
 #pragma clang diagnostic pop
 }
@@ -146,6 +149,7 @@ bsl::exit_code
 main() noexcept
 {
     using namespace bsl;
+    constexpr bsl::uintmax max{numeric_limits<bsl::uintmax>::max()};
 
     bsl::ut_scenario{"for_each array size 1"} = []() {
         bsl::ut_given{} = []() {
@@ -153,14 +157,6 @@ main() noexcept
             bsl::ut_then{} = [&array]() {                  // NOLINT
                 bsl::ut_check(test_array(array) == 42);    // NOLINT
                 static_assert(test_array({42}) == 42);     // NOLINT
-            };
-        };
-
-        bsl::ut_given{} = []() {
-            bsl::int32 array[1]{42};                           // NOLINT
-            bsl::ut_then{} = [&array]() {                      // NOLINT
-                bsl::ut_check(test_array_ptr(array) == 42);    // NOLINT
-                static_assert(test_array_ptr({42}) == 42);     // NOLINT
             };
         };
     };
@@ -173,12 +169,152 @@ main() noexcept
                 static_assert(test_array({4, 8, 15, 16, 23, 42}) == 108);    // NOLINT
             };
         };
+    };
+
+    bsl::ut_scenario{"for_each pos"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                            // NOLINT
+            bsl::ut_then{} = [&array]() {                                         // NOLINT
+                bsl::ut_check(test_array_p(array, 0) == 108);                     // NOLINT
+                static_assert(test_array_p({4, 8, 15, 16, 23, 42}, 0) == 108);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                            // NOLINT
+            bsl::ut_then{} = [&array]() {                                         // NOLINT
+                bsl::ut_check(test_array_p(array, 1) == 104);                     // NOLINT
+                static_assert(test_array_p({4, 8, 15, 16, 23, 42}, 1) == 104);    // NOLINT
+            };
+        };
 
         bsl::ut_given{} = []() {
             bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                           // NOLINT
             bsl::ut_then{} = [&array]() {                                        // NOLINT
-                bsl::ut_check(test_array_ptr(array) == 108);                     // NOLINT
-                static_assert(test_array_ptr({4, 8, 15, 16, 23, 42}) == 108);    // NOLINT
+                bsl::ut_check(test_array_p(array, 42) == 0);                     // NOLINT
+                static_assert(test_array_p({4, 8, 15, 16, 23, 42}, 42) == 0);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                            // NOLINT
+            bsl::ut_then{} = [&array]() {                                         // NOLINT
+                bsl::ut_check(test_array_p(array, max) == 0);                     // NOLINT
+                static_assert(test_array_p({4, 8, 15, 16, 23, 42}, max) == 0);    // NOLINT
+            };
+        };
+    };
+
+    bsl::ut_scenario{"for_each pos count"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                              // NOLINT
+            bsl::ut_then{} = [&array]() {                                           // NOLINT
+                bsl::ut_check(test_array_pc(array, 0, 0) == 0);                     // NOLINT
+                static_assert(test_array_pc({4, 8, 15, 16, 23, 42}, 0, 0) == 0);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                              // NOLINT
+            bsl::ut_then{} = [&array]() {                                           // NOLINT
+                bsl::ut_check(test_array_pc(array, 1, 0) == 0);                     // NOLINT
+                static_assert(test_array_pc({4, 8, 15, 16, 23, 42}, 1, 0) == 0);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                               // NOLINT
+            bsl::ut_then{} = [&array]() {                                            // NOLINT
+                bsl::ut_check(test_array_pc(array, 42, 0) == 0);                     // NOLINT
+                static_assert(test_array_pc({4, 8, 15, 16, 23, 42}, 42, 0) == 0);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                                // NOLINT
+            bsl::ut_then{} = [&array]() {                                             // NOLINT
+                bsl::ut_check(test_array_pc(array, max, 0) == 0);                     // NOLINT
+                static_assert(test_array_pc({4, 8, 15, 16, 23, 42}, max, 0) == 0);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                              // NOLINT
+            bsl::ut_then{} = [&array]() {                                           // NOLINT
+                bsl::ut_check(test_array_pc(array, 0, 1) == 4);                     // NOLINT
+                static_assert(test_array_pc({4, 8, 15, 16, 23, 42}, 0, 1) == 4);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                              // NOLINT
+            bsl::ut_then{} = [&array]() {                                           // NOLINT
+                bsl::ut_check(test_array_pc(array, 1, 1) == 8);                     // NOLINT
+                static_assert(test_array_pc({4, 8, 15, 16, 23, 42}, 1, 1) == 8);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                               // NOLINT
+            bsl::ut_then{} = [&array]() {                                            // NOLINT
+                bsl::ut_check(test_array_pc(array, 42, 1) == 0);                     // NOLINT
+                static_assert(test_array_pc({4, 8, 15, 16, 23, 42}, 42, 0) == 0);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                                // NOLINT
+            bsl::ut_then{} = [&array]() {                                             // NOLINT
+                bsl::ut_check(test_array_pc(array, max, 1) == 0);                     // NOLINT
+                static_assert(test_array_pc({4, 8, 15, 16, 23, 42}, max, 0) == 0);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                                // NOLINT
+            bsl::ut_then{} = [&array]() {                                             // NOLINT
+                bsl::ut_check(test_array_pc(array, 0, 6) == 108);                     // NOLINT
+                static_assert(test_array_pc({4, 8, 15, 16, 23, 42}, 0, 6) == 108);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                                // NOLINT
+            bsl::ut_then{} = [&array]() {                                             // NOLINT
+                bsl::ut_check(test_array_pc(array, 1, 5) == 104);                     // NOLINT
+                static_assert(test_array_pc({4, 8, 15, 16, 23, 42}, 1, 5) == 104);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                              // NOLINT
+            bsl::ut_then{} = [&array]() {                                           // NOLINT
+                bsl::ut_check(test_array_pc(array, 0, 7) == 0);                     // NOLINT
+                static_assert(test_array_pc({4, 8, 15, 16, 23, 42}, 0, 7) == 0);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                              // NOLINT
+            bsl::ut_then{} = [&array]() {                                           // NOLINT
+                bsl::ut_check(test_array_pc(array, 1, 6) == 0);                     // NOLINT
+                static_assert(test_array_pc({4, 8, 15, 16, 23, 42}, 1, 6) == 0);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                              // NOLINT
+            bsl::ut_then{} = [&array]() {                                           // NOLINT
+                bsl::ut_check(test_array_pc(array, 0, max) == 0);                   // NOLINT
+                static_assert(test_array_pc({4, 8, 15, 16, 23, 42}, 0, 7) == 0);    // NOLINT
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                                // NOLINT
+            bsl::ut_then{} = [&array]() {                                             // NOLINT
+                bsl::ut_check(test_array_pc(array, 1, 6) == 0);                       // NOLINT
+                static_assert(test_array_pc({4, 8, 15, 16, 23, 42}, 1, max) == 0);    // NOLINT
             };
         };
     };
@@ -199,25 +335,6 @@ main() noexcept
             bsl::ut_then{} = []() {                                         // NOLINT
                 static_assert(noexcept(for_each(array, test_func1)));       // NOLINT
                 static_assert(noexcept(for_each(array, 6, test_func1)));    // NOLINT
-            };
-        };
-    };
-
-    bsl::ut_scenario{"nullptr"} = []() {
-        bsl::ut_given{} = []() {
-            bsl::ut_then{} = []() {                              // NOLINT
-                bsl::ut_check(test_array_ptr_nullptr() == 0);    // NOLINT
-                static_assert(test_array_ptr_nullptr() == 0);    // NOLINT
-            };
-        };
-    };
-
-    bsl::ut_scenario{"0 size"} = []() {
-        bsl::ut_given{} = []() {
-            bsl::int32 array[6]{4, 8, 15, 16, 23, 42};                                // NOLINT
-            bsl::ut_then{} = [&array]() {                                             // NOLINT
-                bsl::ut_check(test_array_ptr_0_size(array) == 0);                     // NOLINT
-                static_assert(test_array_ptr_0_size({4, 8, 15, 16, 23, 42}) == 0);    // NOLINT
             };
         };
     };

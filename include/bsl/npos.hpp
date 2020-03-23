@@ -22,15 +22,16 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef BSL_STRING_VIEW_HPP
-#define BSL_STRING_VIEW_HPP
+#ifndef BSL_NPOS_HPP
+#define BSL_NPOS_HPP
 
-#include "basic_string_view.hpp"
+#include "cstdint.hpp"
+#include "numeric_limits.hpp"
 
 namespace bsl
 {
-    /// @brief provides the default string_view prototype
-    using string_view = basic_string_view<char_type>;
+    /// @brief defines npos
+    constexpr bsl::uintmax npos{numeric_limits<bsl::uintmax>::max()};
 }
 
 #endif

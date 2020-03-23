@@ -227,14 +227,17 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param s1 the left hand side of the query
         ///   @param s2 the right hand side of the query
+        ///   @param count the number of characters to compare
         ///   @return Returns negative value if s1 appears before s2 in
         ///     lexicographical order. Return 0 if s1 and s2 compare equal,
         ///     if s1 or s2 are nullptr, or if count is zero. Positive value
         ///     if s1 appears after s2 in lexicographical order.
         ///
-        static bsl::int32
-        compare(
-            char_type const *const s1, char_type const *const s2, bsl::uintmax const count) noexcept
+        [[nodiscard]] static constexpr bsl::int32
+        compare(                          // --
+            char_type const *const s1,    // --
+            char_type const *const s2,    // --
+            bsl::uintmax const count) noexcept
         {
             if (nullptr == s1 || nullptr == s2) {
                 return 0;
@@ -259,8 +262,8 @@ namespace bsl
         ///   @param s the string to get the length of
         ///   @return Returns the length of the provided string.
         ///
-        static bsl::uintmax
-        length(char_type const *const s)
+        [[nodiscard]] static constexpr bsl::uintmax
+        length(char_type const *const s) noexcept
         {
             if (nullptr == s) {
                 return 0;
@@ -288,8 +291,8 @@ namespace bsl
         ///   @param ch the character to search for.
         ///   @return Returns a pointer to the first occurrence of "ch" in "p".
         ///
-        static const char_type *
-        find(char_type const *const p, bsl::uintmax const count, char_type const &ch)
+        [[nodiscard]] static constexpr char_type const *
+        find(char_type const *const p, bsl::uintmax const count, char_type const &ch) noexcept
         {
             if (nullptr == p) {
                 return nullptr;
@@ -312,7 +315,7 @@ namespace bsl
         ///   @param c the character to convert
         ///   @return c
         ///
-        static constexpr char_type
+        [[nodiscard]] static constexpr char_type
         to_char_type(bsl::intmax c) noexcept
         {
             return static_cast<char_type>(c);
@@ -330,7 +333,7 @@ namespace bsl
         ///   @param c the character to convert
         ///   @return c
         ///
-        static constexpr bsl::intmax
+        [[nodiscard]] static constexpr bsl::intmax
         to_int_type(char_type c) noexcept
         {
             return static_cast<bsl::intmax>(c);
@@ -351,7 +354,7 @@ namespace bsl
         ///     Returns true if c1 and c2 are both EOF. Returns false
         ///     otherwise.
         ///
-        static constexpr bool
+        [[nodiscard]] static constexpr bool
         eq_int_type(bsl::intmax c1, bsl::intmax c2) noexcept
         {
             if ((c1 == to_char_type(c1)) && (c2 == to_char_type(c2))) {
@@ -372,7 +375,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return Returns the value of EOF
         ///
-        static constexpr bsl::intmax
+        [[nodiscard]] static constexpr bsl::intmax
         eof() noexcept
         {
             constexpr bsl::intmax value_of_eof{-1};
@@ -391,7 +394,7 @@ namespace bsl
         ///   @param e the character to query
         ///   @return Returns e if e is not EOF, otherwise returns 0.
         ///
-        static constexpr bsl::intmax
+        [[nodiscard]] static constexpr bsl::intmax
         not_eof(bsl::intmax e) noexcept
         {
             if (!eq_int_type(e, eof())) {

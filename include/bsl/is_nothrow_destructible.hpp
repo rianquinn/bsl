@@ -66,7 +66,7 @@ namespace bsl
         ///
         template<typename T>
         auto destructor_is_marked_nothrow(bsl::int32 ignored) noexcept
-            -> bool_constant<noexcept(bsl::declval<T &>().~T())>;
+            -> bool_constant<noexcept(bsl::declval<T &>().~T())>;    // NOLINT
 
         /// <!-- description -->
         ///   @brief Tests if a destructor is marked noexcept or not. It does

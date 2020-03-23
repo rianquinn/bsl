@@ -45,25 +45,21 @@
 #  exclusive with readability-const-return-type, which identifies a known
 #  performance issue.
 #
-# -cppcoreguidelines-owning-memory
-#
-#  We do not support dynamic memory, and this is triggering on placement-new
-#  which should not be wrapped in a gsl::owner as the returned pointer is not
-#  an owned.
-#
-# -cppcoreguidelines-pro-type-union-access
-#
-#  AUTOSAR allows for tagged unions, which we use to implement variant like
-#  wrappers. PRQA can handle this check for us.
-#
 # -cert-oop54-cpp,-warnings-as-errors
 #
 #  This produces a false positive when assignment is implemented using the
 #  temporary swap method, which AUTOSAR requires.
 #
+# -readability-avoid-const-params-in-decls
+#
+#  We disable this as AUTOSAR requires that all params that are not changed
+#  be marked as const, even if they do not contribute to the function
+#  signature.
+#
+#
 
-Checks: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon,-modernize-use-trailing-return-type,-readability-redundant-member-init,-cert-dcl21-cpp,-cppcoreguidelines-owning-memory,-cppcoreguidelines-pro-type-union-access,-cert-oop54-cpp,-warnings-as-errors'
-WarningsAsErrors: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon,-modernize-use-trailing-return-type,-readability-redundant-member-init,-cert-dcl21-cpp,-cppcoreguidelines-owning-memory,-cppcoreguidelines-pro-type-union-access,-cert-oop54-cpp,-warnings-as-errors'
+Checks: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon,-modernize-use-trailing-return-type,-readability-redundant-member-init,-cert-dcl21-cpp,-cert-oop54-cpp,-warnings-as-errors,-readability-avoid-const-params-in-decls'
+WarningsAsErrors: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon,-modernize-use-trailing-return-type,-readability-redundant-member-init,-cert-dcl21-cpp,-cert-oop54-cpp,-warnings-as-errors,-readability-avoid-const-params-in-decls'
 HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false
 CheckOptions:
@@ -128,7 +124,7 @@ CheckOptions:
   - key:             cppcoreguidelines-avoid-magic-numbers.IgnoredFloatingPointValues
     value:           '1.0;100.0;'
   - key:             cppcoreguidelines-avoid-magic-numbers.IgnoredIntegerValues
-    value:           '1;2;3;4;5;6;8;15;16;23;42;64;255'
+    value:           '1;2;3;4;5;6;7;8;9;10;15;16;23;42;64;255'
   - key:             cppcoreguidelines-macro-usage.AllowedRegexp
     value:           '^BAREFLANK*|^bf*|^BF*|^CHECK*'
   - key:             cppcoreguidelines-macro-usage.CheckCapsOnly
@@ -344,7 +340,7 @@ CheckOptions:
   - key:             readability-magic-numbers.IgnoredFloatingPointValues
     value:           '1.0;100.0;'
   - key:             readability-magic-numbers.IgnoredIntegerValues
-    value:           '1;2;3;4;5;6;8;15;16;23;42;64;255'
+    value:           '1;2;3;4;5;6;7;8;9;10;15;16;23;42;64;255'
   - key:             readability-redundant-smartptr-get.IgnoreMacros
     value:           '1'
   - key:             readability-simplify-boolean-expr.ChainedConditionalAssignment

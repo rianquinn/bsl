@@ -26,6 +26,12 @@
 #define BSL_DETAILS_VIEW_HPP
 
 #include "../cstdint.hpp"
+#include "../enable_if.hpp"
+#include "../forward.hpp"
+#include "../invoke.hpp"
+#include "../is_invocable.hpp"
+#include "../is_nothrow_invocable.hpp"
+#include "../numeric_limits.hpp"
 
 namespace bsl
 {
@@ -64,7 +70,7 @@ namespace bsl
                 : m_data{arr}, m_size{N}
             {}
 
-            constexpr view(T *const data, bsl::uintmax size) noexcept    // --
+            constexpr view(T *data, bsl::uintmax size) noexcept    // --
                 : m_data{data}, m_size{size}
             {
                 if ((nullptr == m_data) || (0 == m_size)) {
@@ -253,13 +259,13 @@ namespace bsl
                 return this->at_if(m_size > 0 ? m_size - 1 : 0);
             }
 
-            [[nodiscard]] constexpr void *
+            [[nodiscard]] constexpr T *
             data() noexcept
             {
                 return m_data;
             }
 
-            [[nodiscard]] constexpr void const *
+            [[nodiscard]] constexpr T const *
             data() const noexcept
             {
                 return m_data;
@@ -269,6 +275,12 @@ namespace bsl
             size() const noexcept
             {
                 return m_size;
+            }
+
+            [[nodiscard]] constexpr bsl::uintmax
+            max_size() const noexcept
+            {
+                return numeric_limits<bsl::uintmax>::max() / sizeof(T);
             }
 
             [[nodiscard]] constexpr bsl::uintmax
@@ -345,6 +357,263 @@ namespace bsl
             [[maybe_unused]] constexpr view &    // --
             operator=(view &&o) &noexcept = default;
         };
+    }
+
+    /// <!-- description -->
+    ///   @brief Loops through the array, and for each element in the view,
+    ///     calls the provided function "f" with a reference to the view
+    ///     element as well as the index of the element. Note that this version
+    ///     loops through the view from 0 to N - 1.
+    ///
+    ///   SUPPRESSION: PRQA 2023 - exception required
+    ///   - We suppress this because A13-3-1 states that you should not
+    ///     overload functions that contain a forwarding reference because
+    ///     it is confusing to the user. In this case, there is nothing
+    ///     ambiguous about this situation as we are not overloading the
+    ///     forewarding reference itself, which is the only way to define a
+    ///     function pointer that accepts lambdas with capture lists.
+    ///     The examples that demonstrate a problem overload the forwarding
+    ///     reference itself, which is what creates the ambiguity.
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the array's element type
+    ///   @tparam FUNC The type the defines the function "f"
+    ///   @param v the view to loop over
+    ///   @param f the function f to call
+    ///
+    template<typename T, typename FUNC>
+    constexpr void
+    for_each(details::view<T> &v, FUNC &&f)    // PRQA S 2023 // NOLINT
+        noexcept(is_nothrow_invocable<FUNC, T &, bsl::uintmax>::value)
+    {
+        static_assert(is_invocable<FUNC, T &, bsl::uintmax>::value);
+
+        for (bsl::uintmax i{}; i < v.size(); ++i) {
+            invoke(bsl::forward<FUNC>(f), *v.at_if(i), i);
+        }
+    }
+
+    /// <!-- description -->
+    ///   @brief Loops through the array, and for each element in the view,
+    ///     calls the provided function "f" with a reference to the view
+    ///     element as well as the index of the element. Note that this version
+    ///     loops through the view from 0 to N - 1.
+    ///
+    ///   SUPPRESSION: PRQA 2023 - exception required
+    ///   - We suppress this because A13-3-1 states that you should not
+    ///     overload functions that contain a forwarding reference because
+    ///     it is confusing to the user. In this case, there is nothing
+    ///     ambiguous about this situation as we are not overloading the
+    ///     forewarding reference itself, which is the only way to define a
+    ///     function pointer that accepts lambdas with capture lists.
+    ///     The examples that demonstrate a problem overload the forwarding
+    ///     reference itself, which is what creates the ambiguity.
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the array's element type
+    ///   @tparam FUNC The type the defines the function "f"
+    ///   @param v the view to loop over
+    ///   @param pos the stating position of the loop
+    ///   @param f the function f to call
+    ///
+    template<typename T, typename FUNC>
+    constexpr void
+    for_each(details::view<T> &v, bsl::uintmax const pos, FUNC &&f)    // PRQA S 2023 // NOLINT
+        noexcept(is_nothrow_invocable<FUNC, T &, bsl::uintmax>::value)
+    {
+        static_assert(is_invocable<FUNC, T &, bsl::uintmax>::value);
+
+        for (bsl::uintmax i{pos}; i < v.size(); ++i) {
+            invoke(bsl::forward<FUNC>(f), *v.at_if(i), i);
+        }
+    }
+
+    /// <!-- description -->
+    ///   @brief Loops through the array, and for each element in the view,
+    ///     calls the provided function "f" with a reference to the view
+    ///     element as well as the index of the element. Note that this version
+    ///     loops through the view from 0 to N - 1.
+    ///
+    ///   SUPPRESSION: PRQA 2023 - exception required
+    ///   - We suppress this because A13-3-1 states that you should not
+    ///     overload functions that contain a forwarding reference because
+    ///     it is confusing to the user. In this case, there is nothing
+    ///     ambiguous about this situation as we are not overloading the
+    ///     forewarding reference itself, which is the only way to define a
+    ///     function pointer that accepts lambdas with capture lists.
+    ///     The examples that demonstrate a problem overload the forwarding
+    ///     reference itself, which is what creates the ambiguity.
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the array's element type
+    ///   @tparam FUNC The type the defines the function "f"
+    ///   @param v the view to loop over
+    ///   @param pos the stating position of the loop
+    ///   @param count the number of iterations to make make in the loop
+    ///   @param f the function f to call
+    ///
+    template<typename T, typename FUNC>
+    constexpr void
+    for_each(                        // PRQA S 2023 // NOLINT
+        details::view<T> &v,         // --
+        bsl::uintmax const pos,      // --
+        bsl::uintmax const count,    // --
+        FUNC &&f) noexcept(is_nothrow_invocable<FUNC, T &, bsl::uintmax>::value)
+    {
+        static_assert(is_invocable<FUNC, T &, bsl::uintmax>::value);
+
+        if (pos >= v.size()) {
+            return;
+        }
+
+        if (count > v.size() - pos) {
+            return;
+        }
+
+        for (bsl::uintmax i{pos}; i < pos + count; ++i) {
+            invoke(bsl::forward<FUNC>(f), *v.at_if(i), i);
+        }
+    }
+
+    /// <!-- description -->
+    ///   @brief Loops through the array, and for each element in the view,
+    ///     calls the provided function "f" with a reference to the view
+    ///     element as well as the index of the element. Note that this version
+    ///     loops through the view from 0 to N - 1.
+    ///
+    ///   SUPPRESSION: PRQA 2023 - exception required
+    ///   - We suppress this because A13-3-1 states that you should not
+    ///     overload functions that contain a forwarding reference because
+    ///     it is confusing to the user. In this case, there is nothing
+    ///     ambiguous about this situation as we are not overloading the
+    ///     forewarding reference itself, which is the only way to define a
+    ///     function pointer that accepts lambdas with capture lists.
+    ///     The examples that demonstrate a problem overload the forwarding
+    ///     reference itself, which is what creates the ambiguity.
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the array's element type
+    ///   @tparam FUNC The type the defines the function "f"
+    ///   @param v the view to loop over
+    ///   @param f the function f to call
+    ///
+    template<typename T, typename FUNC>
+    constexpr void
+    for_each(details::view<T> const &v, FUNC &&f)    // PRQA S 2023 // NOLINT
+        noexcept(is_nothrow_invocable<FUNC, T &, bsl::uintmax>::value)
+    {
+        static_assert(is_invocable<FUNC, T &, bsl::uintmax>::value);
+
+        for (bsl::uintmax i{}; i < v.size(); ++i) {
+            invoke(bsl::forward<FUNC>(f), *v.at_if(i), i);
+        }
+    }
+
+    /// <!-- description -->
+    ///   @brief Loops through the array, and for each element in the view,
+    ///     calls the provided function "f" with a reference to the view
+    ///     element as well as the index of the element. Note that this version
+    ///     loops through the view from 0 to N - 1.
+    ///
+    ///   SUPPRESSION: PRQA 2023 - exception required
+    ///   - We suppress this because A13-3-1 states that you should not
+    ///     overload functions that contain a forwarding reference because
+    ///     it is confusing to the user. In this case, there is nothing
+    ///     ambiguous about this situation as we are not overloading the
+    ///     forewarding reference itself, which is the only way to define a
+    ///     function pointer that accepts lambdas with capture lists.
+    ///     The examples that demonstrate a problem overload the forwarding
+    ///     reference itself, which is what creates the ambiguity.
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the array's element type
+    ///   @tparam FUNC The type the defines the function "f"
+    ///   @param v the view to loop over
+    ///   @param pos the stating position of the loop
+    ///   @param f the function f to call
+    ///
+    template<typename T, typename FUNC>
+    constexpr void
+    for_each(
+        details::view<T> const &v, bsl::uintmax const pos, FUNC &&f)    // PRQA S 2023 // NOLINT
+        noexcept(is_nothrow_invocable<FUNC, T &, bsl::uintmax>::value)
+    {
+        static_assert(is_invocable<FUNC, T &, bsl::uintmax>::value);
+
+        for (bsl::uintmax i{pos}; i < v.size(); ++i) {
+            invoke(bsl::forward<FUNC>(f), *v.at_if(i), i);
+        }
+    }
+
+    /// <!-- description -->
+    ///   @brief Loops through the array, and for each element in the view,
+    ///     calls the provided function "f" with a reference to the view
+    ///     element as well as the index of the element. Note that this version
+    ///     loops through the view from 0 to N - 1.
+    ///
+    ///   SUPPRESSION: PRQA 2023 - exception required
+    ///   - We suppress this because A13-3-1 states that you should not
+    ///     overload functions that contain a forwarding reference because
+    ///     it is confusing to the user. In this case, there is nothing
+    ///     ambiguous about this situation as we are not overloading the
+    ///     forewarding reference itself, which is the only way to define a
+    ///     function pointer that accepts lambdas with capture lists.
+    ///     The examples that demonstrate a problem overload the forwarding
+    ///     reference itself, which is what creates the ambiguity.
+    ///
+    /// <!-- contracts -->
+    ///   @pre none
+    ///   @post none
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the array's element type
+    ///   @tparam FUNC The type the defines the function "f"
+    ///   @param v the view to loop over
+    ///   @param pos the stating position of the loop
+    ///   @param count the number of iterations to make make in the loop
+    ///   @param f the function f to call
+    ///
+    template<typename T, typename FUNC>
+    constexpr void
+    for_each(                         // PRQA S 2023 // NOLINT
+        details::view<T> const &v,    // --
+        bsl::uintmax const pos,       // --
+        bsl::uintmax const count,     // --
+        FUNC &&f) noexcept(is_nothrow_invocable<FUNC, T &, bsl::uintmax>::value)
+    {
+        static_assert(is_invocable<FUNC, T &, bsl::uintmax>::value);
+
+        if (pos >= v.size()) {
+            return;
+        }
+
+        if (count > v.size() - pos) {
+            return;
+        }
+
+        for (bsl::uintmax i{pos}; i < pos + count; ++i) {
+            invoke(bsl::forward<FUNC>(f), *v.at_if(i), i);
+        }
     }
 }
 
