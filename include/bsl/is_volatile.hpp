@@ -58,7 +58,7 @@ namespace bsl
     template<typename T>
     class is_volatile<T volatile> final : public true_type
     {
-        static_assert(sizeof(T) != sizeof(T), "volatile not supported");
+        static_assert(sizeof(T) != sizeof(T), "volatile not supported");    // NOLINT
     };
 
     /// @endcond doxygen on

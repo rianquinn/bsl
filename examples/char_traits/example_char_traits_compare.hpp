@@ -33,14 +33,11 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_char_traits_compare() noexcept
     {
-        if (bsl::char_traits<bsl::char_type>::compare("42", "42", 2) == 0) {
+        constexpr bsl::uintmax n{2U};
+        if (bsl::char_traits<bsl::char_type>::compare("42", "42", n) == 0) {
             bsl::print("success\n");
         }
     }

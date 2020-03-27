@@ -36,10 +36,6 @@ namespace bsl
     ///   @brief Forms lvalue reference to const type of t
     ///   @include example_as_const_overview.hpp
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type to form the lvalue reference to const of
     ///   @param t the object of type T to form the const lvalue reference of
@@ -56,10 +52,6 @@ namespace bsl
     ///   @brief const rvalue reference overload is deleted to disallow rvalue
     ///     arguments
     ///   @include example_as_const_overview.hpp
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type to form the lvalue reference to const of

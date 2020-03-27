@@ -37,10 +37,6 @@ namespace bsl
     ///   @brief If this function is given an lvalue reference, it returns
     ///     true. Otherwise this function will return false.
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type being queired
     ///   @param t the value of the type being provided
@@ -60,10 +56,6 @@ namespace bsl
     ///     bsl::forward, which will preserve the lvalue/rvalueness of the
     ///     provided argument.
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type being queired
     ///   @param t the value of the type being provided
@@ -79,10 +71,6 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief Provides the example's main function
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     inline void
     example_forward_overview() noexcept

@@ -57,19 +57,22 @@ namespace bsl
         ///   @tparam ARGS the arguments to the operation to detect
         ///
         template<typename DEFAULT, typename VOID, template<class...> class OP, typename... ARGS>
-        class detector final : public type_identity<DEFAULT>
+        struct detector final
         {
-        public:
+            /// @brief provides the member typedef "type"
+            using type = DEFAULT;
+            /// @brief provides the member typedef "value_t"
             using value_t = false_type;
         };
 
         /// @cond doxygen off
 
         template<typename DEFAULT, template<class...> class OP, typename... ARGS>
-        class detector<DEFAULT, void_t<OP<ARGS...>>, OP, ARGS...> final :
-            public type_identity<OP<ARGS...>>
+        struct detector<DEFAULT, void_t<OP<ARGS...>>, OP, ARGS...> final
         {
-        public:
+            /// @brief provides the member typedef "type"
+            using type = OP<ARGS...>;
+            /// @brief provides the member typedef "value_t"
             using value_t = true_type;
         };
 

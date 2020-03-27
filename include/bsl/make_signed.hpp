@@ -29,7 +29,6 @@
 #define BSL_MAKE_SIGNED_HPP
 
 #include "cstdint.hpp"
-#include "type_identity.hpp"
 
 namespace bsl
 {
@@ -51,7 +50,7 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class make_signed final
+    struct make_signed final
     {};
 
     /// @brief a helper that reduces the verbosity of bsl::make_signed
@@ -61,36 +60,60 @@ namespace bsl
     /// @cond doxygen off
 
     template<>
-    class make_signed<bsl::uint8> final : public type_identity<bsl::int8>
-    {};
+    struct make_signed<bsl::uint8> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = bsl::int8;
+    };
 
     template<>
-    class make_signed<bsl::uint8 const> final : public type_identity<bsl::int8 const>
-    {};
+    struct make_signed<bsl::uint8 const> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = bsl::int8 const;
+    };
 
     template<>
-    class make_signed<bsl::uint16> final : public type_identity<bsl::int16>
-    {};
+    struct make_signed<bsl::uint16> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = bsl::int16;
+    };
 
     template<>
-    class make_signed<bsl::uint16 const> final : public type_identity<bsl::int16 const>
-    {};
+    struct make_signed<bsl::uint16 const> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = bsl::int16 const;
+    };
 
     template<>
-    class make_signed<bsl::uint32> final : public type_identity<bsl::int32>
-    {};
+    struct make_signed<bsl::uint32> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = bsl::int32;
+    };
 
     template<>
-    class make_signed<bsl::uint32 const> final : public type_identity<bsl::int32 const>
-    {};
+    struct make_signed<bsl::uint32 const> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = bsl::int32 const;
+    };
 
     template<>
-    class make_signed<bsl::uint64> final : public type_identity<bsl::int64>
-    {};
+    struct make_signed<bsl::uint64> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = bsl::int64;
+    };
 
     template<>
-    class make_signed<bsl::uint64 const> final : public type_identity<bsl::int64 const>
-    {};
+    struct make_signed<bsl::uint64 const> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = bsl::int64 const;
+    };
 
     /// @endcond doxygen on
 }

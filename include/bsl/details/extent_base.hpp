@@ -47,11 +47,12 @@ namespace bsl
         {
         protected:
             /// <!-- description -->
-            ///   @brief copy constructor
+            ///   @brief Destroyes a previously created bsl::extent_base
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
+            ~extent_base() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
@@ -61,10 +62,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief move constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
@@ -73,39 +70,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr extent_base &    // --
-            operator=(extent_base const &o) &noexcept = default;
+            constexpr extent_base &operator=(extent_base const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr extent_base &    // --
-            operator=(extent_base &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::extent_base
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
-            ~extent_base() noexcept = default;
+            constexpr extent_base &operator=(extent_base &&o) &noexcept = default;
         };
 
         /// @cond doxygen off
@@ -115,11 +93,12 @@ namespace bsl
         {
         protected:
             /// <!-- description -->
-            ///   @brief copy constructor
+            ///   @brief Destroyes a previously created bsl::extent_base
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
+            ~extent_base() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
@@ -129,10 +108,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief move constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
@@ -141,39 +116,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr extent_base &    // --
-            operator=(extent_base const &o) &noexcept = default;
+            constexpr extent_base &operator=(extent_base const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr extent_base &    // --
-            operator=(extent_base &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::extent_base
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
-            ~extent_base() noexcept = default;
+            constexpr extent_base &operator=(extent_base &&o) &noexcept = default;
         };
 
         template<typename T, bsl::uintmax N>
@@ -181,11 +137,12 @@ namespace bsl
         {
         protected:
             /// <!-- description -->
-            ///   @brief copy constructor
+            ///   @brief Destroyes a previously created bsl::extent_base
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
+            ~extent_base() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
@@ -195,10 +152,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief move constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
@@ -207,39 +160,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr extent_base &    // --
-            operator=(extent_base const &o) &noexcept = default;
+            constexpr extent_base &operator=(extent_base const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr extent_base &    // --
-            operator=(extent_base &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::extent_base
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
-            ~extent_base() noexcept = default;
+            constexpr extent_base &operator=(extent_base &&o) &noexcept = default;
         };
 
         template<typename T, bsl::uintmax I>
@@ -247,11 +181,12 @@ namespace bsl
         {
         protected:
             /// <!-- description -->
-            ///   @brief copy constructor
+            ///   @brief Destroyes a previously created bsl::extent_base
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
+            ~extent_base() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
@@ -261,10 +196,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief move constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
@@ -273,39 +204,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr extent_base &    // --
-            operator=(extent_base const &o) &noexcept = default;
+            constexpr extent_base &operator=(extent_base const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr extent_base &    // --
-            operator=(extent_base &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::extent_base
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
-            ~extent_base() noexcept = default;
+            constexpr extent_base &operator=(extent_base &&o) &noexcept = default;
         };
 
         template<typename T, bsl::uintmax I, bsl::uintmax N>
@@ -313,11 +225,12 @@ namespace bsl
         {
         protected:
             /// <!-- description -->
-            ///   @brief copy constructor
+            ///   @brief Destroyes a previously created bsl::extent_base
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
+            ~extent_base() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
@@ -327,10 +240,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief move constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
@@ -339,39 +248,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr extent_base &    // --
-            operator=(extent_base const &o) &noexcept = default;
+            constexpr extent_base &operator=(extent_base const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr extent_base &    // --
-            operator=(extent_base &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::extent_base
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
-            ~extent_base() noexcept = default;
+            constexpr extent_base &operator=(extent_base &&o) &noexcept = default;
         };
 
         /// @endcond doxygen on

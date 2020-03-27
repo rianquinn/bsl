@@ -25,8 +25,8 @@
 #ifndef EXAMPLE_FOREACH_OVERVIEW_HPP
 #define EXAMPLE_FOREACH_OVERVIEW_HPP
 
-#include <bsl/discard.hpp>
 #include <bsl/for_each.hpp>
+#include <bsl/string_view.hpp>
 #include <bsl/print.hpp>
 
 namespace bsl
@@ -34,26 +34,66 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_for_each_overview() noexcept
     {
-        constexpr bsl::int32 v1{23};
-        constexpr bsl::int32 v2{42};
-        constexpr bsl::int32 expected{65};
+        constexpr bsl::string_view msg{"Hello"};
+        constexpr bsl::uintmax i1{1U};
+        constexpr bsl::uintmax i4{4U};
+        constexpr char_type co{'o'};
 
-        bsl::int32 t{};
-        bsl::for_each({v1, v2}, [&t](auto const &elem, auto i) noexcept {
-            bsl::discard(i);
-            t += elem;
+        // ---------------------------------------------------------------------
+        bsl::print("example 1: \n");
+        bsl::for_each(msg, [](auto &e) noexcept {
+            bsl::print("%c", e);
         });
+        bsl::print("\n\n");
 
-        if (expected == t) {
-            bsl::print("success\n");
-        }
+        // ---------------------------------------------------------------------
+        bsl::print("example 2: \n");
+        bsl::for_each(msg, [](auto &e, auto i) noexcept {
+            bsl::print("element [%d] == %c\n", i, e);
+        });
+        bsl::print("\n");
+
+        // ---------------------------------------------------------------------
+        bsl::print("example 3: \n");
+        bsl::for_each(msg, [](auto &e) noexcept -> bool {
+            if (co == e) {
+                return bsl::for_each_break;
+            }
+
+            bsl::print("%c", e);
+            return for_each_continue;
+        });
+        bsl::print("\n\n");
+
+        // ---------------------------------------------------------------------
+        bsl::print("example 4: \n");
+        bsl::for_each(msg.begin(), msg.end(), [](auto &e) noexcept {
+            bsl::print("%c", e);
+        });
+        bsl::print("\n\n");
+
+        // ---------------------------------------------------------------------
+        bsl::print("example 5: \n");
+        bsl::for_each(msg.iter(i1), msg.iter(i4), [](auto &e) noexcept {
+            bsl::print("%c", e);
+        });
+        bsl::print("\n\n");
+
+        // ---------------------------------------------------------------------
+        bsl::print("example 6: \n");
+        bsl::for_each(msg.rbegin(), msg.rend(), [](auto &e) noexcept {
+            bsl::print("%c", e);
+        });
+        bsl::print("\n\n");
+
+        // ---------------------------------------------------------------------
+        bsl::print("example 7: \n");
+        bsl::for_each(msg.rbegin(), msg.rend(), [](auto &e, auto i) noexcept {
+            bsl::print("element [%d] == %c\n", i, e);
+        });
     }
 }
 

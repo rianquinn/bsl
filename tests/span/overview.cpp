@@ -31,10 +31,6 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @param args the arguments passed to the application
     ///   @return exit_success on success, exit_failure otherwise

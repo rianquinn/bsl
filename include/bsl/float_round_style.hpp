@@ -43,7 +43,7 @@ namespace bsl
     ///     to use floating point numbers with the BSL, you will receive
     ///     a compilation error.
     ///
-    enum class float_round_style : bsl::uint32
+    enum class float_round_style : bsl::int32
     {
         round_indeterminate = -1,
         round_toward_zero = 0,

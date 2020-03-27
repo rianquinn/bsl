@@ -34,10 +34,6 @@
 ///   @brief Provides the definiton of the main function used by
 ///     the BSL
 ///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
-///
 /// <!-- inputs/outputs -->
 ///   @return bsl::exit_success on success, bsl::exit_failure otherwise
 ///

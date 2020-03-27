@@ -30,10 +30,6 @@
 ///     the application will fast fail. If all calls to ut_check() pass, this
 ///     function will successfully return with bsl::exit_success.
 ///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
-///
 /// <!-- inputs/outputs -->
 ///   @return Always returns bsl::exit_success.
 ///
@@ -59,7 +55,7 @@ main() noexcept
             bsl::ut_then{} = [&sloc]() {
                 bsl::ut_check(sloc.file_name() != nullptr);
                 bsl::ut_check(sloc.function_name() != nullptr);
-                bsl::ut_check(sloc.line() == 58);    // NOLINT
+                bsl::ut_check(sloc.line() == 54);    // NOLINT
             };
         };
     };

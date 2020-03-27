@@ -32,7 +32,6 @@
 #include "details/integer_sequence_min.hpp"
 
 #include "cstdint.hpp"
-#include "value_type_identity.hpp"
 
 namespace bsl
 {
@@ -50,16 +49,15 @@ namespace bsl
     ///   @tparam INTS the integers that make up the integer sequence
     ///
     template<typename T, T... INTS>
-    class integer_sequence final : public value_type_identity<T>
+    class integer_sequence final
     {
     public:
+        /// @brief provides the member typedef "value_type"
+        using value_type = T;
+
         /// <!-- description -->
         ///   @brief Equivalent to sizeof...(INTS)
         ///   @include integer_sequence/example_integer_sequence_size.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Equivalent to sizeof...(INTS)
@@ -74,10 +72,6 @@ namespace bsl
         ///   @brief Returns the max integer in the sequence
         ///   @include integer_sequence/example_integer_sequence_max.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max integer in the sequence
         ///
@@ -90,10 +84,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the min integer in the sequence
         ///   @include integer_sequence/example_integer_sequence_min.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the min integer in the sequence

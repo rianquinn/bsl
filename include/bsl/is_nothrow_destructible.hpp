@@ -55,10 +55,6 @@ namespace bsl
         ///     have a destructor, the other version of this function is
         ///     selected by the compiler which always returns false.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @tparam T The type to query
         ///   @param ignored (only used for overload resolution)
@@ -75,10 +71,6 @@ namespace bsl
         ///     have a destructor, the other version of this function is
         ///     selected by the compiler which always returns false.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @tparam T The type to query
         ///   @param ignored (only used for overload resolution)
@@ -90,10 +82,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Checks if a type "T" is destructible and if so, returns
         ///     true, otherwise returns false.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @tparam T the type to query

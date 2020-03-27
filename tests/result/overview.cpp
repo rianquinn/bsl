@@ -32,10 +32,6 @@ namespace bsl
     ///   @brief Returns a reference to a global test variable for tracking
     ///     the total number of default constructors that have executed.
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @return a reference to a global test variable for tracking
     ///     the total number of default constructors that have executed.
@@ -51,10 +47,6 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Returns a reference to a global test variable for tracking
     ///     the total number of copy constructors that have executed.
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @return a reference to a global test variable for tracking
@@ -72,10 +64,6 @@ namespace bsl
     ///   @brief Returns a reference to a global test variable for tracking
     ///     the total number of move constructors that have executed.
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @return a reference to a global test variable for tracking
     ///     the total number of move constructors that have executed.
@@ -91,10 +79,6 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Returns a reference to a global test variable for tracking
     ///     the total number of copy assignments that have executed.
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @return a reference to a global test variable for tracking
@@ -112,10 +96,6 @@ namespace bsl
     ///   @brief Returns a reference to a global test variable for tracking
     ///     the total number of move assignments that have executed.
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @return a reference to a global test variable for tracking
     ///     the total number of move assignments that have executed.
@@ -132,10 +112,6 @@ namespace bsl
     ///   @brief Returns a reference to a global test variable for tracking
     ///     the total number of destructors that have executed.
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @return a reference to a global test variable for tracking
     ///     the total number of destructors that have executed.
@@ -150,10 +126,6 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief Resets all of the stats
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     template<typename T = void>
     void
@@ -216,8 +188,7 @@ namespace bsl
         ///   @return *this
         ///
         [[maybe_unused]] test_result_monitor &
-            operator=(test_result_monitor const &o) &
-            noexcept
+        operator=(test_result_monitor const &o) &noexcept
         {
             bsl::discard(o);
             test_result_monitor_copy_assignment()++;
@@ -233,8 +204,7 @@ namespace bsl
         ///   @return *this
         ///
         [[maybe_unused]] test_result_monitor &
-            operator=(test_result_monitor &&o) &
-            noexcept
+        operator=(test_result_monitor &&o) &noexcept
         {
             bsl::discard(o);
             test_result_monitor_move_assignment()++;
@@ -256,10 +226,6 @@ namespace bsl
 ///   @brief Main function for this unit test. If a call to ut_check() fails
 ///     the application will fast fail. If all calls to ut_check() pass, this
 ///     function will successfully return with bsl::exit_success.
-///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
 ///
 /// <!-- inputs/outputs -->
 ///   @return Always returns bsl::exit_success.

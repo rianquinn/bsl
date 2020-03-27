@@ -38,10 +38,6 @@ namespace bsl
     ///     value of obj.
     ///   @include example_exchange_overview.hpp
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type that defines the obj being exchanged
     ///   @tparam U the type that defines the new value for obj

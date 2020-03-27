@@ -26,12 +26,12 @@
 #define BSL_DETAILS_INVOKE_IMPL_BASE_HPP
 
 #include "invoke_impl_fp.hpp"
-#include "invoke_impl_mfp_object.hpp"
-#include "invoke_impl_mfp_pointer.hpp"
-#include "invoke_impl_mfp_reference_wrapper.hpp"
-#include "invoke_impl_mop_object.hpp"
-#include "invoke_impl_mop_pointer.hpp"
-#include "invoke_impl_mop_reference_wrapper.hpp"
+#include "invoke_impl_mfp_o.hpp"
+#include "invoke_impl_mfp_p.hpp"
+#include "invoke_impl_mfp_r.hpp"
+#include "invoke_impl_mop_o.hpp"
+#include "invoke_impl_mop_p.hpp"
+#include "invoke_impl_mop_r.hpp"
 
 #include "../decay.hpp"
 #include "../conditional.hpp"
@@ -70,11 +70,12 @@ namespace bsl
         {
         protected:
             /// <!-- description -->
-            ///   @brief copy constructor
+            ///   @brief Destroyes a previously created bsl::invoke_impl_base
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
+            ~invoke_impl_base() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
@@ -84,10 +85,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief move constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
@@ -96,39 +93,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr invoke_impl_base &    // --
-            operator=(invoke_impl_base const &o) &noexcept = default;
+            constexpr invoke_impl_base &operator=(invoke_impl_base const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr invoke_impl_base &    // --
-            operator=(invoke_impl_base &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::invoke_impl_base
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
-            ~invoke_impl_base() noexcept = default;
+            constexpr invoke_impl_base &operator=(invoke_impl_base &&o) &noexcept = default;
         };
 
         /// @class bsl::details::invoke_impl_base
@@ -150,19 +128,20 @@ namespace bsl
         class invoke_impl_base<FUNC U::*, T1, true, false> :
             public conditional_t<
                 is_base_of<U, decay_t<T1>>::value,
-                invoke_impl_mfp_object,
+                invoke_impl_mfp_o,
                 conditional_t<
                     is_reference_wrapper<decay_t<T1>>::value,
-                    invoke_impl_mfp_reference_wrapper,
-                    invoke_impl_mfp_pointer>>
+                    invoke_impl_mfp_r,
+                    invoke_impl_mfp_p>>
         {
         protected:
             /// <!-- description -->
-            ///   @brief copy constructor
+            ///   @brief Destroyes a previously created bsl::invoke_impl_base
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
+            ~invoke_impl_base() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
@@ -172,10 +151,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief move constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
@@ -184,39 +159,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr invoke_impl_base &    // --
-            operator=(invoke_impl_base const &o) &noexcept = default;
+            constexpr invoke_impl_base &operator=(invoke_impl_base const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr invoke_impl_base &    // --
-            operator=(invoke_impl_base &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::invoke_impl_base
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
-            ~invoke_impl_base() noexcept = default;
+            constexpr invoke_impl_base &operator=(invoke_impl_base &&o) &noexcept = default;
         };
 
         /// @class bsl::details::invoke_impl_base
@@ -238,19 +194,20 @@ namespace bsl
         class invoke_impl_base<FUNC U::*, T1, false, true> :
             public conditional_t<
                 is_base_of<U, decay_t<T1>>::value,
-                invoke_impl_mop_object,
+                invoke_impl_mop_o,
                 conditional_t<
                     is_reference_wrapper<decay_t<T1>>::value,
-                    invoke_impl_mop_reference_wrapper,
-                    invoke_impl_mop_pointer>>
+                    invoke_impl_mop_r,
+                    invoke_impl_mop_p>>
         {
         protected:
             /// <!-- description -->
-            ///   @brief copy constructor
+            ///   @brief Destroyes a previously created bsl::invoke_impl_base
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
+            ~invoke_impl_base() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
@@ -260,10 +217,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief move constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
@@ -272,39 +225,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr invoke_impl_base &    // --
-            operator=(invoke_impl_base const &o) &noexcept = default;
+            constexpr invoke_impl_base &operator=(invoke_impl_base const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr invoke_impl_base &    // --
-            operator=(invoke_impl_base &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::invoke_impl_base
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
-            ~invoke_impl_base() noexcept = default;
+            constexpr invoke_impl_base &operator=(invoke_impl_base &&o) &noexcept = default;
         };
 
         /// @class bsl::details::invoke_impl_base
@@ -327,11 +261,12 @@ namespace bsl
         {
         protected:
             /// <!-- description -->
-            ///   @brief copy constructor
+            ///   @brief Destroyes a previously created bsl::invoke_impl_base
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
+            ~invoke_impl_base() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
@@ -341,10 +276,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief move constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
@@ -353,39 +284,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr invoke_impl_base &    // --
-            operator=(invoke_impl_base const &o) &noexcept = default;
+            constexpr invoke_impl_base &operator=(invoke_impl_base const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr invoke_impl_base &    // --
-            operator=(invoke_impl_base &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::invoke_impl_base
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
-            ~invoke_impl_base() noexcept = default;
+            constexpr invoke_impl_base &operator=(invoke_impl_base &&o) &noexcept = default;
         };
     }
 }

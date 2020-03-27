@@ -37,7 +37,6 @@
 #include "source_location.hpp"
 #include "swap.hpp"
 
-#include "enable_if.hpp"
 #include "is_same.hpp"
 #include "is_move_constructible.hpp"
 #include "is_nothrow_move_constructible.hpp"
@@ -84,10 +83,6 @@ namespace bsl
         ///   @brief Swaps *this with other
         ///   @include result/exchange.cpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param lhs the left hand side of the exchange
         ///   @param rhs the right hand side of the exchange
@@ -122,6 +117,9 @@ namespace bsl
         }
 
     public:
+        /// @brief alias for: T
+        using type = T;
+
         /// <!-- description -->
         ///   @brief Constructs a bsl::result that contains T,
         ///     by copying "t"
@@ -147,10 +145,6 @@ namespace bsl
         ///     conversions are disabled through the use of the implicit
         ///     general template constructor that is deleted which absorbs all
         ///     incoming potential implicit conversions.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the value being copied
@@ -188,10 +182,6 @@ namespace bsl
         ///     general template constructor that is deleted which absorbs all
         ///     incoming potential implicit conversions.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param t the value being moved
         ///
@@ -219,10 +209,6 @@ namespace bsl
         ///     by the spec have the same issue with this rule, so it is clear
         ///     it needs a better definition to ensure the library the spec
         ///     demands can actually be compliant with the spec itself.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param ip provide bsl::in_place to construct in place
@@ -264,10 +250,6 @@ namespace bsl
         ///     explicit. This is not a fundamental type and there for does
         ///     not apply.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param e the error code being copied
         ///   @param sloc the source location of the error
@@ -307,10 +289,6 @@ namespace bsl
         ///     explicit. This is not a fundamental type and there for does
         ///     not apply.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param e the error code being moved
         ///   @param sloc the source location of the error
@@ -324,6 +302,18 @@ namespace bsl
             : m_which{details::result_type::contains_e}, m_e{bsl::move(e)}
         {
             bsl::discard(sloc);
+        }
+
+        /// <!-- description -->
+        ///   @brief Destroyes a previously created bsl::result. Since
+        ///     we require E to be trivially destructible, we only need to
+        ///     call a destructor if this object contains a T
+        ///
+        ~result() noexcept
+        {
+            if (details::result_type::contains_t == m_which) {
+                destroy_at(&m_t);    // NOLINT
+            }
         }
 
         /// <!-- description -->
@@ -357,10 +347,6 @@ namespace bsl
         ///     Furthermore, it is impossible to initialize union members
         ///     in an initializer list in a copy/move constructor, which
         ///     PRQA should be capable of detecting, and it doesn't.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
@@ -411,10 +397,6 @@ namespace bsl
         ///     in an initializer list in a copy/move constructor, which
         ///     PRQA should be capable of detecting, and it doesn't.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///
@@ -430,50 +412,8 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief This constructor allows for single argument constructors
-        ///     without the need to mark them as explicit as it will absorb
-        ///     any incoming potential implicit conversion and prevent it.
-        ///
-        ///   SUPPRESSION: PRQA 2180 - false positive
-        ///   - We suppress this because A12-1-4 states that all constructors
-        ///     that are callable from a fundamental type should be marked as
-        ///     explicit. This is callable with a fundamental type, but it
-        ///     is marked as "delete" which means it does not apply.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @tparam O the type that could be implicitly converted
-        ///   @param val the value that could be implicitly converted
-        ///
-        template<typename O>
-        result(O val) noexcept = delete;    // PRQA S 2180
-
-        /// <!-- description -->
-        ///   @brief Destroyes a previously created bsl::result. Since
-        ///     we require E to be trivially destructible, we only need to
-        ///     call a destructor if this object contains a T
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        ~result() noexcept
-        {
-            if (details::result_type::contains_t == m_which) {
-                destroy_at(&m_t);    // NOLINT
-            }
-        }
-
-        /// <!-- description -->
         ///   @brief copy assignment
         ///   @include result/example_result_copy_assignment.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
@@ -482,9 +422,8 @@ namespace bsl
         /// <!-- exceptions -->
         ///   @throw throws if T or E's copy constructor throws
         ///
-        [[maybe_unused]] constexpr result &
-            operator=(result const &o) &
-            noexcept(false)
+        constexpr result &
+        operator=(result const &o) &noexcept(false)
         {
             result tmp{o};
             private_swap(*this, tmp);
@@ -495,22 +434,35 @@ namespace bsl
         ///   @brief move assignment
         ///   @include result/example_result_move_assignment.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr result &
-            operator=(result &&o) &
-            noexcept
+        constexpr result &
+        operator=(result &&o) &noexcept
         {
             result tmp{bsl::move(o)};
             private_swap(*this, tmp);
             return *this;
         }
+
+        /// <!-- description -->
+        ///   @brief This constructor allows for single argument constructors
+        ///     without the need to mark them as explicit as it will absorb
+        ///     any incoming potential implicit conversion and prevent it.
+        ///
+        ///   SUPPRESSION: PRQA 2180 - false positive
+        ///   - We suppress this because A12-1-4 states that all constructors
+        ///     that are callable from a fundamental type should be marked as
+        ///     explicit. This is callable with a fundamental type, but it
+        ///     is marked as "delete" which means it does not apply.
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam O the type that could be implicitly converted
+        ///   @param val the value that could be implicitly converted
+        ///
+        template<typename O>
+        result(O val) noexcept = delete;    // PRQA S 2180
 
         /// <!-- description -->
         ///   @brief Returns a handle to T if this object contains T,
@@ -526,17 +478,12 @@ namespace bsl
         ///     detectable by PRQA, and thus, this suppression will likely
         ///     always be required.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns a handle to T if this object contains T,
         ///     otherwise it returns a nullptr.
         ///
         [[nodiscard]] constexpr T *
-            get_if() &
-            noexcept
+        get_if() &noexcept
         {
             if (details::result_type::contains_t == m_which) {
                 return &m_t;    // PRQA S 4024 // NOLINT
@@ -559,10 +506,6 @@ namespace bsl
         ///   @brief Returns a handle to T if this object contains T,
         ///     otherwise it returns a nullptr.
         ///   @include result/example_result_get_if.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns a handle to T if this object contains T,
@@ -592,10 +535,6 @@ namespace bsl
         ///   @brief Returns an error code if this object contains E,
         ///     otherwise it returns "fallback".
         ///   @include result/example_result_errc.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param fallback returned if this bsl::result contains T

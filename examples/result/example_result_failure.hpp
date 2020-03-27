@@ -33,14 +33,10 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_result_failure() noexcept
     {
-        bsl::result<bool> res{bsl::errc_failure};
+        bsl::result<bool> const res{bsl::errc_failure};
 
         if (res.failure()) {
             bsl::print("success\n");

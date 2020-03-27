@@ -53,18 +53,10 @@ namespace bsl
             /// <!-- description -->
             ///   @brief default constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             constexpr base_wrapper() noexcept = default;
 
             /// <!-- description -->
             ///   @brief virtual default destructor
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             virtual ~base_wrapper() noexcept = default;
 
@@ -73,10 +65,6 @@ namespace bsl
             ///     by the function, member function and const member function
             ///     wrappers. This function is called by the bsl::function to
             ///     execute a wrapped function.
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param args the arguments to pass to the wrapped function
@@ -91,10 +79,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///
@@ -102,10 +86,6 @@ namespace bsl
 
             /// <!-- description -->
             ///   @brief move constructor
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
@@ -115,30 +95,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr base_wrapper &
-            operator=(base_wrapper const &o) &noexcept = default;
+            constexpr base_wrapper &operator=(base_wrapper const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr base_wrapper &
-            operator=(base_wrapper &&o) &noexcept = default;
+            constexpr base_wrapper &operator=(base_wrapper &&o) &noexcept = default;
         };
 
         /// @class bsl::details::base_wrapper
@@ -162,18 +132,10 @@ namespace bsl
             /// <!-- description -->
             ///   @brief default constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             constexpr base_wrapper() noexcept = default;
 
             /// <!-- description -->
             ///   @brief virtual default destructor
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             virtual ~base_wrapper() noexcept = default;
 
@@ -182,10 +144,6 @@ namespace bsl
             ///     by the function, member function and const member function
             ///     wrappers. This function is called by the bsl::function to
             ///     execute a wrapped function.
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param args the arguments to pass to the wrapped function
@@ -197,10 +155,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///
@@ -208,10 +162,6 @@ namespace bsl
 
             /// <!-- description -->
             ///   @brief move constructor
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
@@ -221,30 +171,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr base_wrapper &
-            operator=(base_wrapper const &o) &noexcept = default;
+            constexpr base_wrapper &operator=(base_wrapper const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr base_wrapper &
-            operator=(base_wrapper &&o) &noexcept = default;
+            constexpr base_wrapper &operator=(base_wrapper &&o) &noexcept = default;
         };
     }
 }

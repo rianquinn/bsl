@@ -37,10 +37,6 @@ namespace bsl
     ///     to use member functions in decltype expressions without the need
     ///     to go through constructors.
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type T to get a reference type from
     ///   @return Cannot be called and thus never returns a value. The return

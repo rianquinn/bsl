@@ -70,11 +70,12 @@ namespace bsl
 
         protected:
             /// <!-- description -->
-            ///   @brief copy constructor
+            ///   @brief Destroyes a previously created bsl::swappable_traits
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
+            ~swappable_traits() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
@@ -84,10 +85,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief move constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
@@ -96,39 +93,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr swappable_traits &    // --
-            operator=(swappable_traits const &o) &noexcept = default;
+            constexpr swappable_traits &operator=(swappable_traits const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr swappable_traits &    // --
-            operator=(swappable_traits &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::swappable_traits
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
-            ~swappable_traits() noexcept = default;
+            constexpr swappable_traits &operator=(swappable_traits &&o) &noexcept = default;
         };
 
         /// @class bsl::details::swappable_traits
@@ -157,17 +135,17 @@ namespace bsl
             static constexpr bool m_is_swappable_with{true};
 
             /// @brief states that the provided args are nothrow swappable
-            static constexpr bool m_is_nothrow_swappable_with{
-                noexcept(swap(declval<T>(), declval<U>())) &&
-                noexcept(swap(declval<U>(), declval<T>()))};
+            static constexpr bool m_is_nothrow_swappable_with{noexcept(
+                swap(declval<T>(), declval<U>())) &&noexcept(swap(declval<U>(), declval<T>()))};
 
         protected:
             /// <!-- description -->
-            ///   @brief copy constructor
+            ///   @brief Destroyes a previously created bsl::swappable_traits
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
+            ~swappable_traits() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
@@ -177,10 +155,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief move constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
@@ -189,39 +163,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr swappable_traits &    // --
-            operator=(swappable_traits const &o) &noexcept = default;
+            constexpr swappable_traits &operator=(swappable_traits const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr swappable_traits &    // --
-            operator=(swappable_traits &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::swappable_traits
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
-            ~swappable_traits() noexcept = default;
+            constexpr swappable_traits &operator=(swappable_traits &&o) &noexcept = default;
         };
     }
 }

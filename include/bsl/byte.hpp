@@ -60,10 +60,6 @@ namespace bsl
         ///     to support the bsl::manager.
         ///   @include byte/example_byte_default_constructor.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         byte() noexcept = default;
 
         /// <!-- description -->
@@ -77,10 +73,6 @@ namespace bsl
         ///     conversions are disabled through the use of the implicit
         ///     general template constructor that is deleted which absorbs all
         ///     incoming potential implicit conversions.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param val the value of the integer to create the bsl::byte from.
@@ -100,10 +92,6 @@ namespace bsl
         ///     explicit. This is callable with a fundamental type, but it
         ///     is marked as "delete" which means it does not apply.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @tparam O the type that could be implicitly converted
         ///   @param val the value that could be implicitly converted
@@ -112,11 +100,12 @@ namespace bsl
         byte(O val) noexcept = delete;    // PRQA S 2180
 
         /// <!-- description -->
-        ///   @brief copy constructor
+        ///   @brief Destroyes a previously created bsl::byte
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
+        ~byte() noexcept = default;
+
+        /// <!-- description -->
+        ///   @brief copy constructor
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
@@ -126,10 +115,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief move constructor
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///
@@ -138,55 +123,32 @@ namespace bsl
         /// <!-- description -->
         ///   @brief copy assignment
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr byte &    // --
-        operator=(byte const &o) &noexcept = default;
+        constexpr byte &operator=(byte const &o) &noexcept = default;
 
         /// <!-- description -->
         ///   @brief move assignment
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr byte &    // --
-        operator=(byte &&o) &noexcept = default;
-
-        /// <!-- description -->
-        ///   @brief Destroyes a previously created bsl::byte
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        ~byte() noexcept = default;
+        constexpr byte &operator=(byte &&o) &noexcept = default;
 
         /// <!-- description -->
         ///   @brief Returns the bsl::byte as a given integer type using a
         ///     static_cast to perform the conversion.
         ///   @include byte/example_byte_to_integer.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @tparam T the type of integer to convert the bsl::byte to
         ///   @return Returns the bsl::byte as a given integer type using a
         ///     static_cast to perform the conversion.
         ///
-        template<typename T = bsl::uint8, enable_if_t<is_integral<T>::value> = true>
+        template<typename T = bsl::uint8, enable_if_t<is_integral<T>::value, bool> = true>
         [[nodiscard]] constexpr T
         to_integer() const noexcept
         {
@@ -198,10 +160,6 @@ namespace bsl
     ///   @brief The same as lhs.to_integer() == rhs.to_integer()
     ///   @include byte/example_byte_equal.hpp
     ///   @related bsl::byte
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @param lhs the left hand side of the operator
@@ -219,10 +177,6 @@ namespace bsl
     ///   @include byte/example_byte_not_equal.hpp
     ///   @related bsl::byte
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @param lhs the left hand side of the operator
     ///   @param rhs the right hand side of the operator
@@ -238,10 +192,6 @@ namespace bsl
     ///   @brief The same as b = byte{b.to_integer() << shift}
     ///   @include byte/example_byte_lshift_assign.hpp
     ///   @related bsl::byte
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @param b the bsl::byte to shift
@@ -260,10 +210,6 @@ namespace bsl
     ///   @include byte/example_byte_rshift_assign.hpp
     ///   @related bsl::byte
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @param b the bsl::byte to shift
     ///   @param shift the number of bits to shift b
@@ -280,10 +226,6 @@ namespace bsl
     ///   @brief The same as byte tmp{b}; tmp <<= shift;
     ///   @include byte/example_byte_lshift.hpp
     ///   @related bsl::byte
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @param b the bsl::byte to shift
@@ -303,10 +245,6 @@ namespace bsl
     ///   @include example_byte_rshift.hpp
     ///   @related bsl::byte
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @param b the bsl::byte to shift
     ///   @param shift the number of bits to shift b
@@ -324,10 +262,6 @@ namespace bsl
     ///   @brief The same as lhs = byte{lhs.to_integer() | rhs.to_integer()};
     ///   @include byte/example_byte_or_assign.hpp
     ///   @related bsl::byte
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @param lhs the left hand side of the binary operation
@@ -349,10 +283,6 @@ namespace bsl
     ///   @include byte/example_byte_and_assign.hpp
     ///   @related bsl::byte
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @param lhs the left hand side of the binary operation
     ///   @param rhs the right hand side of the binary operation
@@ -372,10 +302,6 @@ namespace bsl
     ///   @brief The same as lhs = byte{lhs.to_integer() ^ rhs.to_integer()};
     ///   @include byte/example_byte_xor_assign.hpp
     ///   @related bsl::byte
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @param lhs the left hand side of the binary operation
@@ -397,10 +323,6 @@ namespace bsl
     ///   @include byte/example_byte_or.hpp
     ///   @related bsl::byte
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @param lhs the left hand side of the binary operation
     ///   @param rhs the right hand side of the binary operation
@@ -419,16 +341,13 @@ namespace bsl
     ///   @include byte/example_byte_and.hpp
     ///   @related bsl::byte
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @param lhs the left hand side of the binary operation
     ///   @param rhs the right hand side of the binary operation
     ///   @return returns tmp{lhs}; tmp &= rhs;
     ///
-    constexpr byte operator&(byte const &lhs, byte const &rhs) noexcept
+    constexpr byte
+    operator&(byte const &lhs, byte const &rhs) noexcept
     {
         byte tmp{lhs};
         tmp &= rhs;
@@ -439,10 +358,6 @@ namespace bsl
     ///   @brief The same as tmp{lhs}; tmp ^= rhs;
     ///   @include byte/example_byte_xor.hpp
     ///   @related bsl::byte
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @param lhs the left hand side of the binary operation
@@ -461,10 +376,6 @@ namespace bsl
     ///   @brief The same as byte{~b.to_integer()}
     ///   @include byte/example_byte_complement.hpp
     ///   @related bsl::byte
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @param b the bsl::byte to invert

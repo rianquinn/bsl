@@ -33,14 +33,10 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_source_location_current() noexcept
     {
-        bsl::sloc_type const sloc = bsl::sloc_type::current();
+        bsl::sloc_type const sloc{bsl::sloc_type::current()};
         bsl::print("success: %s [%d]\n", sloc.file_name(), sloc.line());
     }
 }

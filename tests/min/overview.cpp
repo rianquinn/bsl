@@ -32,10 +32,6 @@
 ///     the application will fast fail. If all calls to ut_check() pass, this
 ///     function will successfully return with bsl::exit_success.
 ///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
-///
 /// <!-- inputs/outputs -->
 ///   @return Always returns bsl::exit_success.
 ///
@@ -46,14 +42,6 @@ main() noexcept
 
     static_assert(min(23, 42) == 23);
     static_assert(min(42, 23) == 23);
-
-    static_assert(min(42, 23, [](auto const &a, auto const &b) -> bool {
-                      return b < a;
-                  }) == 23);
-
-    static_assert(min(23, 42, [](auto const &a, auto const &b) -> bool {
-                      return b < a;
-                  }) == 23);
 
     return bsl::ut_success();
 }

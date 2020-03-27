@@ -44,10 +44,6 @@ namespace bsl
     ///     reference, and this is a false positive because this is the
     ///     required definition for std::move
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type that defines the value being moved
     ///   @param val the value being moved

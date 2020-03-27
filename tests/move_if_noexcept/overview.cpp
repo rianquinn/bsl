@@ -49,8 +49,7 @@ namespace
         }
 
         myclass &
-            operator=(myclass &&o) &
-            noexcept
+        operator=(myclass &&o) &noexcept
         {
             bsl::discard(o);
             g_moved = true;
@@ -74,8 +73,7 @@ namespace
         }
 
         myclass_move_except &
-            operator=(myclass_move_except &&o) &
-            noexcept(false)
+        operator=(myclass_move_except &&o) &noexcept(false)
         {
             bsl::discard(o);
             g_moved = true;
@@ -100,8 +98,7 @@ namespace
         }
 
         myclass_move_except_nocopy &
-            operator=(myclass_move_except_nocopy &&o) &
-            noexcept
+        operator=(myclass_move_except_nocopy &&o) &noexcept
         {
             bsl::discard(o);
             g_moved = true;
@@ -117,10 +114,6 @@ namespace
 ///   @brief Main function for this unit test. If a call to ut_check() fails
 ///     the application will fast fail. If all calls to ut_check() pass, this
 ///     function will successfully return with bsl::exit_success.
-///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
 ///
 /// <!-- inputs/outputs -->
 ///   @return Always returns bsl::exit_success.

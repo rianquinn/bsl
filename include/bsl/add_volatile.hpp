@@ -28,8 +28,6 @@
 #ifndef BSL_ADD_VOLATILE_HPP
 #define BSL_ADD_VOLATILE_HPP
 
-#include "type_identity.hpp"
-
 namespace bsl
 {
     /// @class bsl::add_volatile
@@ -48,9 +46,12 @@ namespace bsl
     ///   @tparam T the type to add a volatile qualifier to
     ///
     template<typename T>
-    class add_volatile final : public type_identity<T volatile>
+    struct add_volatile final
     {
-        static_assert(sizeof(T) != sizeof(T), "volatile not supported");
+        static_assert(sizeof(T) != sizeof(T), "volatile not supported");    // NOLINT
+
+        /// @brief provides the member typedef "type"
+        using type = T volatile;
     };
 
     /// @brief a helper that reduces the verbosity of bsl::add_volatile
@@ -60,9 +61,12 @@ namespace bsl
     /// @cond doxygen off
 
     template<typename T>
-    class add_volatile<T volatile> final : public type_identity<T volatile>
+    struct add_volatile<T volatile> final
     {
-        static_assert(sizeof(T) != sizeof(T), "volatile not supported");
+        static_assert(sizeof(T) != sizeof(T), "volatile not supported");    // NOLINT
+
+        /// @brief provides the member typedef "type"
+        using type = T volatile;
     };
 
     /// @endcond doxygen on

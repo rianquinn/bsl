@@ -33,16 +33,12 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_result_overview() noexcept
     {
         bsl::result<bool> res{bsl::in_place, true};
 
-        if (auto ptr = res.get_if()) {
+        if (auto const *const ptr = res.get_if()) {
             bsl::print("success: %s\n", *ptr ? "true" : "false");
         }
     }

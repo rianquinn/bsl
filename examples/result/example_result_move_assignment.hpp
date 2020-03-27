@@ -33,10 +33,6 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_result_move_assignment() noexcept
     {
@@ -44,7 +40,7 @@ namespace bsl
         bsl::result<bool> res2{bsl::errc_failure};
 
         res2 = bsl::move(res1);
-        if (auto ptr = res2.get_if()) {
+        if (auto const *const ptr = res2.get_if()) {
             bsl::print("success: %s\n", *ptr ? "true" : "false");
         }
     }

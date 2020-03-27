@@ -30,10 +30,6 @@
 ///     the application will fast fail. If all calls to ut_check() pass, this
 ///     function will successfully return with bsl::exit_success.
 ///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
-///
 /// <!-- inputs/outputs -->
 ///   @return Always returns bsl::exit_success.
 ///
@@ -85,34 +81,6 @@ main() noexcept
             char_type b{42};
             bsl::ut_then{} = [&a, &b]() {
                 bsl::ut_check(traits::lt(a, b));
-            };
-        };
-    };
-
-    bsl::ut_scenario{"move"} = []() {
-        bsl::ut_given{} = []() {
-            char_type a{23};
-            char_type b{42};
-            bsl::ut_when{} = [&a, &b]() {
-                traits::move(&a, &b, 1);
-                bsl::ut_then{} = [&a, &b]() {
-                    bsl::ut_check(a == 42);
-                    bsl::ut_check(b == 42);
-                };
-            };
-        };
-    };
-
-    bsl::ut_scenario{"copy"} = []() {
-        bsl::ut_given{} = []() {
-            char_type a{23};
-            char_type b{42};
-            bsl::ut_when{} = [&a, &b]() {
-                traits::copy(&a, &b, 1);
-                bsl::ut_then{} = [&a, &b]() {
-                    bsl::ut_check(a == 42);
-                    bsl::ut_check(b == 42);
-                };
             };
         };
     };

@@ -85,10 +85,6 @@ namespace bsl
         ///     explicit. This is callable with a fundamental type, but it
         ///     is marked as "delete" which means it does not apply.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @tparam O the type that could be implicitly converted
         ///   @param val the value that could be implicitly converted
@@ -99,10 +95,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief copy constructor
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
         ///
@@ -110,10 +102,6 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief move constructor
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
@@ -123,37 +111,23 @@ namespace bsl
         /// <!-- description -->
         ///   @brief copy assignment
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr errc_type &    // --
-        operator=(errc_type const &o) &noexcept = default;
+        constexpr errc_type &operator=(errc_type const &o) &noexcept = default;
 
         /// <!-- description -->
         ///   @brief move assignment
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr errc_type &    // --
-        operator=(errc_type &&o) &noexcept = default;
+        constexpr errc_type &operator=(errc_type &&o) &noexcept = default;
 
         /// <!-- description -->
         ///   @brief Destroyes a previously created bsl::errc_type
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         ~errc_type() noexcept = default;
 
@@ -163,10 +137,6 @@ namespace bsl
         ///     should use the other functions like ==, !=, operator bool(),
         ///     is_checked() and is_unchecked().
         ///   @include errc_type/example_errc_type_get.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the integer value that represents the error code.
@@ -217,10 +187,6 @@ namespace bsl
         ///     error code is bsl::errc_success, returns false.
         ///   @include errc_type/example_errc_type_is_checked.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns true if the error code is a checked error (i.e.,
         ///     that is the error code is negative), false otherwise. If this
@@ -238,10 +204,6 @@ namespace bsl
         ///     If this error code is bsl::errc_success, returns false.
         ///   @include errc_type/example_errc_type_is_unchecked.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns true if the error code is an unchecked error
         ///     (i.e., that is the error code is positive), false otherwise.
@@ -258,10 +220,6 @@ namespace bsl
         ///     the error code is a custom, user defined error code, returns
         ///     a nullptr.
         ///   @include errc_type/example_errc_type_message.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns a human readable version of the error code. If
@@ -311,7 +269,7 @@ namespace bsl
 
     /// @brief deduction guideline for bsl::function
     template<typename T>
-    errc_type(T const &)->errc_type<T, 0>;
+    errc_type(T const &) -> errc_type<T, 0>;
 }
 
 // -----------------------------------------------------------------------------
@@ -361,10 +319,6 @@ namespace bsl
     ///     the error code is a custom, user defined error code, returns
     ///     a nullptr.
     ///   @include errc_type/example_errc_type_message.hpp
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @return Returns a human readable version of the error code. If

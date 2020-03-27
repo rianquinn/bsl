@@ -54,10 +54,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief constructor
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param current_file the file name of the source
         ///   @param current_func the function name of the source
@@ -78,10 +74,6 @@ namespace bsl
         ///     a source location's file name is "unknown", the function name
         ///     is "unknown" and the line location is "-1".
         ///   @include source_location/example_source_location_default_constructor.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         constexpr source_location() noexcept    // --
             : m_file{"unknown"}                 // --
@@ -107,10 +99,6 @@ namespace bsl
         ///     the current source_location, use bsl::here() which provides a
         ///     function with less verbosity.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param current_file defaults to the current file name
         ///   @param current_func defaults to the current function name
@@ -132,10 +120,6 @@ namespace bsl
         ///     bsl::source_location
         ///   @include source_location/example_source_location_file_name.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return returns the file name associated with the
         ///
@@ -150,10 +134,6 @@ namespace bsl
         ///     bsl::source_location
         ///   @include source_location/example_source_location_function_name.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return returns the function name associated with the
         ///
@@ -167,10 +147,6 @@ namespace bsl
         ///   @brief Returns the line location associated with the
         ///     bsl::source_location
         ///   @include source_location/example_source_location_line.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return returns the line location associated with the
@@ -196,10 +172,6 @@ namespace bsl
     ///     code must be. They are equivalent, and should not produce any
     ///     additional overhead in release mode.
     ///   @include source_location/example_source_location_here.hpp
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @param sloc the source_location object corresponding to

@@ -28,31 +28,53 @@
 #ifndef BSL_IS_FLOATING_POINT_HPP
 #define BSL_IS_FLOATING_POINT_HPP
 
-#include "details/is_floating_point_base.hpp"
+#include "cstdint.hpp"
+#include "true_type.hpp"
+#include "false_type.hpp"
 
 namespace bsl
 {
     /// @class bsl::is_floating_point
     ///
     /// <!-- description -->
-    ///   @brief If the provided type is a float type (taking into account
-    ///     const qualifications), provides the member constant value
+    ///   @brief If the provided type is a floating point type (taking into
+    ///     account const qualifications), provides the member constant value
     ///     equal to true. Otherwise the member constant value is false.
-    ///
-    /// <!-- notes -->
-    ///   @note We do not support floating point numbers. This is only
-    ///     implemented so that we can detect attempts to use floating
-    ///     point types and error out.
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class is_floating_point final : public details::is_floating_point_base<T>
-    {
-        static_assert(
-            !details::is_floating_point_base<T>::value, "floating point types are not supported");
-    };
+    class is_floating_point final : public false_type
+    {};
+
+    /// @cond doxygen off
+
+    template<>
+    class is_floating_point<float> final : public true_type
+    {};
+
+    template<>
+    class is_floating_point<float const> final : public true_type
+    {};
+
+    template<>
+    class is_floating_point<double> final : public true_type
+    {};
+
+    template<>
+    class is_floating_point<double const> final : public true_type
+    {};
+
+    template<>
+    class is_floating_point<long double> final : public true_type
+    {};
+
+    template<>
+    class is_floating_point<long double const> final : public true_type
+    {};
+
+    /// @endcond doxygen on
 }
 
 #endif

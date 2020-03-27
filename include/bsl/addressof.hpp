@@ -37,10 +37,6 @@ namespace bsl
     ///     that could be unsafe).
     ///   @include example_addressof_overview.hpp
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type of object to get the address of.
     ///   @param val the object of type T to get the address of.
@@ -58,10 +54,6 @@ namespace bsl
     ///     would allow you to get the address of an rvalue which could result
     ///     in UB.
     ///   @include example_addressof_overview.hpp
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type of object to get the address of.

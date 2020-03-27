@@ -28,8 +28,6 @@
 #ifndef BSL_REMOVE_REFERENCE_HPP
 #define BSL_REMOVE_REFERENCE_HPP
 
-#include "type_identity.hpp"
-
 namespace bsl
 {
     /// @class bsl::remove_reference
@@ -43,8 +41,11 @@ namespace bsl
     ///   @tparam T the type to remove the reference from
     ///
     template<typename T>
-    class remove_reference final : public type_identity<T>
-    {};
+    struct remove_reference final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     /// @brief a helper that reduces the verbosity of bsl::remove_reference
     template<typename T>
@@ -53,12 +54,18 @@ namespace bsl
     /// @cond doxygen off
 
     template<typename T>
-    struct remove_reference<T &> final : public type_identity<T>
-    {};
+    struct remove_reference<T &> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     template<typename T>
-    struct remove_reference<T &&> final : public type_identity<T>
-    {};
+    struct remove_reference<T &&> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     /// @endcond doxygen on
 }

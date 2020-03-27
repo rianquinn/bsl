@@ -28,9 +28,6 @@
 #ifndef BSL_INTEGRAL_CONSTANT_HPP
 #define BSL_INTEGRAL_CONSTANT_HPP
 
-#include "type_identity.hpp"
-#include "value_type_identity.hpp"
-
 namespace bsl
 {
     /// @class bsl::integral_constant
@@ -45,21 +42,25 @@ namespace bsl
     ///   @tparam T the type of integral being stored
     ///
     template<typename T, T v>
-    class integral_constant :
-        public value_type_identity<T>,
-        public type_identity<integral_constant<T, v>>
+    class integral_constant
     {
     public:
+        /// @brief provides the member typedef "type"
+        using type = integral_constant<T, v>;
+        /// @brief provides the member typedef "value_type"
+        using value_type = T;
+
         /// @brief the type T that stores the integral constant
-        static constexpr T value{v};
+        static constexpr value_type value{v};
 
     protected:
         /// <!-- description -->
-        ///   @brief copy constructor
+        ///   @brief Destroyes a previously created bsl::integral_constant
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
+        ~integral_constant() noexcept = default;
+
+        /// <!-- description -->
+        ///   @brief copy constructor
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
@@ -69,10 +70,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief move constructor
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///
@@ -81,39 +78,20 @@ namespace bsl
         /// <!-- description -->
         ///   @brief copy assignment
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr integral_constant &    // --
-        operator=(integral_constant const &o) &noexcept = default;
+        constexpr integral_constant &operator=(integral_constant const &o) &noexcept = default;
 
         /// <!-- description -->
         ///   @brief move assignment
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr integral_constant &    // --
-        operator=(integral_constant &&o) &noexcept = default;
-
-        /// <!-- description -->
-        ///   @brief Destroyes a previously created bsl::integral_constant
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        ~integral_constant() noexcept = default;
+        constexpr integral_constant &operator=(integral_constant &&o) &noexcept = default;
     };
 }
 

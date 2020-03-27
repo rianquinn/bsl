@@ -69,8 +69,11 @@ namespace bsl
     ///   @tparam T the type to add an lvalue reference to
     ///
     template<typename T>
-    class add_lvalue_reference final : public decltype(details::try_add_lvalue_reference<T>(0))
-    {};
+    struct add_lvalue_reference final
+    {
+        /// @brief provides the member typedef "type"
+        using type = typename decltype(details::try_add_lvalue_reference<T>(0))::type;
+    };
 
     /// @brief a helper that reduces the verbosity of bsl::add_lvalue_reference
     template<typename T>

@@ -28,8 +28,6 @@
 #ifndef BSL_REMOVE_CONST_HPP
 #define BSL_REMOVE_CONST_HPP
 
-#include "type_identity.hpp"
-
 namespace bsl
 {
     /// @class bsl::remove_const
@@ -43,8 +41,11 @@ namespace bsl
     ///   @tparam T the type to remove the const qualifier from
     ///
     template<typename T>
-    class remove_const final : public type_identity<T>
-    {};
+    struct remove_const final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     /// @brief a helper that reduces the verbosity of bsl::remove_const
     template<typename T>
@@ -53,8 +54,11 @@ namespace bsl
     /// @cond doxygen off
 
     template<typename T>
-    struct remove_const<T const> final : public type_identity<T>
-    {};
+    struct remove_const<T const> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     /// @endcond doxygen on
 }

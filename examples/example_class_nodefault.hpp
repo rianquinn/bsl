@@ -40,18 +40,10 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Deleted default constructor
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         example_class_nodefault() noexcept = delete;
 
         /// <!-- description -->
         ///   @brief Simple example of a getter
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return returns the value of m_data1;

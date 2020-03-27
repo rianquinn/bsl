@@ -38,27 +38,15 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Used to define bsl::nonesuch as useless
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         constexpr nonesuch() noexcept = delete;
 
         /// <!-- description -->
         ///   @brief Used to define bsl::nonesuch as useless
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         ~nonesuch() noexcept = delete;
 
         /// <!-- description -->
         ///   @brief Used to define bsl::nonesuch as useless
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
@@ -68,10 +56,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Used to define bsl::nonesuch as useless
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///
@@ -80,28 +64,20 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Used to define bsl::nonesuch as useless
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr nonesuch &operator=(nonesuch const &o) &noexcept = delete;
+        constexpr nonesuch &operator=(nonesuch const &o) &noexcept = delete;
 
         /// <!-- description -->
         ///   @brief Used to define bsl::nonesuch as useless
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr nonesuch &operator=(nonesuch &&o) &noexcept = delete;
+        constexpr nonesuch &operator=(nonesuch &&o) &noexcept = delete;
     };
 }
 

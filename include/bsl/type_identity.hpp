@@ -41,82 +41,10 @@ namespace bsl
     ///   @tparam T the type that defines the member typedef "type"
     ///
     template<typename T>
-    class type_identity
+    struct type_identity final
     {
-    public:
         /// @brief the member typedef "type" being provided
         using type = T;
-
-        /// <!-- description -->
-        ///   @brief default constructor
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        constexpr type_identity() noexcept = default;
-
-    protected:
-        /// <!-- description -->
-        ///   @brief copy constructor
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param o the object being copied
-        ///
-        constexpr type_identity(type_identity const &o) noexcept = default;
-
-        /// <!-- description -->
-        ///   @brief move constructor
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
-        ///
-        constexpr type_identity(type_identity &&o) noexcept = default;
-
-        /// <!-- description -->
-        ///   @brief copy assignment
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param o the object being copied
-        ///   @return a reference to *this
-        ///
-        [[maybe_unused]] constexpr type_identity &    // --
-        operator=(type_identity const &o) &noexcept = default;
-
-        /// <!-- description -->
-        ///   @brief move assignment
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
-        ///   @return a reference to *this
-        ///
-        [[maybe_unused]] constexpr type_identity &    // --
-        operator=(type_identity &&o) &noexcept = default;
-
-        /// <!-- description -->
-        ///   @brief Destroyes a previously created bsl::type_identity
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        ~type_identity() noexcept = default;
     };
 
     /// @brief a helper that reduces the verbosity of bsl::type_identity

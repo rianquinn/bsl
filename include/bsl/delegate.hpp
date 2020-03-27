@@ -78,6 +78,9 @@ namespace bsl
         aligned_storage_t<sizeof(void *) * 3> m_store;
 
     public:
+        /// @brief alias for: R
+        using result_type = R;
+
         /// <!-- description -->
         ///   @brief Provides support for ensuring that a bsl::delegate is a
         ///     POD type, allowing it to be defined as a global resource.
@@ -88,10 +91,6 @@ namespace bsl
         ///     include {} to ensure the bsl::delegate is initialized, which
         ///     most compilers will warn about.
         ///   @include delegate/example_delegate_default_constructor.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         delegate() noexcept = default;
 
@@ -107,10 +106,6 @@ namespace bsl
         ///     that are callable from a fundamental type should be marked as
         ///     explicit. This is not a fundamental type and there for does
         ///     not apply.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param func a pointer to the delegate being wrapped
@@ -131,10 +126,6 @@ namespace bsl
         ///     is marked as invalid, and will always return an error when
         ///     executed.
         ///   @include delegate/example_delegate_constructor_memfunc.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
@@ -158,10 +149,6 @@ namespace bsl
         ///     error when executed.
         ///   @include delegate/example_delegate_constructor_cmemfunc.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
         ///   @param func a pointer to the delegate being wrapped
@@ -181,10 +168,6 @@ namespace bsl
         ///   @brief Execute the bsl::delegate by calling the wrapped function
         ///     with "args" and returning the result.
         ///   @include delegate/example_delegate_functor.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param args the arguments to pass to the wrapped function
@@ -210,10 +193,6 @@ namespace bsl
         ///   @brief If the bsl::delegate is valid, returns true, otherwise
         ///     returns false.
         ///   @include delegate/example_delegate_valid.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return If the bsl::delegate is valid, returns true, otherwise
@@ -260,6 +239,9 @@ namespace bsl
         aligned_storage_t<sizeof(void *) * 3> m_store;
 
     public:
+        /// @brief alias for: R
+        using result_type = R;
+
         /// <!-- description -->
         ///   @brief Provides support for ensuring that a bsl::delegate is a
         ///     POD type, allowing it to be defined as a global resource.
@@ -270,10 +252,6 @@ namespace bsl
         ///     include {} to ensure the bsl::delegate is initialized, which
         ///     most compilers will warn about.
         ///   @include delegate/example_delegate_default_constructor.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         delegate() noexcept = default;
 
@@ -289,10 +267,6 @@ namespace bsl
         ///     that are callable from a fundamental type should be marked as
         ///     explicit. This is not a fundamental type and there for does
         ///     not apply.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param func a pointer to the delegate being wrapped
@@ -313,10 +287,6 @@ namespace bsl
         ///     is marked as invalid, and will always return an error when
         ///     executed.
         ///   @include delegate/example_delegate_constructor_memfunc.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
@@ -340,10 +310,6 @@ namespace bsl
         ///     error when executed.
         ///   @include delegate/example_delegate_constructor_cmemfunc.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
         ///   @param func a pointer to the delegate being wrapped
@@ -363,10 +329,6 @@ namespace bsl
         ///   @brief Execute the bsl::delegate by calling the wrapped function
         ///     with "args" and returning the result.
         ///   @include delegate/example_delegate_functor.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param args the arguments to pass to the wrapped function
@@ -389,10 +351,6 @@ namespace bsl
         ///   @brief If the bsl::delegate is valid, returns true, otherwise
         ///     returns false.
         ///   @include delegate/example_delegate_valid.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return If the bsl::delegate is valid, returns true, otherwise
@@ -436,6 +394,9 @@ namespace bsl
         aligned_storage_t<sizeof(void *) * 3> m_store;
 
     public:
+        /// @brief alias for: void
+        using result_type = void;
+
         /// <!-- description -->
         ///   @brief Provides support for ensuring that a bsl::delegate is a
         ///     POD type, allowing it to be defined as a global resource.
@@ -446,10 +407,6 @@ namespace bsl
         ///     include {} to ensure the bsl::delegate is initialized, which
         ///     most compilers will warn about.
         ///   @include delegate/example_delegate_default_constructor.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         delegate() noexcept = default;
 
@@ -465,10 +422,6 @@ namespace bsl
         ///     that are callable from a fundamental type should be marked as
         ///     explicit. This is not a fundamental type and there for does
         ///     not apply.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param func a pointer to the delegate being wrapped
@@ -489,10 +442,6 @@ namespace bsl
         ///     is marked as invalid, and will always return an error when
         ///     executed.
         ///   @include delegate/example_delegate_constructor_memfunc.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
@@ -516,10 +465,6 @@ namespace bsl
         ///     error when executed.
         ///   @include delegate/example_delegate_constructor_cmemfunc.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
         ///   @param func a pointer to the delegate being wrapped
@@ -539,10 +484,6 @@ namespace bsl
         ///   @brief Execute the bsl::delegate by calling the wrapped function
         ///     with "args".
         ///   @include delegate/example_delegate_functor.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param args the arguments to pass to the wrapped function
@@ -565,10 +506,6 @@ namespace bsl
         ///   @brief If the bsl::delegate is valid, returns true, otherwise
         ///     returns false.
         ///   @include delegate/example_delegate_valid.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return If the bsl::delegate is valid, returns true, otherwise
@@ -612,6 +549,9 @@ namespace bsl
         aligned_storage_t<sizeof(void *) * 3> m_store;
 
     public:
+        /// @brief alias for: void
+        using result_type = void;
+
         /// <!-- description -->
         ///   @brief Provides support for ensuring that a bsl::delegate is a
         ///     POD type, allowing it to be defined as a global resource.
@@ -622,10 +562,6 @@ namespace bsl
         ///     include {} to ensure the bsl::delegate is initialized, which
         ///     most compilers will warn about.
         ///   @include delegate/example_delegate_default_constructor.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         delegate() noexcept = default;
 
@@ -641,10 +577,6 @@ namespace bsl
         ///     that are callable from a fundamental type should be marked as
         ///     explicit. This is not a fundamental type and there for does
         ///     not apply.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param func a pointer to the delegate being wrapped
@@ -665,10 +597,6 @@ namespace bsl
         ///     is marked as invalid, and will always return an error when
         ///     executed.
         ///   @include delegate/example_delegate_constructor_memfunc.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
@@ -693,10 +621,6 @@ namespace bsl
         ///     error when executed.
         ///   @include delegate/example_delegate_constructor_cmemfunc.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param t the object to execute the member function from
         ///   @param func a pointer to the delegate being wrapped
@@ -718,10 +642,6 @@ namespace bsl
         ///     with "args".
         ///   @include delegate/example_delegate_functor.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param args the arguments to pass to the wrapped function
         ///
@@ -741,10 +661,6 @@ namespace bsl
         ///     returns false.
         ///   @include delegate/example_delegate_valid.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return If the bsl::delegate is valid, returns true, otherwise
         ///     returns false.
@@ -761,51 +677,51 @@ namespace bsl
 
     /// @brief deduction guideline for bsl::delegate
     template<typename R, typename... ARGS>
-    delegate(R (*)(ARGS...))->delegate<R(ARGS...)>;
+    delegate(R (*)(ARGS...)) -> delegate<R(ARGS...)>;
 
     /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename R, typename... ARGS>
-    delegate(T &t, R (U::*)(ARGS...))->delegate<R(ARGS...)>;
+    delegate(T &t, R (U::*)(ARGS...)) -> delegate<R(ARGS...)>;
 
     /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename R, typename... ARGS>
-    delegate(T const &t, R (U::*)(ARGS...) const)->delegate<R(ARGS...)>;
+    delegate(T const &t, R (U::*)(ARGS...) const) -> delegate<R(ARGS...)>;
 
     /// @brief deduction guideline for bsl::delegate
     template<typename R, typename... ARGS>
-    delegate(R (*)(ARGS...) noexcept)->delegate<R(ARGS...) noexcept>;
+    delegate(R (*)(ARGS...) noexcept) -> delegate<R(ARGS...) noexcept>;
 
     /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename R, typename... ARGS>
-    delegate(T &t, R (U::*)(ARGS...) noexcept)->delegate<R(ARGS...) noexcept>;
+    delegate(T &t, R (U::*)(ARGS...) noexcept) -> delegate<R(ARGS...) noexcept>;
 
     /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename R, typename... ARGS>
-    delegate(T const &t, R (U::*)(ARGS...) const noexcept)->delegate<R(ARGS...) noexcept>;
+    delegate(T const &t, R (U::*)(ARGS...) const noexcept) -> delegate<R(ARGS...) noexcept>;
 
     /// @brief deduction guideline for bsl::delegate
     template<typename... ARGS>
-    delegate(void (*)(ARGS...))->delegate<void(ARGS...)>;
+    delegate(void (*)(ARGS...)) -> delegate<void(ARGS...)>;
 
     /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename... ARGS>
-    delegate(T &t, void (U::*)(ARGS...))->delegate<void(ARGS...)>;
+    delegate(T &t, void (U::*)(ARGS...)) -> delegate<void(ARGS...)>;
 
     /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename... ARGS>
-    delegate(T const &t, void (U::*)(ARGS...) const)->delegate<void(ARGS...)>;
+    delegate(T const &t, void (U::*)(ARGS...) const) -> delegate<void(ARGS...)>;
 
     /// @brief deduction guideline for bsl::delegate
     template<typename... ARGS>
-    delegate(void (*)(ARGS...) noexcept)->delegate<void(ARGS...) noexcept>;
+    delegate(void (*)(ARGS...) noexcept) -> delegate<void(ARGS...) noexcept>;
 
     /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename... ARGS>
-    delegate(T &t, void (U::*)(ARGS...) noexcept)->delegate<void(ARGS...) noexcept>;
+    delegate(T &t, void (U::*)(ARGS...) noexcept) -> delegate<void(ARGS...) noexcept>;
 
     /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename... ARGS>
-    delegate(T const &t, void (U::*)(ARGS...) const noexcept)->delegate<void(ARGS...) noexcept>;
+    delegate(T const &t, void (U::*)(ARGS...) const noexcept) -> delegate<void(ARGS...) noexcept>;
 
     /// @endcond doxygen on
 }

@@ -261,6 +261,7 @@ FILE(GLOB_RECURSE BF_SOURCES_SRC RELATIVE ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR
 
 if(CMAKE_BUILD_TYPE STREQUAL DEBUG OR
    CMAKE_BUILD_TYPE STREQUAL CLANG_TIDY OR
+   CMAKE_BUILD_TYPE STREQUAL PERFORCE OR
    CMAKE_BUILD_TYPE STREQUAL ASAN OR
    CMAKE_BUILD_TYPE STREQUAL UBSAN OR
    CMAKE_BUILD_TYPE STREQUAL COVERAGE)
@@ -410,6 +411,7 @@ string(APPEND CMAKE_CXX_FLAGS
     "-Wno-padded "
     "-Wno-weak-vtables "
     "-Wno-ctad-maybe-unsupported "
+    "-Wno-enum-compare-conditional"
 )
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -Werror")
@@ -454,10 +456,22 @@ if(CMAKE_BUILD_TYPE STREQUAL PERFORCE)
     set(BSL_BUILTIN_FILE "\"file\"")
     set(BSL_BUILTIN_FUNCTION "\"function\"")
     set(BSL_BUILTIN_LINE "0")
+    set(BSL_BUILTIN_MEMSET "p")
+    set(BSL_BUILTIN_MEMMOVE "dst")
+    set(BSL_BUILTIN_MEMCPY "dst")
+    set(BSL_BUILTIN_MEMCHR "p")
+    set(BSL_BUILTIN_STRNCMP "0")
+    set(BSL_BUILTIN_STRLEN "0U")
 else()
     set(BSL_BUILTIN_FILE "__builtin_FILE()")
     set(BSL_BUILTIN_FUNCTION "__builtin_FUNCTION()")
     set(BSL_BUILTIN_LINE "__builtin_LINE()")
+    set(BSL_BUILTIN_MEMSET "__builtin_memset(p, a, count)")
+    set(BSL_BUILTIN_MEMMOVE "__builtin_memmove(dst, src, count)")
+    set(BSL_BUILTIN_MEMCPY "__builtin_memcpy(dst, src, count)")
+    set(BSL_BUILTIN_MEMCHR "__builtin_memchr(p, ch, count)")
+    set(BSL_BUILTIN_STRNCMP "__builtin_strncmp(s1, s2, count)")
+    set(BSL_BUILTIN_STRLEN "__builtin_strlen(s)")
 endif()
 
 list(APPEND BSL_DEFAULT_DEFINES
@@ -466,6 +480,12 @@ list(APPEND BSL_DEFAULT_DEFINES
     BSL_BUILTIN_FILE=${BSL_BUILTIN_FILE}
     BSL_BUILTIN_FUNCTION=${BSL_BUILTIN_FUNCTION}
     BSL_BUILTIN_LINE=${BSL_BUILTIN_LINE}
+    BSL_BUILTIN_MEMSET=${BSL_BUILTIN_MEMSET}
+    BSL_BUILTIN_MEMMOVE=${BSL_BUILTIN_MEMMOVE}
+    BSL_BUILTIN_MEMCPY=${BSL_BUILTIN_MEMCPY}
+    BSL_BUILTIN_MEMCHR=${BSL_BUILTIN_MEMCHR}
+    BSL_BUILTIN_STRNCMP=${BSL_BUILTIN_STRNCMP}
+    BSL_BUILTIN_STRLEN=${BSL_BUILTIN_STRLEN}
 )
 
 # ------------------------------------------------------------------------------

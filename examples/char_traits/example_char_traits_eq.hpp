@@ -33,15 +33,11 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_char_traits_eq() noexcept
     {
-        bsl::char_type const val1{42};
-        bsl::char_type const val2{42};
+        bsl::char_type const val1{static_cast<bsl::char_type>(42)};
+        bsl::char_type const val2{static_cast<bsl::char_type>(42)};
 
         if (bsl::char_traits<bsl::char_type>::eq(val1, val2)) {
             bsl::print("success\n");

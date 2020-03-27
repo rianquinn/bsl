@@ -41,10 +41,6 @@ namespace bsl
         ///   @brief Checks if the provided type "T" is a fundamental type
         ///     and if so, returns true, otherwise returns false.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @tparam T the type to query
         ///   @return Returns true if "T" is fundamental, false otherwise.

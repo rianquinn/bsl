@@ -25,19 +25,18 @@
 #ifndef BSL_BASIC_STRING_VIEW_HPP
 #define BSL_BASIC_STRING_VIEW_HPP
 
-#include "details/view.hpp"
-
 #include "char_traits.hpp"
+#include "contiguous_iterator.hpp"
 #include "cstdint.hpp"
 #include "min.hpp"
 #include "npos.hpp"
+#include "reverse_iterator.hpp"
+#include "view.hpp"
 
 // TODO:
 // - Need to implement the find functions. These need the safe_int class as
 //   there is a lot of math that could result in overflow that needs to be
-//   accounted for. Unlike functions like for_each, which can isolate
-//   potential overflow issues, the find math is far too complicated to
-//   get correct without the assistance of safe_int.
+//   accounted for.
 //
 
 namespace bsl
@@ -54,12 +53,31 @@ namespace bsl
     ///   @tparam Traits the traits class used to work with the string
     ///
     template<typename CharT, typename Traits = char_traits<CharT>>
-    class basic_string_view final : public details::view<CharT const>
+    class basic_string_view final : public view<CharT const>
     {
     public:
+        /// @brief alias for: CharT const
+        using value_type = CharT const;
+        /// @brief alias for: bsl::uintmax
+        using size_type = bsl::uintmax;
+        /// @brief alias for: bsl::uintmax
+        using difference_type = bsl::uintmax;
+        /// @brief alias for: CharT const &
+        using reference = CharT const &;
+        /// @brief alias for: CharT const &
+        using const_reference = CharT const &;
+        /// @brief alias for: CharT const *
+        using pointer = CharT const *;
+        /// @brief alias for: CharT const const *
+        using const_pointer = CharT const *;
+        /// @brief alias for: contiguous_iterator<CharT const>
+        using iterator = contiguous_iterator<CharT const>;
+        /// @brief alias for: contiguous_iterator<CharT const const>
+        using const_iterator = contiguous_iterator<CharT const>;
+
         /// <!-- description -->
         ///   @brief Default constructor that creates a basic_string_view with
-        ///     data() == nullptr and size()/length() == 0. All accessors
+        ///     data() == nullptr and size() == 0. All accessors
         ///     will return a nullptr if used. Note that like other view types
         ///     in the BSL, the bsl::basic_string_view is a POD type. This
         ///     means that when declaring a global, default constructed
@@ -74,10 +92,6 @@ namespace bsl
         ///     executed at runtime, which is not allowed by AUTOSAR.
         ///   @include  basic_string_view/example_basic_string_view_default_constructor.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         constexpr basic_string_view() noexcept = default;
 
         /// <!-- description -->
@@ -86,16 +100,12 @@ namespace bsl
         ///     the string.
         ///   @include basic_string_view/example_basic_string_view_s_count_constructor.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param s a pointer to the string
         ///   @param count the number of characters in the string
         ///
-        constexpr basic_string_view(CharT const *const s, bsl::uintmax const count) noexcept
-            : details::view<CharT const>{s, count}
+        constexpr basic_string_view(pointer const s, size_type const count) noexcept
+            : view<CharT const>{s, count}
         {}
 
         /// <!-- description -->
@@ -104,17 +114,18 @@ namespace bsl
         ///     string is determined using Traits<CharT>::length,
         ///     which scans for '\0'.
         ///   @include basic_string_view/example_basic_string_view_s_constructor.hpp
-        ///   @related
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
+        ///   SUPPRESSION: PRQA 2180 - false positive
+        ///   - We suppress this because A12-1-4 states that all constructors
+        ///     that are callable from a fundamental type should be marked as
+        ///     explicit. This is not a fundamental type and there for does
+        ///     not apply (as pointers are not fundamental types).
         ///
         /// <!-- inputs/outputs -->
         ///   @param s a pointer to the string
         ///
-        constexpr basic_string_view(CharT const *const s) noexcept    // NOLINT
-            : details::view<CharT const>{s, Traits::length(s)}
+        constexpr basic_string_view(pointer const s) noexcept    // PRQA S 2180 // NOLINT
+            : view<CharT const>{s, Traits::length(s)}
         {}
 
         /// <!-- description -->
@@ -125,14 +136,10 @@ namespace bsl
         ///     total number of bytes, use bsl::basic_string_view::size_bytes().
         ///   @include basic_string_view/example_basic_string_view_length.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the length of the string being viewed.
         ///
-        [[nodiscard]] constexpr bsl::uintmax
+        [[nodiscard]] constexpr size_type
         length() const noexcept
         {
             return this->size();
@@ -144,16 +151,13 @@ namespace bsl
         ///     string, with data() returning a nullptr, and size() returning 0.
         ///   @include basic_string_view/example_basic_string_view_remove_prefix.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param n the number of character to remove from the start of
         ///     the string.
+        ///   @return returns *this
         ///
         [[maybe_unused]] constexpr basic_string_view &
-        remove_prefix(bsl::uintmax const n) noexcept
+        remove_prefix(size_type const n) noexcept
         {
             if (n >= this->size()) {
                 *this = basic_string_view{};
@@ -169,56 +173,20 @@ namespace bsl
         ///     string, with data() returning a nullptr, and size() returning 0.
         ///   @include basic_string_view/example_basic_string_view_remove_suffix.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param n the number of character to remove from the end of
         ///     the string.
+        ///   @return returns *this
         ///
         [[maybe_unused]] constexpr basic_string_view &
-        remove_suffix(bsl::uintmax const n) noexcept
+        remove_suffix(size_type const n) noexcept
         {
             if (n >= this->size()) {
                 *this = basic_string_view{};
             }
 
-            *this = basic_string_view{this->at_if(0), this->size() - n};
+            *this = basic_string_view{this->at_if(0U), this->size() - n};
             return *this;
-        }
-
-        /// <!-- description -->
-        ///   @brief Copies the substring [pos, pos + rcount) to the string
-        ///     pointed to by dst, where rcount is the smaller of count and
-        ///     size() - pos. If pos is larger than size(), the copy request
-        ///     is ignored and 0 is returned.
-        ///   @include basic_string_view/example_basic_string_view_copy.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param dst the buffer to copy the string to
-        ///   @param count the number of characters to copy
-        ///   @param pos the starting position in the string that is copied
-        ///   @return Returns dst
-        ///
-        [[maybe_unused]] constexpr bsl::uintmax
-        copy(                            // --
-            CharT *const dst,            // --
-            bsl::uintmax const count,    // --
-            bsl::uintmax const pos = 0) const noexcept
-        {
-            if (pos >= this->size()) {
-                return 0;
-            }
-
-            bsl::uintmax const rcount{min(count, this->size() - pos)};
-            Traits::copy(static_cast<CharT *>(dst), this->at_if(pos), rcount);
-
-            return rcount;
         }
 
         /// <!-- description -->
@@ -233,10 +201,6 @@ namespace bsl
         ///     are invalid, this function returns an empty string view.
         ///   @include basic_string_view/example_basic_string_view_substr.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param pos the starting position of the new substring.
         ///   @param count the length of the new bsl::basic_string_view
@@ -245,7 +209,7 @@ namespace bsl
         ///     and ends at "pos" + "count".
         ///
         [[nodiscard]] constexpr basic_string_view
-        substr(bsl::uintmax pos = 0, bsl::uintmax count = npos) const noexcept
+        substr(size_type const pos = 0U, size_type const count = npos) const noexcept
         {
             if (pos >= this->size()) {
                 return basic_string_view{};
@@ -256,11 +220,7 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief Compares two strings.
-        ///   @include basic_string_view/example_basic_string_view_compare_1.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
+        ///   @include basic_string_view/example_basic_string_view_compare.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @param v the bsl::basic_string_view to compare with
@@ -274,11 +234,7 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief Same as substr(pos, count).compare(v)
-        ///   @include basic_string_view/example_basic_string_view_compare_2.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
+        ///   @include basic_string_view/example_basic_string_view_compare.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @param pos the starting position of "this" to compare from
@@ -287,18 +243,17 @@ namespace bsl
         ///   @return Returns the same results as std::strncmp
         ///
         [[nodiscard]] constexpr bsl::int32
-        compare(bsl::uintmax pos, bsl::uintmax count, basic_string_view const &v) const noexcept
+        compare(                      // --
+            size_type const pos,      // --
+            size_type const count,    // --
+            basic_string_view const &v) const noexcept
         {
             return this->substr(pos, count).compare(v);
         }
 
         /// <!-- description -->
         ///   @brief Same as substr(pos1, count1).compare(v.substr(pos2, count2))
-        ///   @include basic_string_view/example_basic_string_view_compare_3.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
+        ///   @include basic_string_view/example_basic_string_view_compare.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @param pos1 the starting position of "this" to compare from
@@ -310,40 +265,32 @@ namespace bsl
         ///
         [[nodiscard]] constexpr bsl::int32
         compare(                           // --
-            bsl::uintmax pos1,             // --
-            bsl::uintmax count1,           // --
+            size_type pos1,                // --
+            size_type count1,              // --
             basic_string_view const &v,    // --
-            bsl::uintmax pos2,             // --
-            bsl::uintmax count2) const noexcept
+            size_type pos2,                // --
+            size_type count2) const noexcept
         {
             return this->substr(pos1, count1).compare(v.substr(pos2, count2));
         }
 
         /// <!-- description -->
         ///   @brief Same as compare(basic_string_view{s})
-        ///   @include basic_string_view/example_basic_string_view_compare_4.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
+        ///   @include basic_string_view/example_basic_string_view_compare.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @param s a pointer to a string to compare with "this"
         ///   @return Returns the same results as std::strncmp
         ///
         [[nodiscard]] constexpr bsl::int32
-        compare(CharT const *const s) const noexcept
+        compare(pointer const s) const noexcept
         {
             return this->compare(basic_string_view{s});
         }
 
         /// <!-- description -->
         ///   @brief Same as substr(pos, count).compare(basic_string_view{s})
-        ///   @include basic_string_view/example_basic_string_view_compare_5.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
+        ///   @include basic_string_view/example_basic_string_view_compare.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @param pos the starting position of "this" to compare from
@@ -352,18 +299,14 @@ namespace bsl
         ///   @return Returns the same results as std::strncmp
         ///
         [[nodiscard]] constexpr bsl::int32
-        compare(bsl::uintmax pos, bsl::uintmax count, CharT const *const s) const noexcept
+        compare(size_type pos, size_type count, pointer const s) const noexcept
         {
             return this->substr(pos, count).compare(basic_string_view{s});
         }
 
         /// <!-- description -->
         ///   @brief Same as substr(pos, count1).compare(basic_string_view{s, count2})
-        ///   @include basic_string_view/example_basic_string_view_compare_6.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
+        ///   @include basic_string_view/example_basic_string_view_compare.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @param pos the starting position of "this" to compare from
@@ -373,11 +316,11 @@ namespace bsl
         ///   @return Returns the same results as std::strncmp
         ///
         [[nodiscard]] constexpr bsl::int32
-        compare(                     // --
-            bsl::uintmax pos,        // --
-            bsl::uintmax count1,     // --
-            CharT const *const s,    // --
-            bsl::uintmax count2) const noexcept
+        compare(                 // --
+            size_type pos,       // --
+            size_type count1,    // --
+            pointer const s,     // --
+            size_type count2) const noexcept
         {
             return this->substr(pos, count1).compare(basic_string_view{s, count2});
         }
@@ -385,10 +328,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Checks if the string begins with the given prefix
         ///   @include basic_string_view/example_basic_string_view_starts_with.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param v the bsl::basic_string_view to compare with
@@ -402,16 +341,12 @@ namespace bsl
                 return false;
             }
 
-            return this->substr(0, v.size()) == v;
+            return this->substr(0U, v.size()) == v;
         }
 
         /// <!-- description -->
         ///   @brief Checks if the string begins with the given prefix
         ///   @include basic_string_view/example_basic_string_view_starts_with.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param c the CharT to compare with
@@ -421,7 +356,7 @@ namespace bsl
         [[nodiscard]] constexpr bool
         starts_with(CharT const c) const noexcept
         {
-            if (auto ptr = this->front_if()) {
+            if (auto *const ptr = this->front_if()) {
                 return *ptr == c;
             }
 
@@ -432,17 +367,13 @@ namespace bsl
         ///   @brief Checks if the string begins with the given prefix
         ///   @include basic_string_view/example_basic_string_view_starts_with.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param s the string to compare with
         ///   @return Returns true if the string begins with the given prefix,
         ///     false otherwise.
         ///
         [[nodiscard]] constexpr bool
-        starts_with(CharT const *const s) const noexcept
+        starts_with(pointer const s) const noexcept
         {
             return this->starts_with(basic_string_view{s});
         }
@@ -450,10 +381,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Checks if the string ends with the given suffix
         ///   @include basic_string_view/example_basic_string_view_ends_with.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param v the bsl::basic_string_view to compare with
@@ -474,10 +401,6 @@ namespace bsl
         ///   @brief Checks if the string ends with the given suffix
         ///   @include basic_string_view/example_basic_string_view_ends_with.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param c the CharT to compare with
         ///   @return Returns true if the string ends with the given suffix,
@@ -486,7 +409,7 @@ namespace bsl
         [[nodiscard]] constexpr bool
         ends_with(CharT const c) const noexcept
         {
-            if (auto ptr = this->back_if()) {
+            if (auto *const ptr = this->back_if()) {
                 return *ptr == c;
             }
 
@@ -497,25 +420,41 @@ namespace bsl
         ///   @brief Checks if the string ends with the given suffix
         ///   @include basic_string_view/example_basic_string_view_ends_with.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param s the string to compare with
         ///   @return Returns true if the string ends with the given suffix,
         ///     false otherwise.
         ///
         [[nodiscard]] constexpr bool
-        ends_with(CharT const *const s) const noexcept
+        ends_with(pointer const s) const noexcept
         {
             return this->ends_with(basic_string_view{s});
         }
     };
 
+    /// <!-- description -->
+    ///   @brief Returns true if two strings have the same length (which is
+    ///     different from compare() which uses the minimum size between the
+    ///     two provided strings), and contain the same characters. Returns
+    ///     false otherwise.
+    ///   @include basic_string_view/example_basic_string_view_equals.hpp
+    ///   @related bsl::basic_string_view
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam CharT the type of characters in the string
+    ///   @tparam Traits the traits class used to work with the string
+    ///   @param lhs the left hand side of the operation
+    ///   @param rhs the right hand side of the operation
+    ///   @return Returns true if two strings have the same length (which is
+    ///     different from compare() which uses the minimum size between the
+    ///     two provided strings), and contain the same characters. Returns
+    ///     false otherwise.
+    ///
     template<typename CharT, typename Traits>
     constexpr bool
-    operator==(basic_string_view<CharT, Traits> lhs, basic_string_view<CharT, Traits> rhs) noexcept
+    operator==(
+        bsl::basic_string_view<CharT, Traits> const &lhs,
+        bsl::basic_string_view<CharT, Traits> const &rhs) noexcept
     {
         if (lhs.size() != rhs.size()) {
             return false;
@@ -524,37 +463,129 @@ namespace bsl
         return lhs.compare(rhs) == 0;
     }
 
+    /// <!-- description -->
+    ///   @brief Returns true if two strings have the same length (which is
+    ///     different from compare() which uses the minimum size between the
+    ///     two provided strings), and contain the same characters. Returns
+    ///     false otherwise.
+    ///   @include basic_string_view/example_basic_string_view_equals.hpp
+    ///   @related bsl::basic_string_view
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam CharT the type of characters in the string
+    ///   @tparam Traits the traits class used to work with the string
+    ///   @param lhs the left hand side of the operation
+    ///   @param rhs the right hand side of the operation
+    ///   @return Returns true if two strings have the same length (which is
+    ///     different from compare() which uses the minimum size between the
+    ///     two provided strings), and contain the same characters. Returns
+    ///     false otherwise.
+    ///
     template<typename CharT, typename Traits>
     constexpr bool
-    operator==(basic_string_view<CharT, Traits> lhs, CharT const *const rhs) noexcept
+    operator==(bsl::basic_string_view<CharT, Traits> const &lhs, CharT const *const rhs) noexcept
     {
-        return lhs == basic_string_view<CharT, Traits>{rhs};
+        return lhs == bsl::basic_string_view<CharT, Traits>{rhs};
     }
 
+    /// <!-- description -->
+    ///   @brief Returns true if two strings have the same length (which is
+    ///     different from compare() which uses the minimum size between the
+    ///     two provided strings), and contain the same characters. Returns
+    ///     false otherwise.
+    ///   @include basic_string_view/example_basic_string_view_equals.hpp
+    ///   @related bsl::basic_string_view
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam CharT the type of characters in the string
+    ///   @tparam Traits the traits class used to work with the string
+    ///   @param lhs the left hand side of the operation
+    ///   @param rhs the right hand side of the operation
+    ///   @return Returns true if two strings have the same length (which is
+    ///     different from compare() which uses the minimum size between the
+    ///     two provided strings), and contain the same characters. Returns
+    ///     false otherwise.
+    ///
     template<typename CharT, typename Traits>
     constexpr bool
-    operator==(CharT const *const lhs, basic_string_view<CharT, Traits> rhs) noexcept
+    operator==(CharT const *const lhs, bsl::basic_string_view<CharT, Traits> const &rhs) noexcept
     {
-        return basic_string_view<CharT, Traits>{lhs} == rhs;
+        return bsl::basic_string_view<CharT, Traits>{lhs} == rhs;
     }
 
+    /// <!-- description -->
+    ///   @brief Returns true if two strings are not the same length (which is
+    ///     different from compare() which uses the minimum size between the
+    ///     two provided strings), or contain different characters. Returns
+    ///     false otherwise.
+    ///   @include basic_string_view/example_basic_string_view_not_equals.hpp
+    ///   @related bsl::basic_string_view
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam CharT the type of characters in the string
+    ///   @tparam Traits the traits class used to work with the string
+    ///   @param lhs the left hand side of the operation
+    ///   @param rhs the right hand side of the operation
+    ///   @return Returns true if two strings are not the same length (which is
+    ///     different from compare() which uses the minimum size between the
+    ///     two provided strings), or contain different characters. Returns
+    ///     false otherwise.
+    ///
     template<typename CharT, typename Traits>
     constexpr bool
-    operator!=(basic_string_view<CharT, Traits> lhs, basic_string_view<CharT, Traits> rhs) noexcept
+    operator!=(
+        bsl::basic_string_view<CharT, Traits> const &lhs,
+        bsl::basic_string_view<CharT, Traits> const &rhs) noexcept
     {
         return !(lhs == rhs);
     }
 
+    /// <!-- description -->
+    ///   @brief Returns true if two strings are not the same length (which is
+    ///     different from compare() which uses the minimum size between the
+    ///     two provided strings), or contain different characters. Returns
+    ///     false otherwise.
+    ///   @include basic_string_view/example_basic_string_view_not_equals.hpp
+    ///   @related bsl::basic_string_view
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam CharT the type of characters in the string
+    ///   @tparam Traits the traits class used to work with the string
+    ///   @param lhs the left hand side of the operation
+    ///   @param rhs the right hand side of the operation
+    ///   @return Returns true if two strings are not the same length (which is
+    ///     different from compare() which uses the minimum size between the
+    ///     two provided strings), or contain different characters. Returns
+    ///     false otherwise.
+    ///
     template<typename CharT, typename Traits>
     constexpr bool
-    operator!=(basic_string_view<CharT, Traits> lhs, CharT const *const rhs) noexcept
+    operator!=(bsl::basic_string_view<CharT, Traits> const &lhs, CharT const *const rhs) noexcept
     {
         return !(lhs == rhs);
     }
 
+    /// <!-- description -->
+    ///   @brief Returns true if two strings are not the same length (which is
+    ///     different from compare() which uses the minimum size between the
+    ///     two provided strings), or contain different characters. Returns
+    ///     false otherwise.
+    ///   @include basic_string_view/example_basic_string_view_not_equals.hpp
+    ///   @related bsl::basic_string_view
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam CharT the type of characters in the string
+    ///   @tparam Traits the traits class used to work with the string
+    ///   @param lhs the left hand side of the operation
+    ///   @param rhs the right hand side of the operation
+    ///   @return Returns true if two strings are not the same length (which is
+    ///     different from compare() which uses the minimum size between the
+    ///     two provided strings), or contain different characters. Returns
+    ///     false otherwise.
+    ///
     template<typename CharT, typename Traits>
     constexpr bool
-    operator!=(CharT const *const lhs, basic_string_view<CharT, Traits> rhs) noexcept
+    operator!=(CharT const *const lhs, bsl::basic_string_view<CharT, Traits> const &rhs) noexcept
     {
         return !(lhs == rhs);
     }

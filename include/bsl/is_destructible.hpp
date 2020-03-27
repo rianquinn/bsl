@@ -50,10 +50,6 @@ namespace bsl
         ///   @brief Checks if a type "T" is destructible and if so, returns
         ///     true, otherwise returns false.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @tparam T the type to query
         ///   @return If "T" is destructible, returns true, otherwise returns

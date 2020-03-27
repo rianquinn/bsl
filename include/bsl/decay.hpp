@@ -29,13 +29,11 @@
 #define BSL_DECAY_HPP
 
 #include "add_pointer.hpp"
-#include "conditional.hpp"
 #include "is_array.hpp"
 #include "is_function.hpp"
 #include "remove_cv.hpp"
 #include "remove_extent.hpp"
 #include "remove_reference.hpp"
-#include "type_identity.hpp"
 
 namespace bsl
 {
@@ -44,28 +42,51 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Applies lvalue-to-rvalue, array-to-pointer, and
     ///     function-to-pointer implicit conversions to the type T,
-    ///     removes const-qualifiers, and defines the resulting type as the
-    ///     member typedef type. Note that this does not remove volatile as
-    ///     the BSL does not support the use of volatile.
+    ///     removes cv-qualifiers, and defines the resulting type as the
+    ///     member typedef type.
     ///   @include example_decay_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type to decay
     ///
-    template<typename T>
-    class decay final :
-        public type_identity<conditional_t<
-            is_array<remove_reference_t<T>>::value,
-            remove_extent_t<remove_reference_t<T>> *,
-            conditional_t<
-                is_function<remove_reference_t<T>>::value,
-                add_pointer_t<remove_reference_t<T>>,
-                remove_cv_t<remove_reference_t<T>>>>>
-    {};
+    template<
+        typename T,
+        bool IS_ARRAY = is_array<remove_reference_t<T>>::value,
+        bool IS_FUNCTION = is_function<remove_reference_t<T>>::value>
+    struct decay final
+    {
+        /// @brief provides the member typedef "type"
+        using type = remove_cv_t<remove_reference_t<T>>;
+    };
 
-    /// @brief a helper that reduces the verbosity of bsl::add_const
+    /// @brief a helper that reduces the verbosity of bsl::decay
     template<typename T>
     using decay_t = typename decay<T>::type;
+
+    /// @cond doxygen off
+
+    template<typename T>
+    struct decay<T, true, true> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = remove_extent_t<remove_reference_t<T>> *;
+    };
+
+    template<typename T>
+    struct decay<T, true, false> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = remove_extent_t<remove_reference_t<T>> *;
+    };
+
+    template<typename T>
+    struct decay<T, false, true> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = add_pointer_t<remove_reference_t<T>>;
+    };
+
+    /// @endcond doxygen on
 }
 
 #endif

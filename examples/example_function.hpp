@@ -30,10 +30,6 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides an example function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @param val the value to return
     ///   @return returns val

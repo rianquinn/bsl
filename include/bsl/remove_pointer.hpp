@@ -28,8 +28,6 @@
 #ifndef BSL_REMOVE_POINTER_HPP
 #define BSL_REMOVE_POINTER_HPP
 
-#include "type_identity.hpp"
-
 namespace bsl
 {
     /// @class bsl::remove_pointer
@@ -43,8 +41,11 @@ namespace bsl
     ///   @tparam T the type to remove the pointer from
     ///
     template<typename T>
-    class remove_pointer final : public type_identity<T>
-    {};
+    struct remove_pointer final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     /// @brief a helper that reduces the verbosity of bsl::remove_pointer
     template<typename T>
@@ -53,12 +54,18 @@ namespace bsl
     /// @cond doxygen off
 
     template<typename T>
-    struct remove_pointer<T *> final : public type_identity<T>
-    {};
+    struct remove_pointer<T *> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     template<typename T>
-    struct remove_pointer<T *const> final : public type_identity<T>
-    {};
+    struct remove_pointer<T *const> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     /// @endcond doxygen on
 }

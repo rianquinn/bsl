@@ -46,10 +46,6 @@ namespace bsl
         ///   @brief Creates a bsl::arguments object given a provided argc
         ///     and argv.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param argc the total number of arguments passed to the
         ///     application

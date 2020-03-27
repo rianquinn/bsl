@@ -40,6 +40,11 @@ parsers:
       method: no
       macro: no
 
+ignore:
+  - "examples/**"
+  - "include/bsl/ut.hpp"
+  - "tests/**"
+
 comment:
   layout: "reach,diff,flags,tree"
   behavior: default

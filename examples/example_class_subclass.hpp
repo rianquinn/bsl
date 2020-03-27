@@ -50,18 +50,10 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Creates a default bsl::example_class_subclass
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         example_class_subclass() noexcept = default;
 
         /// <!-- description -->
         ///   @brief Destroyes a previously created bsl::example_class_subclass
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         ~example_class_subclass() noexcept
         {
@@ -71,10 +63,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief copy constructor
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
         ///
@@ -83,10 +71,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief move constructor
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///
@@ -94,10 +78,6 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief copy assignment
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
@@ -108,10 +88,6 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief copy constructor
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved

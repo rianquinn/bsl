@@ -59,10 +59,6 @@ namespace bsl
             ///     in addition to a reference to the member function's object
             ///     and later called by the overloaded call function.
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param t a reference to the member function's object
             ///   @param func a pointer to a regular function
@@ -74,10 +70,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief Calls the wrapped function by passing "args" to the
             ///     function and returing the result.
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param args the arguments to pass to the wrapped function
@@ -119,10 +111,6 @@ namespace bsl
             ///     in addition to a reference to the member function's object
             ///     and later called by the overloaded call function.
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param t a reference to the member function's object
             ///   @param func a pointer to a regular function
@@ -134,10 +122,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief Calls the wrapped function by passing "args" to the
             ///     function and returing the result.
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param args the arguments to pass to the wrapped function

@@ -30,7 +30,6 @@
 
 #include "decay.hpp"
 #include "declval.hpp"
-#include "type_identity.hpp"
 
 namespace bsl
 {
@@ -43,27 +42,34 @@ namespace bsl
     ///   @include example_common_type_overview.hpp
     ///
     template<typename...>
-    class common_type;
+    struct common_type;
 
-    /// @brief a helper that reduces the verbosity of bsl::add_const
+    /// @brief a helper that reduces the verbosity of bsl::common_type
     template<typename... T>
     using common_type_t = typename common_type<T...>::type;
 
     /// @cond doxygen off
 
     template<typename T>
-    class common_type<T> final : public type_identity<decay_t<T>>
-    {};
+    struct common_type<T> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = decay_t<T>;
+    };
 
     template<typename T1, typename T2>
-    class common_type<T1, T2> final :
-        public type_identity<decay_t<decltype(true ? declval<T1>() : declval<T2>())>>
-    {};
+    struct common_type<T1, T2> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = decay_t<decltype(true ? declval<T1>() : declval<T2>())>;    // NOLINT
+    };
 
     template<typename T1, typename T2, typename... R>
-    class common_type<T1, T2, R...> final :
-        public type_identity<common_type_t<common_type_t<T1, T2>, R...>>
-    {};
+    struct common_type<T1, T2, R...> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = common_type_t<common_type_t<T1, T2>, R...>;
+    };
 
     /// @endcond doxygen on
 }

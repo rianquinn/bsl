@@ -33,14 +33,11 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_char_traits_length() noexcept
     {
-        if (bsl::char_traits<bsl::char_type>::length("42") == 2) {
+        constexpr bsl::uintmax len{2U};
+        if (bsl::char_traits<bsl::char_type>::length("42") == len) {
             bsl::print("success\n");
         }
     }

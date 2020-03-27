@@ -35,17 +35,13 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_delegate_constructor_func() noexcept
     {
         bsl::delegate const func{&example_function};
 
         auto const res1{func(true)};
-        if (auto const val = res1.get_if()) {
+        if (auto const *const val = res1.get_if()) {
             if (*val) {
                 bsl::print("success\n");
             }

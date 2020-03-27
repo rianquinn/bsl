@@ -33,15 +33,11 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_char_traits_to_char_type() noexcept
     {
         bsl::intmax const val1{42};
-        bsl::char_type const val2{42};
+        bsl::char_type const val2{static_cast<bsl::char_type>(42)};
 
         if (bsl::char_traits<bsl::char_type>::to_char_type(val1) == val2) {
             bsl::print("success\n");

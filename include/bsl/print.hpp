@@ -41,10 +41,6 @@ namespace bsl
     ///     if fputs() is not defined, you must define it as this function
     ///     uses fputs() to actually output to the console.
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam ARGS defines the types of arguments passed to this function
     ///   @param fmt the format string that defines what to print
@@ -60,21 +56,6 @@ namespace bsl
         std::printf(fmt, args...);                            // PRQA S 1-10000 // NOLINT
 #pragma clang diagnostic pop                                  // PRQA S 1-10000 // NOLINT
     }                                                         // PRQA S 1-10000 // NOLINT
-
-#pragma clang diagnostic push                             // PRQA S 1-10000 // NOLINT
-#pragma clang diagnostic ignored "-Wformat-security"      // PRQA S 1-10000 // NOLINT
-#pragma clang diagnostic ignored "-Wformat-nonliteral"    // PRQA S 1-10000 // NOLINT
-
-    template<bsl::uintmax N, typename... ARGS>
-    constexpr void
-    print2(const char (&arr)[N], ARGS &&... args) noexcept    // NOLINT
-    {
-        // constexpr bsl::view yourmom{arr};
-        std::printf(arr, args...);    // PRQA S 1-10000 // NOLINT
-    }                                 // PRQA S 1-10000 // NOLINT
-
-#pragma clang diagnostic pop    // PRQA S 1-10000 // NOLINT
-
 }
 
 #endif

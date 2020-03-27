@@ -46,10 +46,6 @@
 ///     if they are defined. This function is used by bsl::result and others,
 ///     but PRQA is not able to detect this.
 ///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
-///
 /// <!-- inputs/outputs -->
 ///   @param count ignored
 ///   @param ptr the ptr to return

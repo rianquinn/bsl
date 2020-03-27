@@ -46,9 +46,11 @@ namespace bsl
     ///     qualifiers from
     ///
     template<typename T>
-    class remove_cvext final :    // --
-        public type_identity<remove_cv_t<remove_all_extents_t<T>>>
-    {};
+    struct remove_cvext final
+    {
+        /// @brief provides the member typedef "type"
+        using type = remove_cv_t<remove_all_extents_t<T>>;
+    };
 
     /// @brief a helper that reduces the verbosity of bsl::remove_cvext
     template<typename T>

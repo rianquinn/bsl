@@ -33,17 +33,13 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_result_copy_constructor() noexcept
     {
-        bsl::result<bool> res1{bsl::in_place, true};
-        bsl::result<bool> res2{res1};
+        bsl::result<bool> const res1{bsl::in_place, true};
+        bsl::result<bool> const res2{res1};    // NOLINT
 
-        if (auto ptr = res2.get_if()) {
+        if (auto const *const ptr = res2.get_if()) {
             bsl::print("success: %s\n", *ptr ? "true" : "false");
         }
     }

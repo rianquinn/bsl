@@ -37,6 +37,19 @@
 // #include "example_aligned_union_overview.hpp"
 #include "example_alignment_of_overview.hpp"
 #include "example_as_const_overview.hpp"
+#include "example_basic_string_view_overview.hpp"
+#include "basic_string_view/example_basic_string_view_compare.hpp"
+#include "basic_string_view/example_basic_string_view_default_constructor.hpp"
+#include "basic_string_view/example_basic_string_view_ends_with.hpp"
+#include "basic_string_view/example_basic_string_view_equals.hpp"
+#include "basic_string_view/example_basic_string_view_length.hpp"
+#include "basic_string_view/example_basic_string_view_not_equals.hpp"
+#include "basic_string_view/example_basic_string_view_remove_prefix.hpp"
+#include "basic_string_view/example_basic_string_view_remove_suffix.hpp"
+#include "basic_string_view/example_basic_string_view_s_constructor.hpp"
+#include "basic_string_view/example_basic_string_view_s_count_constructor.hpp"
+#include "basic_string_view/example_basic_string_view_starts_with.hpp"
+#include "basic_string_view/example_basic_string_view_substr.hpp"
 #include "example_bool_constant_overview.hpp"
 #include "example_byte_overview.hpp"
 #include "byte/example_byte_and_assign.hpp"
@@ -58,14 +71,12 @@
 #include "example_char_traits_overview.hpp"
 #include "char_traits/example_char_traits_assign.hpp"
 #include "char_traits/example_char_traits_compare.hpp"
-#include "char_traits/example_char_traits_copy.hpp"
 #include "char_traits/example_char_traits_eof.hpp"
 #include "char_traits/example_char_traits_eq_int_type.hpp"
 #include "char_traits/example_char_traits_eq.hpp"
 #include "char_traits/example_char_traits_find.hpp"
 #include "char_traits/example_char_traits_length.hpp"
 #include "char_traits/example_char_traits_lt.hpp"
-#include "char_traits/example_char_traits_move.hpp"
 #include "char_traits/example_char_traits_not_eof.hpp"
 #include "char_traits/example_char_traits_to_char_type.hpp"
 #include "char_traits/example_char_traits_to_int_type.hpp"
@@ -102,6 +113,7 @@
 #include "example_exchange_overview.hpp"
 #include "example_extent_overview.hpp"
 #include "example_false_type_overview.hpp"
+#include "example_fill_overview.hpp"
 #include "example_for_each_overview.hpp"
 #include "example_forward_overview.hpp"
 // #include "example_has_unique_object_representations_overview.hpp"
@@ -130,6 +142,7 @@
 #include "example_is_convertible_overview.hpp"
 #include "example_is_copy_assignable_overview.hpp"
 #include "example_is_copy_constructible_overview.hpp"
+#include "example_is_copyable_overview.hpp"
 #include "example_is_default_constructible_overview.hpp"
 #include "example_is_destructible_overview.hpp"
 #include "example_is_detected_overview.hpp"
@@ -147,17 +160,20 @@
 #include "example_is_member_pointer_overview.hpp"
 #include "example_is_move_assignable_overview.hpp"
 #include "example_is_move_constructible_overview.hpp"
+#include "example_is_movable_overview.hpp"
 #include "example_is_nothrow_assignable_overview.hpp"
 #include "example_is_nothrow_constructible_overview.hpp"
 #include "example_is_nothrow_convertible_overview.hpp"
 #include "example_is_nothrow_copy_assignable_overview.hpp"
 #include "example_is_nothrow_copy_constructible_overview.hpp"
+#include "example_is_nothrow_copyable_overview.hpp"
 #include "example_is_nothrow_default_constructible_overview.hpp"
 #include "example_is_nothrow_destructible_overview.hpp"
 #include "example_is_nothrow_invocable_overview.hpp"
 #include "example_is_nothrow_invocable_r_overview.hpp"
 #include "example_is_nothrow_move_assignable_overview.hpp"
 #include "example_is_nothrow_move_constructible_overview.hpp"
+#include "example_is_nothrow_movable_overview.hpp"
 #include "example_is_nothrow_swappable_overview.hpp"
 #include "example_is_nothrow_swappable_with_overview.hpp"
 #include "example_is_null_pointer_overview.hpp"
@@ -184,6 +200,7 @@
 #include "example_is_trivially_destructible_overview.hpp"
 #include "example_is_trivially_move_assignable_overview.hpp"
 #include "example_is_trivially_move_constructible_overview.hpp"
+#include "example_is_trivially_movable_overview.hpp"
 #include "example_is_unbounded_array_overview.hpp"
 #include "example_is_unsigned_overview.hpp"
 #include "example_is_void_overview.hpp"
@@ -234,19 +251,13 @@
 #include "source_location/example_source_location_line.hpp"
 #include "example_swap_overview.hpp"
 #include "example_true_type_overview.hpp"
-#include "example_type_identity_overview.hpp"
 #include "example_underlying_type_overview.hpp"
-#include "example_value_type_identity_overview.hpp"
 #include "example_void_t_overview.hpp"
 
 namespace
 {
     /// <!-- description -->
     ///   @brief Executes an example with some possible pre/post logic
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @param func the example function to call
@@ -266,13 +277,7 @@ namespace
 /// <!-- description -->
 ///   @brief Provides the example's main function
 ///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
-///
 /// <!-- inputs/outputs -->
-///   @param argc the total number of arguments passed to the application
-///   @param argv the arguments passed to the application
 ///   @return 0 on success, non-0 on failure
 ///
 bsl::exit_code
@@ -289,6 +294,19 @@ main() noexcept
     // example(&bsl::example_aligned_union_overview, "example_aligned_union_overview");
     example(&bsl::example_alignment_of_overview, "example_alignment_of_overview");
     example(&bsl::example_as_const_overview, "example_as_const_overview");
+    example(&bsl::example_basic_string_view_overview, "example_basic_string_view_overview");
+    example(&bsl::example_basic_string_view_compare, "example_basic_string_view_compare");
+    example(&bsl::example_basic_string_view_default_constructor, "example_basic_string_view_default_constructor");
+    example(&bsl::example_basic_string_view_ends_with, "example_basic_string_view_ends_with");
+    example(&bsl::example_basic_string_view_equals, "example_basic_string_view_equals");
+    example(&bsl::example_basic_string_view_length, "example_basic_string_view_length");
+    example(&bsl::example_basic_string_view_not_equals, "example_basic_string_view_not_equals");
+    example(&bsl::example_basic_string_view_remove_prefix, "example_basic_string_view_remove_prefix");
+    example(&bsl::example_basic_string_view_remove_suffix, "example_basic_string_view_remove_suffix");
+    example(&bsl::example_basic_string_view_s_constructor, "example_basic_string_view_s_constructor");
+    example(&bsl::example_basic_string_view_s_count_constructor, "example_basic_string_view_s_count_constructor");
+    example(&bsl::example_basic_string_view_starts_with, "example_basic_string_view_starts_with");
+    example(&bsl::example_basic_string_view_substr, "example_basic_string_view_substr");
     example(&bsl::example_bool_constant_overview, "example_bool_constant_overview");
     example(&bsl::example_byte_overview, "example_byte_overview");
     example(&bsl::example_byte_and_assign, "example_byte_and_assign");
@@ -310,14 +328,12 @@ main() noexcept
     example(&bsl::example_char_traits_overview, "example_char_traits_overview");
     example(&bsl::example_char_traits_assign, "example_char_traits_assign");
     example(&bsl::example_char_traits_compare, "example_char_traits_compare");
-    example(&bsl::example_char_traits_copy, "example_char_traits_copy");
     example(&bsl::example_char_traits_eof, "example_char_traits_eof");
     example(&bsl::example_char_traits_eq_int_type, "example_char_traits_eq_int_type");
     example(&bsl::example_char_traits_eq, "example_char_traits_eq");
     example(&bsl::example_char_traits_find, "example_char_traits_find");
     example(&bsl::example_char_traits_length, "example_char_traits_length");
     example(&bsl::example_char_traits_lt, "example_char_traits_lt");
-    example(&bsl::example_char_traits_move, "example_char_traits_move");
     example(&bsl::example_char_traits_not_eof, "example_char_traits_not_eof");
     example(&bsl::example_char_traits_to_char_type, "example_char_traits_to_char_type");
     example(&bsl::example_char_traits_to_int_type, "example_char_traits_to_int_type");
@@ -354,6 +370,7 @@ main() noexcept
     example(&bsl::example_exchange_overview, "example_exchange_overview");
     example(&bsl::example_extent_overview, "example_extent_overview");
     example(&bsl::example_false_type_overview, "example_false_type_overview");
+    example(&bsl::example_fill_overview, "example_fill_overview");
     example(&bsl::example_for_each_overview, "example_for_each_overview");
     example(&bsl::example_forward_overview, "example_forward_overview");
     // example(&bsl::example_has_unique_object_representations_overview, "example_has_unique_object_representations_overview");
@@ -382,6 +399,7 @@ main() noexcept
     example(&bsl::example_is_convertible_overview, "example_is_convertible_overview");
     example(&bsl::example_is_copy_assignable_overview, "example_is_copy_assignable_overview");
     example(&bsl::example_is_copy_constructible_overview, "example_is_copy_constructible_overview");
+    example(&bsl::example_is_copyable_overview, "example_is_copyable_overview");
     example(&bsl::example_is_default_constructible_overview, "example_is_default_constructible_overview");
     example(&bsl::example_is_destructible_overview, "example_is_destructible_overview");
     example(&bsl::example_is_detected_overview, "example_is_detected_overview");
@@ -399,17 +417,20 @@ main() noexcept
     example(&bsl::example_is_member_pointer_overview, "example_is_member_pointer_overview");
     example(&bsl::example_is_move_assignable_overview, "example_is_move_assignable_overview");
     example(&bsl::example_is_move_constructible_overview, "example_is_move_constructible_overview");
+    example(&bsl::example_is_movable_overview, "example_is_movable_overview");
     example(&bsl::example_is_nothrow_assignable_overview, "example_is_nothrow_assignable_overview");
     example(&bsl::example_is_nothrow_constructible_overview, "example_is_nothrow_constructible_overview");
     example(&bsl::example_is_nothrow_convertible_overview, "example_is_nothrow_convertible_overview");
     example(&bsl::example_is_nothrow_copy_assignable_overview, "example_is_nothrow_copy_assignable_overview");
     example(&bsl::example_is_nothrow_copy_constructible_overview, "example_is_nothrow_copy_constructible_overview");
+    example(&bsl::example_is_nothrow_copyable_overview, "example_is_nothrow_copyable_overview");
     example(&bsl::example_is_nothrow_default_constructible_overview, "example_is_nothrow_default_constructible_overview");
     example(&bsl::example_is_nothrow_destructible_overview, "example_is_nothrow_destructible_overview");
     example(&bsl::example_is_nothrow_invocable_overview, "example_is_nothrow_invocable_overview");
     example(&bsl::example_is_nothrow_invocable_r_overview, "example_is_nothrow_invocable_r_overview");
     example(&bsl::example_is_nothrow_move_assignable_overview, "example_is_nothrow_move_assignable_overview");
     example(&bsl::example_is_nothrow_move_constructible_overview, "example_is_nothrow_move_constructible_overview");
+    example(&bsl::example_is_nothrow_movable_overview, "example_is_nothrow_movable_overview");
     example(&bsl::example_is_nothrow_swappable_overview, "example_is_nothrow_swappable_overview");
     example(&bsl::example_is_nothrow_swappable_with_overview, "example_is_nothrow_swappable_with_overview");
     example(&bsl::example_is_null_pointer_overview, "example_is_null_pointer_overview");
@@ -436,6 +457,7 @@ main() noexcept
     example(&bsl::example_is_trivially_destructible_overview, "example_is_trivially_destructible_overview");
     example(&bsl::example_is_trivially_move_assignable_overview, "example_is_trivially_move_assignable_overview");
     example(&bsl::example_is_trivially_move_constructible_overview, "example_is_trivially_move_constructible_overview");
+    example(&bsl::example_is_trivially_movable_overview, "example_is_trivially_movable_overview");
     example(&bsl::example_is_unbounded_array_overview, "example_is_unbounded_array_overview");
     example(&bsl::example_is_unsigned_overview, "example_is_unsigned_overview");
     example(&bsl::example_is_void_overview, "example_is_void_overview");
@@ -486,9 +508,7 @@ main() noexcept
     example(&bsl::example_source_location_line, "example_source_location_line");
     example(&bsl::example_swap_overview, "example_swap_overview");
     example(&bsl::example_true_type_overview, "example_true_type_overview");
-    example(&bsl::example_type_identity_overview, "example_type_identity_overview");
     example(&bsl::example_underlying_type_overview, "example_underlying_type_overview");
-    example(&bsl::example_value_type_identity_overview, "example_value_type_identity_overview");
     example(&bsl::example_void_t_overview, "example_void_t_overview");
 
     // clang-format on

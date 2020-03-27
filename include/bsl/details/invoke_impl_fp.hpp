@@ -52,10 +52,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief Invokes a function pointer
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @tparam FUNC the type that defines the function being called
             ///   @tparam TN the types that define the arguments passed to the
@@ -75,11 +71,12 @@ namespace bsl
 
         protected:
             /// <!-- description -->
-            ///   @brief copy constructor
+            ///   @brief Destroyes a previously created bsl::invoke_impl_fp
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
+            ~invoke_impl_fp() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
@@ -89,10 +86,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief move constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
@@ -101,39 +94,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr invoke_impl_fp &    // --
-            operator=(invoke_impl_fp const &o) &noexcept = default;
+            constexpr invoke_impl_fp &operator=(invoke_impl_fp const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr invoke_impl_fp &    // --
-            operator=(invoke_impl_fp &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::invoke_impl_fp
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
-            ~invoke_impl_fp() noexcept = default;
+            constexpr invoke_impl_fp &operator=(invoke_impl_fp &&o) &noexcept = default;
         };
     }
 }

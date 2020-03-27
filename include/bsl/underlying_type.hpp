@@ -28,8 +28,6 @@
 #ifndef BSL_UNDERLYING_TYPE_HPP
 #define BSL_UNDERLYING_TYPE_HPP
 
-#include "type_identity.hpp"
-
 namespace bsl
 {
     /// @class bsl::underlying_type
@@ -44,9 +42,11 @@ namespace bsl
     ///   @tparam T the type to query
     ///
     template<typename T>
-    class underlying_type final :    // --
-        public type_identity<__underlying_type(T)>
-    {};
+    struct underlying_type final
+    {
+        /// @brief provides the member typedef "type"
+        using type = __underlying_type(T);
+    };
 
     /// @brief a helper that reduces the verbosity of bsl::underlying_type
     template<typename T>

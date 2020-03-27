@@ -46,10 +46,6 @@ namespace bsl
     ///     reference, and this is a false positive because this is the
     ///     required definition for std::forward
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type that defines the value being forwarded
     ///   @param val the value being forwarded
@@ -75,10 +71,6 @@ namespace bsl
     ///     return a pointer or reference to a parameter that is a const
     ///     reference, and this is a false positive because this is the
     ///     required definition for std::forward
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type that defines the value being forwarded

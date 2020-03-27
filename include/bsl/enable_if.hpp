@@ -28,8 +28,6 @@
 #ifndef BSL_ENABLE_IF_HPP
 #define BSL_ENABLE_IF_HPP
 
-#include "type_identity.hpp"
-
 namespace bsl
 {
     /// @class bsl::enable_if
@@ -40,30 +38,27 @@ namespace bsl
     ///     typedef of type T, otherwise, there is no public member typedef.
     ///   @include example_enable_if_overview.hpp
     ///
-    /// <!-- notes -->
-    ///   @note Unlike the std::enable_if, the default type is an bool,
-    ///     not a void. This allows for SFINAE to set default values to true,
-    ///     and not * = nullptr. Using the == true syntax is easier to read,
-    ///     and the * = nullptr syntax will still work if needed.
-    ///
     /// <!-- template parameters -->
     ///   @tparam B if B is true, bsl::enable_if has a public member
     ///     typedef of type T, otherwise, there is no public member typedef.
     ///   @tparam T the type of typedef that is defined if B is true
     ///
-    template<bool B, typename T = bool>
-    class enable_if final
+    template<bool B, typename T = void>
+    struct enable_if final
     {};
 
     /// @brief a helper that reduces the verbosity of bsl::enable_if
-    template<bool B, typename T = bool>
+    template<bool B, typename T = void>
     using enable_if_t = typename enable_if<B, T>::type;
 
     /// @cond doxygen off
 
     template<typename T>
-    class enable_if<true, T> final : public type_identity<T>
-    {};
+    struct enable_if<true, T> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     /// @endcond doxygen on
 }

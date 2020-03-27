@@ -31,7 +31,6 @@
 #include "char_type.hpp"
 #include "cstdint.hpp"
 #include "discard.hpp"
-#include "for_each.hpp"
 #include "numeric_limits.hpp"
 
 namespace bsl
@@ -60,7 +59,9 @@ namespace bsl
     ///     this class directly, and we only provide it for compatibility.
     ///     Note that there are some BSL specific changes to the library, which
     ///     should not change the "valid" behavior of this class, but will
-    ///     change "invalid" behavior to comply better with AUTOSAR.
+    ///     change "invalid" behavior to comply better with AUTOSAR. We also
+    ///     do not have support for the type aliases yet as they either collide
+    ///     with existing global typedefs, or are not compliant with AUTOSAR.
     ///   @include example_char_traits_overview.hpp
     ///
     template<>
@@ -70,10 +71,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Assigns a to r
         ///   @include char_traits/example_char_traits_assign.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param r the left hand side of the assignment
@@ -93,10 +90,6 @@ namespace bsl
         ///   @note The BSL adds a nullptr check to this call, and will
         ///     not perform the operation if p == nullptr.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param p the location of the string to set to a
         ///   @param count the number of characters to set
@@ -106,20 +99,19 @@ namespace bsl
         [[maybe_unused]] static char_type *
         assign(char_type *const p, bsl::uintmax const count, char_type const a) noexcept
         {
+            bsl::discard(count);
+            bsl::discard(a);
+
             if (nullptr == p) {
                 return nullptr;
             }
 
-            return static_cast<char_type *>(__builtin_memset(p, a, count));
+            return static_cast<char_type *>(BSL_BUILTIN_MEMSET);
         }
 
         /// <!-- description -->
         ///   @brief Returns true if "a" == "b"
         ///   @include char_traits/example_char_traits_eq.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param a the left hand side of the query
@@ -136,10 +128,6 @@ namespace bsl
         ///   @brief Returns true if "a" < "b"
         ///   @include char_traits/example_char_traits_lt.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param a the left hand side of the query
         ///   @param b the right hand side of the query
@@ -149,63 +137,6 @@ namespace bsl
         lt(char_type const a, char_type const b) noexcept
         {
             return a < b;
-        }
-
-        /// <!-- description -->
-        ///   @brief Same as std::memmove (which is the same as std::copy
-        ///     with the difference that overlapping is supported)
-        ///   @include char_traits/example_char_traits_move.hpp
-        ///
-        /// <!-- notes -->
-        ///   @note The BSL adds a nullptr check to this call, and will
-        ///     not perform the operation if dst or src == nullptr
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param dst the destination to copy to
-        ///   @param src the source to copy from
-        ///   @param count the number of characters to copy
-        ///   @return returns dst
-        ///
-        [[maybe_unused]] static char_type *
-        move(char_type *const dst, char_type const *const src, bsl::uintmax const count) noexcept
-        {
-            if (nullptr == dst || nullptr == src) {
-                return nullptr;
-            }
-
-            return static_cast<char_type *>(__builtin_memmove(dst, src, count));
-        }
-
-        /// <!-- description -->
-        ///   @brief Same as std::memcpy
-        ///   @include char_traits/example_char_traits_copy.hpp
-        ///
-        /// <!-- notes -->
-        ///   @note The BSL adds a nullptr check to this call, and will
-        ///     not perform the operation if dst or src == nullptr
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param dst the destination to copy to
-        ///   @param src the source to copy from
-        ///   @param count the number of characters to copy
-        ///   @return returns dst
-        ///
-        [[maybe_unused]] static char_type *
-        copy(char_type *const dst, char_type const *const src, bsl::uintmax const count) noexcept
-        {
-            if (nullptr == dst || nullptr == src) {
-                return nullptr;
-            }
-
-            return static_cast<char_type *>(__builtin_memcpy(dst, src, count));
         }
 
         /// <!-- description -->
@@ -219,10 +150,6 @@ namespace bsl
         ///   @note The BSL adds a nullptr check to this call, and will
         ///     return 0 if s1 or s2 are a nullptr (same as if num was set
         ///     to 0).
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param s1 the left hand side of the query
@@ -239,11 +166,13 @@ namespace bsl
             char_type const *const s2,    // --
             bsl::uintmax const count) noexcept
         {
-            if (nullptr == s1 || nullptr == s2) {
+            bsl::discard(count);
+
+            if ((nullptr == s1) || (nullptr == s2)) {
                 return 0;
             }
 
-            return __builtin_strncmp(s1, s2, count);
+            return BSL_BUILTIN_STRNCMP;
         }
 
         /// <!-- description -->
@@ -254,10 +183,6 @@ namespace bsl
         ///   @note The BSL adds a nullptr check to this call, and will
         ///     return 0 if s is a nullptr.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param s the string to get the length of
         ///   @return Returns the length of the provided string.
@@ -266,10 +191,10 @@ namespace bsl
         length(char_type const *const s) noexcept
         {
             if (nullptr == s) {
-                return 0;
+                return 0U;
             }
 
-            return __builtin_strlen(s);
+            return BSL_BUILTIN_STRLEN;
         }
 
         /// <!-- description -->
@@ -279,10 +204,6 @@ namespace bsl
         /// <!-- notes -->
         ///   @note The BSL adds a nullptr check to this call, and will
         ///     return a nullptr if p is a nullptr.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param p a pointer to the string to search through.
@@ -294,11 +215,14 @@ namespace bsl
         [[nodiscard]] static constexpr char_type const *
         find(char_type const *const p, bsl::uintmax const count, char_type const &ch) noexcept
         {
+            bsl::discard(count);
+            bsl::discard(ch);
+
             if (nullptr == p) {
                 return nullptr;
             }
 
-            return static_cast<char_type *>(__builtin_memchr(p, ch, count));
+            return static_cast<char_type const *>(BSL_BUILTIN_MEMCHR);
         }
 
         /// <!-- description -->
@@ -307,16 +231,12 @@ namespace bsl
         ///     the results are unspecified.
         ///   @include char_traits/example_char_traits_to_char_type.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param c the character to convert
         ///   @return c
         ///
         [[nodiscard]] static constexpr char_type
-        to_char_type(bsl::intmax c) noexcept
+        to_char_type(bsl::intmax const c) noexcept
         {
             return static_cast<char_type>(c);
         }
@@ -325,16 +245,12 @@ namespace bsl
         ///   @brief Converts a value of char_type to bsl::intmax.
         ///   @include char_traits/example_char_traits_to_int_type.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param c the character to convert
         ///   @return c
         ///
         [[nodiscard]] static constexpr bsl::intmax
-        to_int_type(char_type c) noexcept
+        to_int_type(char_type const c) noexcept
         {
             return static_cast<bsl::intmax>(c);
         }
@@ -342,10 +258,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Checks whether two values of type int_type are equal.
         ///   @include char_traits/example_char_traits_eq_int_type.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param c1 the left hand side of the query
@@ -355,22 +267,18 @@ namespace bsl
         ///     otherwise.
         ///
         [[nodiscard]] static constexpr bool
-        eq_int_type(bsl::intmax c1, bsl::intmax c2) noexcept
+        eq_int_type(bsl::intmax const c1, bsl::intmax const c2) noexcept
         {
-            if ((c1 == to_char_type(c1)) && (c2 == to_char_type(c2))) {
+            if ((to_int_type(to_char_type(c1)) == c1) && (to_int_type(to_char_type(c2)) == c2)) {
                 return eq(to_char_type(c1), to_char_type(c2));
             }
 
-            return (c1 == eof()) && (c2 == eof());
+            return (eof() == c1) && (eof() == c2);
         }
 
         /// <!-- description -->
         ///   @brief Returns the value of EOF
         ///   @include char_traits/example_char_traits_eof.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the value of EOF
@@ -386,16 +294,12 @@ namespace bsl
         ///   @brief Returns e if e is not EOF, otherwise returns 0.
         ///   @include char_traits/example_char_traits_not_eof.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param e the character to query
         ///   @return Returns e if e is not EOF, otherwise returns 0.
         ///
         [[nodiscard]] static constexpr bsl::intmax
-        not_eof(bsl::intmax e) noexcept
+        not_eof(bsl::intmax const e) noexcept
         {
             if (!eq_int_type(e, eof())) {
                 return e;

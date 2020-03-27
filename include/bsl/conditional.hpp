@@ -28,8 +28,6 @@
 #ifndef BSL_CONDITIONAL_HPP
 #define BSL_CONDITIONAL_HPP
 
-#include "type_identity.hpp"
-
 namespace bsl
 {
     /// @class bsl::conditional
@@ -45,8 +43,11 @@ namespace bsl
     ///   @tparam F the type to return if B is false
     ///
     template<bool B, typename T, typename F>
-    class conditional final : public type_identity<T>
-    {};
+    struct conditional final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     /// @brief a helper that reduces the verbosity of bsl::conditional
     template<bool B, typename T, typename F>
@@ -55,8 +56,11 @@ namespace bsl
     /// @cond doxygen off
 
     template<typename T, typename F>
-    class conditional<false, T, F> final : public type_identity<F>
-    {};
+    struct conditional<false, T, F> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = F;
+    };
 
     /// @endcond doxygen on
 }

@@ -37,10 +37,6 @@ namespace bsl
     ///     that is manifestly constant-evaluated; otherwise returns false.
     ///   @include example_is_constant_evaluated_overview.hpp
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @return Returns true if the evaluation of the
     ///     call occurs within the evaluation of an expression or conversion

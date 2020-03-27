@@ -49,10 +49,6 @@ namespace bsl
         ///   @brief Default constructor that ensure construction of
         ///     this type must be explicit
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         explicit constexpr in_place_t() noexcept = default;
     };
 
@@ -80,10 +76,6 @@ namespace bsl
         ///   @brief Default constructor that ensure construction of
         ///     this type must be explicit
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         explicit constexpr in_place_type_t() noexcept = default;
     };
 
@@ -107,10 +99,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Default constructor that ensure construction of
         ///     this type must be explicit
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         explicit constexpr in_place_index_t() noexcept = default;
     };

@@ -72,9 +72,9 @@ namespace
         constexpr myclass_except() noexcept(false) = default;
         ~myclass_except() noexcept(false) = default;
         constexpr myclass_except(myclass_except const &) noexcept(false) = default;
-        constexpr myclass_except &operator=(myclass_except const &) & noexcept(false) = default;
+        constexpr myclass_except &operator=(myclass_except const &) &noexcept(false) = default;
         constexpr myclass_except(myclass_except &&) noexcept(false) = delete;
-        constexpr myclass_except &operator=(myclass_except &&) & noexcept(false) = delete;
+        constexpr myclass_except &operator=(myclass_except &&) &noexcept(false) = delete;
     };
 
 #pragma clang diagnostic pop
@@ -84,10 +84,6 @@ namespace
 ///   @brief Main function for this unit test. If a call to ut_check() fails
 ///     the application will fast fail. If all calls to ut_check() pass, this
 ///     function will successfully return with bsl::exit_success.
-///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
 ///
 /// <!-- inputs/outputs -->
 ///   @return Always returns bsl::exit_success.

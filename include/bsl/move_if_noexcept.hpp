@@ -43,10 +43,6 @@ namespace bsl
     ///     semantics with strong exception guarantee.
     ///   @include example_move_if_noexcept_overview.hpp
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type that defines the value being moved
     ///   @param val the value being moved
@@ -55,7 +51,7 @@ namespace bsl
     template<typename T>
     constexpr conditional_t<
         !is_nothrow_move_constructible<T>::value && is_copy_constructible<T>::value,
-        const T &,
+        T const &,
         T &&>
     move_if_noexcept(T &val) noexcept
     {

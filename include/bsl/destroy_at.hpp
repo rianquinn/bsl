@@ -34,10 +34,6 @@ namespace bsl
     ///   @brief Calls the destructor of the object pointed to by ptr
     ///   @include example_destroy_at_overview.hpp
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T defines the type pointer to by ptr
     ///   @param ptr a pointer to the object to destroy

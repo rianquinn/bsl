@@ -33,14 +33,13 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_char_traits_find() noexcept
     {
-        if (bsl::char_traits<bsl::char_type>::find("42", 2, '2') != nullptr) {
+        constexpr bsl::uintmax n{2U};
+        constexpr bsl::char_type ch{'2'};
+
+        if (bsl::char_traits<bsl::char_type>::find("42", n, ch) != nullptr) {
             bsl::print("success\n");
         }
     }

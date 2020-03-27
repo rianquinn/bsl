@@ -36,14 +36,6 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Invokes the callable object "f" with arguments "tn".
     ///
-    /// <!-- contracts -->
-    ///   @pre expects func != nullptr. Note that this pre-condition is
-    ///     not validated as there is no way to report an error. We do
-    ///     provide safe_invoke() versions of invoke() that resolve this
-    ///     issue and should be used instead. invoke() is only provided
-    ///     to ensure support with 3rd party libraries.
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam FUNC the type that defines the function being called
     ///   @tparam TN the types that define the arguments passed to the
@@ -51,6 +43,9 @@ namespace bsl
     ///   @param f a pointer to the function being called.
     ///   @param tn the arguments passed to the function f when called.
     ///   @return Returns the result of calling "f" with "tn"
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @throw throws if the provided function throws
     ///
     template<typename FUNC, typename... TN>
     constexpr auto

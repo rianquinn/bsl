@@ -28,8 +28,6 @@
 #ifndef BSL_REMOVE_VOLATILE_HPP
 #define BSL_REMOVE_VOLATILE_HPP
 
-#include "type_identity.hpp"
-
 namespace bsl
 {
     /// @class bsl::remove_volatile
@@ -48,8 +46,11 @@ namespace bsl
     ///   @tparam T the type to remove the const qualifier from
     ///
     template<typename T>
-    class remove_volatile final : public type_identity<T>
-    {};
+    struct remove_volatile final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     /// @brief a helper that reduces the verbosity of bsl::remove_volatile
     template<typename T>
@@ -58,9 +59,12 @@ namespace bsl
     /// @cond doxygen off
 
     template<typename T>
-    struct remove_volatile<T volatile> final : public type_identity<T>
+    struct remove_volatile<T volatile> final
     {
-        static_assert(sizeof(T) != sizeof(T), "volatile not supported");
+        static_assert(sizeof(T) != sizeof(T), "volatile not supported");    // NOLINT
+
+        /// @brief provides the member typedef "type"
+        using type = T;
     };
 
     /// @endcond doxygen on

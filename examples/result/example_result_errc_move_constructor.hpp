@@ -33,16 +33,15 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_result_errc_move_constructor() noexcept
     {
-        bsl::errc_type<> my_errc1{42};
-        bsl::errc_type<> my_errc2{42};
-        bsl::result<bool> res{bsl::move(my_errc1)};
+        constexpr bsl::int32 val{42};
+
+        bsl::errc_type<> my_errc1{val};
+        constexpr bsl::errc_type<> my_errc2{val};
+
+        bsl::result<bool> const res{bsl::move(my_errc1)};
 
         if (res.errc() == my_errc2) {
             bsl::print("success\n");

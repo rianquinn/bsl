@@ -43,10 +43,6 @@ namespace bsl
         ///     required for a type to be convertible. If the type is
         ///     returnable, this returns true, false otherwise.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @tparam T The type to query
         ///   @param ignored (only used for overload resolution)
@@ -59,10 +55,6 @@ namespace bsl
         ///   @brief Tests if the provided type is returnable, which is
         ///     required for a type to be convertible. If the type is
         ///     returnable, this returns true, false otherwise.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @tparam T The type to query
@@ -78,10 +70,6 @@ namespace bsl
         ///     conversion constructor (but might be implicitly provided
         ///     by the compiler). If the type is convertible, this returns
         ///     true, false otherwise.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @tparam From the type to convert to
@@ -100,10 +88,6 @@ namespace bsl
         ///     by the compiler). If the type is convertible, this returns
         ///     true, false otherwise.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @tparam From the type to convert to
         ///   @tparam To the type to convert from
@@ -116,10 +100,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Performs all of the tests including testing if both
         ///     types are void
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @tparam From the type to convert to

@@ -70,7 +70,7 @@ namespace
         constexpr myclass3(myclass3 const &) noexcept = default;
         constexpr myclass3 &operator=(myclass3 const &) &noexcept = default;
         constexpr myclass3(myclass3 &&) noexcept = default;
-        constexpr myclass3 &operator=(myclass3 &&) & noexcept(false) = default;
+        constexpr myclass3 &operator=(myclass3 &&) &noexcept(false) = default;
 
         explicit constexpr myclass3(bool val) noexcept : data{val}
         {}
@@ -86,7 +86,7 @@ namespace
         constexpr myclass4(myclass4 const &) noexcept = default;
         constexpr myclass4 &operator=(myclass4 const &) &noexcept = default;
         constexpr myclass4(myclass4 &&) noexcept(false) = default;
-        constexpr myclass4 &operator=(myclass4 &&) & noexcept(false) = default;
+        constexpr myclass4 &operator=(myclass4 &&) &noexcept(false) = default;
 
         explicit constexpr myclass4(bool val) noexcept : data{val}
         {}
@@ -161,10 +161,6 @@ namespace
 ///   @brief Main function for this unit test. If a call to ut_check() fails
 ///     the application will fast fail. If all calls to ut_check() pass, this
 ///     function will successfully return with bsl::exit_success.
-///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
 ///
 /// <!-- inputs/outputs -->
 ///   @return Always returns bsl::exit_success.

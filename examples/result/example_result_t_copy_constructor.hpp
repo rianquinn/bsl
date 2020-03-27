@@ -33,17 +33,13 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_result_t_copy_constructor() noexcept
     {
-        bool val{true};
+        bool const val{true};
         bsl::result<bool> res{val};
 
-        if (auto ptr = res.get_if()) {
+        if (auto const *const ptr = res.get_if()) {
             bsl::print("success: %s\n", *ptr ? "true" : "false");
         }
     }

@@ -63,10 +63,6 @@ namespace bsl
     ///     constructor would fail this test, not this function. Something is
     ///     buggy with this test.
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type of object to initialize
     ///   @tparam ARGS the types of args to initialize T with

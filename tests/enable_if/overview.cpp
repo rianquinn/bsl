@@ -33,15 +33,11 @@ namespace
     /// <!-- description -->
     ///   @brief Returns true if T is a bool, false otherwise
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type to query
     ///   @return Returns true if T is a bool, false otherwise
     ///
-    template<typename T, bsl::enable_if_t<bsl::is_same<T, bool>::value> = true>
+    template<typename T, bsl::enable_if_t<bsl::is_same<T, bool>::value, bool> = true>
     constexpr bool
     foo1() noexcept
     {
@@ -51,15 +47,11 @@ namespace
     /// <!-- description -->
     ///   @brief Returns true if T is a bool, false otherwise
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type to query
     ///   @return Returns true if T is a bool, false otherwise
     ///
-    template<typename T, bsl::enable_if_t<!bsl::is_same<T, bool>::value> = true>
+    template<typename T, bsl::enable_if_t<!bsl::is_same<T, bool>::value, bool> = true>
     constexpr bool
     foo1() noexcept
     {
@@ -68,10 +60,6 @@ namespace
 
     /// <!-- description -->
     ///   @brief Returns true if T is a bool, false otherwise
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type to query
@@ -87,10 +75,6 @@ namespace
     /// <!-- description -->
     ///   @brief Returns true if T is a bool, false otherwise
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type to query
     ///   @return Returns true if T is a bool, false otherwise
@@ -105,10 +89,6 @@ namespace
     /// <!-- description -->
     ///   @brief Returns true if T is a bool, false otherwise
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type to query
     ///   @return Returns true if T is a bool, false otherwise
@@ -122,10 +102,6 @@ namespace
 
     /// <!-- description -->
     ///   @brief Returns true if T is a bool, false otherwise
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type to query
@@ -143,10 +119,6 @@ namespace
 ///   @brief Main function for this unit test. If a call to ut_check() fails
 ///     the application will fast fail. If all calls to ut_check() pass, this
 ///     function will successfully return with bsl::exit_success.
-///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
 ///
 /// <!-- inputs/outputs -->
 ///   @return Always returns bsl::exit_success.

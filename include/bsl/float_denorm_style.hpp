@@ -43,7 +43,7 @@ namespace bsl
     ///     to use floating point numbers with the BSL, you will receive
     ///     a compilation error.
     ///
-    enum class float_denorm_style : bsl::uint32
+    enum class float_denorm_style : bsl::int32
     {
         denorm_indeterminate = -1,
         denorm_absent = 0,

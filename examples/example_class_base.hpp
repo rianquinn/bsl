@@ -40,18 +40,10 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Creates a default bsl::example_class_base
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         example_class_base() noexcept = default;
 
         /// <!-- description -->
         ///   @brief Simple example of a getter
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return returns the value of m_data1;
@@ -64,10 +56,6 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief Simple example of a setter
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param val the val to set m_data1 to
@@ -82,10 +70,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Destroyes a previously created bsl::example_class_base
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         ~example_class_base() noexcept
         {
             m_data1 = false;
@@ -93,10 +77,6 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief copy constructor
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
@@ -106,10 +86,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief move constructor
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved
         ///
@@ -117,10 +93,6 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief copy assignment
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being copied
@@ -131,10 +103,6 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief copy constructor
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the object being moved

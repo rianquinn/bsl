@@ -69,8 +69,11 @@ namespace bsl
     ///   @tparam T the type to add an rvalue reference to
     ///
     template<typename T>
-    class add_rvalue_reference final : public decltype(details::try_add_rvalue_reference<T>(0))
-    {};
+    struct add_rvalue_reference final
+    {
+        /// @brief provides the member typedef "type"
+        using type = typename decltype(details::try_add_rvalue_reference<T>(0))::type;
+    };
 
     /// @brief a helper that reduces the verbosity of bsl::add_rvalue_reference
     template<typename T>

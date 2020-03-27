@@ -46,8 +46,11 @@ namespace bsl
     ///     qualifiers from
     ///
     template<typename T>
-    class remove_cvref final : public type_identity<remove_cv_t<remove_reference_t<T>>>
-    {};
+    struct remove_cvref final
+    {
+        /// @brief provides the member typedef "type"
+        using type = remove_cv_t<remove_reference_t<T>>;
+    };
 
     /// @brief a helper that reduces the verbosity of bsl::remove_cvref
     template<typename T>

@@ -29,9 +29,31 @@
 #include "cstdint.hpp"
 #include "float_denorm_style.hpp"
 #include "float_round_style.hpp"
+#include "is_unsigned.hpp"
 
 namespace bsl
 {
+    namespace details
+    {
+        /// <!-- description -->
+        ///   @brief Returns the number of Radix digits for a given type.
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam T the type to query
+        ///   @return Returns the number of Radix digits for a given type.
+        ///
+        template<typename T>
+        [[nodiscard]] constexpr bsl::int32
+        get_digits() noexcept
+        {
+            if (is_unsigned<T>::value) {
+                return (CHAR_BIT * static_cast<bsl::int32>(sizeof(T)));
+            }
+
+            return (CHAR_BIT * static_cast<bsl::int32>(sizeof(T))) - 1;
+        }
+    }
+
     /// @class bsl::numeric_limits
     ///
     /// <!-- description -->
@@ -42,7 +64,7 @@ namespace bsl
     ///   @tparam T the type to get information about
     ///
     template<typename T>
-    struct numeric_limits final
+    class numeric_limits final
     {
         /// @brief stores whether or not this is a specialization
         static constexpr bool is_specialized{false};
@@ -91,13 +113,10 @@ namespace bsl
         /// @brief stores whether or T detected tinyness before rounding
         static constexpr bool tinyness_before{false};
 
+    public:
         /// <!-- description -->
         ///   @brief Returns the min value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the min value of T
@@ -112,10 +131,6 @@ namespace bsl
         ///   @brief Returns the lowest value of T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the lowest value of T
         ///
@@ -128,10 +143,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the max value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
@@ -146,10 +157,6 @@ namespace bsl
         ///   @brief Returns the floating point resolution
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
         ///
@@ -162,10 +169,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the rounding error of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the rounding error of T
@@ -180,10 +183,6 @@ namespace bsl
         ///   @brief Returns the value of infinity for T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the value of infinity for T
         ///
@@ -196,10 +195,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the quiet NaN value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the quiet NaN value for T
@@ -214,10 +209,6 @@ namespace bsl
         ///   @brief Returns the signaling NaN value for T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the signaling NaN value for T
         ///
@@ -230,10 +221,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the smallest subnormal value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the smallest subnormal value for T
@@ -254,7 +241,7 @@ namespace bsl
     ///   @include example_numeric_limits_overview.hpp
     ///
     template<>
-    struct numeric_limits<bool> final
+    class numeric_limits<bool> final
     {
         /// @brief stores whether or not this is a specialization
         static constexpr bool is_specialized{true};
@@ -303,13 +290,10 @@ namespace bsl
         /// @brief stores whether or T detected tinyness before rounding
         static constexpr bool tinyness_before{false};
 
+    public:
         /// <!-- description -->
         ///   @brief Returns the min value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the min value of T
@@ -324,10 +308,6 @@ namespace bsl
         ///   @brief Returns the lowest value of T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the lowest value of T
         ///
@@ -340,10 +320,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the max value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
@@ -358,10 +334,6 @@ namespace bsl
         ///   @brief Returns the floating point resolution
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
         ///
@@ -374,10 +346,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the rounding error of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the rounding error of T
@@ -392,10 +360,6 @@ namespace bsl
         ///   @brief Returns the value of infinity for T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the value of infinity for T
         ///
@@ -408,10 +372,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the quiet NaN value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the quiet NaN value for T
@@ -426,10 +386,6 @@ namespace bsl
         ///   @brief Returns the signaling NaN value for T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the signaling NaN value for T
         ///
@@ -442,10 +398,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the smallest subnormal value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the smallest subnormal value for T
@@ -464,7 +416,7 @@ namespace bsl
     ///   @include example_numeric_limits_overview.hpp
     ///
     template<>
-    struct numeric_limits<bsl::int8> final
+    class numeric_limits<bsl::int8> final
     {
         /// @brief stores whether or not this is a specialization
         static constexpr bool is_specialized{true};
@@ -493,7 +445,7 @@ namespace bsl
         /// @brief stores whether or not T handles overflow with modulo
         static constexpr bool is_modulo{false};
         /// @brief stores the number of radix digits for T
-        static constexpr bsl::int32 digits{(CHAR_BIT * sizeof(bsl::int8)) - 1};
+        static constexpr bsl::int32 digits{details::get_digits<bsl::int8>()};
         /// @brief stores the number of base 10 digits for T
         static constexpr bsl::int32 digits10{0};    // TODO... need to sort out the need for log10
         /// @brief stores the number of base 10 digits to diff T
@@ -513,13 +465,10 @@ namespace bsl
         /// @brief stores whether or T detected tinyness before rounding
         static constexpr bool tinyness_before{false};
 
+    public:
         /// <!-- description -->
         ///   @brief Returns the min value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the min value of T
@@ -534,10 +483,6 @@ namespace bsl
         ///   @brief Returns the lowest value of T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the lowest value of T
         ///
@@ -550,10 +495,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the max value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
@@ -568,10 +509,6 @@ namespace bsl
         ///   @brief Returns the floating point resolution
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
         ///
@@ -584,10 +521,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the rounding error of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the rounding error of T
@@ -602,10 +535,6 @@ namespace bsl
         ///   @brief Returns the value of infinity for T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the value of infinity for T
         ///
@@ -618,10 +547,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the quiet NaN value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the quiet NaN value for T
@@ -636,10 +561,6 @@ namespace bsl
         ///   @brief Returns the signaling NaN value for T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the signaling NaN value for T
         ///
@@ -652,10 +573,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the smallest subnormal value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the smallest subnormal value for T
@@ -674,7 +591,7 @@ namespace bsl
     ///   @include example_numeric_limits_overview.hpp
     ///
     template<>
-    struct numeric_limits<bsl::int16> final
+    class numeric_limits<bsl::int16> final
     {
         /// @brief stores whether or not this is a specialization
         static constexpr bool is_specialized{true};
@@ -703,7 +620,7 @@ namespace bsl
         /// @brief stores whether or not T handles overflow with modulo
         static constexpr bool is_modulo{false};
         /// @brief stores the number of radix digits for T
-        static constexpr bsl::int32 digits{(CHAR_BIT * sizeof(bsl::int16)) - 1};
+        static constexpr bsl::int32 digits{details::get_digits<bsl::int16>()};
         /// @brief stores the number of base 10 digits for T
         static constexpr bsl::int32 digits10{0};    // TODO... need to sort out the need for log10
         /// @brief stores the number of base 10 digits to diff T
@@ -723,13 +640,10 @@ namespace bsl
         /// @brief stores whether or T detected tinyness before rounding
         static constexpr bool tinyness_before{false};
 
+    public:
         /// <!-- description -->
         ///   @brief Returns the min value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the min value of T
@@ -744,10 +658,6 @@ namespace bsl
         ///   @brief Returns the lowest value of T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the lowest value of T
         ///
@@ -760,10 +670,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the max value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
@@ -778,10 +684,6 @@ namespace bsl
         ///   @brief Returns the floating point resolution
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
         ///
@@ -794,10 +696,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the rounding error of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the rounding error of T
@@ -812,10 +710,6 @@ namespace bsl
         ///   @brief Returns the value of infinity for T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the value of infinity for T
         ///
@@ -828,10 +722,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the quiet NaN value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the quiet NaN value for T
@@ -846,10 +736,6 @@ namespace bsl
         ///   @brief Returns the signaling NaN value for T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the signaling NaN value for T
         ///
@@ -862,10 +748,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the smallest subnormal value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the smallest subnormal value for T
@@ -884,7 +766,7 @@ namespace bsl
     ///   @include example_numeric_limits_overview.hpp
     ///
     template<>
-    struct numeric_limits<bsl::int32> final
+    class numeric_limits<bsl::int32> final
     {
         /// @brief stores whether or not this is a specialization
         static constexpr bool is_specialized{true};
@@ -913,7 +795,7 @@ namespace bsl
         /// @brief stores whether or not T handles overflow with modulo
         static constexpr bool is_modulo{false};
         /// @brief stores the number of radix digits for T
-        static constexpr bsl::int32 digits{(CHAR_BIT * sizeof(bsl::int32)) - 1};
+        static constexpr bsl::int32 digits{details::get_digits<bsl::int32>()};
         /// @brief stores the number of base 10 digits for T
         static constexpr bsl::int32 digits10{0};    // TODO... need to sort out the need for log10
         /// @brief stores the number of base 10 digits to diff T
@@ -933,13 +815,10 @@ namespace bsl
         /// @brief stores whether or T detected tinyness before rounding
         static constexpr bool tinyness_before{false};
 
+    public:
         /// <!-- description -->
         ///   @brief Returns the min value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the min value of T
@@ -954,10 +833,6 @@ namespace bsl
         ///   @brief Returns the lowest value of T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the lowest value of T
         ///
@@ -970,10 +845,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the max value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
@@ -988,10 +859,6 @@ namespace bsl
         ///   @brief Returns the floating point resolution
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
         ///
@@ -1004,10 +871,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the rounding error of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the rounding error of T
@@ -1022,10 +885,6 @@ namespace bsl
         ///   @brief Returns the value of infinity for T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the value of infinity for T
         ///
@@ -1038,10 +897,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the quiet NaN value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the quiet NaN value for T
@@ -1056,10 +911,6 @@ namespace bsl
         ///   @brief Returns the signaling NaN value for T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the signaling NaN value for T
         ///
@@ -1072,10 +923,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the smallest subnormal value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the smallest subnormal value for T
@@ -1094,7 +941,7 @@ namespace bsl
     ///   @include example_numeric_limits_overview.hpp
     ///
     template<>
-    struct numeric_limits<bsl::int64> final
+    class numeric_limits<bsl::int64> final
     {
         /// @brief stores whether or not this is a specialization
         static constexpr bool is_specialized{true};
@@ -1123,7 +970,7 @@ namespace bsl
         /// @brief stores whether or not T handles overflow with modulo
         static constexpr bool is_modulo{false};
         /// @brief stores the number of radix digits for T
-        static constexpr bsl::int32 digits{(CHAR_BIT * sizeof(bsl::int64)) - 1};
+        static constexpr bsl::int32 digits{details::get_digits<bsl::int64>()};
         /// @brief stores the number of base 10 digits for T
         static constexpr bsl::int32 digits10{0};    // TODO... need to sort out the need for log10
         /// @brief stores the number of base 10 digits to diff T
@@ -1143,13 +990,10 @@ namespace bsl
         /// @brief stores whether or T detected tinyness before rounding
         static constexpr bool tinyness_before{false};
 
+    public:
         /// <!-- description -->
         ///   @brief Returns the min value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the min value of T
@@ -1164,10 +1008,6 @@ namespace bsl
         ///   @brief Returns the lowest value of T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the lowest value of T
         ///
@@ -1180,10 +1020,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the max value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
@@ -1198,10 +1034,6 @@ namespace bsl
         ///   @brief Returns the floating point resolution
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
         ///
@@ -1214,10 +1046,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the rounding error of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the rounding error of T
@@ -1232,10 +1060,6 @@ namespace bsl
         ///   @brief Returns the value of infinity for T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the value of infinity for T
         ///
@@ -1248,10 +1072,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the quiet NaN value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the quiet NaN value for T
@@ -1266,10 +1086,6 @@ namespace bsl
         ///   @brief Returns the signaling NaN value for T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the signaling NaN value for T
         ///
@@ -1282,10 +1098,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns the smallest subnormal value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the smallest subnormal value for T
@@ -1304,7 +1116,7 @@ namespace bsl
     ///   @include example_numeric_limits_overview.hpp
     ///
     template<>
-    struct numeric_limits<bsl::uint8> final
+    class numeric_limits<bsl::uint8> final
     {
         /// @brief stores whether or not this is a specialization
         static constexpr bool is_specialized{true};
@@ -1333,7 +1145,7 @@ namespace bsl
         /// @brief stores whether or not T handles overflow with modulo
         static constexpr bool is_modulo{true};
         /// @brief stores the number of radix digits for T
-        static constexpr bsl::int32 digits{(CHAR_BIT * sizeof(bsl::uint8))};
+        static constexpr bsl::int32 digits{details::get_digits<bsl::uint8>()};
         /// @brief stores the number of base 10 digits for T
         static constexpr bsl::int32 digits10{0};    // TODO... need to sort out the need for log10
         /// @brief stores the number of base 10 digits to diff T
@@ -1353,13 +1165,10 @@ namespace bsl
         /// @brief stores whether or T detected tinyness before rounding
         static constexpr bool tinyness_before{false};
 
+    public:
         /// <!-- description -->
         ///   @brief Returns the min value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the min value of T
@@ -1367,16 +1176,12 @@ namespace bsl
         static constexpr bsl::uint8
         min() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the lowest value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the lowest value of T
@@ -1384,16 +1189,17 @@ namespace bsl
         static constexpr bsl::uint8
         lowest() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the max value of T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
+        ///   SUPPRESSION: PRQA 3130 - false positive
+        ///   - We suppress this because M5-0-3 states that implicit
+        ///     conversions should not be performed. There is no implicit
+        ///     conversion here, verified by Clang Tidy.
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
@@ -1401,16 +1207,12 @@ namespace bsl
         static constexpr bsl::uint8
         max() noexcept
         {
-            return UINT8_MAX;
+            return UINT8_MAX;    // PRQA S 1-10000
         }
 
         /// <!-- description -->
         ///   @brief Returns the floating point resolution
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
@@ -1418,16 +1220,12 @@ namespace bsl
         static constexpr bsl::uint8
         epsilon() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the rounding error of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the rounding error of T
@@ -1435,16 +1233,12 @@ namespace bsl
         static constexpr bsl::uint8
         round_error() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the value of infinity for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the value of infinity for T
@@ -1452,16 +1246,12 @@ namespace bsl
         static constexpr bsl::uint8
         infinity() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the quiet NaN value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the quiet NaN value for T
@@ -1469,16 +1259,12 @@ namespace bsl
         static constexpr bsl::uint8
         quiet_NaN() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the signaling NaN value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the signaling NaN value for T
@@ -1486,16 +1272,12 @@ namespace bsl
         static constexpr bsl::uint8
         signaling_NaN() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the smallest subnormal value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the smallest subnormal value for T
@@ -1503,7 +1285,7 @@ namespace bsl
         static constexpr bsl::uint8
         denorm_min() noexcept
         {
-            return 0;
+            return 0U;
         }
     };
 
@@ -1514,7 +1296,7 @@ namespace bsl
     ///   @include example_numeric_limits_overview.hpp
     ///
     template<>
-    struct numeric_limits<bsl::uint16> final
+    class numeric_limits<bsl::uint16> final
     {
         /// @brief stores whether or not this is a specialization
         static constexpr bool is_specialized{true};
@@ -1543,7 +1325,7 @@ namespace bsl
         /// @brief stores whether or not T handles overflow with modulo
         static constexpr bool is_modulo{true};
         /// @brief stores the number of radix digits for T
-        static constexpr bsl::int32 digits{(CHAR_BIT * sizeof(bsl::uint16))};
+        static constexpr bsl::int32 digits{details::get_digits<bsl::uint16>()};
         /// @brief stores the number of base 10 digits for T
         static constexpr bsl::int32 digits10{0};    // TODO... need to sort out the need for log10
         /// @brief stores the number of base 10 digits to diff T
@@ -1563,13 +1345,10 @@ namespace bsl
         /// @brief stores whether or T detected tinyness before rounding
         static constexpr bool tinyness_before{false};
 
+    public:
         /// <!-- description -->
         ///   @brief Returns the min value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the min value of T
@@ -1577,16 +1356,12 @@ namespace bsl
         static constexpr bsl::uint16
         min() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the lowest value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the lowest value of T
@@ -1594,16 +1369,17 @@ namespace bsl
         static constexpr bsl::uint16
         lowest() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the max value of T
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
+        ///   SUPPRESSION: PRQA 3130 - false positive
+        ///   - We suppress this because M5-0-3 states that implicit
+        ///     conversions should not be performed. There is no implicit
+        ///     conversion here, verified by Clang Tidy.
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
@@ -1611,16 +1387,12 @@ namespace bsl
         static constexpr bsl::uint16
         max() noexcept
         {
-            return UINT16_MAX;
+            return UINT16_MAX;    // PRQA S 1-10000
         }
 
         /// <!-- description -->
         ///   @brief Returns the floating point resolution
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
@@ -1628,16 +1400,12 @@ namespace bsl
         static constexpr bsl::uint16
         epsilon() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the rounding error of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the rounding error of T
@@ -1645,16 +1413,12 @@ namespace bsl
         static constexpr bsl::uint16
         round_error() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the value of infinity for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the value of infinity for T
@@ -1662,16 +1426,12 @@ namespace bsl
         static constexpr bsl::uint16
         infinity() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the quiet NaN value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the quiet NaN value for T
@@ -1679,16 +1439,12 @@ namespace bsl
         static constexpr bsl::uint16
         quiet_NaN() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the signaling NaN value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the signaling NaN value for T
@@ -1696,16 +1452,12 @@ namespace bsl
         static constexpr bsl::uint16
         signaling_NaN() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the smallest subnormal value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the smallest subnormal value for T
@@ -1713,7 +1465,7 @@ namespace bsl
         static constexpr bsl::uint16
         denorm_min() noexcept
         {
-            return 0;
+            return 0U;
         }
     };
 
@@ -1724,7 +1476,7 @@ namespace bsl
     ///   @include example_numeric_limits_overview.hpp
     ///
     template<>
-    struct numeric_limits<bsl::uint32> final
+    class numeric_limits<bsl::uint32> final
     {
         /// @brief stores whether or not this is a specialization
         static constexpr bool is_specialized{true};
@@ -1753,7 +1505,7 @@ namespace bsl
         /// @brief stores whether or not T handles overflow with modulo
         static constexpr bool is_modulo{true};
         /// @brief stores the number of radix digits for T
-        static constexpr bsl::int32 digits{(CHAR_BIT * sizeof(bsl::uint32))};
+        static constexpr bsl::int32 digits{details::get_digits<bsl::uint32>()};
         /// @brief stores the number of base 10 digits for T
         static constexpr bsl::int32 digits10{0};    // TODO... need to sort out the need for log10
         /// @brief stores the number of base 10 digits to diff T
@@ -1773,13 +1525,10 @@ namespace bsl
         /// @brief stores whether or T detected tinyness before rounding
         static constexpr bool tinyness_before{false};
 
+    public:
         /// <!-- description -->
         ///   @brief Returns the min value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the min value of T
@@ -1787,16 +1536,12 @@ namespace bsl
         static constexpr bsl::uint32
         min() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the lowest value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the lowest value of T
@@ -1804,16 +1549,12 @@ namespace bsl
         static constexpr bsl::uint32
         lowest() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the max value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
@@ -1828,26 +1569,18 @@ namespace bsl
         ///   @brief Returns the floating point resolution
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
         ///
         static constexpr bsl::uint32
         epsilon() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the rounding error of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the rounding error of T
@@ -1855,16 +1588,12 @@ namespace bsl
         static constexpr bsl::uint32
         round_error() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the value of infinity for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the value of infinity for T
@@ -1872,16 +1601,12 @@ namespace bsl
         static constexpr bsl::uint32
         infinity() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the quiet NaN value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the quiet NaN value for T
@@ -1889,16 +1614,12 @@ namespace bsl
         static constexpr bsl::uint32
         quiet_NaN() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the signaling NaN value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the signaling NaN value for T
@@ -1906,16 +1627,12 @@ namespace bsl
         static constexpr bsl::uint32
         signaling_NaN() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the smallest subnormal value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the smallest subnormal value for T
@@ -1923,7 +1640,7 @@ namespace bsl
         static constexpr bsl::uint32
         denorm_min() noexcept
         {
-            return 0;
+            return 0U;
         }
     };
 
@@ -1934,7 +1651,7 @@ namespace bsl
     ///   @include example_numeric_limits_overview.hpp
     ///
     template<>
-    struct numeric_limits<bsl::uint64> final
+    class numeric_limits<bsl::uint64> final
     {
         /// @brief stores whether or not this is a specialization
         static constexpr bool is_specialized{true};
@@ -1963,7 +1680,7 @@ namespace bsl
         /// @brief stores whether or not T handles overflow with modulo
         static constexpr bool is_modulo{true};
         /// @brief stores the number of radix digits for T
-        static constexpr bsl::int32 digits{(CHAR_BIT * sizeof(bsl::uint64))};
+        static constexpr bsl::int32 digits{details::get_digits<bsl::uint64>()};
         /// @brief stores the number of base 10 digits for T
         static constexpr bsl::int32 digits10{0};    // TODO... need to sort out the need for log10
         /// @brief stores the number of base 10 digits to diff T
@@ -1983,13 +1700,10 @@ namespace bsl
         /// @brief stores whether or T detected tinyness before rounding
         static constexpr bool tinyness_before{false};
 
+    public:
         /// <!-- description -->
         ///   @brief Returns the min value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the min value of T
@@ -1997,16 +1711,12 @@ namespace bsl
         static constexpr bsl::uint64
         min() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the lowest value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the lowest value of T
@@ -2014,16 +1724,12 @@ namespace bsl
         static constexpr bsl::uint64
         lowest() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the max value of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
@@ -2038,26 +1744,18 @@ namespace bsl
         ///   @brief Returns the floating point resolution
         ///   @include example_numeric_limits_overview.hpp
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the max value of T
         ///
         static constexpr bsl::uint64
         epsilon() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the rounding error of T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the rounding error of T
@@ -2065,16 +1763,12 @@ namespace bsl
         static constexpr bsl::uint64
         round_error() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the value of infinity for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the value of infinity for T
@@ -2082,16 +1776,12 @@ namespace bsl
         static constexpr bsl::uint64
         infinity() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the quiet NaN value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the quiet NaN value for T
@@ -2099,16 +1789,12 @@ namespace bsl
         static constexpr bsl::uint64
         quiet_NaN() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the signaling NaN value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the signaling NaN value for T
@@ -2116,16 +1802,12 @@ namespace bsl
         static constexpr bsl::uint64
         signaling_NaN() noexcept
         {
-            return 0;
+            return 0U;
         }
 
         /// <!-- description -->
         ///   @brief Returns the smallest subnormal value for T
         ///   @include example_numeric_limits_overview.hpp
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns the smallest subnormal value for T
@@ -2133,92 +1815,8 @@ namespace bsl
         static constexpr bsl::uint64
         denorm_min() noexcept
         {
-            return 0;
+            return 0U;
         }
-    };
-
-    /// @class bsl::numeric_limits
-    ///
-    /// <!-- description -->
-    ///   @brief Implements std::numeric_limits
-    ///   @include example_numeric_limits_overview.hpp
-    ///
-    template<>
-    struct numeric_limits<char> final
-    {
-        // char not supported
-    };
-
-    /// @class bsl::numeric_limits
-    ///
-    /// <!-- description -->
-    ///   @brief Implements std::numeric_limits
-    ///   @include example_numeric_limits_overview.hpp
-    ///
-    template<>
-    struct numeric_limits<wchar_t> final
-    {
-        // wchar_t not supported
-    };
-
-    /// @class bsl::numeric_limits
-    ///
-    /// <!-- description -->
-    ///   @brief Implements std::numeric_limits
-    ///   @include example_numeric_limits_overview.hpp
-    ///
-    template<>
-    struct numeric_limits<char16_t> final
-    {
-        // char16_t not supported
-    };
-
-    /// @class bsl::numeric_limits
-    ///
-    /// <!-- description -->
-    ///   @brief Implements std::numeric_limits
-    ///   @include example_numeric_limits_overview.hpp
-    ///
-    template<>
-    struct numeric_limits<char32_t> final
-    {
-        // char32_t not supported
-    };
-
-    /// @class bsl::numeric_limits
-    ///
-    /// <!-- description -->
-    ///   @brief Implements std::numeric_limits
-    ///   @include example_numeric_limits_overview.hpp
-    ///
-    template<>
-    struct numeric_limits<float> final
-    {
-        // float not supported
-    };
-
-    /// @class bsl::numeric_limits
-    ///
-    /// <!-- description -->
-    ///   @brief Implements std::numeric_limits
-    ///   @include example_numeric_limits_overview.hpp
-    ///
-    template<>
-    struct numeric_limits<double> final
-    {
-        // double not supported
-    };
-
-    /// @class bsl::numeric_limits
-    ///
-    /// <!-- description -->
-    ///   @brief Implements std::numeric_limits
-    ///   @include example_numeric_limits_overview.hpp
-    ///
-    template<>
-    struct numeric_limits<long double> final
-    {
-        // long double not supported
     };
 
     /// @endcond doxygen on

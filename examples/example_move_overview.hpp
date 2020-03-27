@@ -33,15 +33,11 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_move_overview() noexcept
     {
         bool val1{true};
-        bool &&val2{bsl::move(val1)};
+        bool const &&val2{bsl::move(val1)};
 
         if (val2) {
             bsl::print("success\n");

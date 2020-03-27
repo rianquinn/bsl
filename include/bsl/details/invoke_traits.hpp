@@ -30,7 +30,6 @@
 #include "../is_nothrow_convertible.hpp"
 #include "../is_void.hpp"
 #include "../invoke.hpp"
-#include "../type_identity.hpp"
 #include "../void_t.hpp"
 
 namespace bsl
@@ -87,11 +86,12 @@ namespace bsl
 
         protected:
             /// <!-- description -->
-            ///   @brief copy constructor
+            ///   @brief Destroyes a previously created bsl::invoke_traits
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
+            ~invoke_traits() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
@@ -101,10 +101,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief move constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
@@ -113,39 +109,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr invoke_traits &    // --
-            operator=(invoke_traits const &o) &noexcept = default;
+            constexpr invoke_traits &operator=(invoke_traits const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr invoke_traits &    // --
-            operator=(invoke_traits &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::invoke_traits
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
-            ~invoke_traits() noexcept = default;
+            constexpr invoke_traits &operator=(invoke_traits &&o) &noexcept = default;
         };
 
         /// @class bsl::details::invoke_traits
@@ -173,10 +150,12 @@ namespace bsl
         ///     provided function when called.
         ///
         template<typename FUNC, typename... TN>
-        class invoke_traits<void_t<invoke_type<FUNC, TN...>>, FUNC, TN...> :
-            public type_identity<invoke_type<FUNC, TN...>>
+        class invoke_traits<void_t<invoke_type<FUNC, TN...>>, FUNC, TN...>
         {
         public:
+            /// @brief provides the member typedef "type"
+            using type = invoke_type<FUNC, TN...>;
+
             /// @brief states that the provided args form a callable
             static constexpr bool m_is_invocable{true};
 
@@ -189,22 +168,23 @@ namespace bsl
             ///   that is convertible to R
             template<typename R>
             static constexpr bool m_is_invocable_r{
-                (is_void<R>::value || is_convertible<R, invoke_type<FUNC, TN...>>::value)};
+                (is_void<R>::value || is_convertible<R, type>::value)};
 
             /// @brief states whether or not the provided args form a nothrow
             ///   callable that is convertible to R
             template<typename R>
             static constexpr bool m_is_nothrow_invocable_r{
                 noexcept(invoke(declval<FUNC>(), declval<TN>()...)) &&
-                (is_void<R>::value || is_nothrow_convertible<R, invoke_type<FUNC, TN...>>::value)};
+                (is_void<R>::value || is_nothrow_convertible<R, type>::value)};
 
         protected:
             /// <!-- description -->
-            ///   @brief copy constructor
+            ///   @brief Destroyes a previously created bsl::invoke_traits
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
+            ~invoke_traits() noexcept = default;
+
+            /// <!-- description -->
+            ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
@@ -214,10 +194,6 @@ namespace bsl
             /// <!-- description -->
             ///   @brief move constructor
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
@@ -226,39 +202,20 @@ namespace bsl
             /// <!-- description -->
             ///   @brief copy assignment
             ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr invoke_traits &    // --
-            operator=(invoke_traits const &o) &noexcept = default;
+            constexpr invoke_traits &operator=(invoke_traits const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            [[maybe_unused]] constexpr invoke_traits &    // --
-            operator=(invoke_traits &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::invoke_traits
-            ///
-            /// <!-- contracts -->
-            ///   @pre none
-            ///   @post none
-            ///
-            ~invoke_traits() noexcept = default;
+            constexpr invoke_traits &operator=(invoke_traits &&o) &noexcept = default;
         };
     }
 }

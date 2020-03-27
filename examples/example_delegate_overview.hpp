@@ -36,10 +36,6 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_delegate_overview() noexcept
     {
@@ -48,14 +44,14 @@ namespace bsl
         bsl::delegate const func2{c, &example_class_subclass::get};
 
         auto const res1{func1(true)};
-        if (auto const val = res1.get_if()) {
+        if (auto const *const val = res1.get_if()) {
             if (*val) {
                 bsl::print("success\n");
             }
         }
 
         auto const res2{func2()};
-        if (auto const val = res2.get_if()) {
+        if (auto const *const val = res2.get_if()) {
             if (*val) {
                 bsl::print("success\n");
             }

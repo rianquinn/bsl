@@ -30,10 +30,6 @@ namespace
     /// <!-- description -->
     ///   @brief String comparison function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @param lhs the left hand side of the comparison
     ///   @param rhs the right hand side of the comparison
@@ -57,10 +53,6 @@ namespace
 ///   @brief Main function for this unit test. If a call to ut_check() fails
 ///     the application will fast fail. If all calls to ut_check() pass, this
 ///     function will successfully return with bsl::exit_success.
-///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
 ///
 /// <!-- inputs/outputs -->
 ///   @return Always returns bsl::exit_success.

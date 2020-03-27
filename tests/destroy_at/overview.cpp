@@ -42,10 +42,6 @@ namespace
         /// <!-- description -->
         ///   @brief When called, sets g_called to true
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         ~myclass() noexcept
         {
             g_called = true;
@@ -58,10 +54,6 @@ namespace
 ///     the application will fast fail. If all calls to ut_check() pass, this
 ///     function will successfully return with bsl::exit_success.
 ///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
-///
 /// <!-- inputs/outputs -->
 ///   @return Always returns bsl::exit_success.
 ///
@@ -69,6 +61,15 @@ bsl::exit_code
 main() noexcept
 {
     using namespace bsl;
+
+    bsl::ut_scenario{"attempting to destroy nullptr is ignored"} = []() {
+        bsl::ut_given{} = []() {
+            myclass *c{};
+            bsl::ut_when{} = [&c]() {
+                bsl::destroy_at(c);
+            };
+        };
+    };
 
     bsl::ut_scenario{"detroy_at"} = []() {
         bsl::ut_given{} = []() {

@@ -32,10 +32,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Equivalent to a static_cast from a void *
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @tparam T the type to convert the ptr to
         ///   @param ptr the pointer to convert

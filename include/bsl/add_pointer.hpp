@@ -28,10 +28,37 @@
 #ifndef BSL_ADD_POINTER_HPP
 #define BSL_ADD_POINTER_HPP
 
+#include "cstdint.hpp"
+#include "remove_reference.hpp"
 #include "type_identity.hpp"
 
 namespace bsl
 {
+    namespace details
+    {
+        /// <!-- description -->
+        ///   @brief Returns T with an added * if possible
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam T the type to return with an added *
+        ///   @param ignored ignored
+        ///   @return only used for decltype
+        ///
+        template<typename T>
+        auto try_add_pointer(bsl::int32 ignored) noexcept -> type_identity<remove_reference_t<T> *>;
+
+        /// <!-- description -->
+        ///   @brief Returns T if * cannot be added
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam T the type to return without an addd *
+        ///   @param ignored ignored
+        ///   @return only used for decltype
+        ///
+        template<typename T>
+        auto try_add_pointer(bool ignored) noexcept -> type_identity<T>;
+    }
+
     /// @class bsl::add_pointer
     ///
     /// <!-- description -->
@@ -43,24 +70,15 @@ namespace bsl
     ///   @tparam T the type to add an pointer to
     ///
     template<typename T>
-    class add_pointer final : public type_identity<T *>
-    {};
+    struct add_pointer final
+    {
+        /// @brief provides the member typedef "type"
+        using type = typename decltype(details::try_add_pointer<T>(0))::type;
+    };
 
     /// @brief a helper that reduces the verbosity of bsl::add_pointer
     template<typename T>
     using add_pointer_t = typename add_pointer<T>::type;
-
-    /// @cond doxygen off
-
-    template<typename T>
-    class add_pointer<T &> final : public type_identity<T *>
-    {};
-
-    template<typename T>
-    class add_pointer<T &&> final : public type_identity<T *>
-    {};
-
-    /// @endcond doxygen on
 }
 
 #endif

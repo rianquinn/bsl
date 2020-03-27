@@ -33,15 +33,13 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Returns true if T is a bool, false otherwise
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type to query
     ///   @return Returns true if T is a bool, false otherwise
     ///
-    template<typename T, bsl::enable_if_t<bsl::is_same<T, bool>::value> = true>
+    template<          // --
+        typename T,    // --
+        bsl::enable_if_t<bsl::is_same<T, bool>::value, bool> = true>
     constexpr bool
     foo() noexcept
     {
@@ -51,15 +49,13 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Returns true if T is a bool, false otherwise
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type to query
     ///   @return Returns true if T is a bool, false otherwise
     ///
-    template<typename T, bsl::enable_if_t<!bsl::is_same<T, bool>::value> = true>
+    template<          // --
+        typename T,    // --
+        bsl::enable_if_t<!bsl::is_same<T, bool>::value, bool> = true>
     constexpr bool
     foo() noexcept
     {
@@ -68,10 +64,6 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief Provides the example's main function
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     inline void
     example_enable_if_overview() noexcept

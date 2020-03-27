@@ -29,7 +29,6 @@
 #define BSL_REMOVE_EXTENT_HPP
 
 #include "cstdint.hpp"
-#include "type_identity.hpp"
 
 namespace bsl
 {
@@ -44,8 +43,11 @@ namespace bsl
     ///   @tparam T the type to remove the extent from
     ///
     template<typename T>
-    class remove_extent final : public type_identity<T>
-    {};
+    struct remove_extent final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     /// @brief a helper that reduces the verbosity of bsl::remove_extent
     template<typename T>
@@ -54,12 +56,18 @@ namespace bsl
     /// @cond doxygen off
 
     template<typename T>
-    struct remove_extent<T[]> final : public type_identity<T>    // NOLINT
-    {};
+    struct remove_extent<T[]> final    // NOLINT
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     template<typename T, bsl::uintmax N>
-    struct remove_extent<T[N]> final : public type_identity<T>    // NOLINT
-    {};
+    struct remove_extent<T[N]> final    // NOLINT
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     /// @endcond doxygen on
 }

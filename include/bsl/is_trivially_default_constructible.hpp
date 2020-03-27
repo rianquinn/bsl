@@ -29,6 +29,7 @@
 #define BSL_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE_HPP
 
 #include "bool_constant.hpp"
+#include "is_trivially_constructible.hpp"
 
 namespace bsl
 {
@@ -45,7 +46,7 @@ namespace bsl
     ///
     template<typename T>
     class is_trivially_default_constructible final :    // --
-        public bool_constant<__is_trivially_constructible(T)>
+        public bool_constant<is_trivially_constructible<T>::value>
     {};
 }
 

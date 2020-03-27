@@ -28,17 +28,11 @@
 #ifndef BSL_MIN_HPP
 #define BSL_MIN_HPP
 
-#include "forward.hpp"
-
 namespace bsl
 {
     /// <!-- description -->
     ///   @brief Returns a if a is smaller than b, otherwise returns b.
     ///   @include example_min_overview.hpp
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type that defines both a and b
@@ -48,33 +42,9 @@ namespace bsl
     ///
     template<typename T>
     constexpr T const &
-    min(T const &a, T const &b)
+    min(T const &a, T const &b) noexcept
     {
         return (b < a) ? b : a;
-    }
-
-    /// <!-- description -->
-    ///   @brief Returns a if a is smaller than b, otherwise returns b. Uses
-    ///     Comapre to perform the comparison instead of <
-    ///   @include example_min_overview.hpp
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
-    /// <!-- inputs/outputs -->
-    ///   @tparam T The type that defines both a and b
-    ///   @tparam COMPARE The type that defines the compare function
-    ///   @param a the first parameter to compare
-    ///   @param b the second parameter to compare
-    ///   @param comp A function that returns true if b is less than a.
-    ///   @return Returns a if a is smaller than b, otherwise returns b.
-    ///
-    template<typename T, typename COMPARE>
-    constexpr T const &
-    min(T const &a, T const &b, COMPARE &&comp)
-    {
-        return (bsl::forward<COMPARE>(comp)(a, b)) ? b : a;
     }
 }
 

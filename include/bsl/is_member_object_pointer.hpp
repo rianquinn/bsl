@@ -39,10 +39,6 @@ namespace bsl
         ///   @brief Checks if a type "T" is a member object pointer and if so,
         ///     returns true, otherwise returns false.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @tparam T the type to query
         ///   @return If "T" is a member object pointer, returns true,

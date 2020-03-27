@@ -28,8 +28,6 @@
 #ifndef BSL_REMOVE_CV_HPP
 #define BSL_REMOVE_CV_HPP
 
-#include "type_identity.hpp"
-
 namespace bsl
 {
     /// @class bsl::remove_cv
@@ -43,7 +41,7 @@ namespace bsl
     ///   - We suppress this because A2-11-1 states that the volatile keyword
     ///     cannot be used. The volatile keyword is required to implement the
     ///     remove_cv type trait, and more importantly, if you use this
-    ///     keword the code will not actually compile, meaning PRQA is
+    ///     keyword the code will not actually compile, meaning PRQA is
     ///     detecting the use of the volatile keyword without first detecting
     ///     if it is actually being used, only that it is present in the file.
     ///
@@ -57,8 +55,11 @@ namespace bsl
     ///   @tparam T the type to remove the const and volatile qualifiers from
     ///
     template<typename T>
-    class remove_cv final : public type_identity<T>
-    {};
+    struct remove_cv final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
 
     /// @brief a helper that reduces the verbosity of bsl::remove_cv
     template<typename T>
@@ -67,19 +68,28 @@ namespace bsl
     /// @cond doxygen off
 
     template<typename T>
-    struct remove_cv<T const> final : public type_identity<T>
-    {};
-
-    template<typename T>
-    struct remove_cv<T volatile> final : public type_identity<T>    // PRQA S 5219
+    struct remove_cv<T const> final
     {
-        static_assert(sizeof(T) != sizeof(T), "volatile not supported");
+        /// @brief provides the member typedef "type"
+        using type = T;
     };
 
     template<typename T>
-    struct remove_cv<T const volatile> final : public type_identity<T>    // PRQA S 5219
+    struct remove_cv<T volatile> final    // PRQA S 5219
     {
-        static_assert(sizeof(T) != sizeof(T), "volatile not supported");
+        static_assert(sizeof(T) != sizeof(T), "volatile not supported");    // NOLINT
+
+        /// @brief provides the member typedef "type"
+        using type = T;
+    };
+
+    template<typename T>
+    struct remove_cv<T const volatile> final    // PRQA S 5219
+    {
+        static_assert(sizeof(T) != sizeof(T), "volatile not supported");    // NOLINT
+
+        /// @brief provides the member typedef "type"
+        using type = T;
     };
 
     /// @endcond doxygen on

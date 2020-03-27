@@ -21,23 +21,18 @@
 
 # Exceptions
 #
-# -hicpp-braces-around-statements
-# -readability-braces-around-statements
-# -bugprone-suspicious-semicolon
-#
-#  We disable these as they do not work with constexpr if statements in
-#  template functions.
-#  https://bugs.llvm.org/show_bug.cgi?id=35824
-#
 # -modernize-use-trailing-return-type
 #
 #  We disable this as AUTOSAR does not allow for non-template trailing return
 #  types, and this check does not have this sort of granularity.
 #
+# -modernize-use-default-member-init
 # -readability-redundant-member-init
 #
 #  We disable this as AUTOSAR requires the use of redundant member
-#  initializers to ensure explicit initialization.
+#  initializers to ensure explicit initialization. In addition, they do not
+#  allow for mixed initializers. Either all members are initialized using
+#  default member initialization, or none of them are.
 #
 # -cert-dcl21-cpp
 #
@@ -45,7 +40,7 @@
 #  exclusive with readability-const-return-type, which identifies a known
 #  performance issue.
 #
-# -cert-oop54-cpp,-warnings-as-errors
+# -cert-oop54-cpp
 #
 #  This produces a false positive when assignment is implemented using the
 #  temporary swap method, which AUTOSAR requires.
@@ -58,8 +53,8 @@
 #
 #
 
-Checks: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon,-modernize-use-trailing-return-type,-readability-redundant-member-init,-cert-dcl21-cpp,-cert-oop54-cpp,-warnings-as-errors,-readability-avoid-const-params-in-decls'
-WarningsAsErrors: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-hicpp-braces-around-statements,-readability-braces-around-statements,-bugprone-suspicious-semicolon,-modernize-use-trailing-return-type,-readability-redundant-member-init,-cert-dcl21-cpp,-cert-oop54-cpp,-warnings-as-errors,-readability-avoid-const-params-in-decls'
+Checks: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-modernize-use-trailing-return-type,-modernize-use-default-member-init,-readability-redundant-member-init,-cert-dcl21-cpp,-cert-oop54-cpp,-readability-avoid-const-params-in-decls'
+WarningsAsErrors: 'clang-diagnostic-*,clang-analyzer-*,-*,bugprone-*,cert-*,clang-analyzer-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,readability-*,-modernize-use-trailing-return-type,-modernize-use-default-member-init,-readability-redundant-member-init,-cert-dcl21-cpp,-cert-oop54-cpp,-readability-avoid-const-params-in-decls'
 HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false
 CheckOptions:

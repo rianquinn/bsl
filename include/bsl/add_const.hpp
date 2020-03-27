@@ -28,8 +28,6 @@
 #ifndef BSL_ADD_CONST_HPP
 #define BSL_ADD_CONST_HPP
 
-#include "type_identity.hpp"
-
 namespace bsl
 {
     /// @class bsl::add_const
@@ -43,8 +41,11 @@ namespace bsl
     ///   @tparam T the type to add a const qualifier to
     ///
     template<typename T>
-    class add_const final : public type_identity<T const>
-    {};
+    struct add_const final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T const;
+    };
 
     /// @brief a helper that reduces the verbosity of bsl::add_const
     template<typename T>
@@ -53,8 +54,11 @@ namespace bsl
     /// @cond doxygen off
 
     template<typename T>
-    class add_const<T const> final : public type_identity<T const>
-    {};
+    struct add_const<T const> final
+    {
+        /// @brief provides the member typedef "type"
+        using type = T const;
+    };
 
     /// @endcond doxygen on
 }

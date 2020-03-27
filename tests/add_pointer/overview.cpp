@@ -22,7 +22,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/add_rvalue_reference.hpp>
+#include <bsl/add_pointer.hpp>
 #include <bsl/is_same.hpp>
 
 #include <bsl/ut.hpp>
@@ -38,10 +38,6 @@ namespace
 ///     the application will fast fail. If all calls to ut_check() pass, this
 ///     function will successfully return with bsl::exit_success.
 ///
-/// <!-- contracts -->
-///   @pre none
-///   @post none
-///
 /// <!-- inputs/outputs -->
 ///   @return Always returns bsl::exit_success.
 ///
@@ -50,27 +46,27 @@ main() noexcept
 {
     using namespace bsl;
 
-    static_assert(is_same<add_rvalue_reference_t<bool>, bool &&>::value);
-    static_assert(is_same<add_rvalue_reference_t<bool &&>, bool &&>::value);
-    static_assert(is_same<add_rvalue_reference_t<bool const>, bool const &&>::value);
-    static_assert(is_same<add_rvalue_reference_t<bool *>, bool *&&>::value);
-    static_assert(is_same<add_rvalue_reference_t<bool &>, bool &>::value);
+    static_assert(is_same<add_pointer_t<bool>, bool *>::value);
+    static_assert(is_same<add_pointer_t<bool *>, bool **>::value);
+    static_assert(is_same<add_pointer_t<bool const>, bool const *>::value);
+    static_assert(is_same<add_pointer_t<bool &>, bool *>::value);
+    static_assert(is_same<add_pointer_t<bool &&>, bool *>::value);
 
-    static_assert(is_same<add_rvalue_reference_t<myclass>, myclass &&>::value);
-    static_assert(is_same<add_rvalue_reference_t<myclass &&>, myclass &&>::value);
-    static_assert(is_same<add_rvalue_reference_t<myclass const>, myclass const &&>::value);
-    static_assert(is_same<add_rvalue_reference_t<myclass *>, myclass *&&>::value);
-    static_assert(is_same<add_rvalue_reference_t<myclass &>, myclass &>::value);
+    static_assert(is_same<add_pointer_t<myclass>, myclass *>::value);
+    static_assert(is_same<add_pointer_t<myclass *>, myclass **>::value);
+    static_assert(is_same<add_pointer_t<myclass const>, myclass const *>::value);
+    static_assert(is_same<add_pointer_t<myclass &>, myclass *>::value);
+    static_assert(is_same<add_pointer_t<myclass &&>, myclass *>::value);
 
-    static_assert(is_same<add_rvalue_reference_t<void>, void>::value);
-    static_assert(is_same<add_rvalue_reference_t<void const>, void const>::value);
+    static_assert(is_same<add_pointer_t<void>, void *>::value);
+    static_assert(is_same<add_pointer_t<void const>, void const *>::value);
 
-    static_assert(is_same<add_rvalue_reference_t<bool(bool)>, bool(&&)(bool)>::value);
-    static_assert(is_same<add_rvalue_reference_t<bool(bool) const>, bool(bool) const>::value);
-    static_assert(is_same<add_rvalue_reference_t<bool(bool) &>, bool(bool) &>::value);
-    static_assert(is_same<add_rvalue_reference_t<bool(bool) &&>, bool(bool) &&>::value);
-    static_assert(is_same<add_rvalue_reference_t<bool(bool) const &>, bool(bool) const &>::value);
-    static_assert(is_same<add_rvalue_reference_t<bool(bool) const &&>, bool(bool) const &&>::value);
+    static_assert(is_same<add_pointer_t<bool(bool)>, bool (*)(bool)>::value);
+    static_assert(is_same<add_pointer_t<bool(bool) const>, bool(bool) const>::value);
+    static_assert(is_same<add_pointer_t<bool(bool) &>, bool(bool) &>::value);
+    static_assert(is_same<add_pointer_t<bool(bool) &&>, bool(bool) &&>::value);
+    static_assert(is_same<add_pointer_t<bool(bool) const &>, bool(bool) const &>::value);
+    static_assert(is_same<add_pointer_t<bool(bool) const &&>, bool(bool) const &&>::value);
 
     return ut_success();
 }

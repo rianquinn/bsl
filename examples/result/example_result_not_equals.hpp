@@ -33,16 +33,12 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_result_not_equals() noexcept
     {
-        bsl::result<bool> res1{bsl::in_place, true};
-        bsl::result<bool> res2{bsl::in_place, false};
-        bsl::result<bool> res3{bsl::errc_failure};
+        bsl::result<bool> const res1{bsl::in_place, true};
+        bsl::result<bool> const res2{bsl::in_place, false};
+        bsl::result<bool> const res3{bsl::errc_failure};
 
         if (res1 != res2) {
             bsl::print("success\n");

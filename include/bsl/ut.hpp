@@ -47,10 +47,6 @@ namespace bsl
         ///   @brief Returns a reference to the name of the current test
         ///     case.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns a reference to the name of the current test
         ///     case.
@@ -65,10 +61,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Returns a reference to the reset handler function
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @return Returns a reference to the reset handler function
         ///
@@ -81,10 +73,6 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief Prints the current source location to the console.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @param sloc the current source location to print
@@ -114,10 +102,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Constructs a scenario
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @param name the name of the scenario (i.e., test case)
         ///
@@ -128,10 +112,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Executes a lambda function as the body of the
         ///     scenario.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @tparam FUNC the type of lambda being executed
@@ -172,10 +152,6 @@ namespace bsl
         ///   @brief Executes a lambda function as the body of the
         ///     "given" portion of the scenario.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @tparam FUNC the type of lambda being executed
         ///   @param func the lambda being executed
@@ -201,10 +177,6 @@ namespace bsl
         /// <!-- description -->
         ///   @brief Executes a lambda function as the body of the
         ///     "when" portion of the scenario.
-        ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
         ///
         /// <!-- inputs/outputs -->
         ///   @tparam FUNC the type of lambda being executed
@@ -232,10 +204,6 @@ namespace bsl
         ///   @brief Executes a lambda function as the body of the
         ///     "then" portion of the scenario.
         ///
-        /// <!-- contracts -->
-        ///   @pre none
-        ///   @post none
-        ///
         /// <!-- inputs/outputs -->
         ///   @tparam FUNC the type of lambda being executed
         ///   @param func the lambda being executed
@@ -258,10 +226,6 @@ namespace bsl
     ///   @brief Sets the unit test's reset handler. After each test has
     ///     executed, this register handler will be called.
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @param hdlr the handler to register as the reset handler
     ///
@@ -273,10 +237,6 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief Outputs a message and returns bsl::exit_success
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @return returns bsl::exit_success
@@ -290,10 +250,6 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief Outputs a message and returns bsl::exit_failure
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @param sloc used to identify the location in the unit test that a
@@ -314,10 +270,6 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Checks to see if "test" is true. If test is false, this
     ///     function will exit fast with a failure code.
-    ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
     ///
     /// <!-- inputs/outputs -->
     ///   @param test if test is true, this function returns true. If test is

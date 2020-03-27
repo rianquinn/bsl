@@ -49,17 +49,13 @@ namespace bsl
     ///     to mark a parameter or return as unused which is all that this
     ///     is doing in a less verbose, more self-documenting way.
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     /// <!-- inputs/outputs -->
     ///   @tparam ARGS the types that define the provided arguments to ignore
     ///   @param args the arguments to ignore
     ///
     template<typename... ARGS>
     constexpr void
-    discard(ARGS &&... args) noexcept    // PRQA S 4649 // NOLINT
+    discard(ARGS &&... args) noexcept    // PRQA S 1-10000 // NOLINT
     {}
 }
 

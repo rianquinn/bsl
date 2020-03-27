@@ -33,14 +33,10 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the example's main function
     ///
-    /// <!-- contracts -->
-    ///   @pre none
-    ///   @post none
-    ///
     inline void
     example_numeric_limits_overview() noexcept
     {
-        if (bsl::numeric_limits<bool>::is_integer) {
+        if (bsl::numeric_limits<bsl::uint64>::min() == 0U) {
             bsl::print("success\n");
         }
     }
