@@ -45,6 +45,35 @@ set(BF_ENABLED "${BF_COLOR_GRN}enabled${BF_COLOR_RST}")
 set(BF_DISABLED "${BF_COLOR_YLW}disabled${BF_COLOR_RST}")
 
 # ------------------------------------------------------------------------------
+# bf_error
+# ------------------------------------------------------------------------------
+
+# Error
+#
+# Prints an error message, and then errors out to stop processing.
+#
+# MSG: The message to show when erroring out
+#
+macro(bf_error MSG)
+    message(FATAL_ERROR "${BF_COLOR_RED}${MSG}${BF_COLOR_RST}")
+endmacro(bf_error)
+
+# ------------------------------------------------------------------------------
+# bf_configuration_error
+# ------------------------------------------------------------------------------
+
+# Configuration Error
+#
+# Prints an error message, shows the configuration options, and then errors
+# out to stop processing.
+#
+# MSG: The message to show when erroring out
+#
+macro(bf_configuration_error MSG)
+    bf_error(${MSG})
+endmacro(bf_configuration_error)
+
+# ------------------------------------------------------------------------------
 # supported generator/compiler
 # ------------------------------------------------------------------------------
 
@@ -78,35 +107,6 @@ endif()
 # - Add -O for size (think it is -Os)
 # - Remove all debug symbols
 # - Add the compiler and linker flags for -fsections on UNIX
-
-# ------------------------------------------------------------------------------
-# bf_error
-# ------------------------------------------------------------------------------
-
-# Error
-#
-# Prints an error message, and then errors out to stop processing.
-#
-# MSG: The message to show when erroring out
-#
-macro(bf_error MSG)
-    message(FATAL_ERROR "${BF_COLOR_RED}${MSG}${BF_COLOR_RST}")
-endmacro(bf_error)
-
-# ------------------------------------------------------------------------------
-# bf_configuration_error
-# ------------------------------------------------------------------------------
-
-# Configuration Error
-#
-# Prints an error message, shows the configuration options, and then errors
-# out to stop processing.
-#
-# MSG: The message to show when erroring out
-#
-macro(bf_configuration_error MSG)
-    bf_error(${MSG})
-endmacro(bf_configuration_error)
 
 # ------------------------------------------------------------------------------
 # bf_find_program
@@ -342,35 +342,6 @@ if(ENABLE_DOXYGEN)
     message(STATUS "Tool [Doxygen]: ${BF_ENABLED} - ${BF_DOXYGEN}")
 else()
     message(STATUS "Tool [Doxygen]: ${BF_DISABLED}")
-endif()
-
-# ------------------------------------------------------------------------------
-# flexlint
-# ------------------------------------------------------------------------------
-
-if(CMAKE_BUILD_TYPE STREQUAL DEBUG OR
-   CMAKE_BUILD_TYPE STREQUAL CLANG_TIDY OR
-   CMAKE_BUILD_TYPE STREQUAL ASAN OR
-   CMAKE_BUILD_TYPE STREQUAL UBSAN OR
-   CMAKE_BUILD_TYPE STREQUAL COVERAGE)
-    if(NOT DEFINED ENABLE_FLEXLINT)
-        set(ENABLE_FLEXLINT ON)
-    endif()
-endif()
-
-if(ENABLE_FLEXLINT)
-    bf_find_program(BF_FLEXLINT "flexlint" "https://github.com/dalance/flexlint")
-    add_custom_target(flexlint
-        COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_SOURCE_DIR} flexlint
-        VERBATIM
-    )
-    add_custom_command(TARGET info
-        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   ninja flexlint                        checks source against regex rules"
-        VERBATIM
-    )
-    message(STATUS "Tool [Flexlint]: ${BF_ENABLED} - ${BF_FLEXLINT}")
-else()
-    message(STATUS "Tool [Flexlint]: ${BF_DISABLED}")
 endif()
 
 # ------------------------------------------------------------------------------
