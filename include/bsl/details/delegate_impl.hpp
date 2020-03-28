@@ -22,17 +22,17 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef BSL_DETAILS_BASE_WRAPPER_HPP
-#define BSL_DETAILS_BASE_WRAPPER_HPP
+#ifndef BSL_DETAILS_DELEGATE_IMPL_HPP
+#define BSL_DETAILS_DELEGATE_IMPL_HPP
 
 namespace bsl
 {
     namespace details
     {
         template<typename>
-        class base_wrapper;
+        class delegate_impl;
 
-        /// @class bsl::details::base_wrapper
+        /// @class bsl::details::delegate_impl
         ///
         /// <!-- description -->
         ///   @brief Provides the base class implementation for the function,
@@ -47,18 +47,18 @@ namespace bsl
         ///   @tparam ARGS the arg types of the function being wrapped
         ///
         template<typename R, typename... ARGS>
-        class base_wrapper<R(ARGS...)>
+        class delegate_impl<R(ARGS...)>
         {
         public:
             /// <!-- description -->
             ///   @brief default constructor
             ///
-            constexpr base_wrapper() noexcept = default;
+            constexpr delegate_impl() noexcept = default;
 
             /// <!-- description -->
             ///   @brief virtual default destructor
             ///
-            virtual ~base_wrapper() noexcept = default;
+            virtual ~delegate_impl() noexcept = default;
 
             /// <!-- description -->
             ///   @brief Pure virtual "call" function that is overloaded
@@ -82,7 +82,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///
-            constexpr base_wrapper(base_wrapper const &o) noexcept = default;
+            constexpr delegate_impl(delegate_impl const &o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief move constructor
@@ -90,7 +90,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
-            constexpr base_wrapper(base_wrapper &&o) noexcept = default;
+            constexpr delegate_impl(delegate_impl &&o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief copy assignment
@@ -99,7 +99,7 @@ namespace bsl
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            constexpr base_wrapper &operator=(base_wrapper const &o) &noexcept = default;
+            constexpr delegate_impl &operator=(delegate_impl const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
@@ -108,10 +108,10 @@ namespace bsl
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            constexpr base_wrapper &operator=(base_wrapper &&o) &noexcept = default;
+            constexpr delegate_impl &operator=(delegate_impl &&o) &noexcept = default;
         };
 
-        /// @class bsl::details::base_wrapper
+        /// @class bsl::details::delegate_impl
         ///
         /// <!-- description -->
         ///   @brief Provides the base class implementation for the function,
@@ -126,18 +126,18 @@ namespace bsl
         ///   @tparam ARGS the arg types of the function being wrapped
         ///
         template<typename R, typename... ARGS>
-        class base_wrapper<R(ARGS...) noexcept>
+        class delegate_impl<R(ARGS...) noexcept>
         {
         public:
             /// <!-- description -->
             ///   @brief default constructor
             ///
-            constexpr base_wrapper() noexcept = default;
+            constexpr delegate_impl() noexcept = default;
 
             /// <!-- description -->
             ///   @brief virtual default destructor
             ///
-            virtual ~base_wrapper() noexcept = default;
+            virtual ~delegate_impl() noexcept = default;
 
             /// <!-- description -->
             ///   @brief Pure virtual "call" function that is overloaded
@@ -158,7 +158,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///
-            constexpr base_wrapper(base_wrapper const &o) noexcept = default;
+            constexpr delegate_impl(delegate_impl const &o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief move constructor
@@ -166,7 +166,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
-            constexpr base_wrapper(base_wrapper &&o) noexcept = default;
+            constexpr delegate_impl(delegate_impl &&o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief copy assignment
@@ -175,7 +175,7 @@ namespace bsl
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            constexpr base_wrapper &operator=(base_wrapper const &o) &noexcept = default;
+            constexpr delegate_impl &operator=(delegate_impl const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
@@ -184,7 +184,7 @@ namespace bsl
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            constexpr base_wrapper &operator=(base_wrapper &&o) &noexcept = default;
+            constexpr delegate_impl &operator=(delegate_impl &&o) &noexcept = default;
         };
     }
 }

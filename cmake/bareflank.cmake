@@ -370,7 +370,6 @@ endif()
 
 string(APPEND CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} "
-    "-ffreestanding "
     "-fno-exceptions "
     "-fno-rtti "
     "-fcomment-block-commands=include "

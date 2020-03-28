@@ -43,7 +43,7 @@ namespace bsl
     ///
     template<typename T>
     constexpr void
-    destroy_at(T const *const ptr) noexcept(noexcept(ptr->T::~T()))
+    destroy_at(T *const ptr) noexcept(noexcept(ptr->T::~T()))
     {
         if (nullptr != ptr) {
             ptr->T::~T();

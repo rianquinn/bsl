@@ -22,8 +22,8 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef BSL_DETAILS_MEMFUNC_WRAPPER_HPP
-#define BSL_DETAILS_MEMFUNC_WRAPPER_HPP
+#ifndef BSL_DETAILS_CMEMFUNC_WRAPPER_HPP
+#define BSL_DETAILS_CMEMFUNC_WRAPPER_HPP
 
 #include "../forward.hpp"
 
@@ -32,12 +32,12 @@ namespace bsl
     namespace details
     {
         template<typename, typename>
-        class memfunc_wrapper;
+        class delegate_cmfp;
 
-        /// @class bsl::details::memfunc_wrapper
+        /// @class bsl::details::delegate_cmfp
         ///
         /// <!-- description -->
-        ///   @brief Wraps a member function
+        ///   @brief Wraps a const member function
         ///
         /// <!-- template parameters -->
         ///   @tparam T the type of object the member function belongs too
@@ -45,25 +45,25 @@ namespace bsl
         ///   @tparam ARGS the arg types of the function being wrapped
         ///
         template<typename T, typename R, typename... ARGS>
-        class memfunc_wrapper<T, R(ARGS...)> final : public base_wrapper<R(ARGS...)>
+        class delegate_cmfp<T, R(ARGS...)> final : public base_wrapper<R(ARGS...)>
         {
             /// @brief stores a reference to the member function's object
-            T &m_t;
+            T const *m_t;
             /// @brief stores a pointer to the wrapped function
-            R (T::*m_func)(ARGS...);
+            R (T::*m_func)(ARGS...) const;
 
         public:
             /// <!-- description -->
-            ///   @brief Creates a bsl::details::memfunc_wrapper given a pointer
-            ///     to a member function. This function pointer is stored,
-            ///     in addition to a reference to the member function's object
-            ///     and later called by the overloaded call function.
+            ///   @brief Creates a bsl::details::delegate_cmfp given a
+            ///     pointer to a member function. This function pointer is
+            ///     stored, in addition to a reference to the member function's
+            ///     object and later called by the overloaded call function.
             ///
             /// <!-- inputs/outputs -->
             ///   @param t a reference to the member function's object
             ///   @param func a pointer to a regular function
             ///
-            explicit constexpr memfunc_wrapper(T &t, R (T::*const func)(ARGS...)) noexcept
+            explicit constexpr delegate_cmfp(T const &t, R (T::*const func)(ARGS...) const) noexcept
                 : base_wrapper<R(ARGS...)>{}, m_t{t}, m_func{func}
             {}
 
@@ -85,10 +85,10 @@ namespace bsl
             }
         };
 
-        /// @class bsl::details::memfunc_wrapper
+        /// @class bsl::details::delegate_cmfp
         ///
         /// <!-- description -->
-        ///   @brief Wraps a member function
+        ///   @brief Wraps a const member function
         ///
         /// <!-- template parameters -->
         ///   @tparam T the type of object the member function belongs too
@@ -96,26 +96,26 @@ namespace bsl
         ///   @tparam ARGS the arg types of the function being wrapped
         ///
         template<typename T, typename R, typename... ARGS>
-        class memfunc_wrapper<T, R(ARGS...) noexcept> final :
-            public base_wrapper<R(ARGS...) noexcept>
+        class delegate_cmfp<T, R(ARGS...) noexcept> final : public base_wrapper<R(ARGS...) noexcept>
         {
             /// @brief stores a reference to the member function's object
-            T &m_t;
+            T const *m_t;
             /// @brief stores a pointer to the wrapped function
-            R (T::*m_func)(ARGS...) noexcept;
+            R (T::*m_func)(ARGS...) const noexcept;
 
         public:
             /// <!-- description -->
-            ///   @brief Creates a bsl::details::memfunc_wrapper given a pointer
-            ///     to a member function. This function pointer is stored,
-            ///     in addition to a reference to the member function's object
-            ///     and later called by the overloaded call function.
+            ///   @brief Creates a bsl::details::delegate_cmfp given a
+            ///     pointer to a member function. This function pointer is
+            ///     stored, in addition to a reference to the member function's
+            ///     object and later called by the overloaded call function.
             ///
             /// <!-- inputs/outputs -->
             ///   @param t a reference to the member function's object
             ///   @param func a pointer to a regular function
             ///
-            explicit constexpr memfunc_wrapper(T &t, R (T::*const func)(ARGS...) noexcept) noexcept
+            explicit constexpr delegate_cmfp(
+                T const &t, R (T::*const func)(ARGS...) const noexcept) noexcept
                 : base_wrapper<R(ARGS...) noexcept>{}, m_t{t}, m_func{func}
             {}
 

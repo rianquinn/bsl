@@ -89,8 +89,8 @@ namespace bsl
         ///     type), should be initialized using {} to ensure the POD is
         ///     properly initialized. Using the above method for global
         ///     initialization ensures that global constructors are not
-        ///     executed at runtime, which is not allowed by AUTOSAR.
-        ///   @include  basic_string_view/example_basic_string_view_default_constructor.hpp
+        ///     executed at runtime, which is required by AUTOSAR.
+        ///   @include basic_string_view/example_basic_string_view_default_constructor.hpp
         ///
         constexpr basic_string_view() noexcept = default;
 

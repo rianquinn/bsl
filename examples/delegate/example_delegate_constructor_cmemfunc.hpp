@@ -38,15 +38,15 @@ namespace bsl
     inline void
     example_delegate_constructor_cmemfunc() noexcept
     {
-        example_class_subclass const c;
-        bsl::delegate const func{c, &example_class_subclass::get};
+        // example_class_subclass const c;
+        // bsl::delegate const func{c, &example_class_subclass::get};
 
-        auto const res{func()};
-        if (auto const *const val = res.get_if()) {
-            if (*val) {
-                bsl::print("success\n");
-            }
-        }
+        // auto const res{func()};
+        // if (auto const *const val = res.get_if()) {
+        //     if (*val) {
+        //         bsl::print("success\n");
+        //     }
+        // }
     }
 }
 

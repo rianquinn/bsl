@@ -22,44 +22,55 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef BSL_DETAILS_FUNC_WRAPPER_HPP
-#define BSL_DETAILS_FUNC_WRAPPER_HPP
+#ifndef BSL_DETAILS_DELEGATE_IMPL_MFP_HPP
+#define BSL_DETAILS_DELEGATE_IMPL_MFP_HPP
 
+#include "delegate_impl.hpp"
 #include "../forward.hpp"
 
 namespace bsl
 {
     namespace details
     {
-        template<typename>
-        class func_wrapper;
+        template<typename, typename>
+        class delegate_impl_mfp;
 
-        /// @class bsl::details::func_wrapper
+        /// @class bsl::details::delegate_impl_mfp
         ///
         /// <!-- description -->
-        ///   @brief Wraps a regular function call.
+        ///   @brief Wraps a member function
         ///
         /// <!-- template parameters -->
+        ///   @tparam T the type of object the member function belongs too
         ///   @tparam R the return type of the function being wrapped
         ///   @tparam ARGS the arg types of the function being wrapped
         ///
-        template<typename R, typename... ARGS>
-        class func_wrapper<R(ARGS...)> final : public base_wrapper<R(ARGS...)>
+        template<typename T, typename R, typename... ARGS>
+        class delegate_impl_mfp<T, R(ARGS...)> final :    // --
+            public delegate_impl<R(ARGS...)>
         {
+            static_assert(sizeof(delegate_impl_mfp<R(ARGS...)>) <= sizeof(void *) * 2);
+
+            /// @brief stores a reference to the member function's object
+            T *m_t;
             /// @brief stores a pointer to the wrapped function
-            R (*m_func)(ARGS...);
+            R (T::*m_func)(ARGS...);
 
         public:
             /// <!-- description -->
-            ///   @brief Creates a bsl::details::func_wrapper given a pointer
-            ///     to a regular function. This function pointer is stored,
+            ///   @brief Creates a bsl::details::delegate_impl_mfp given a pointer
+            ///     to a member function. This function pointer is stored,
+            ///     in addition to a reference to the member function's object
             ///     and later called by the overloaded call function.
             ///
             /// <!-- inputs/outputs -->
+            ///   @param t a reference to the member function's object
             ///   @param func a pointer to a regular function
             ///
-            explicit constexpr func_wrapper(R (*const func)(ARGS...)) noexcept
-                : base_wrapper<R(ARGS...)>{}, m_func{func}
+            explicit constexpr delegate_impl_mfp(    // --
+                T *const t,
+                R (T::*const func)(ARGS...)) noexcept
+                : delegate_impl<R(ARGS...)>{}, m_t{t}, m_func{func}
             {}
 
             /// <!-- description -->
@@ -76,36 +87,44 @@ namespace bsl
             [[nodiscard]] R
             call(ARGS &&... args) const noexcept(false) final
             {
-                return m_func(bsl::forward<ARGS>(args)...);
+                return (m_t->*m_func)(bsl::forward<ARGS>(args)...);
             }
         };
 
-        /// @class bsl::details::func_wrapper
+        /// @class bsl::details::delegate_impl_mfp
         ///
         /// <!-- description -->
-        ///   @brief Wraps a regular function call.
+        ///   @brief Wraps a member function
         ///
         /// <!-- template parameters -->
+        ///   @tparam T the type of object the member function belongs too
         ///   @tparam R the return type of the function being wrapped
         ///   @tparam ARGS the arg types of the function being wrapped
         ///
-        template<typename R, typename... ARGS>
-        class func_wrapper<R(ARGS...) noexcept> final : public base_wrapper<R(ARGS...) noexcept>
+        template<typename T, typename R, typename... ARGS>
+        class delegate_impl_mfp<T, R(ARGS...) noexcept> final :    // --
+            public delegate_impl<R(ARGS...) noexcept>
         {
+            /// @brief stores a reference to the member function's object
+            T *m_t;
             /// @brief stores a pointer to the wrapped function
-            R (*m_func)(ARGS...) noexcept;
+            R (T::*m_func)(ARGS...) noexcept;
 
         public:
             /// <!-- description -->
-            ///   @brief Creates a bsl::details::func_wrapper given a pointer
-            ///     to a regular function. This function pointer is stored,
+            ///   @brief Creates a bsl::details::delegate_impl_mfp given a pointer
+            ///     to a member function. This function pointer is stored,
+            ///     in addition to a reference to the member function's object
             ///     and later called by the overloaded call function.
             ///
             /// <!-- inputs/outputs -->
+            ///   @param t a reference to the member function's object
             ///   @param func a pointer to a regular function
             ///
-            explicit constexpr func_wrapper(R (*const func)(ARGS...) noexcept) noexcept
-                : base_wrapper<R(ARGS...) noexcept>{}, m_func{func}
+            explicit constexpr delegate_impl_mfp(    // --
+                T *const t,
+                R (T::*const func)(ARGS...) noexcept) noexcept
+                : delegate_impl<R(ARGS...) noexcept>{}, m_t{t}, m_func{func}
             {}
 
             /// <!-- description -->
@@ -119,7 +138,7 @@ namespace bsl
             [[nodiscard]] R
             call(ARGS &&... args) const noexcept final
             {
-                return m_func(bsl::forward<ARGS>(args)...);
+                return (m_t->*m_func)(bsl::forward<ARGS>(args)...);
             }
         };
     }

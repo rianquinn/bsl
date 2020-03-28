@@ -20,4 +20,3 @@
 # SOFTWARE.
 
 bf_add_test(requirements)
-bf_add_test(run-time)

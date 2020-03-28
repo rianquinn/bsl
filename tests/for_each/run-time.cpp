@@ -26,9 +26,7 @@
 #include <bsl/array.hpp>
 // #include <bsl/ut.hpp>
 
-
 #include <cstdlib>
-
 
 // namespace
 // {
@@ -150,17 +148,16 @@ main() noexcept
 {
     bsl::array<bsl::int32, 5> arr{};
 
-    bsl::for_each(arr, [](auto &e){
-        e = std::rand(); // NOLINT
+    bsl::for_each(arr, [](auto &e) {
+        e = std::rand();    // NOLINT
     });
 
     bsl::int32 sum{};
-    bsl::for_each(arr, [&sum](auto &e){
+    bsl::for_each(arr, [&sum](auto &e) {
         sum += e;
     });
 
     return sum;
-
 
     // using namespace bsl;
     // constexpr bsl::uintmax max{numeric_limits<bsl::uintmax>::max()};
