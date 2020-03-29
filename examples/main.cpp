@@ -87,13 +87,13 @@
 #include "example_construct_at_overview.hpp"
 #include "example_decay_overview.hpp"
 #include "example_declval_overview.hpp"
-#include "example_delegate_overview.hpp"
-#include "delegate/example_delegate_constructor_cmemfunc.hpp"
-#include "delegate/example_delegate_constructor_func.hpp"
-#include "delegate/example_delegate_constructor_memfunc.hpp"
-#include "delegate/example_delegate_default_constructor.hpp"
-#include "delegate/example_delegate_functor.hpp"
-#include "delegate/example_delegate_valid.hpp"
+// #include "example_delegate_overview.hpp"
+// #include "delegate/example_delegate_constructor_cmemfunc.hpp"
+// #include "delegate/example_delegate_constructor_func.hpp"
+// #include "delegate/example_delegate_constructor_memfunc.hpp"
+// #include "delegate/example_delegate_default_constructor.hpp"
+// #include "delegate/example_delegate_functor.hpp"
+// #include "delegate/example_delegate_valid.hpp"
 #include "example_destroy_at_overview.hpp"
 #include "example_detected_or_overview.hpp"
 #include "example_detected_overview.hpp"
@@ -344,13 +344,13 @@ main() noexcept
     example(&bsl::example_construct_at_overview, "example_construct_at_overview");
     example(&bsl::example_decay_overview, "example_decay_overview");
     example(&bsl::example_declval_overview, "example_declval_overview");
-    example(&bsl::example_delegate_overview, "example_delegate_overview");
-    example(&bsl::example_delegate_constructor_cmemfunc, "example_delegate_constructor_cmemfunc");
-    example(&bsl::example_delegate_constructor_func, "example_delegate_constructor_func");
-    example(&bsl::example_delegate_constructor_memfunc, "example_delegate_constructor_memfunc");
-    example(&bsl::example_delegate_default_constructor, "example_delegate_default_constructor");
-    example(&bsl::example_delegate_functor, "example_delegate_functor");
-    example(&bsl::example_delegate_valid, "example_delegate_valid");
+    // example(&bsl::example_delegate_overview, "example_delegate_overview");
+    // example(&bsl::example_delegate_constructor_cmemfunc, "example_delegate_constructor_cmemfunc");
+    // example(&bsl::example_delegate_constructor_func, "example_delegate_constructor_func");
+    // example(&bsl::example_delegate_constructor_memfunc, "example_delegate_constructor_memfunc");
+    // example(&bsl::example_delegate_default_constructor, "example_delegate_default_constructor");
+    // example(&bsl::example_delegate_functor, "example_delegate_functor");
+    // example(&bsl::example_delegate_valid, "example_delegate_valid");
     example(&bsl::example_destroy_at_overview, "example_destroy_at_overview");
     example(&bsl::example_detected_or_overview, "example_detected_or_overview");
     example(&bsl::example_detected_overview, "example_detected_overview");

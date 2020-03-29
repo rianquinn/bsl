@@ -81,7 +81,6 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief Swaps *this with other
-        ///   @include result/exchange.cpp
         ///
         /// <!-- inputs/outputs -->
         ///   @param lhs the left hand side of the exchange
