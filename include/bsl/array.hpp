@@ -55,6 +55,7 @@ namespace bsl
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type of element being encapsulated.
+    ///   @tparam N the total number of elements in the array. Cannot be 0
     ///
     template<typename T, bsl::uintmax N>
     class array final
@@ -657,17 +658,18 @@ namespace bsl
     };
 
     /// <!-- description -->
-    ///   @brief Returns true if two arrays have the same size and contain
-    ///     the same contents. Returns false otherwise.
+    ///   @brief Returns true if two arrays contain the same contents.
+    ///     Returns false otherwise.
     ///   @include array/example_array_equals.hpp
     ///   @related bsl::array
     ///
     /// <!-- inputs/outputs -->
-    ///   @tparam T the type of elements in the array
+    ///   @tparam T the type of element being encapsulated.
+    ///   @tparam N the total number of elements in the array. Cannot be 0
     ///   @param lhs the left hand side of the operation
     ///   @param rhs the right hand side of the operation
-    ///   @return Returns true if two arrays have the same size and contain
-    ///     the same contents. Returns false otherwise.
+    ///   @return Returns true if two arrays contain the same contents.
+    ///     Returns false otherwise.
     ///
     template<typename T, bsl::uintmax N>
     constexpr bool
@@ -688,13 +690,14 @@ namespace bsl
     }
 
     /// <!-- description -->
-    ///   @brief Returns false if two arrays have the same size and contain
-    ///     the same contents. Returns true otherwise.
+    ///   @brief Returns false if two arrays contain the same contents.
+    ///     Returns true otherwise.
     ///   @include array/example_array_not_equals.hpp
     ///   @related bsl::array
     ///
     /// <!-- inputs/outputs -->
-    ///   @tparam T the type of elements in the array
+    ///   @tparam T the type of element being encapsulated.
+    ///   @tparam N the total number of elements in the array. Cannot be 0
     ///   @param lhs the left hand side of the operation
     ///   @param rhs the right hand side of the operation
     ///   @return Returns true if two arrays have the same size and contain

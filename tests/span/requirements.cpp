@@ -22,6 +22,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
+#include <bsl/span.hpp>
 #include <bsl/array.hpp>
 #include <bsl/discard.hpp>
 #include <bsl/ut.hpp>
@@ -36,28 +37,30 @@ namespace
         [[nodiscard]] constexpr bool
         test_member_const() const
         {
-            bsl::discard(arr.at_if(0));
-            bsl::discard(arr.front());
-            bsl::discard(arr.front_if());
-            bsl::discard(arr.back());
-            bsl::discard(arr.back_if());
-            bsl::discard(arr.data());
-            bsl::discard(arr.begin());
-            bsl::discard(arr.cbegin());
-            bsl::discard(arr.end());
-            bsl::discard(arr.cend());
-            bsl::discard(arr.iter(0));
-            bsl::discard(arr.citer(0));
-            bsl::discard(arr.rbegin());
-            bsl::discard(arr.crbegin());
-            bsl::discard(arr.rend());
-            bsl::discard(arr.crend());
-            bsl::discard(arr.riter(0));
-            bsl::discard(arr.criter(0));
-            bsl::discard(arr.empty());
-            bsl::discard(arr.size());
-            bsl::discard(arr.max_size());
-            bsl::discard(arr.size_bytes());
+            bsl::span const spn{arr.data(), arr.size()};
+            bsl::discard(spn.at_if(0));
+            bsl::discard(spn.front_if());
+            bsl::discard(spn.back_if());
+            bsl::discard(spn.data());
+            bsl::discard(spn.begin());
+            bsl::discard(spn.cbegin());
+            bsl::discard(spn.end());
+            bsl::discard(spn.cend());
+            bsl::discard(spn.iter(0));
+            bsl::discard(spn.citer(0));
+            bsl::discard(spn.rbegin());
+            bsl::discard(spn.crbegin());
+            bsl::discard(spn.rend());
+            bsl::discard(spn.crend());
+            bsl::discard(spn.riter(0));
+            bsl::discard(spn.criter(0));
+            bsl::discard(spn.empty());
+            bsl::discard(spn.size());
+            bsl::discard(spn.max_size());
+            bsl::discard(spn.size_bytes());
+            bsl::discard(spn.first());
+            bsl::discard(spn.last());
+            bsl::discard(spn.subspan(0));
 
             return true;
         }
@@ -65,22 +68,30 @@ namespace
         [[nodiscard]] constexpr bool
         test_member_nonconst()
         {
-            bsl::discard(arr.at_if(0));
-            bsl::discard(arr.front());
-            bsl::discard(arr.front_if());
-            bsl::discard(arr.back());
-            bsl::discard(arr.back_if());
-            bsl::discard(arr.data());
-            bsl::discard(arr.begin());
-            bsl::discard(arr.end());
-            bsl::discard(arr.iter(0));
-            bsl::discard(arr.rbegin());
-            bsl::discard(arr.rend());
-            bsl::discard(arr.riter(0));
-            bsl::discard(arr.empty());
-            bsl::discard(arr.size());
-            bsl::discard(arr.max_size());
-            bsl::discard(arr.size_bytes());
+            bsl::span spn{arr.data(), arr.size()};
+            bsl::discard(spn.at_if(0));
+            bsl::discard(spn.front_if());
+            bsl::discard(spn.back_if());
+            bsl::discard(spn.data());
+            bsl::discard(spn.begin());
+            bsl::discard(spn.cbegin());
+            bsl::discard(spn.end());
+            bsl::discard(spn.cend());
+            bsl::discard(spn.iter(0));
+            bsl::discard(spn.citer(0));
+            bsl::discard(spn.rbegin());
+            bsl::discard(spn.crbegin());
+            bsl::discard(spn.rend());
+            bsl::discard(spn.crend());
+            bsl::discard(spn.riter(0));
+            bsl::discard(spn.criter(0));
+            bsl::discard(spn.empty());
+            bsl::discard(spn.size());
+            bsl::discard(spn.max_size());
+            bsl::discard(spn.size_bytes());
+            bsl::discard(spn.first());
+            bsl::discard(spn.last());
+            bsl::discard(spn.subspan(0));
 
             return true;
         }

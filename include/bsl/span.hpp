@@ -30,6 +30,7 @@
 
 #include "contiguous_iterator.hpp"
 #include "cstdint.hpp"
+#include "for_each.hpp"
 #include "min.hpp"
 #include "npos.hpp"
 #include "numeric_limits.hpp"
@@ -641,6 +642,19 @@ namespace bsl
         }
 
         /// <!-- description -->
+        ///   @brief Returns size() == 0
+        ///   @include span/example_span_empty.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns size() == 0
+        ///
+        [[nodiscard]] constexpr bool
+        empty() const noexcept
+        {
+            return 0U == m_count;
+        }
+
+        /// <!-- description -->
         ///   @brief Returns the number of elements in the array being
         ///     viewed. If this is a default constructed view, or the view
         ///     was constructed in error, this will return 0.
@@ -681,19 +695,6 @@ namespace bsl
         size_bytes() const noexcept
         {
             return m_count * sizeof(T);
-        }
-
-        /// <!-- description -->
-        ///   @brief Returns size() == 0
-        ///   @include span/example_span_empty.hpp
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @return Returns size() == 0
-        ///
-        [[nodiscard]] constexpr bool
-        empty() const noexcept
-        {
-            return 0U == m_count;
         }
 
         /// <!-- description -->
@@ -828,6 +829,61 @@ namespace bsl
         /// @brief stores the number of elements in the array being viewed
         size_type m_count;
     };
+
+    /// <!-- description -->
+    ///   @brief Returns true if two spans have the same size and contain
+    ///     the same contents. Returns false otherwise.
+    ///   @include span/example_span_equals.hpp
+    ///   @related bsl::span
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the type of elements in the span
+    ///   @param lhs the left hand side of the operation
+    ///   @param rhs the right hand side of the operation
+    ///   @return Returns true if two spans have the same size and contain
+    ///     the same contents. Returns false otherwise.
+    ///
+    template<typename T>
+    constexpr bool
+    operator==(bsl::span<T> const &lhs, bsl::span<T> const &rhs) noexcept
+    {
+        bool eq{true};
+
+        if (lhs.size() != rhs.size()) {
+            return false;
+        }
+
+        bsl::for_each(lhs, [&rhs, &eq](auto &e, auto i) -> bool {
+            if (e != *rhs.at_if(i)) {
+                eq = false;
+                return bsl::for_each_break;
+            }
+
+            return bsl::for_each_continue;
+        });
+
+        return eq;
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns false if two spans have the same size and contain
+    ///     the same contents. Returns true otherwise.
+    ///   @include span/example_span_not_equals.hpp
+    ///   @related bsl::span
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the type of elements in the span
+    ///   @param lhs the left hand side of the operation
+    ///   @param rhs the right hand side of the operation
+    ///   @return Returns true if two spans have the same size and contain
+    ///     the same contents. Returns false otherwise.
+    ///
+    template<typename T>
+    constexpr bool
+    operator!=(bsl::span<T> const &lhs, bsl::span<T> const &rhs) noexcept
+    {
+        return !(lhs == rhs);
+    }
 }
 
 #endif
