@@ -77,8 +77,7 @@ namespace bsl
     ///
     template<typename ITER, typename T>
     constexpr enable_if_t<is_copy_assignable<T>::value>
-    fill(ITER first, ITER last, T const &value) noexcept(
-        is_nothrow_copy_assignable<T>::value)
+    fill(ITER first, ITER last, T const &value) noexcept(is_nothrow_copy_assignable<T>::value)
     {
         bsl::for_each(first, last, [&value](auto &e) {
             e = value;

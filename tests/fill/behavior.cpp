@@ -55,7 +55,7 @@ tests() noexcept
             bsl::ut_when{} = [&arr]() {
                 bsl::fill(arr, true);
                 bsl::ut_then{} = [&arr]() {
-                    bsl::for_each(arr, [](auto &e){
+                    bsl::for_each(arr, [](auto &e) {
                         bsl::ut_check(e);
                     });
                 };
@@ -69,7 +69,7 @@ tests() noexcept
             bsl::ut_when{} = [&arr]() {
                 bsl::fill(arr.begin(), arr.end(), true);
                 bsl::ut_then{} = [&arr]() {
-                    bsl::for_each(arr, [](auto &e){
+                    bsl::for_each(arr, [](auto &e) {
                         bsl::ut_check(e);
                     });
                 };
@@ -83,7 +83,7 @@ tests() noexcept
             bsl::ut_when{} = [&arr]() {
                 bsl::fill(arr.rbegin(), arr.rend(), true);
                 bsl::ut_then{} = [&arr]() {
-                    bsl::for_each(arr, [](auto &e){
+                    bsl::for_each(arr, [](auto &e) {
                         bsl::ut_check(e);
                     });
                 };
@@ -129,7 +129,7 @@ tests() noexcept
             bsl::ut_when{} = [&arr]() {
                 bsl::fill(arr.end(), arr.begin(), true);
                 bsl::ut_then{} = [&arr]() {
-                    bsl::for_each(arr, [](auto &e){
+                    bsl::for_each(arr, [](auto &e) {
                         bsl::ut_check(!e);
                     });
                 };
@@ -143,7 +143,7 @@ tests() noexcept
             bsl::ut_when{} = [&arr]() {
                 bsl::fill(arr.rend(), arr.rbegin(), true);
                 bsl::ut_then{} = [&arr]() {
-                    bsl::for_each(arr, [](auto &e){
+                    bsl::for_each(arr, [](auto &e) {
                         bsl::ut_check(!e);
                     });
                 };
@@ -157,7 +157,7 @@ tests() noexcept
             bsl::ut_when{} = [&arr]() {
                 bsl::fill(arr.iter(4), arr.iter(1), true);
                 bsl::ut_then{} = [&arr]() {
-                    bsl::for_each(arr, [](auto &e){
+                    bsl::for_each(arr, [](auto &e) {
                         bsl::ut_check(!e);
                     });
                 };
@@ -171,7 +171,7 @@ tests() noexcept
             bsl::ut_when{} = [&arr]() {
                 bsl::fill(arr.riter(0), arr.riter(3), true);
                 bsl::ut_then{} = [&arr]() {
-                    bsl::for_each(arr, [](auto &e){
+                    bsl::for_each(arr, [](auto &e) {
                         bsl::ut_check(!e);
                     });
                 };

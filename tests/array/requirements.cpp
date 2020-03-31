@@ -23,11 +23,70 @@
 /// SOFTWARE.
 
 #include <bsl/array.hpp>
+#include <bsl/discard.hpp>
 #include <bsl/ut.hpp>
 
 namespace
 {
+    class fixture_t final
+    {
+        bsl::array<bool, 5> arr{};
 
+    public:
+        [[nodiscard]] constexpr bool
+        test_member_const() const
+        {
+            bsl::discard(arr.at_if(0));
+            bsl::discard(arr.front());
+            bsl::discard(arr.front_if());
+            bsl::discard(arr.back());
+            bsl::discard(arr.back_if());
+            bsl::discard(arr.data());
+            bsl::discard(arr.begin());
+            bsl::discard(arr.cbegin());
+            bsl::discard(arr.end());
+            bsl::discard(arr.cend());
+            bsl::discard(arr.iter(0));
+            bsl::discard(arr.citer(0));
+            bsl::discard(arr.rbegin());
+            bsl::discard(arr.crbegin());
+            bsl::discard(arr.rend());
+            bsl::discard(arr.crend());
+            bsl::discard(arr.riter(0));
+            bsl::discard(arr.criter(0));
+            bsl::discard(arr.empty());
+            bsl::discard(arr.size());
+            bsl::discard(arr.max_size());
+            bsl::discard(arr.size_bytes());
+
+            return true;
+        }
+
+        [[nodiscard]] constexpr bool
+        test_member_nonconst()
+        {
+            bsl::discard(arr.at_if(0));
+            bsl::discard(arr.front());
+            bsl::discard(arr.front_if());
+            bsl::discard(arr.back());
+            bsl::discard(arr.back_if());
+            bsl::discard(arr.data());
+            bsl::discard(arr.begin());
+            bsl::discard(arr.end());
+            bsl::discard(arr.iter(0));
+            bsl::discard(arr.rbegin());
+            bsl::discard(arr.rend());
+            bsl::discard(arr.riter(0));
+            bsl::discard(arr.empty());
+            bsl::discard(arr.size());
+            bsl::discard(arr.max_size());
+            bsl::discard(arr.size_bytes());
+
+            return true;
+        }
+    };
+
+    constexpr fixture_t fixture1{};
 }
 
 /// <!-- description -->
@@ -43,14 +102,14 @@ main() noexcept
 {
     using namespace bsl;
 
-    bsl::ut_scenario{"verify except"} = []() {
-        static_assert(!noexcept(bsl::fill(g_arr1, copy_except{})));
-        static_assert(!noexcept(bsl::fill(g_arr1.begin(), g_arr1.end(), copy_except{})));
-    };
-
-    bsl::ut_scenario{"verify noexcept"} = []() {
-        static_assert(noexcept(bsl::fill(g_arr2, copy_noexcept{})));
-        static_assert(noexcept(bsl::fill(g_arr2.begin(), g_arr2.end(), copy_noexcept{})));
+    bsl::ut_scenario{"verify constness"} = []() {
+        bsl::ut_given{} = []() {
+            fixture_t fixture2{};
+            bsl::ut_then{} = [&fixture2]() {
+                static_assert(fixture1.test_member_const());
+                ut_check(fixture2.test_member_nonconst());
+            };
+        };
     };
 
     return bsl::ut_success();
