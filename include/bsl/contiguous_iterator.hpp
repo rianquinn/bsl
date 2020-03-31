@@ -42,7 +42,7 @@
 
 namespace bsl
 {
-    /// @class
+    /// @class bsl::contiguous_iterator
     ///
     /// <!-- description -->
     ///   @brief Provides a contiguous iterator as defined by the C++
@@ -83,13 +83,13 @@ namespace bsl
         /// @brief alias for: bsl::uintmax
         using difference_type = bsl::uintmax;
         /// @brief alias for: T &
-        using reference = T &;
+        using reference_type = T &;
         /// @brief alias for: T const &
-        using const_reference = T const &;
+        using const_reference_type = T const &;
         /// @brief alias for: T *
-        using pointer = T *;
+        using pointer_type = T *;
         /// @brief alias for: T const *
-        using const_pointer = T const *;
+        using const_pointer_type = T const *;
 
         /// <!-- description -->
         ///   @brief Default constructor that creates a contiguous iterator
@@ -97,7 +97,6 @@ namespace bsl
         ///     specifically do not initialize m_ptr, m_count, or m_i which
         ///     ensures this is a POD typethe contiguous iterator to be used
         ///     as a global resource.
-        ///   @include contiguous_iterator/example_contiguous_iterator_default_constructor.hpp
         ///
         constexpr contiguous_iterator() noexcept = default;
 
@@ -106,14 +105,14 @@ namespace bsl
         ///     and the total number of elements in the array. Note that you
         ///     should not use this directly but instead, should use the
         ///     container's begin() function.
-        ///   @include contiguous_iterator/example_contiguous_iterator_ptr_count_constructor.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @param ptr a pointer to the array being iterated
         ///   @param count the number of elements in the array being iterated
+        ///   @param i the initial index of the iterator
         ///
         constexpr contiguous_iterator(    // --
-            pointer const ptr,            // --
+            pointer_type const ptr,       // --
             size_type const count,        // --
             size_type const i = 0U) noexcept
             : m_ptr{ptr}, m_count{count}, m_i{i}
@@ -134,7 +133,20 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return Returns a pointer to the array being iterated
         ///
-        [[nodiscard]] constexpr const_pointer
+        [[nodiscard]] constexpr pointer_type
+        data() noexcept
+        {
+            return m_ptr;
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the array being iterated
+        ///   @include contiguous_iterator/example_contiguous_iterator_data.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the array being iterated
+        ///
+        [[nodiscard]] constexpr const_pointer_type
         data() const noexcept
         {
             return m_ptr;
@@ -168,18 +180,29 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Returns true if the iterator is valid (i.e., points to
-        ///     an array). Default constructed iterators, or iterators that
-        ///     are constructed with invalid arguments are invalid.
-        ///   @include contiguous_iterator/example_contiguous_iterator_index.hpp
+        ///   @brief Returns nullptr == data()
+        ///   @include contiguous_iterator/example_contiguous_iterator_empty.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @return Returns the iterator's current index
+        ///   @return Returns nullptr == data()
         ///
-        [[nodiscard]] constexpr size_type
-        valid() const noexcept
+        [[nodiscard]] constexpr bool
+        empty() const noexcept
         {
-            return nullptr != m_ptr;
+            return nullptr == this->data();
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns index() == size()
+        ///   @include contiguous_iterator/example_contiguous_iterator_is_end.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns index() == size()
+        ///
+        [[nodiscard]] constexpr bool
+        is_end() const noexcept
+        {
+            return this->index() == this->size();
         }
 
         /// <!-- description -->
@@ -219,7 +242,7 @@ namespace bsl
         ///     iterator's current index. If the index is out of bounds,
         ///     or the iterator is invalid, this function returns a nullptr.
         ///
-        [[nodiscard]] constexpr pointer
+        [[nodiscard]] constexpr pointer_type
         get_if() noexcept    // PRQA S 4211
         {
             if (nullptr == m_ptr) {
@@ -255,7 +278,7 @@ namespace bsl
         ///     iterator's current index. If the index is out of bounds,
         ///     or the iterator is invalid, this function returns a nullptr.
         ///
-        [[nodiscard]] constexpr const_pointer
+        [[nodiscard]] constexpr const_pointer_type
         get_if() const noexcept
         {
             if (nullptr == m_ptr) {
@@ -292,21 +315,6 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Increments the iterator (postfix)
-        ///   @include contiguous_iterator/example_contiguous_iterator_increment.hpp
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @return returns *this
-        ///
-        [[maybe_unused]] constexpr contiguous_iterator
-        operator++(int) noexcept
-        {
-            contiguous_iterator tmp{*this};
-            ++(*this);
-            return tmp;
-        }
-
-        /// <!-- description -->
         ///   @brief Decrements the iterator
         ///   @include contiguous_iterator/example_contiguous_iterator_decrement.hpp
         ///
@@ -328,24 +336,9 @@ namespace bsl
             return *this;
         }
 
-        /// <!-- description -->
-        ///   @brief Decrements the iterator
-        ///   @include contiguous_iterator/example_contiguous_iterator_decrement.hpp
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @return returns *this
-        ///
-        [[maybe_unused]] constexpr contiguous_iterator
-        operator--(int) noexcept
-        {
-            contiguous_iterator tmp{*this};
-            --(*this);
-            return tmp;
-        }
-
     private:
         /// @brief stores a pointer to the array being iterated
-        pointer m_ptr;
+        pointer_type m_ptr;
         /// @brief stores the number of elements in the array being iterated
         size_type m_count;
         /// @brief stores the current index in the array being iterated
@@ -375,7 +368,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Returns true if the provided contiguous iterators do not point
     ///     to the same array or the same index.
-    ///   @include contiguous_iterator/example_contiguous_iterator_equals.hpp
+    ///   @include contiguous_iterator/example_contiguous_iterator_not_equals.hpp
     ///   @related bsl::contiguous_iterator
     ///
     /// <!-- inputs/outputs -->
@@ -412,7 +405,7 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief Returns lhs.index() <= rhs.index()
-    ///   @include contiguous_iterator/example_contiguous_iterator_lt_assign.hpp
+    ///   @include contiguous_iterator/example_contiguous_iterator_lt_equals.hpp
     ///   @related bsl::contiguous_iterator
     ///
     /// <!-- inputs/outputs -->
@@ -448,7 +441,7 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief Returns lhs.index() >= rhs.index()
-    ///   @include contiguous_iterator/example_contiguous_iterator_gt_assign.hpp
+    ///   @include contiguous_iterator/example_contiguous_iterator_gt_equals.hpp
     ///   @related bsl::contiguous_iterator
     ///
     /// <!-- inputs/outputs -->

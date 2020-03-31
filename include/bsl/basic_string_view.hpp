@@ -30,8 +30,8 @@
 #include "cstdint.hpp"
 #include "min.hpp"
 #include "npos.hpp"
+#include "numeric_limits.hpp"
 #include "reverse_iterator.hpp"
-#include "view.hpp"
 
 // TODO:
 // - Need to implement the find functions. These need the safe_int class as
@@ -53,7 +53,7 @@ namespace bsl
     ///   @tparam Traits the traits class used to work with the string
     ///
     template<typename CharT, typename Traits = char_traits<CharT>>
-    class basic_string_view final : public view<CharT const>
+    class basic_string_view final    // NOLINT
     {
     public:
         /// @brief alias for: CharT const
@@ -63,17 +63,21 @@ namespace bsl
         /// @brief alias for: bsl::uintmax
         using difference_type = bsl::uintmax;
         /// @brief alias for: CharT const &
-        using reference = CharT const &;
+        using reference_type = CharT const &;
         /// @brief alias for: CharT const &
-        using const_reference = CharT const &;
+        using const_reference_type = CharT const &;
         /// @brief alias for: CharT const *
-        using pointer = CharT const *;
+        using pointer_type = CharT const *;
         /// @brief alias for: CharT const const *
-        using const_pointer = CharT const *;
+        using const_pointer_type = CharT const *;
         /// @brief alias for: contiguous_iterator<CharT const>
-        using iterator = contiguous_iterator<CharT const>;
+        using iterator_type = contiguous_iterator<CharT const>;
         /// @brief alias for: contiguous_iterator<CharT const const>
-        using const_iterator = contiguous_iterator<CharT const>;
+        using const_iterator_type = contiguous_iterator<CharT const>;
+        /// @brief alias for: reverse_iterator<iterator>
+        using reverse_iterator_type = reverse_iterator<iterator_type>;
+        /// @brief alias for: reverse_iterator<const_iterator>
+        using const_reverse_iterator_type = reverse_iterator<const_iterator_type>;
 
         /// <!-- description -->
         ///   @brief Default constructor that creates a basic_string_view with
@@ -104,9 +108,13 @@ namespace bsl
         ///   @param s a pointer to the string
         ///   @param count the number of characters in the string
         ///
-        constexpr basic_string_view(pointer const s, size_type const count) noexcept
-            : view<CharT const>{s, count}
-        {}
+        constexpr basic_string_view(pointer_type const s, size_type const count) noexcept
+            : m_ptr{s}, m_count{count}
+        {
+            if ((nullptr == m_ptr) || (0U == m_count)) {
+                *this = basic_string_view{};
+            }
+        }
 
         /// <!-- description -->
         ///   @brief ptr constructor. This creates a bsl::basic_string_view
@@ -124,9 +132,522 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param s a pointer to the string
         ///
-        constexpr basic_string_view(pointer const s) noexcept    // PRQA S 2180 // NOLINT
-            : view<CharT const>{s, Traits::length(s)}
-        {}
+        constexpr basic_string_view(pointer_type const s) noexcept    // PRQA S 2180 // NOLINT
+            : m_ptr{s}, m_count{Traits::length(s)}
+        {
+            if ((nullptr == m_ptr) || (0U == m_count)) {
+                *this = basic_string_view{};
+            }
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "index". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///   @include basic_string_view/example_basic_string_view_at_if.hpp
+        ///
+        ///   SUPPRESSION: PRQA 4211 - false positive
+        ///   - We suppress this because M9-3-3 states that if a function
+        ///     doesn't modify a class member, it should be marked as const.
+        ///     This function, however, returns a non-const pointer to an
+        ///     object stored internal to the class, meaning it cannot be
+        ///     labeled const without breaking other AUTOSAR rules. This
+        ///     is no different than returning a non-const refernce which
+        ///     does not trip up PRQA so this must be a bug.
+        ///
+        ///   SUPPRESSION: PRQA 3706 - false positive
+        ///   - We suppress this because M5-0-15 states that pointer arithmetic
+        ///     is not allowed, and instead direct indexing or an array should
+        ///     be used. This took a while to sort out. The short story is,
+        ///     this is a false positive. M5-0-15 wants you to do ptr[X]
+        ///     instead of *(ptr + X), which is what we are doing here. This
+        ///     example is clearly shown in the second to last line in the
+        ///     example that MISRA 2008 provides. The language for this was
+        ///     cleaned up in MISRA 2012 as well. PRQA should be capable of
+        ///     detecting this.
+        ///
+        ///   SUPPRESSION: PRQA 4024 - false positive
+        ///   - We suppress this because A9-3-1 states that we should
+        ///     not provide a non-const reference or pointer to private
+        ///     member function, unless the class mimics a smart pointer or
+        ///     a containter. This class mimics a container.
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param index the index of the instance to return
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "index". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr pointer_type
+        at_if(size_type const index) noexcept    // PRQA S 4211
+        {
+            if ((nullptr == m_ptr) || (index >= m_count)) {
+                return nullptr;
+            }
+
+            return &m_ptr[index];    // PRQA S 3706, 4024 // NOLINT
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "index". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///   @include basic_string_view/example_basic_string_view_at_if.hpp
+        ///
+        ///   SUPPRESSION: PRQA 3706 - false positive
+        ///   - We suppress this because M5-0-15 states that pointer arithmetic
+        ///     is not allowed, and instead direct indexing or an array should
+        ///     be used. This took a while to sort out. The short story is,
+        ///     this is a false positive. M5-0-15 wants you to do ptr[X]
+        ///     instead of *(ptr + X), which is what we are doing here. This
+        ///     example is clearly shown in the second to last line in the
+        ///     example that MISRA 2008 provides. The language for this was
+        ///     cleaned up in MISRA 2012 as well. PRQA should be capable of
+        ///     detecting this.
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param index the index of the instance to return
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "index". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr const_pointer_type
+        at_if(size_type const index) const noexcept
+        {
+            if ((nullptr == m_ptr) || (index >= m_count)) {
+                return nullptr;
+            }
+
+            return &m_ptr[index];    // PRQA S 3706 // NOLINT
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "0". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///   @include basic_string_view/example_basic_string_view_front_if.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "0". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr pointer_type
+        front_if() noexcept
+        {
+            return this->at_if(0);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "0". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///   @include basic_string_view/example_basic_string_view_front_if.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "0". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr const_pointer_type
+        front_if() const noexcept
+        {
+            return this->at_if(0);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "size() - 1". If the index is out of bounds, or the view is
+        ///     invalid, this function returns a nullptr.
+        ///   @include basic_string_view/example_basic_string_view_back_if.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "size() - 1". If the index is out of bounds, or the view is
+        ///     invalid, this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr pointer_type
+        back_if() noexcept
+        {
+            return this->at_if(m_count > 0 ? m_count - 1 : 0);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "size() - 1". If the index is out of bounds, or the view is
+        ///     invalid, this function returns a nullptr.
+        ///   @include basic_string_view/example_basic_string_view_back_if.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "size() - 1". If the index is out of bounds, or the view is
+        ///     invalid, this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr const_pointer_type
+        back_if() const noexcept
+        {
+            return this->at_if(m_count > 0 ? m_count - 1 : 0);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the string being viewed. If this is
+        ///     a default constructed view, or the view was constructed in
+        ///     error, this will return a nullptr.
+        ///   @include basic_string_view/example_basic_string_view_data.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the string being viewed. If this is
+        ///     a default constructed view, or the view was constructed in
+        ///     error, this will return a nullptr.
+        ///
+        [[nodiscard]] constexpr pointer_type
+        data() noexcept
+        {
+            return m_ptr;
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the string being viewed. If this is
+        ///     a default constructed view, or the view was constructed in
+        ///     error, this will return a nullptr.
+        ///   @include basic_string_view/example_basic_string_view_data.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the string being viewed. If this is
+        ///     a default constructed view, or the view was constructed in
+        ///     error, this will return a nullptr.
+        ///
+        [[nodiscard]] constexpr const_pointer_type
+        data() const noexcept
+        {
+            return m_ptr;
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to the first element of the view.
+        ///   @include basic_string_view/example_basic_string_view_begin.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns an iterator to the first element of the view.
+        ///
+        [[nodiscard]] constexpr iterator_type
+        begin() noexcept
+        {
+            return iterator_type{m_ptr, m_count, 0U};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to the first element of the view.
+        ///   @include basic_string_view/example_basic_string_view_begin.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns an iterator to the first element of the view.
+        ///
+        [[nodiscard]] constexpr const_iterator_type
+        begin() const noexcept
+        {
+            return const_iterator_type{m_ptr, m_count, 0U};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to the first element of the view.
+        ///   @include basic_string_view/example_basic_string_view_begin.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns an iterator to the first element of the view.
+        ///
+        [[nodiscard]] constexpr const_iterator_type
+        cbegin() const noexcept
+        {
+            return const_iterator_type{m_ptr, m_count, 0U};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to the element "i" in the view.
+        ///   @include basic_string_view/example_basic_string_view_iter.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param i the element in the string to return an iterator for.
+        ///   @return Returns an iterator to the element "i" in the view.
+        ///
+        [[nodiscard]] constexpr iterator_type
+        iter(size_type const i) noexcept
+        {
+            return iterator_type{m_ptr, m_count, i};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to the element "i" in the view.
+        ///   @include basic_string_view/example_basic_string_view_iter.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param i the element in the string to return an iterator for.
+        ///   @return Returns an iterator to the element "i" in the view.
+        ///
+        [[nodiscard]] constexpr const_iterator_type
+        iter(size_type const i) const noexcept
+        {
+            return const_iterator_type{m_ptr, m_count, i};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to the element "i" in the view.
+        ///   @include basic_string_view/example_basic_string_view_iter.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param i the element in the string to return an iterator for.
+        ///   @return Returns an iterator to the element "i" in the view.
+        ///
+        [[nodiscard]] constexpr const_iterator_type
+        citer(size_type const i) const noexcept
+        {
+            return const_iterator_type{m_ptr, m_count, i};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to one past the last element of the
+        ///     view. If you attempt to access this iterator, a nullptr will
+        ///     always be returned.
+        ///   @include basic_string_view/example_basic_string_view_end.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns an iterator to one past the last element of the
+        ///     view. If you attempt to access this iterator, a nullptr will
+        ///     always be returned.
+        ///
+        [[nodiscard]] constexpr iterator_type
+        end() noexcept
+        {
+            return iterator_type{m_ptr, m_count, m_count};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to one past the last element of the
+        ///     view. If you attempt to access this iterator, a nullptr will
+        ///     always be returned.
+        ///   @include basic_string_view/example_basic_string_view_end.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns an iterator to one past the last element of the
+        ///     view. If you attempt to access this iterator, a nullptr will
+        ///     always be returned.
+        ///
+        [[nodiscard]] constexpr const_iterator_type
+        end() const noexcept
+        {
+            return const_iterator_type{m_ptr, m_count, m_count};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to one past the last element of the
+        ///     view. If you attempt to access this iterator, a nullptr will
+        ///     always be returned.
+        ///   @include basic_string_view/example_basic_string_view_end.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns an iterator to one past the last element of the
+        ///     view. If you attempt to access this iterator, a nullptr will
+        ///     always be returned.
+        ///
+        [[nodiscard]] constexpr const_iterator_type
+        cend() const noexcept
+        {
+            return const_iterator_type{m_ptr, m_count, m_count};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator to one past the last element
+        ///     of the view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include basic_string_view/example_basic_string_view_rbegin.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a reverse iterator to the last element of the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr reverse_iterator_type
+        rbegin() noexcept
+        {
+            return reverse_iterator_type{this->end()};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator to one past the last element
+        ///     of the view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include basic_string_view/example_basic_string_view_rbegin.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a reverse iterator to the last element of the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr const_reverse_iterator_type
+        rbegin() const noexcept
+        {
+            return const_reverse_iterator_type{this->end()};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator to one past the last element
+        ///     of the view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include basic_string_view/example_basic_string_view_rbegin.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a reverse iterator to the last element of the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr const_reverse_iterator_type
+        crbegin() const noexcept
+        {
+            return const_reverse_iterator_type{this->cend()};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator element "i" in the
+        ///     view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include basic_string_view/example_basic_string_view_riter.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param i the element in the string to return an iterator for.
+        ///   @return Returns a reverse iterator element "i" in the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr reverse_iterator_type
+        riter(size_type const i) noexcept
+        {
+            size_type ai{i >= m_count ? m_count : i + 1};
+            return reverse_iterator_type{this->iter(ai)};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator element "i" in the
+        ///     view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include basic_string_view/example_basic_string_view_riter.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param i the element in the string to return an iterator for.
+        ///   @return Returns a reverse iterator element "i" in the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr const_reverse_iterator_type
+        riter(size_type const i) const noexcept
+        {
+            size_type ai{i >= m_count ? m_count : i + 1};
+            return const_reverse_iterator_type{this->iter(ai)};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator element "i" in the
+        ///     view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include basic_string_view/example_basic_string_view_riter.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param i the element in the string to return an iterator for.
+        ///   @return Returns a reverse iterator element "i" in the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr const_reverse_iterator_type
+        criter(size_type const i) const noexcept
+        {
+            size_type ai{i >= m_count ? m_count : i + 1};
+            return const_reverse_iterator_type{this->citer(ai)};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator first element of the
+        ///     view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include basic_string_view/example_basic_string_view_rend.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a reverse iterator first element of the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr reverse_iterator_type
+        rend() noexcept
+        {
+            return reverse_iterator_type{this->begin()};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator first element of the
+        ///     view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include basic_string_view/example_basic_string_view_rend.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a reverse iterator first element of the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr const_reverse_iterator_type
+        rend() const noexcept
+        {
+            return const_reverse_iterator_type{this->begin()};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator first element of the
+        ///     view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include basic_string_view/example_basic_string_view_rend.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a reverse iterator first element of the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr const_reverse_iterator_type
+        crend() const noexcept
+        {
+            return const_reverse_iterator_type{this->cbegin()};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns the number of elements in the string being
+        ///     viewed. If this is a default constructed view, or the view
+        ///     was constructed in error, this will return 0.
+        ///   @include basic_string_view/example_basic_string_view_size.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns the number of elements in the string being
+        ///     viewed. If this is a default constructed view, or the view
+        ///     was constructed in error, this will return 0.
+        ///
+        [[nodiscard]] constexpr size_type
+        size() const noexcept
+        {
+            return m_count;
+        }
 
         /// <!-- description -->
         ///   @brief Returns the length of the string being viewed. This is
@@ -143,6 +664,45 @@ namespace bsl
         length() const noexcept
         {
             return this->size();
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns the max number of elements the BSL supports.
+        ///   @include basic_string_view/example_basic_string_view_max_size.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns the max number of elements the BSL supports.
+        ///
+        [[nodiscard]] constexpr size_type
+        max_size() const noexcept
+        {
+            return numeric_limits<size_type>::max() / sizeof(CharT);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns size() * sizeof(T)
+        ///   @include basic_string_view/example_basic_string_view_size_bytes.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns size() * sizeof(T)
+        ///
+        [[nodiscard]] constexpr size_type
+        size_bytes() const noexcept
+        {
+            return m_count * sizeof(CharT);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns size() == 0
+        ///   @include basic_string_view/example_basic_string_view_empty.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns size() == 0
+        ///
+        [[nodiscard]] constexpr bool
+        empty() const noexcept
+        {
+            return 0U == m_count;
         }
 
         /// <!-- description -->
@@ -283,7 +843,7 @@ namespace bsl
         ///   @return Returns the same results as std::strncmp
         ///
         [[nodiscard]] constexpr bsl::int32
-        compare(pointer const s) const noexcept
+        compare(pointer_type const s) const noexcept
         {
             return this->compare(basic_string_view{s});
         }
@@ -299,7 +859,7 @@ namespace bsl
         ///   @return Returns the same results as std::strncmp
         ///
         [[nodiscard]] constexpr bsl::int32
-        compare(size_type pos, size_type count, pointer const s) const noexcept
+        compare(size_type pos, size_type count, pointer_type const s) const noexcept
         {
             return this->substr(pos, count).compare(basic_string_view{s});
         }
@@ -316,10 +876,10 @@ namespace bsl
         ///   @return Returns the same results as std::strncmp
         ///
         [[nodiscard]] constexpr bsl::int32
-        compare(                 // --
-            size_type pos,       // --
-            size_type count1,    // --
-            pointer const s,     // --
+        compare(                     // --
+            size_type pos,           // --
+            size_type count1,        // --
+            pointer_type const s,    // --
             size_type count2) const noexcept
         {
             return this->substr(pos, count1).compare(basic_string_view{s, count2});
@@ -349,12 +909,12 @@ namespace bsl
         ///   @include basic_string_view/example_basic_string_view_starts_with.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @param c the CharT to compare with
+        ///   @param c the value_type to compare with
         ///   @return Returns true if the string begins with the given prefix,
         ///     false otherwise.
         ///
         [[nodiscard]] constexpr bool
-        starts_with(CharT const c) const noexcept
+        starts_with(value_type const c) const noexcept
         {
             if (auto *const ptr = this->front_if()) {
                 return *ptr == c;
@@ -373,7 +933,7 @@ namespace bsl
         ///     false otherwise.
         ///
         [[nodiscard]] constexpr bool
-        starts_with(pointer const s) const noexcept
+        starts_with(pointer_type const s) const noexcept
         {
             return this->starts_with(basic_string_view{s});
         }
@@ -402,12 +962,12 @@ namespace bsl
         ///   @include basic_string_view/example_basic_string_view_ends_with.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @param c the CharT to compare with
+        ///   @param c the value_type to compare with
         ///   @return Returns true if the string ends with the given suffix,
         ///     false otherwise.
         ///
         [[nodiscard]] constexpr bool
-        ends_with(CharT const c) const noexcept
+        ends_with(value_type const c) const noexcept
         {
             if (auto *const ptr = this->back_if()) {
                 return *ptr == c;
@@ -426,10 +986,16 @@ namespace bsl
         ///     false otherwise.
         ///
         [[nodiscard]] constexpr bool
-        ends_with(pointer const s) const noexcept
+        ends_with(pointer_type const s) const noexcept
         {
             return this->ends_with(basic_string_view{s});
         }
+
+    private:
+        /// @brief stores a pointer to the string being viewed
+        pointer_type m_ptr;
+        /// @brief stores the number of elements in the string being viewed
+        size_type m_count;
     };
 
     /// <!-- description -->

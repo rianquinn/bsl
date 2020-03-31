@@ -29,9 +29,6 @@
 
 // namespace
 // {
-// #pragma clang diagnostic push
-// #pragma clang diagnostic ignored "-Wunneeded-internal-declaration"
-
 //     constexpr void
 //     test_func1(bsl::int32 const &elem, bsl::uintmax index) noexcept
 //     {
@@ -129,8 +126,6 @@
 
 //         return answer;
 //     }
-
-// #pragma clang diagnostic pop
 // }
 
 /// <!-- description -->

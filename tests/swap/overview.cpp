@@ -27,9 +27,6 @@
 
 namespace
 {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunneeded-member-function"
-
     class myclass1 final
     {
     public:
@@ -153,8 +150,6 @@ namespace
 
         return val1.data;
     }
-
-#pragma clang diagnostic push
 }
 
 /// <!-- description -->

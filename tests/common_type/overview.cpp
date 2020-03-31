@@ -29,9 +29,6 @@
 
 // clang-format off
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunneeded-member-function"
-
 namespace
 {
     enum class e1_type : bsl::int32;
@@ -200,7 +197,5 @@ main() noexcept
 
     return bsl::ut_success();
 }
-
-#pragma clang diagnostic pop
 
 // clang-format on

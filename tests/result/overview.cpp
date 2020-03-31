@@ -294,7 +294,7 @@ main() noexcept
 
     bsl::ut_scenario{"make errc"} = []() {
         bsl::ut_given{} = []() {
-            bsl::errc_type<> const myerror{42};
+            bsl::errc_type const myerror{42};
             result<test_result_monitor> const test{myerror};
 
             bsl::ut_then{} = [&test, &myerror]() {
@@ -313,7 +313,7 @@ main() noexcept
 
     bsl::ut_scenario{"make move"} = []() {
         bsl::ut_given{} = []() {
-            bsl::errc_type<> myerror{42};
+            bsl::errc_type myerror{42};
             result<test_result_monitor> const test{bsl::move(myerror)};
 
             bsl::ut_then{} = [&test, &myerror]() {

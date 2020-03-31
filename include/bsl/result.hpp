@@ -70,7 +70,7 @@ namespace bsl
     ///   @tparam T the nullable type
     ///   @tparam E the error type to use
     ///
-    template<typename T, typename E = errc_type<>>
+    template<typename T, typename E = errc_type>
     class result final
     {
         static_assert(!is_same<T, E>::value);

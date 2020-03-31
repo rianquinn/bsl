@@ -32,8 +32,8 @@
 #include "cstdint.hpp"
 #include "min.hpp"
 #include "npos.hpp"
+#include "numeric_limits.hpp"
 #include "reverse_iterator.hpp"
-#include "view.hpp"
 
 namespace bsl
 {
@@ -78,13 +78,13 @@ namespace bsl
     ///       bsl::span. Instead, a bsl::span is useful when you have an
     ///       array in memory that is not in your control (for example, a
     ///       device's memory).
-    ///   @include example_view_overview.hpp
+    ///   @include example_span_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type of element being viewed.
     ///
     template<typename T>
-    class span final : public view<T>
+    class span final    // NOLINT
     {
     public:
         /// @brief alias for: T
@@ -94,17 +94,21 @@ namespace bsl
         /// @brief alias for: bsl::uintmax
         using difference_type = bsl::uintmax;
         /// @brief alias for: T &
-        using reference = T &;
+        using reference_type = T &;
         /// @brief alias for: T &
-        using const_reference = T &;
+        using const_reference_type = T &;
         /// @brief alias for: T *
-        using pointer = T *;
+        using pointer_type = T *;
         /// @brief alias for: T const *
-        using const_pointer = T *;
+        using const_pointer_type = T *;
         /// @brief alias for: contiguous_iterator<T>
-        using iterator = contiguous_iterator<T>;
+        using iterator_type = contiguous_iterator<T>;
         /// @brief alias for: contiguous_iterator<T const>
-        using const_iterator = contiguous_iterator<T>;
+        using const_iterator_type = contiguous_iterator<T>;
+        /// @brief alias for: reverse_iterator<iterator>
+        using reverse_iterator_type = reverse_iterator<iterator_type>;
+        /// @brief alias for: reverse_iterator<const_iterator>
+        using const_reverse_iterator_type = reverse_iterator<const_iterator_type>;
 
         /// <!-- description -->
         ///   @brief Default constructor that creates a span with
@@ -136,9 +140,561 @@ namespace bsl
         ///   @param ptr a pointer to the array being spaned.
         ///   @param count the number of elements in the array being spaned.
         ///
-        constexpr span(pointer const ptr, size_type const count) noexcept    // --
-            : m_view{ptr, count}
-        {}
+        constexpr span(pointer_type const ptr, size_type const count) noexcept    // --
+            : m_ptr{ptr}, m_count{count}
+        {
+            if ((nullptr == m_ptr) || (0U == m_count)) {
+                *this = span{};
+            }
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "index". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///   @include span/example_span_at_if.hpp
+        ///
+        ///   SUPPRESSION: PRQA 4211 - false positive
+        ///   - We suppress this because M9-3-3 states that if a function
+        ///     doesn't modify a class member, it should be marked as const.
+        ///     This function, however, returns a non-const pointer to an
+        ///     object stored internal to the class, meaning it cannot be
+        ///     labeled const without breaking other AUTOSAR rules. This
+        ///     is no different than returning a non-const refernce which
+        ///     does not trip up PRQA so this must be a bug.
+        ///
+        ///   SUPPRESSION: PRQA 3706 - false positive
+        ///   - We suppress this because M5-0-15 states that pointer arithmetic
+        ///     is not allowed, and instead direct indexing or an array should
+        ///     be used. This took a while to sort out. The short story is,
+        ///     this is a false positive. M5-0-15 wants you to do ptr[X]
+        ///     instead of *(ptr + X), which is what we are doing here. This
+        ///     example is clearly shown in the second to last line in the
+        ///     example that MISRA 2008 provides. The language for this was
+        ///     cleaned up in MISRA 2012 as well. PRQA should be capable of
+        ///     detecting this.
+        ///
+        ///   SUPPRESSION: PRQA 4024 - false positive
+        ///   - We suppress this because A9-3-1 states that we should
+        ///     not provide a non-const reference or pointer to private
+        ///     member function, unless the class mimics a smart pointer or
+        ///     a containter. This class mimics a container.
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param index the index of the instance to return
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "index". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr pointer_type
+        at_if(size_type const index) noexcept    // PRQA S 4211
+        {
+            if ((nullptr == m_ptr) || (index >= m_count)) {
+                return nullptr;
+            }
+
+            return &m_ptr[index];    // PRQA S 3706, 4024 // NOLINT
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "index". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///   @include span/example_span_at_if.hpp
+        ///
+        ///   SUPPRESSION: PRQA 3706 - false positive
+        ///   - We suppress this because M5-0-15 states that pointer arithmetic
+        ///     is not allowed, and instead direct indexing or an array should
+        ///     be used. This took a while to sort out. The short story is,
+        ///     this is a false positive. M5-0-15 wants you to do ptr[X]
+        ///     instead of *(ptr + X), which is what we are doing here. This
+        ///     example is clearly shown in the second to last line in the
+        ///     example that MISRA 2008 provides. The language for this was
+        ///     cleaned up in MISRA 2012 as well. PRQA should be capable of
+        ///     detecting this.
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param index the index of the instance to return
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "index". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr const_pointer_type
+        at_if(size_type const index) const noexcept
+        {
+            if ((nullptr == m_ptr) || (index >= m_count)) {
+                return nullptr;
+            }
+
+            return &m_ptr[index];    // PRQA S 3706 // NOLINT
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "0". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///   @include span/example_span_front_if.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "0". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr pointer_type
+        front_if() noexcept
+        {
+            return this->at_if(0);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "0". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///   @include span/example_span_front_if.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "0". If the index is out of bounds, or the view is invalid,
+        ///     this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr const_pointer_type
+        front_if() const noexcept
+        {
+            return this->at_if(0);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "size() - 1". If the index is out of bounds, or the view is
+        ///     invalid, this function returns a nullptr.
+        ///   @include span/example_span_back_if.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "size() - 1". If the index is out of bounds, or the view is
+        ///     invalid, this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr pointer_type
+        back_if() noexcept
+        {
+            return this->at_if(m_count > 0 ? m_count - 1 : 0);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the instance of T stored at index
+        ///     "size() - 1". If the index is out of bounds, or the view is
+        ///     invalid, this function returns a nullptr.
+        ///   @include span/example_span_back_if.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the instance of T stored at index
+        ///     "size() - 1". If the index is out of bounds, or the view is
+        ///     invalid, this function returns a nullptr.
+        ///
+        [[nodiscard]] constexpr const_pointer_type
+        back_if() const noexcept
+        {
+            return this->at_if(m_count > 0 ? m_count - 1 : 0);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the array being viewed. If this is
+        ///     a default constructed view, or the view was constructed in
+        ///     error, this will return a nullptr.
+        ///   @include span/example_span_data.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the array being viewed. If this is
+        ///     a default constructed view, or the view was constructed in
+        ///     error, this will return a nullptr.
+        ///
+        [[nodiscard]] constexpr pointer_type
+        data() noexcept
+        {
+            return m_ptr;
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the array being viewed. If this is
+        ///     a default constructed view, or the view was constructed in
+        ///     error, this will return a nullptr.
+        ///   @include span/example_span_data.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the array being viewed. If this is
+        ///     a default constructed view, or the view was constructed in
+        ///     error, this will return a nullptr.
+        ///
+        [[nodiscard]] constexpr const_pointer_type
+        data() const noexcept
+        {
+            return m_ptr;
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to the first element of the view.
+        ///   @include span/example_span_begin.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns an iterator to the first element of the view.
+        ///
+        [[nodiscard]] constexpr iterator_type
+        begin() noexcept
+        {
+            return iterator_type{m_ptr, m_count, 0U};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to the first element of the view.
+        ///   @include span/example_span_begin.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns an iterator to the first element of the view.
+        ///
+        [[nodiscard]] constexpr const_iterator_type
+        begin() const noexcept
+        {
+            return const_iterator_type{m_ptr, m_count, 0U};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to the first element of the view.
+        ///   @include span/example_span_begin.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns an iterator to the first element of the view.
+        ///
+        [[nodiscard]] constexpr const_iterator_type
+        cbegin() const noexcept
+        {
+            return const_iterator_type{m_ptr, m_count, 0U};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to the element "i" in the view.
+        ///   @include span/example_span_iter.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param i the element in the array to return an iterator for.
+        ///   @return Returns an iterator to the element "i" in the view.
+        ///
+        [[nodiscard]] constexpr iterator_type
+        iter(size_type const i) noexcept
+        {
+            return iterator_type{m_ptr, m_count, i};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to the element "i" in the view.
+        ///   @include span/example_span_iter.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param i the element in the array to return an iterator for.
+        ///   @return Returns an iterator to the element "i" in the view.
+        ///
+        [[nodiscard]] constexpr const_iterator_type
+        iter(size_type const i) const noexcept
+        {
+            return const_iterator_type{m_ptr, m_count, i};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to the element "i" in the view.
+        ///   @include span/example_span_iter.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param i the element in the array to return an iterator for.
+        ///   @return Returns an iterator to the element "i" in the view.
+        ///
+        [[nodiscard]] constexpr const_iterator_type
+        citer(size_type const i) const noexcept
+        {
+            return const_iterator_type{m_ptr, m_count, i};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to one past the last element of the
+        ///     view. If you attempt to access this iterator, a nullptr will
+        ///     always be returned.
+        ///   @include span/example_span_end.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns an iterator to one past the last element of the
+        ///     view. If you attempt to access this iterator, a nullptr will
+        ///     always be returned.
+        ///
+        [[nodiscard]] constexpr iterator_type
+        end() noexcept
+        {
+            return iterator_type{m_ptr, m_count, m_count};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to one past the last element of the
+        ///     view. If you attempt to access this iterator, a nullptr will
+        ///     always be returned.
+        ///   @include span/example_span_end.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns an iterator to one past the last element of the
+        ///     view. If you attempt to access this iterator, a nullptr will
+        ///     always be returned.
+        ///
+        [[nodiscard]] constexpr const_iterator_type
+        end() const noexcept
+        {
+            return const_iterator_type{m_ptr, m_count, m_count};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns an iterator to one past the last element of the
+        ///     view. If you attempt to access this iterator, a nullptr will
+        ///     always be returned.
+        ///   @include span/example_span_end.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns an iterator to one past the last element of the
+        ///     view. If you attempt to access this iterator, a nullptr will
+        ///     always be returned.
+        ///
+        [[nodiscard]] constexpr const_iterator_type
+        cend() const noexcept
+        {
+            return const_iterator_type{m_ptr, m_count, m_count};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator to one past the last element
+        ///     of the view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include span/example_span_rbegin.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a reverse iterator to the last element of the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr reverse_iterator_type
+        rbegin() noexcept
+        {
+            return reverse_iterator_type{this->end()};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator to one past the last element
+        ///     of the view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include span/example_span_rbegin.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a reverse iterator to the last element of the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr const_reverse_iterator_type
+        rbegin() const noexcept
+        {
+            return const_reverse_iterator_type{this->end()};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator to one past the last element
+        ///     of the view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include span/example_span_rbegin.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a reverse iterator to the last element of the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr const_reverse_iterator_type
+        crbegin() const noexcept
+        {
+            return const_reverse_iterator_type{this->cend()};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator element "i" in the
+        ///     view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include span/example_span_riter.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param i the element in the array to return an iterator for.
+        ///   @return Returns a reverse iterator element "i" in the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr reverse_iterator_type
+        riter(size_type const i) noexcept
+        {
+            size_type ai{i >= m_count ? m_count : i + 1};
+            return reverse_iterator_type{this->iter(ai)};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator element "i" in the
+        ///     view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include span/example_span_riter.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param i the element in the array to return an iterator for.
+        ///   @return Returns a reverse iterator element "i" in the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr const_reverse_iterator_type
+        riter(size_type const i) const noexcept
+        {
+            size_type ai{i >= m_count ? m_count : i + 1};
+            return const_reverse_iterator_type{this->iter(ai)};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator element "i" in the
+        ///     view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include span/example_span_riter.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param i the element in the array to return an iterator for.
+        ///   @return Returns a reverse iterator element "i" in the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr const_reverse_iterator_type
+        criter(size_type const i) const noexcept
+        {
+            size_type ai{i >= m_count ? m_count : i + 1};
+            return const_reverse_iterator_type{this->citer(ai)};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator first element of the
+        ///     view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include span/example_span_rend.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a reverse iterator first element of the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr reverse_iterator_type
+        rend() noexcept
+        {
+            return reverse_iterator_type{this->begin()};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator first element of the
+        ///     view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include span/example_span_rend.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a reverse iterator first element of the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr const_reverse_iterator_type
+        rend() const noexcept
+        {
+            return const_reverse_iterator_type{this->begin()};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a reverse iterator first element of the
+        ///     view. When accessing the iterator, the iterator will
+        ///     always return the element T[internal index - 1], providing
+        ///     access to the range [size() - 1, 0) while internally storing the
+        ///     range [size(), 1) with element 0 representing the end(). For more
+        ///     information, see the bsl::reverse_iterator documentation.
+        ///   @include span/example_span_rend.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a reverse iterator first element of the
+        ///     view.
+        ///
+        [[nodiscard]] constexpr const_reverse_iterator_type
+        crend() const noexcept
+        {
+            return const_reverse_iterator_type{this->cbegin()};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns the number of elements in the array being
+        ///     viewed. If this is a default constructed view, or the view
+        ///     was constructed in error, this will return 0.
+        ///   @include span/example_span_size.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns the number of elements in the array being
+        ///     viewed. If this is a default constructed view, or the view
+        ///     was constructed in error, this will return 0.
+        ///
+        [[nodiscard]] constexpr size_type
+        size() const noexcept
+        {
+            return m_count;
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns the max number of elements the BSL supports.
+        ///   @include span/example_span_max_size.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns the max number of elements the BSL supports.
+        ///
+        [[nodiscard]] constexpr size_type
+        max_size() const noexcept
+        {
+            return numeric_limits<size_type>::max() / sizeof(T);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns size() * sizeof(T)
+        ///   @include span/example_span_size_bytes.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns size() * sizeof(T)
+        ///
+        [[nodiscard]] constexpr size_type
+        size_bytes() const noexcept
+        {
+            return m_count * sizeof(T);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns size() == 0
+        ///   @include span/example_span_empty.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns size() == 0
+        ///
+        [[nodiscard]] constexpr bool
+        empty() const noexcept
+        {
+            return 0U == m_count;
+        }
 
         /// <!-- description -->
         ///   @brief Returns subspan(0, count). If count is 0, an invalid
@@ -150,7 +706,23 @@ namespace bsl
         ///   @return Returns subspan(0, count). If count is 0, an invalid
         ///     span is returned.
         ///
-        [[nodiscard]] constexpr span
+        [[nodiscard]] constexpr span<T>
+        first(size_type count = npos) noexcept
+        {
+            return this->subspan(0, count);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns subspan(0, count). If count is 0, an invalid
+        ///     span is returned.
+        ///   @include span/example_span_first.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param count the number of elements of the new subspan
+        ///   @return Returns subspan(0, count). If count is 0, an invalid
+        ///     span is returned.
+        ///
+        [[nodiscard]] constexpr span<T const>
         first(size_type count = npos) const noexcept
         {
             return this->subspan(0, count);
@@ -170,11 +742,35 @@ namespace bsl
         ///     current span is returned. If the count is 0, an invalid span
         ///     is returned.
         ///
-        [[nodiscard]] constexpr span
+        [[nodiscard]] constexpr span<T>
+        last(size_type count = npos) noexcept
+        {
+            if (count > this->size()) {
+                count = this->size();
+            }
+
+            return this->subspan(this->size() - count, count);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns subspan(this->size() - count, count). If count
+        ///     is greater than the size of the current span, a copy of the
+        ///     current span is returned. If the count is 0, an invalid span
+        ///     is returned.
+        ///   @include span/example_span_last.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param count the number of elements of the new subspan
+        ///   @return Returns subspan(this->size() - count, count). If count
+        ///     is greater than the size of the current span, a copy of the
+        ///     current span is returned. If the count is 0, an invalid span
+        ///     is returned.
+        ///
+        [[nodiscard]] constexpr span<T const>
         last(size_type count = npos) const noexcept
         {
-            if (count >= this->size()) {
-                return *this;
+            if (count > this->size()) {
+                count = this->size();
             }
 
             return this->subspan(this->size() - count, count);
@@ -193,15 +789,44 @@ namespace bsl
         ///     the provided "pos" is greater than or equal to the size of
         ///     the current span, an invalid span is returned.
         ///
-        [[nodiscard]] constexpr span
+        [[nodiscard]] constexpr span<T>
+        subspan(size_type pos, size_type count = npos) noexcept
+        {
+            if (pos >= this->size()) {
+                return {};
+            }
+
+            return span<T>{this->at_if(pos), min(count, this->size() - pos)};
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns span{at_if(pos), min(count, size() - pos)}. If
+        ///     the provided "pos" is greater than or equal to the size of
+        ///     the current span, an invalid span is returned.
+        ///   @include span/example_span_subspan.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param pos the starting position of the new span
+        ///   @param count the number of elements of the new subspan
+        ///   @return Returns span{at_if(pos), min(count, size() - pos)}. If
+        ///     the provided "pos" is greater than or equal to the size of
+        ///     the current span, an invalid span is returned.
+        ///
+        [[nodiscard]] constexpr span<T const>
         subspan(size_type pos, size_type count = npos) const noexcept
         {
             if (pos >= this->size()) {
                 return {};
             }
 
-            return span{this->at_if(pos), min(count, this->size() - pos)};
+            return span<T const>{this->at_if(pos), min(count, this->size() - pos)};
         }
+
+    private:
+        /// @brief stores a pointer to the array being viewed
+        pointer_type m_ptr;
+        /// @brief stores the number of elements in the array being viewed
+        size_type m_count;
     };
 }
 

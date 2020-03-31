@@ -25,16 +25,21 @@
 #ifndef BSL_UT_HPP
 #define BSL_UT_HPP
 
-#include <stdlib.h>    // NOLINT
+#include <cstdlib>
 
 #include "color.hpp"
 #include "cstr_type.hpp"
 #include "exit_code.hpp"
 #include "forward.hpp"
 #include "invoke.hpp"
+#include "is_constant_evaluated.hpp"
 #include "main.hpp"
 #include "print.hpp"
 #include "source_location.hpp"
+
+#pragma clang diagnostic ignored "-Wunused-member-function"
+#pragma clang diagnostic ignored "-Wunneeded-member-function"
+#pragma clang diagnostic ignored "-Wunneeded-internal-declaration"
 
 namespace bsl
 {
@@ -122,14 +127,21 @@ namespace bsl
         [[maybe_unused]] constexpr ut_scenario &
         operator=(FUNC &&func) noexcept
         {
-            details::ut_current_test_case_name() = m_name;
-
-            bsl::invoke(bsl::forward<FUNC>(func));
-            if (nullptr != details::ut_reset_handler()) {
-                details::ut_reset_handler()();
+            if (!is_constant_evaluated()) {
+                details::ut_current_test_case_name() = m_name;
             }
 
-            details::ut_current_test_case_name() = nullptr;
+            bsl::invoke(bsl::forward<FUNC>(func));
+            if (!is_constant_evaluated()) {
+                if (nullptr != details::ut_reset_handler()) {
+                    details::ut_reset_handler()();
+                }
+            }
+
+            if (!is_constant_evaluated()) {
+                details::ut_current_test_case_name() = nullptr;
+            }
+
             return *this;
         }
 
@@ -214,8 +226,10 @@ namespace bsl
         operator=(FUNC &&func) noexcept
         {
             bsl::invoke(bsl::forward<FUNC>(func));
-            if (nullptr != details::ut_reset_handler()) {
-                details::ut_reset_handler()();
+            if (!is_constant_evaluated()) {
+                if (nullptr != details::ut_reset_handler()) {
+                    details::ut_reset_handler()();
+                }
             }
 
             return *this;
@@ -224,7 +238,8 @@ namespace bsl
 
     /// <!-- description -->
     ///   @brief Sets the unit test's reset handler. After each test has
-    ///     executed, this register handler will be called.
+    ///     executed, this register handler will be called. Note that the
+    ///     reset handler is not supported for compile-time checks.
     ///
     /// <!-- inputs/outputs -->
     ///   @param hdlr the handler to register as the reset handler
@@ -241,31 +256,25 @@ namespace bsl
     /// <!-- inputs/outputs -->
     ///   @return returns bsl::exit_success
     ///
-    inline bsl::exit_code
+    constexpr bsl::exit_code
     ut_success() noexcept
     {
-        bsl::print("%s%s%s\n", green, "All tests passed", reset_color);
+        if (!is_constant_evaluated()) {
+            bsl::print("%s%s%s\n", green, "All tests passed", reset_color);
+        }
+
         return bsl::exit_success;
     }
 
     /// <!-- description -->
-    ///   @brief Outputs a message and returns bsl::exit_failure
+    ///   @brief This is a non-constexpr function that can be used to detect
+    ///     when a unit test check fails. If this function is called at
+    ///     compile-time, it will not compile, resulting in a human readable
+    ///     error message.
     ///
-    /// <!-- inputs/outputs -->
-    ///   @param sloc used to identify the location in the unit test that a
-    ///     check failed.
-    ///
-    [[noreturn]] inline void
-    ut_failure(sloc_type const &sloc = here()) noexcept
-    {
-        bsl::print("%s%s%s ", red, "[UNIT TEST FAILED]", reset_color);
-        bsl::print("in test case \"");
-        bsl::print("%s%s%s", magenta, details::ut_current_test_case_name(), reset_color);
-        bsl::print("\"\n");
-        details::ut_print_here(sloc);
-
-        exit(bsl::exit_failure);
-    }
+    inline void
+    ut_check_failed() noexcept
+    {}
 
     /// <!-- description -->
     ///   @brief Checks to see if "test" is true. If test is false, this
@@ -278,10 +287,11 @@ namespace bsl
     ///     check failed.
     ///   @return returns test
     ///
-    [[maybe_unused]] inline bool
+    [[maybe_unused]] constexpr bool
     ut_check(bool const test, sloc_type const &sloc = here()) noexcept
     {
         if (!test) {
+            ut_check_failed();
             bsl::print("%s%s%s ", red, "[CHECK FAILED]", reset_color);
             bsl::print("in test case \"");
             bsl::print("%s%s%s", magenta, details::ut_current_test_case_name(), reset_color);

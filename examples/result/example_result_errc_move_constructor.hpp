@@ -38,8 +38,8 @@ namespace bsl
     {
         constexpr bsl::int32 val{42};
 
-        bsl::errc_type<> my_errc1{val};
-        constexpr bsl::errc_type<> my_errc2{val};
+        bsl::errc_type my_errc1{val};
+        constexpr bsl::errc_type my_errc2{val};
 
         bsl::result<bool> const res{bsl::move(my_errc1)};
 

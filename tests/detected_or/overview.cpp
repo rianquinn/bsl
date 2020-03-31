@@ -30,9 +30,6 @@
 
 namespace
 {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunneeded-member-function"
-
     class myclass final
     {
     public:
@@ -48,8 +45,6 @@ namespace
 
     template<typename T>
     using set_type = decltype(bsl::declval<T &>().set());
-
-#pragma clang diagnostic pop
 }
 
 /// <!-- description -->

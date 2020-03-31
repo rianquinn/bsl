@@ -48,10 +48,10 @@ namespace bsl
     ///
     class byte final
     {
-        /// @brief stores the byte itself
-        bsl::uint8 m_data;
-
     public:
+        /// @brief alias for: T
+        using value_type = bsl::uint8;
+
         /// <!-- description -->
         ///   @brief Default constructor. This ensures the byte type is a
         ///     POD type, allowing it to be constructed as a global resource.
@@ -63,7 +63,7 @@ namespace bsl
         byte() noexcept = default;
 
         /// <!-- description -->
-        ///   @brief Creates a bsl::byte from a bsl::uint8
+        ///   @brief Creates a bsl::byte from a value_type
         ///   @include byte/example_byte_by_value_constructor.hpp
         ///
         ///   SUPPRESSION: PRQA 2180 - exception required
@@ -77,7 +77,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param val the value of the integer to create the bsl::byte from.
         ///
-        constexpr byte(bsl::uint8 const val) noexcept    // PRQA S 2180 // NOLINT
+        constexpr byte(value_type const val) noexcept    // PRQA S 2180 // NOLINT
             : m_data{val}
         {}
 
@@ -148,12 +148,16 @@ namespace bsl
         ///   @return Returns the bsl::byte as a given integer type using a
         ///     static_cast to perform the conversion.
         ///
-        template<typename T = bsl::uint8, enable_if_t<is_integral<T>::value, bool> = true>
+        template<typename T = value_type, enable_if_t<is_integral<T>::value, bool> = true>
         [[nodiscard]] constexpr T
         to_integer() const noexcept
         {
             return static_cast<T>(m_data);
         }
+
+    private:
+        /// @brief stores the byte itself
+        value_type m_data;
     };
 
     /// <!-- description -->

@@ -47,9 +47,9 @@ namespace bsl
         template<typename R, typename... ARGS>
         struct delegate_vtbl final
         {
-            void (*m_copy_func)(void * const, void const * const);
-            void (*m_move_func)(void * const, void * const);
-            void (*m_free_func)(void * const);
+            void (*m_copy_func)(void *const, void const *const);
+            void (*m_move_func)(void *const, void *const);
+            void (*m_free_func)(void *const);
         };
 
         /// <!-- description -->
@@ -62,7 +62,7 @@ namespace bsl
         ///
         template<typename FUNC>
         [[nodiscard]] static constexpr FUNC &
-        get_func(void * const heap) noexcept
+        get_func(void *const heap) noexcept
         {
             return *static_cast<FUNC *>(heap);
         }
@@ -77,7 +77,7 @@ namespace bsl
         ///
         template<typename FUNC>
         [[nodiscard]] static constexpr FUNC const &
-        get_func(void const * const heap) noexcept
+        get_func(void const *const heap) noexcept
         {
             return *static_cast<FUNC const *>(heap);
         }
@@ -99,7 +99,7 @@ namespace bsl
         ///
         template<typename FUNC>
         constexpr void
-        copy_func(void * const heap, FUNC const &func) noexcept
+        copy_func(void *const heap, FUNC const &func) noexcept
         {
             bsl::construct_at<FUNC>(heap, func);
         }
@@ -121,7 +121,7 @@ namespace bsl
         ///
         template<typename FUNC>
         constexpr void
-        move_func(void * const heap, FUNC &&func) noexcept
+        move_func(void *const heap, FUNC &&func) noexcept
         {
             bsl::construct_at<FUNC>(heap, bsl::move(func));
         }
@@ -149,7 +149,7 @@ namespace bsl
         ///
         template<typename FUNC, typename R, typename... ARGS>
         [[maybe_unused]] constexpr R
-        call_func_generic(void const * const heap, ARGS &&... args) noexcept(false)
+        call_func_generic(void const *const heap, ARGS &&... args) noexcept(false)
         {
             return get_func<FUNC>(heap)(bsl::forward<ARGS>(args)...);
         }
@@ -166,7 +166,7 @@ namespace bsl
         ///
         template<typename FUNC>
         constexpr void
-        copy_func_generic(void * const heap, void const * const func) noexcept
+        copy_func_generic(void *const heap, void const *const func) noexcept
         {
             copy_func<FUNC>(heap, get_func<FUNC>(func));
         }
@@ -183,7 +183,7 @@ namespace bsl
         ///
         template<typename FUNC>
         constexpr void
-        move_func_generic(void * const heap, void * const func) noexcept
+        move_func_generic(void *const heap, void *const func) noexcept
         {
             move_func<FUNC>(heap, bsl::move(get_func<FUNC>(func)));
         }
@@ -203,7 +203,7 @@ namespace bsl
         ///
         template<typename FUNC>
         constexpr void
-        free_func_generic(void * const heap) noexcept
+        free_func_generic(void *const heap) noexcept
         {
             bsl::destroy_at<FUNC>(&get_func<FUNC>(heap));
         }
@@ -229,10 +229,7 @@ namespace bsl
         get_delegate_vtbl() noexcept
         {
             static delegate_vtbl<R, ARGS...> s_vtbl{
-                &copy_func_generic<FUNC>,
-                &move_func_generic<FUNC>,
-                &free_func_generic<FUNC>
-            };
+                &copy_func_generic<FUNC>, &move_func_generic<FUNC>, &free_func_generic<FUNC>};
 
             return &s_vtbl;
         }

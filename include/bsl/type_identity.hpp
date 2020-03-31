@@ -35,7 +35,6 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Provides the member typedef "type" that names T
     ///     (i.e., the identity transformation).
-    ///   @include example_type_identity_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type that defines the member typedef "type"

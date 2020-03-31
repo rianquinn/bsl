@@ -27,8 +27,6 @@
 #include <bsl/string_view.hpp>
 #include <bsl/ut.hpp>
 
-#pragma clang diagnostic ignored "-Wunneeded-internal-declaration"
-
 namespace
 {
     constexpr bsl::string_view msg1{"Hello World"};

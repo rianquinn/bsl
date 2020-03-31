@@ -36,8 +36,8 @@ namespace bsl
     inline void
     example_basic_string_view_compare() noexcept
     {
-        constexpr bsl::basic_string_view<bsl::char_type> str1{"Hello World"};
-        constexpr bsl::basic_string_view<bsl::char_type> str2{"Hello World"};
+        constexpr bsl::basic_string_view<bsl::char_type> str1{"Hello"};
+        constexpr bsl::basic_string_view<bsl::char_type> str2{"Hello"};
 
         if (str1.compare(str2) == 0) {
             bsl::print("success\n");

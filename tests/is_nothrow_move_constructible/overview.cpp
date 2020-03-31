@@ -27,9 +27,6 @@
 
 namespace
 {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-member-function"
-
     class myclass final
     {};
 
@@ -99,8 +96,6 @@ namespace
         constexpr myclass_except(myclass_except &&) noexcept(false) = delete;
         constexpr myclass_except &operator=(myclass_except &&) &noexcept(false) = delete;
     };
-
-#pragma clang diagnostic pop
 }
 
 /// <!-- description -->

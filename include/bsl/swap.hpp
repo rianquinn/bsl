@@ -44,6 +44,7 @@ namespace bsl
     ///   @tparam T the type that defines the values being swapped
     ///   @param lhs the value being swapped with rhs
     ///   @param rhs the value being swapped with lhs
+    ///   @return return's void
     ///
     /// <!-- inputs/outputs -->
     ///   @throw throws if move construction or assignment of T throws

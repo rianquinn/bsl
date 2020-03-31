@@ -51,6 +51,7 @@ namespace bsl
     ///     BSL classes, we do not support the member version of swap() and
     ///     fill() as they are not compliant with AUTOSAR (due to the name
     ///     reuse). User bsl::swap() and bsl::fill() instead.
+    ///   @include example_array_overview.hpp
     ///
     /// <!-- template parameters -->
     ///   @tparam T the type of element being encapsulated.
@@ -71,17 +72,21 @@ namespace bsl
         /// @brief alias for: bsl::uintmax
         using difference_type = bsl::uintmax;
         /// @brief alias for: T &
-        using reference = T &;
+        using reference_type = T &;
         /// @brief alias for: T const &
-        using const_reference = T const &;
+        using const_reference_type = T const &;
         /// @brief alias for: T *
-        using pointer = T *;
+        using pointer_type = T *;
         /// @brief alias for: T const *
-        using const_pointer = T const *;
+        using const_pointer_type = T const *;
         /// @brief alias for: contiguous_iterator<T>
-        using iterator = contiguous_iterator<T>;
+        using iterator_type = contiguous_iterator<T>;
         /// @brief alias for: contiguous_iterator<T const>
-        using const_iterator = contiguous_iterator<T const>;
+        using const_iterator_type = contiguous_iterator<T const>;
+        /// @brief alias for: reverse_iterator<iterator>
+        using reverse_iterator_type = reverse_iterator<iterator_type>;
+        /// @brief alias for: reverse_iterator<const_iterator>
+        using const_reverse_iterator_type = reverse_iterator<const_iterator_type>;
 
         /// <!-- description -->
         ///   @brief Returns a pointer to the instance of T stored at index
@@ -112,7 +117,7 @@ namespace bsl
         ///     "index". If the index is out of bounds, or the array is invalid,
         ///     this function returns a nullptr.
         ///
-        [[nodiscard]] constexpr pointer
+        [[nodiscard]] constexpr pointer_type
         at_if(size_type const index) noexcept
         {
             if (index >= N) {
@@ -145,7 +150,7 @@ namespace bsl
         ///     "index". If the index is out of bounds, or the array is invalid,
         ///     this function returns a nullptr.
         ///
-        [[nodiscard]] constexpr const_pointer
+        [[nodiscard]] constexpr const_pointer_type
         at_if(size_type const index) const noexcept
         {
             if (index >= N) {
@@ -162,7 +167,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return Returns a reference to the first element in the array.
         ///
-        [[nodiscard]] constexpr reference
+        [[nodiscard]] constexpr reference_type
         front() noexcept
         {
             return *this->at_if(0);
@@ -175,10 +180,36 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return Returns a reference to the first element in the array.
         ///
-        [[nodiscard]] constexpr const_reference
+        [[nodiscard]] constexpr const_reference_type
         front() const noexcept
         {
             return *this->at_if(0);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the first element in the array.
+        ///   @include array/example_array_front_if.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the first element in the array.
+        ///
+        [[nodiscard]] constexpr pointer_type
+        front_if() noexcept
+        {
+            return this->at_if(0);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the first element in the array.
+        ///   @include array/example_array_front_if.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the first element in the array.
+        ///
+        [[nodiscard]] constexpr const_pointer_type
+        front_if() const noexcept
+        {
+            return this->at_if(0);
         }
 
         /// <!-- description -->
@@ -188,7 +219,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return Returns a reference to the last element in the array.
         ///
-        [[nodiscard]] constexpr reference
+        [[nodiscard]] constexpr reference_type
         back() noexcept
         {
             return *this->at_if(N - 1);
@@ -201,23 +232,49 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return Returns a reference to the last element in the array.
         ///
-        [[nodiscard]] constexpr const_reference
+        [[nodiscard]] constexpr const_reference_type
         back() const noexcept
         {
             return *this->at_if(N - 1);
         }
 
         /// <!-- description -->
+        ///   @brief Returns a pointer to the last element in the array.
+        ///   @include array/example_array_back_if.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the last element in the array.
+        ///
+        [[nodiscard]] constexpr pointer_type
+        back_if() noexcept
+        {
+            return this->at_if(N - 1);
+        }
+
+        /// <!-- description -->
+        ///   @brief Returns a pointer to the last element in the array.
+        ///   @include array/example_array_back_if.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns a pointer to the last element in the array.
+        ///
+        [[nodiscard]] constexpr const_pointer_type
+        back_if() const noexcept
+        {
+            return this->at_if(N - 1);
+        }
+
+        /// <!-- description -->
         ///   @brief Returns a pointer to the array being encapsulated.
         ///   @include array/example_array_data.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @return Returns a pointer to the array being encapsulated.
         ///
-        [[nodiscard]] constexpr pointer
+        [[nodiscard]] constexpr pointer_type
         data() noexcept
         {
-            return m_data;
+            return m_data;    // NOLINT
         }
 
         /// <!-- description -->
@@ -227,10 +284,10 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return Returns a pointer to the array being encapsulated.
         ///
-        [[nodiscard]] constexpr const_pointer
+        [[nodiscard]] constexpr const_pointer_type
         data() const noexcept
         {
-            return m_data;
+            return m_data;    // NOLINT
         }
 
         /// <!-- description -->
@@ -240,10 +297,10 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return Returns an iterator to the first element of the array.
         ///
-        [[nodiscard]] constexpr iterator
+        [[nodiscard]] constexpr iterator_type
         begin() noexcept
         {
-            return iterator{m_data, N, 0U};
+            return iterator_type{this->front_if(), N, 0U};
         }
 
         /// <!-- description -->
@@ -253,10 +310,10 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return Returns an iterator to the first element of the array.
         ///
-        [[nodiscard]] constexpr const_iterator
+        [[nodiscard]] constexpr const_iterator_type
         begin() const noexcept
         {
-            return const_iterator{m_data, N, 0U};
+            return const_iterator_type{this->front_if(), N, 0U};
         }
 
         /// <!-- description -->
@@ -266,10 +323,10 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return Returns an iterator to the first element of the array.
         ///
-        [[nodiscard]] constexpr const_iterator
+        [[nodiscard]] constexpr const_iterator_type
         cbegin() const noexcept
         {
-            return const_iterator{m_data, N, 0U};
+            return const_iterator_type{this->front_if(), N, 0U};
         }
 
         /// <!-- description -->
@@ -277,12 +334,13 @@ namespace bsl
         ///   @include array/example_array_iter.hpp
         ///
         /// <!-- inputs/outputs -->
+        ///   @param i the element in the array to return an iterator for.
         ///   @return Returns an iterator to the element "i" in the array.
         ///
-        [[nodiscard]] constexpr iterator
+        [[nodiscard]] constexpr iterator_type
         iter(size_type const i) noexcept
         {
-            return iterator{m_data, N, i};
+            return iterator_type{this->front_if(), N, i};
         }
 
         /// <!-- description -->
@@ -290,12 +348,13 @@ namespace bsl
         ///   @include array/example_array_iter.hpp
         ///
         /// <!-- inputs/outputs -->
+        ///   @param i the element in the array to return an iterator for.
         ///   @return Returns an iterator to the element "i" in the array.
         ///
-        [[nodiscard]] constexpr const_iterator
+        [[nodiscard]] constexpr const_iterator_type
         iter(size_type const i) const noexcept
         {
-            return const_iterator{m_data, N, i};
+            return const_iterator_type{this->front_if(), N, i};
         }
 
         /// <!-- description -->
@@ -303,12 +362,13 @@ namespace bsl
         ///   @include array/example_array_iter.hpp
         ///
         /// <!-- inputs/outputs -->
+        ///   @param i the element in the array to return an iterator for.
         ///   @return Returns an iterator to the element "i" in the array.
         ///
-        [[nodiscard]] constexpr const_iterator
+        [[nodiscard]] constexpr const_iterator_type
         citer(size_type const i) const noexcept
         {
-            return const_iterator{m_data, N, i};
+            return const_iterator_type{this->front_if(), N, i};
         }
 
         /// <!-- description -->
@@ -322,10 +382,10 @@ namespace bsl
         ///     array. If you attempt to access this iterator, a nullptr will
         ///     always be returned.
         ///
-        [[nodiscard]] constexpr iterator
+        [[nodiscard]] constexpr iterator_type
         end() noexcept
         {
-            return iterator{m_data, N, N};
+            return iterator_type{this->front_if(), N, N};
         }
 
         /// <!-- description -->
@@ -339,10 +399,10 @@ namespace bsl
         ///     array. If you attempt to access this iterator, a nullptr will
         ///     always be returned.
         ///
-        [[nodiscard]] constexpr const_iterator
+        [[nodiscard]] constexpr const_iterator_type
         end() const noexcept
         {
-            return const_iterator{m_data, N, N};
+            return const_iterator_type{this->front_if(), N, N};
         }
 
         /// <!-- description -->
@@ -356,10 +416,10 @@ namespace bsl
         ///     array. If you attempt to access this iterator, a nullptr will
         ///     always be returned.
         ///
-        [[nodiscard]] constexpr const_iterator
+        [[nodiscard]] constexpr const_iterator_type
         cend() const noexcept
         {
-            return const_iterator{m_data, N, N};
+            return const_iterator_type{this->front_if(), N, N};
         }
 
         /// <!-- description -->
@@ -375,10 +435,10 @@ namespace bsl
         ///   @return Returns a reverse iterator to the last element of the
         ///     array.
         ///
-        [[nodiscard]] constexpr reverse_iterator<iterator>
+        [[nodiscard]] constexpr reverse_iterator_type
         rbegin() noexcept
         {
-            return reverse_iterator<iterator>{this->end()};
+            return reverse_iterator_type{this->end()};
         }
 
         /// <!-- description -->
@@ -394,10 +454,10 @@ namespace bsl
         ///   @return Returns a reverse iterator to the last element of the
         ///     array.
         ///
-        [[nodiscard]] constexpr reverse_iterator<const_iterator>
+        [[nodiscard]] constexpr const_reverse_iterator_type
         rbegin() const noexcept
         {
-            return reverse_iterator<const_iterator>{this->end()};
+            return const_reverse_iterator_type{this->end()};
         }
 
         /// <!-- description -->
@@ -413,10 +473,10 @@ namespace bsl
         ///   @return Returns a reverse iterator to the last element of the
         ///     array.
         ///
-        [[nodiscard]] constexpr reverse_iterator<const_iterator>
+        [[nodiscard]] constexpr const_reverse_iterator_type
         crbegin() const noexcept
         {
-            return reverse_iterator<const_iterator>{this->cend()};
+            return const_reverse_iterator_type{this->cend()};
         }
 
         /// <!-- description -->
@@ -429,14 +489,15 @@ namespace bsl
         ///   @include array/example_array_riter.hpp
         ///
         /// <!-- inputs/outputs -->
+        ///   @param i the element in the array to return an iterator for.
         ///   @return Returns a reverse iterator element "i" in the
         ///     array.
         ///
-        [[nodiscard]] constexpr reverse_iterator<iterator>
+        [[nodiscard]] constexpr reverse_iterator_type
         riter(size_type const i) noexcept
         {
             size_type ai{i >= N ? N : i + 1};
-            return reverse_iterator<iterator>{this->iter(ai)};
+            return reverse_iterator_type{this->iter(ai)};
         }
 
         /// <!-- description -->
@@ -449,14 +510,15 @@ namespace bsl
         ///   @include array/example_array_riter.hpp
         ///
         /// <!-- inputs/outputs -->
+        ///   @param i the element in the array to return an iterator for.
         ///   @return Returns a reverse iterator element "i" in the
         ///     array.
         ///
-        [[nodiscard]] constexpr reverse_iterator<const_iterator>
+        [[nodiscard]] constexpr const_reverse_iterator_type
         riter(size_type const i) const noexcept
         {
             size_type ai{i >= N ? N : i + 1};
-            return reverse_iterator<const_iterator>{this->iter(ai)};
+            return const_reverse_iterator_type{this->iter(ai)};
         }
 
         /// <!-- description -->
@@ -469,14 +531,15 @@ namespace bsl
         ///   @include array/example_array_riter.hpp
         ///
         /// <!-- inputs/outputs -->
+        ///   @param i the element in the array to return an iterator for.
         ///   @return Returns a reverse iterator element "i" in the
         ///     array.
         ///
-        [[nodiscard]] constexpr reverse_iterator<const_iterator>
+        [[nodiscard]] constexpr const_reverse_iterator_type
         criter(size_type const i) const noexcept
         {
             size_type ai{i >= N ? N : i + 1};
-            return reverse_iterator<const_iterator>{this->citer(ai)};
+            return const_reverse_iterator_type{this->citer(ai)};
         }
 
         /// <!-- description -->
@@ -492,10 +555,10 @@ namespace bsl
         ///   @return Returns a reverse iterator first element of the
         ///     array.
         ///
-        [[nodiscard]] constexpr reverse_iterator<iterator>
+        [[nodiscard]] constexpr reverse_iterator_type
         rend() noexcept
         {
-            return reverse_iterator<iterator>{this->begin()};
+            return reverse_iterator_type{this->begin()};
         }
 
         /// <!-- description -->
@@ -511,10 +574,10 @@ namespace bsl
         ///   @return Returns a reverse iterator first element of the
         ///     array.
         ///
-        [[nodiscard]] constexpr reverse_iterator<const_iterator>
+        [[nodiscard]] constexpr const_reverse_iterator_type
         rend() const noexcept
         {
-            return reverse_iterator<const_iterator>{this->begin()};
+            return const_reverse_iterator_type{this->begin()};
         }
 
         /// <!-- description -->
@@ -530,10 +593,10 @@ namespace bsl
         ///   @return Returns a reverse iterator first element of the
         ///     array.
         ///
-        [[nodiscard]] constexpr reverse_iterator<const_iterator>
+        [[nodiscard]] constexpr const_reverse_iterator_type
         crend() const noexcept
         {
-            return reverse_iterator<const_iterator>{this->cbegin()};
+            return const_reverse_iterator_type{this->cbegin()};
         }
 
         /// <!-- description -->
@@ -613,7 +676,7 @@ namespace bsl
         bool eq{true};
 
         bsl::for_each(lhs, [&rhs, &eq](auto &e, auto i) -> bool {
-            if (e != rhs.at_if(i)) {
+            if (e != *rhs.at_if(i)) {
                 eq = false;
                 return bsl::for_each_break;
             }
@@ -627,7 +690,7 @@ namespace bsl
     /// <!-- description -->
     ///   @brief Returns false if two arrays have the same size and contain
     ///     the same contents. Returns true otherwise.
-    ///   @include array/example_array_equals.hpp
+    ///   @include array/example_array_not_equals.hpp
     ///   @related bsl::array
     ///
     /// <!-- inputs/outputs -->

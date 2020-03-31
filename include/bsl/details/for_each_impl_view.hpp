@@ -27,6 +27,7 @@
 
 #include "value_type_for.hpp"
 
+#include "../discard.hpp"
 #include "../invoke_result.hpp"
 #include "../is_bool.hpp"
 #include "../is_invocable.hpp"
@@ -59,7 +60,26 @@ namespace bsl
             bool EO = is_invocable<FUNC, value_type_for<VIEW> &>::value,
             bool EI = is_invocable<FUNC, value_type_for<VIEW> &, bsl::uintmax>::value>
         class for_each_impl_view final
-        {};
+        {
+            static_assert(
+                sizeof(FUNC) != sizeof(FUNC),    // NOLINT
+                "the function you provided to bsl::for_each is invalid");
+
+            /// <!-- description -->
+            ///   @brief This function is only provided to reduce the garbage
+            ///     the compiler spits out when an error occurs.
+            ///
+            /// <!-- inputs/outputs -->
+            ///   @param v the view to iterator over
+            ///   @param f the function to execute on each iteration
+            ///
+            static constexpr void
+            call(VIEW &&v, FUNC &&f) noexcept
+            {
+                bsl::discard(v);
+                bsl::discard(f);
+            }
+        };
 
         /// @class
         ///

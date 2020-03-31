@@ -30,6 +30,7 @@
 namespace bsl
 {
     /// @brief provides the default string_view prototype
+    /// @related bsl::basic_string_view
     using string_view = basic_string_view<char_type>;
 }
 

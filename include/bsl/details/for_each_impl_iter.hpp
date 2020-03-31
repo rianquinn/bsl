@@ -27,6 +27,7 @@
 
 #include "value_type_for.hpp"
 
+#include "../discard.hpp"
 #include "../invoke_result.hpp"
 #include "../is_bool.hpp"
 #include "../is_invocable.hpp"
@@ -61,7 +62,28 @@ namespace bsl
             bool EO = is_invocable<FUNC, value_type_for<ITER1> &>::value,
             bool EI = is_invocable<FUNC, value_type_for<ITER1> &, bsl::uintmax>::value>
         class for_each_impl_iter final
-        {};
+        {
+            static_assert(
+                sizeof(FUNC) != sizeof(FUNC),    // NOLINT
+                "the function you provided to bsl::for_each is invalid");
+
+            /// <!-- description -->
+            ///   @brief This function is only provided to reduce the garbage
+            ///     the compiler spits out when an error occurs.
+            ///
+            /// <!-- inputs/outputs -->
+            ///   @param begin points to the first element being iterated
+            ///   @param end points to the last element being iterated
+            ///   @param f the function to execute on each iteration
+            ///
+            static constexpr void
+            call(ITER1 &&begin, ITER2 &&end, FUNC &&f) noexcept
+            {
+                bsl::discard(begin);
+                bsl::discard(end);
+                bsl::discard(f);
+            }
+        };
 
         /// @class
         ///
@@ -102,7 +124,7 @@ namespace bsl
             call(ITER &&begin, ITER &&end, FUNC &&f) noexcept(
                 is_nothrow_invocable<FUNC, value_type_for<ITER> &>::value)
             {
-                for (ITER iter{begin}; iter != end; ++iter) {
+                for (ITER iter{begin}; iter < end; ++iter) {
                     if constexpr (is_bool<ret_type>::value) {
                         if (!invoke(bsl::forward<FUNC>(f), *iter.get_if())) {
                             break;
@@ -154,7 +176,7 @@ namespace bsl
             call(ITER &&begin, ITER &&end, FUNC &&f) noexcept(
                 is_nothrow_invocable<FUNC, value_type_for<ITER> &, bsl::uintmax>::value)
             {
-                for (ITER iter{begin}; iter != end; ++iter) {
+                for (ITER iter{begin}; iter < end; ++iter) {
                     if constexpr (is_bool<ret_type>::value) {
                         if (!invoke(bsl::forward<FUNC>(f), *iter.get_if(), iter.index())) {
                             break;

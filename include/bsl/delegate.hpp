@@ -38,16 +38,18 @@
 
 namespace bsl
 {
+    /// @cond doxygen off
+
     template<typename F>
     class delegate;
+
+    /// @endcond doxygen on
 
     /// @brief the total size of the heap
     constexpr bsl::uintmax delegate_heap_size{16};
     /// @brief the alignment of the heap
     constexpr bsl::uintmax delegate_heap_align{32};
 
-    /// @class
-    ///
     /// <!-- description -->
     ///   @brief A bsl::delegate is similar to a std::function with some
     ///     key differences:
@@ -80,14 +82,14 @@ namespace bsl
     ///   @tparam ARGS the argument to pass to the delegate
     ///
     template<typename R, typename... ARGS>
-    class delegate<R(ARGS...)> // NOLINT
+    class delegate<R(ARGS...)>    // NOLINT
     {
         /// @brief defines the type used to store the wrapped function
         using heap_type = aligned_storage_t<delegate_heap_size, delegate_heap_align>;
         /// @brief defines the type used to copy, move and free the delegate
         using vtbl_type = details::delegate_vtbl<R, ARGS...> *;
         /// @brief defines the type of function to call when op() is called
-        using call_type = R (*)(void const * const, ARGS &&...);
+        using call_type = R (*)(void const *const, ARGS &&...);
 
         /// @brief stores the wrapped function
         heap_type m_heap;
@@ -160,7 +162,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param func a pointer to the function to wrap
         ///
-        constexpr delegate(R(* func)(ARGS...)) noexcept // NOLINT
+        constexpr delegate(R (*func)(ARGS...)) noexcept    // NOLINT
             : m_heap{}, m_vtbl{}, m_call{}
         {
             if (nullptr != func) {
@@ -180,11 +182,10 @@ namespace bsl
         ///   @param mfp a pointer to the member function to wrap
         ///
         template<typename T, typename U>
-        constexpr delegate(T *t, R (U::*mfp)(ARGS...)) noexcept
-            : m_heap{}, m_vtbl{}, m_call{}
+        constexpr delegate(T *t, R (U::*mfp)(ARGS...)) noexcept : m_heap{}, m_vtbl{}, m_call{}
         {
             if (nullptr != t && nullptr != mfp) {
-                auto func = [mfp, t](ARGS && ...args) -> R {
+                auto func = [mfp, t](ARGS &&... args) -> R {
                     return (t->*mfp)(bsl::forward<ARGS>(args)...);
                 };
 
@@ -206,11 +207,10 @@ namespace bsl
         ///   @param mfp a pointer to the member function to wrap
         ///
         template<typename T, typename U>
-        constexpr delegate(T *t, R (U::*mfp)(ARGS...) const) noexcept
-            : m_heap{}, m_vtbl{}, m_call{}
+        constexpr delegate(T *t, R (U::*mfp)(ARGS...) const) noexcept : m_heap{}, m_vtbl{}, m_call{}
         {
             if (nullptr != t && nullptr != mfp) {
-                auto func = [mfp, t](ARGS && ...args) -> R {
+                auto func = [mfp, t](ARGS &&... args) -> R {
                     return (t->*mfp)(bsl::forward<ARGS>(args)...);
                 };
 
@@ -224,7 +224,6 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief Copies a delegate
-        ///   @include delegate/example_delegate_copy_constructor.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the delegate to copy
@@ -239,7 +238,6 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief Moves a delegate
-        ///   @include delegate/example_delegate_move_constructor.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the delegate to move
@@ -254,7 +252,6 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief Copies a delegate
-        ///   @include delegate/example_delegate_copy_assignment.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the delegate to copy
@@ -270,7 +267,6 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief Moves a delegate
-        ///   @include delegate/example_delegate_move_assignment.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @param o the delegate to move
@@ -314,7 +310,7 @@ namespace bsl
         ///     bsl::errc_bad_function if the delegate is empty(),
         ///     bsl::errc_success otherwise.
         ///
-        [[maybe_unused]] constexpr conditional_t<is_void<R>::value, bsl::errc_type<>, result<R>>
+        [[maybe_unused]] constexpr conditional_t<is_void<R>::value, bsl::errc_type, result<R>>
         operator()(ARGS... args) const
         {
             if constexpr (is_void<R>::value) {
@@ -354,8 +350,6 @@ namespace bsl
 
     /// @cond doxygen off
 
-    /// @class
-    ///
     /// <!-- description -->
     ///   @brief A bsl::delegate is similar to a std::function with some
     ///     key differences:
@@ -388,14 +382,14 @@ namespace bsl
     ///   @tparam ARGS the argument to pass to the delegate
     ///
     template<typename R, typename... ARGS>
-    class delegate<R(ARGS...) noexcept> // NOLINT
+    class delegate<R(ARGS...) noexcept>    // NOLINT
     {
         /// @brief defines the type used to store the wrapped function
         using heap_type = aligned_storage_t<delegate_heap_size, delegate_heap_align>;
         /// @brief defines the type used to copy, move and free the delegate
         using vtbl_type = details::delegate_vtbl<R, ARGS...> *;
         /// @brief defines the type of function to call when op() is called
-        using call_type = R (*)(void const * const, ARGS &&...);
+        using call_type = R (*)(void const *const, ARGS &&...);
 
         /// @brief stores the wrapped function
         heap_type m_heap;
@@ -468,7 +462,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param func a pointer to the function to wrap
         ///
-        constexpr delegate(R(* func)(ARGS...) noexcept) noexcept // NOLINT
+        constexpr delegate(R (*func)(ARGS...) noexcept) noexcept    // NOLINT
             : m_heap{}, m_vtbl{}, m_call{}
         {
             if (nullptr != func) {
@@ -492,7 +486,7 @@ namespace bsl
             : m_heap{}, m_vtbl{}, m_call{}
         {
             if (nullptr != t && nullptr != mfp) {
-                auto func = [mfp, t](ARGS && ...args) noexcept -> R {
+                auto func = [mfp, t](ARGS &&... args) noexcept -> R {
                     return (t->*mfp)(bsl::forward<ARGS>(args)...);
                 };
 
@@ -518,7 +512,7 @@ namespace bsl
             : m_heap{}, m_vtbl{}, m_call{}
         {
             if (nullptr != t && nullptr != mfp) {
-                auto func = [mfp, t](ARGS && ...args) noexcept -> R {
+                auto func = [mfp, t](ARGS &&... args) noexcept -> R {
                     return (t->*mfp)(bsl::forward<ARGS>(args)...);
                 };
 
@@ -622,7 +616,7 @@ namespace bsl
         ///     bsl::errc_bad_function if the delegate is empty(),
         ///     bsl::errc_success otherwise.
         ///
-        [[maybe_unused]] constexpr conditional_t<is_void<R>::value, bsl::errc_type<>, result<R>>
+        [[maybe_unused]] constexpr conditional_t<is_void<R>::value, bsl::errc_type, result<R>>
         operator()(ARGS... args) const noexcept
         {
             if constexpr (is_void<R>::value) {
@@ -660,8 +654,6 @@ namespace bsl
         }
     };
 
-    /// @endcond doxygen on
-
     /// @brief deduction guideline for bsl::delegate
     delegate()->delegate<void() noexcept>;
 
@@ -688,6 +680,8 @@ namespace bsl
     /// @brief deduction guideline for bsl::delegate
     template<typename T, typename U, typename R, typename... ARGS>
     delegate(T *t, R (U::*)(ARGS...) const noexcept) -> delegate<R(ARGS...) noexcept>;
+
+    /// @endcond doxygen off
 }
 
 #endif

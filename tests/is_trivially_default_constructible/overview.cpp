@@ -27,9 +27,6 @@
 
 namespace
 {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-member-function"
-
     class myclass final
     {};
 
@@ -67,8 +64,6 @@ namespace
     public:
         myclass_except() noexcept(false) = default;
     };
-
-#pragma clang diagnostic pop
 }
 
 /// <!-- description -->

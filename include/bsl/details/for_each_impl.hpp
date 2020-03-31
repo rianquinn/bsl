@@ -27,6 +27,8 @@
 
 #include "for_each_impl_iter.hpp"
 #include "for_each_impl_view.hpp"
+
+#include "../discard.hpp"
 #include "../forward.hpp"
 
 namespace bsl
@@ -47,7 +49,24 @@ namespace bsl
         ///
         template<typename... ARGS>
         class for_each_impl final
-        {};
+        {
+            static_assert(
+                sizeof(for_each_impl) != sizeof(for_each_impl),    // NOLINT
+                "the view/iterators you provided to bsl::for_each are invalid");
+
+            /// <!-- description -->
+            ///   @brief This function is only provided to reduce the garbage
+            ///     the compiler spits out when an error occurs.
+            ///
+            /// <!-- inputs/outputs -->
+            ///   @param args the arguments passed to bsl::for_each
+            ///
+            static constexpr void
+            call(ARGS &&... args) noexcept
+            {
+                bsl::discard(args...);
+            }
+        };
 
         /// @class bsl::details::for_each_impl
         ///

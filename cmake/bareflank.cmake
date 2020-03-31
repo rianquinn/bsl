@@ -22,10 +22,18 @@
 # This file contains a set of macros that all Bareflank projects need to
 # function "internally". These are not intended to be exposed to the user.
 
+include(ProcessorCount)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# ------------------------------------------------------------------------------
+# Number of Threads
+# ------------------------------------------------------------------------------
+
+ProcessorCount(NUM_THREADS)
 
 # ------------------------------------------------------------------------------
 # Color
@@ -226,7 +234,7 @@ if(BUILD_TESTS)
     include(CTest)
     add_custom_target(
         unittest
-        COMMAND ctest --output-on-failure
+        COMMAND ctest -j ${NUM_THREADS} --output-on-failure
     )
     add_custom_command(TARGET info
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   ninja unittest                        run the project's unit tests"
@@ -301,7 +309,7 @@ if(CMAKE_BUILD_TYPE STREQUAL COVERAGE)
     bf_find_program(BF_GRCOV "grcov" "https://github.com/mozilla/grcov")
     message(STATUS "Tool [grcov]: ${BF_ENABLED} - ${BF_GRCOV}")
     add_custom_target(codecov-upload
-        COMMAND ctest --output-on-failure
+        COMMAND ctest -j ${NUM_THREADS} --output-on-failure
         COMMAND grcov ${CMAKE_BINARY_DIR} -s ${CMAKE_SOURCE_DIR} -t lcov --branch -o ${CMAKE_BINARY_DIR}/coverage.info
         COMMAND curl -s https://codecov.io/bash > ${CMAKE_BINARY_DIR}/codecov.sh
         COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_SOURCE_DIR}

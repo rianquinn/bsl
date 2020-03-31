@@ -24,7 +24,6 @@
 
 #include <bsl/string_view.hpp>
 #include <bsl/cstr_type.hpp>
-#include <bsl/is_base_of.hpp>
 #include <bsl/is_pod.hpp>
 #include <bsl/max.hpp>
 #include <bsl/ut.hpp>
@@ -57,7 +56,6 @@ main() noexcept
 
     bsl::ut_scenario{"requirements"} = []() {
         static_assert(is_pod<string_view>::value);
-        static_assert(is_base_of<view<char_type const>, string_view>::value);
     };
 
     bsl::ut_scenario{"default constructor"} = []() {

@@ -36,18 +36,60 @@
 #include "example_aligned_storage_overview.hpp"
 // #include "example_aligned_union_overview.hpp"
 #include "example_alignment_of_overview.hpp"
+#include "example_array_overview.hpp"
+#include "array/example_array_at_if.hpp"
+#include "array/example_array_back_if.hpp"
+#include "array/example_array_back.hpp"
+#include "array/example_array_begin.hpp"
+#include "array/example_array_data.hpp"
+#include "array/example_array_empty.hpp"
+#include "array/example_array_end.hpp"
+#include "array/example_array_equals.hpp"
+#include "array/example_array_front_if.hpp"
+#include "array/example_array_front.hpp"
+#include "array/example_array_iter.hpp"
+#include "array/example_array_max_size.hpp"
+#include "array/example_array_not_equals.hpp"
+#include "array/example_array_rbegin.hpp"
+#include "array/example_array_rend.hpp"
+#include "array/example_array_riter.hpp"
+#include "array/example_array_size_bytes.hpp"
+#include "array/example_array_size.hpp"
 #include "example_as_const_overview.hpp"
+#include "basic_errc_type/example_basic_errc_type_constructor_t.hpp"
+#include "basic_errc_type/example_basic_errc_type_equals.hpp"
+#include "basic_errc_type/example_basic_errc_type_failure.hpp"
+#include "basic_errc_type/example_basic_errc_type_get.hpp"
+#include "basic_errc_type/example_basic_errc_type_is_checked.hpp"
+#include "basic_errc_type/example_basic_errc_type_is_unchecked.hpp"
+#include "basic_errc_type/example_basic_errc_type_message.hpp"
+#include "basic_errc_type/example_basic_errc_type_not_equals.hpp"
+#include "basic_errc_type/example_basic_errc_type_success.hpp"
 #include "example_basic_string_view_overview.hpp"
+#include "basic_string_view/example_basic_string_view_at_if.hpp"
+#include "basic_string_view/example_basic_string_view_back_if.hpp"
+#include "basic_string_view/example_basic_string_view_begin.hpp"
 #include "basic_string_view/example_basic_string_view_compare.hpp"
+#include "basic_string_view/example_basic_string_view_data.hpp"
 #include "basic_string_view/example_basic_string_view_default_constructor.hpp"
+#include "basic_string_view/example_basic_string_view_empty.hpp"
+#include "basic_string_view/example_basic_string_view_end.hpp"
 #include "basic_string_view/example_basic_string_view_ends_with.hpp"
 #include "basic_string_view/example_basic_string_view_equals.hpp"
+#include "basic_string_view/example_basic_string_view_front_if.hpp"
+#include "basic_string_view/example_basic_string_view_iter.hpp"
 #include "basic_string_view/example_basic_string_view_length.hpp"
+#include "basic_string_view/example_basic_string_view_max_size.hpp"
 #include "basic_string_view/example_basic_string_view_not_equals.hpp"
+#include "basic_string_view/example_basic_string_view_rbegin.hpp"
 #include "basic_string_view/example_basic_string_view_remove_prefix.hpp"
 #include "basic_string_view/example_basic_string_view_remove_suffix.hpp"
+#include "basic_string_view/example_basic_string_view_rend.hpp"
+#include "basic_string_view/example_basic_string_view_riter.hpp"
 #include "basic_string_view/example_basic_string_view_s_constructor.hpp"
 #include "basic_string_view/example_basic_string_view_s_count_constructor.hpp"
+#include "basic_string_view/example_basic_string_view_size_bytes.hpp"
+#include "basic_string_view/example_basic_string_view_size.hpp"
 #include "basic_string_view/example_basic_string_view_starts_with.hpp"
 #include "basic_string_view/example_basic_string_view_substr.hpp"
 #include "example_bool_constant_overview.hpp"
@@ -85,31 +127,37 @@
 #include "example_conditional_overview.hpp"
 #include "example_conjunction_overview.hpp"
 #include "example_construct_at_overview.hpp"
+#include "example_contiguous_iterator_overview.hpp"
+#include "contiguous_iterator/example_contiguous_iterator_data.hpp"
+#include "contiguous_iterator/example_contiguous_iterator_decrement.hpp"
+#include "contiguous_iterator/example_contiguous_iterator_empty.hpp"
+#include "contiguous_iterator/example_contiguous_iterator_equals.hpp"
+#include "contiguous_iterator/example_contiguous_iterator_get_if.hpp"
+#include "contiguous_iterator/example_contiguous_iterator_gt_equals.hpp"
+#include "contiguous_iterator/example_contiguous_iterator_gt.hpp"
+#include "contiguous_iterator/example_contiguous_iterator_increment.hpp"
+#include "contiguous_iterator/example_contiguous_iterator_index.hpp"
+#include "contiguous_iterator/example_contiguous_iterator_is_end.hpp"
+#include "contiguous_iterator/example_contiguous_iterator_lt_equals.hpp"
+#include "contiguous_iterator/example_contiguous_iterator_lt.hpp"
+#include "contiguous_iterator/example_contiguous_iterator_not_equals.hpp"
+#include "contiguous_iterator/example_contiguous_iterator_size.hpp"
 #include "example_decay_overview.hpp"
 #include "example_declval_overview.hpp"
-// #include "example_delegate_overview.hpp"
-// #include "delegate/example_delegate_constructor_cmemfunc.hpp"
-// #include "delegate/example_delegate_constructor_func.hpp"
-// #include "delegate/example_delegate_constructor_memfunc.hpp"
-// #include "delegate/example_delegate_default_constructor.hpp"
-// #include "delegate/example_delegate_functor.hpp"
-// #include "delegate/example_delegate_valid.hpp"
+#include "example_delegate_overview.hpp"
+#include "delegate/example_delegate_cmfp_constructor.hpp"
+#include "delegate/example_delegate_default_constructor.hpp"
+#include "delegate/example_delegate_empty.hpp"
+#include "delegate/example_delegate_fp_constructor.hpp"
+#include "delegate/example_delegate_functor.hpp"
+#include "delegate/example_delegate_mfp_constructor.hpp"
 #include "example_destroy_at_overview.hpp"
 #include "example_detected_or_overview.hpp"
 #include "example_detected_overview.hpp"
 #include "example_discard_overview.hpp"
 #include "example_disjunction_overview.hpp"
 #include "example_enable_if_overview.hpp"
-#include "example_errc_type_overview.hpp"
-#include "errc_type/example_errc_type_constructor_t.hpp"
-#include "errc_type/example_errc_type_equals.hpp"
-#include "errc_type/example_errc_type_failure.hpp"
-#include "errc_type/example_errc_type_get.hpp"
-#include "errc_type/example_errc_type_is_checked.hpp"
-#include "errc_type/example_errc_type_is_unchecked.hpp"
-#include "errc_type/example_errc_type_message.hpp"
-#include "errc_type/example_errc_type_not_equals.hpp"
-#include "errc_type/example_errc_type_success.hpp"
+#include "example_basic_errc_type_overview.hpp"
 #include "example_exchange_overview.hpp"
 #include "example_extent_overview.hpp"
 #include "example_false_type_overview.hpp"
@@ -242,6 +290,21 @@
 #include "result/example_result_t_copy_constructor.hpp"
 #include "result/example_result_t_in_place_constructor.hpp"
 #include "result/example_result_t_move_constructor.hpp"
+#include "example_reverse_iterator_overview.hpp"
+#include "reverse_iterator/example_reverse_iterator_data.hpp"
+#include "reverse_iterator/example_reverse_iterator_decrement.hpp"
+#include "reverse_iterator/example_reverse_iterator_empty.hpp"
+#include "reverse_iterator/example_reverse_iterator_equals.hpp"
+#include "reverse_iterator/example_reverse_iterator_get_if.hpp"
+#include "reverse_iterator/example_reverse_iterator_gt_equals.hpp"
+#include "reverse_iterator/example_reverse_iterator_gt.hpp"
+#include "reverse_iterator/example_reverse_iterator_increment.hpp"
+#include "reverse_iterator/example_reverse_iterator_index.hpp"
+#include "reverse_iterator/example_reverse_iterator_is_end.hpp"
+#include "reverse_iterator/example_reverse_iterator_lt_equals.hpp"
+#include "reverse_iterator/example_reverse_iterator_lt.hpp"
+#include "reverse_iterator/example_reverse_iterator_not_equals.hpp"
+#include "reverse_iterator/example_reverse_iterator_size.hpp"
 #include "example_source_location_overview.hpp"
 #include "source_location/example_source_location_current.hpp"
 #include "source_location/example_source_location_default_constructor.hpp"
@@ -249,6 +312,26 @@
 #include "source_location/example_source_location_function_name.hpp"
 #include "source_location/example_source_location_here.hpp"
 #include "source_location/example_source_location_line.hpp"
+#include "example_span_overview.hpp"
+#include "span/example_span_at_if.hpp"
+#include "span/example_span_back_if.hpp"
+#include "span/example_span_begin.hpp"
+#include "span/example_span_data.hpp"
+#include "span/example_span_default_constructor.hpp"
+#include "span/example_span_empty.hpp"
+#include "span/example_span_end.hpp"
+#include "span/example_span_first.hpp"
+#include "span/example_span_front_if.hpp"
+#include "span/example_span_iter.hpp"
+#include "span/example_span_last.hpp"
+#include "span/example_span_max_size.hpp"
+#include "span/example_span_ptr_count_constructor.hpp"
+#include "span/example_span_rbegin.hpp"
+#include "span/example_span_rend.hpp"
+#include "span/example_span_riter.hpp"
+#include "span/example_span_size_bytes.hpp"
+#include "span/example_span_size.hpp"
+#include "span/example_span_subspan.hpp"
 #include "example_swap_overview.hpp"
 #include "example_true_type_overview.hpp"
 #include "example_underlying_type_overview.hpp"
@@ -293,18 +376,60 @@ main() noexcept
     example(&bsl::example_aligned_storage_overview, "example_aligned_storage_overview");
     // example(&bsl::example_aligned_union_overview, "example_aligned_union_overview");
     example(&bsl::example_alignment_of_overview, "example_alignment_of_overview");
+    example(&bsl::example_array_overview, "example_array_overview");
+    example(&bsl::example_array_at_if, "example_array_at_if");
+    example(&bsl::example_array_back_if, "example_array_back_if");
+    example(&bsl::example_array_back, "example_array_back");
+    example(&bsl::example_array_data, "example_array_data");
+    example(&bsl::example_array_empty, "example_array_empty");
+    example(&bsl::example_array_end, "example_array_end");
+    example(&bsl::example_array_equals, "example_array_equals");
+    example(&bsl::example_array_front_if, "example_array_front_if");
+    example(&bsl::example_array_front, "example_array_front");
+    example(&bsl::example_array_iter, "example_array_iter");
+    example(&bsl::example_array_max_size, "example_array_max_size");
+    example(&bsl::example_array_not_equals, "example_array_not_equals");
+    example(&bsl::example_array_rbegin, "example_array_rbegin");
+    example(&bsl::example_array_rend, "example_array_rend");
+    example(&bsl::example_array_riter, "example_array_riter");
+    example(&bsl::example_array_size_bytes, "example_array_size_bytes");
+    example(&bsl::example_array_size, "example_array_size");
     example(&bsl::example_as_const_overview, "example_as_const_overview");
+    example(&bsl::example_basic_errc_type_overview, "example_basic_errc_type_overview");
+    example(&bsl::example_basic_errc_type_constructor_t, "example_basic_errc_type_constructor_t");
+    example(&bsl::example_basic_errc_type_equals, "example_basic_errc_type_equals");
+    example(&bsl::example_basic_errc_type_failure, "example_basic_errc_type_failure");
+    example(&bsl::example_basic_errc_type_get, "example_basic_errc_type_get");
+    example(&bsl::example_basic_errc_type_is_checked, "example_basic_errc_type_is_checked");
+    example(&bsl::example_basic_errc_type_is_unchecked, "example_basic_errc_type_is_unchecked");
+    example(&bsl::example_basic_errc_type_message, "example_basic_errc_type_message");
+    example(&bsl::example_basic_errc_type_not_equals, "example_basic_errc_type_not_equals");
+    example(&bsl::example_basic_errc_type_success, "example_basic_errc_type_success");
     example(&bsl::example_basic_string_view_overview, "example_basic_string_view_overview");
+    example(&bsl::example_basic_string_view_at_if, "example_basic_string_view_at_if");
+    example(&bsl::example_basic_string_view_back_if, "example_basic_string_view_back_if");
+    example(&bsl::example_basic_string_view_begin, "example_basic_string_view_begin");
     example(&bsl::example_basic_string_view_compare, "example_basic_string_view_compare");
+    example(&bsl::example_basic_string_view_data, "example_basic_string_view_data");
     example(&bsl::example_basic_string_view_default_constructor, "example_basic_string_view_default_constructor");
+    example(&bsl::example_basic_string_view_empty, "example_basic_string_view_empty");
+    example(&bsl::example_basic_string_view_end, "example_basic_string_view_end");
     example(&bsl::example_basic_string_view_ends_with, "example_basic_string_view_ends_with");
     example(&bsl::example_basic_string_view_equals, "example_basic_string_view_equals");
+    example(&bsl::example_basic_string_view_front_if, "example_basic_string_view_front_if");
+    example(&bsl::example_basic_string_view_iter, "example_basic_string_view_iter");
     example(&bsl::example_basic_string_view_length, "example_basic_string_view_length");
+    example(&bsl::example_basic_string_view_max_size, "example_basic_string_view_max_size");
     example(&bsl::example_basic_string_view_not_equals, "example_basic_string_view_not_equals");
+    example(&bsl::example_basic_string_view_rbegin, "example_basic_string_view_rbegin");
     example(&bsl::example_basic_string_view_remove_prefix, "example_basic_string_view_remove_prefix");
     example(&bsl::example_basic_string_view_remove_suffix, "example_basic_string_view_remove_suffix");
+    example(&bsl::example_basic_string_view_rend, "example_basic_string_view_rend");
+    example(&bsl::example_basic_string_view_riter, "example_basic_string_view_riter");
     example(&bsl::example_basic_string_view_s_constructor, "example_basic_string_view_s_constructor");
     example(&bsl::example_basic_string_view_s_count_constructor, "example_basic_string_view_s_count_constructor");
+    example(&bsl::example_basic_string_view_size_bytes, "example_basic_string_view_size_bytes");
+    example(&bsl::example_basic_string_view_size, "example_basic_string_view_size");
     example(&bsl::example_basic_string_view_starts_with, "example_basic_string_view_starts_with");
     example(&bsl::example_basic_string_view_substr, "example_basic_string_view_substr");
     example(&bsl::example_bool_constant_overview, "example_bool_constant_overview");
@@ -342,31 +467,36 @@ main() noexcept
     example(&bsl::example_conditional_overview, "example_conditional_overview");
     example(&bsl::example_conjunction_overview, "example_conjunction_overview");
     example(&bsl::example_construct_at_overview, "example_construct_at_overview");
+    example(&bsl::example_contiguous_iterator_overview, "example_contiguous_iterator_overview");
+    example(&bsl::example_contiguous_iterator_data, "example_contiguous_iterator_data");
+    example(&bsl::example_contiguous_iterator_decrement, "example_contiguous_iterator_decrement");
+    example(&bsl::example_contiguous_iterator_empty, "example_contiguous_iterator_empty");
+    example(&bsl::example_contiguous_iterator_equals, "example_contiguous_iterator_equals");
+    example(&bsl::example_contiguous_iterator_get_if, "example_contiguous_iterator_get_if");
+    example(&bsl::example_contiguous_iterator_gt_equals, "example_contiguous_iterator_gt_equals");
+    example(&bsl::example_contiguous_iterator_gt, "example_contiguous_iterator_gt");
+    example(&bsl::example_contiguous_iterator_increment, "example_contiguous_iterator_increment");
+    example(&bsl::example_contiguous_iterator_index, "example_contiguous_iterator_index");
+    example(&bsl::example_contiguous_iterator_is_end, "example_contiguous_iterator_is_end");
+    example(&bsl::example_contiguous_iterator_lt_equals, "example_contiguous_iterator_lt_equals");
+    example(&bsl::example_contiguous_iterator_lt, "example_contiguous_iterator_lt");
+    example(&bsl::example_contiguous_iterator_not_equals, "example_contiguous_iterator_not_equals");
+    example(&bsl::example_contiguous_iterator_size, "example_contiguous_iterator_size");
     example(&bsl::example_decay_overview, "example_decay_overview");
     example(&bsl::example_declval_overview, "example_declval_overview");
-    // example(&bsl::example_delegate_overview, "example_delegate_overview");
-    // example(&bsl::example_delegate_constructor_cmemfunc, "example_delegate_constructor_cmemfunc");
-    // example(&bsl::example_delegate_constructor_func, "example_delegate_constructor_func");
-    // example(&bsl::example_delegate_constructor_memfunc, "example_delegate_constructor_memfunc");
-    // example(&bsl::example_delegate_default_constructor, "example_delegate_default_constructor");
-    // example(&bsl::example_delegate_functor, "example_delegate_functor");
-    // example(&bsl::example_delegate_valid, "example_delegate_valid");
+    example(&bsl::example_delegate_overview, "example_delegate_overview");
+    example(&bsl::example_delegate_cmfp_constructor, "example_delegate_cmfp_constructor");
+    example(&bsl::example_delegate_default_constructor, "example_delegate_default_constructor");
+    example(&bsl::example_delegate_empty, "example_delegate_empty");
+    example(&bsl::example_delegate_fp_constructor, "example_delegate_fp_constructor");
+    example(&bsl::example_delegate_functor, "example_delegate_functor");
+    example(&bsl::example_delegate_mfp_constructor, "example_delegate_mfp_constructor");
     example(&bsl::example_destroy_at_overview, "example_destroy_at_overview");
     example(&bsl::example_detected_or_overview, "example_detected_or_overview");
     example(&bsl::example_detected_overview, "example_detected_overview");
     example(&bsl::example_discard_overview, "example_discard_overview");
     example(&bsl::example_disjunction_overview, "example_disjunction_overview");
     example(&bsl::example_enable_if_overview, "example_enable_if_overview");
-    example(&bsl::example_errc_type_overview, "example_errc_type_overview");
-    example(&bsl::example_errc_type_constructor_t, "example_errc_type_constructor_t");
-    example(&bsl::example_errc_type_equals, "example_errc_type_equals");
-    example(&bsl::example_errc_type_failure, "example_errc_type_failure");
-    example(&bsl::example_errc_type_get, "example_errc_type_get");
-    example(&bsl::example_errc_type_is_checked, "example_errc_type_is_checked");
-    example(&bsl::example_errc_type_is_unchecked, "example_errc_type_is_unchecked");
-    example(&bsl::example_errc_type_message, "example_errc_type_message");
-    example(&bsl::example_errc_type_not_equals, "example_errc_type_not_equals");
-    example(&bsl::example_errc_type_success, "example_errc_type_success");
     example(&bsl::example_exchange_overview, "example_exchange_overview");
     example(&bsl::example_extent_overview, "example_extent_overview");
     example(&bsl::example_false_type_overview, "example_false_type_overview");
@@ -499,6 +629,21 @@ main() noexcept
     example(&bsl::example_result_t_copy_constructor, "example_result_t_copy_constructor");
     example(&bsl::example_result_t_in_place_constructor, "example_result_t_in_place_constructor");
     example(&bsl::example_result_t_move_constructor, "example_result_t_move_constructor");
+    example(&bsl::example_reverse_iterator_overview, "example_reverse_iterator_overview");
+    example(&bsl::example_reverse_iterator_data, "example_reverse_iterator_data");
+    example(&bsl::example_reverse_iterator_decrement, "example_reverse_iterator_decrement");
+    example(&bsl::example_reverse_iterator_empty, "example_reverse_iterator_empty");
+    example(&bsl::example_reverse_iterator_equals, "example_reverse_iterator_equals");
+    example(&bsl::example_reverse_iterator_get_if, "example_reverse_iterator_get_if");
+    example(&bsl::example_reverse_iterator_gt_equals, "example_reverse_iterator_gt_equals");
+    example(&bsl::example_reverse_iterator_gt, "example_reverse_iterator_gt");
+    example(&bsl::example_reverse_iterator_increment, "example_reverse_iterator_increment");
+    example(&bsl::example_reverse_iterator_index, "example_reverse_iterator_index");
+    example(&bsl::example_reverse_iterator_is_end, "example_reverse_iterator_is_end");
+    example(&bsl::example_reverse_iterator_lt_equals, "example_reverse_iterator_lt_equals");
+    example(&bsl::example_reverse_iterator_lt, "example_reverse_iterator_lt");
+    example(&bsl::example_reverse_iterator_not_equals, "example_reverse_iterator_not_equals");
+    example(&bsl::example_reverse_iterator_size, "example_reverse_iterator_size");
     example(&bsl::example_source_location_overview, "example_source_location_overview");
     example(&bsl::example_source_location_current, "example_source_location_current");
     example(&bsl::example_source_location_default_constructor, "example_source_location_default_constructor");
@@ -506,6 +651,26 @@ main() noexcept
     example(&bsl::example_source_location_function_name, "example_source_location_function_name");
     example(&bsl::example_source_location_here, "example_source_location_here");
     example(&bsl::example_source_location_line, "example_source_location_line");
+    example(&bsl::example_span_overview, "example_span_overview");
+    example(&bsl::example_span_at_if, "example_span_at_if");
+    example(&bsl::example_span_back_if, "example_span_back_if");
+    example(&bsl::example_span_begin, "example_span_begin");
+    example(&bsl::example_span_data, "example_span_data");
+    example(&bsl::example_span_default_constructor, "example_span_default_constructor");
+    example(&bsl::example_span_empty, "example_span_empty");
+    example(&bsl::example_span_end, "example_span_end");
+    example(&bsl::example_span_first, "example_span_first");
+    example(&bsl::example_span_front_if, "example_span_front_if");
+    example(&bsl::example_span_iter, "example_span_iter");
+    example(&bsl::example_span_last, "example_span_last");
+    example(&bsl::example_span_max_size, "example_span_max_size");
+    example(&bsl::example_span_ptr_count_constructor, "example_span_ptr_count_constructor");
+    example(&bsl::example_span_rbegin, "example_span_rbegin");
+    example(&bsl::example_span_rend, "example_span_rend");
+    example(&bsl::example_span_riter, "example_span_riter");
+    example(&bsl::example_span_size_bytes, "example_span_size_bytes");
+    example(&bsl::example_span_size, "example_span_size");
+    example(&bsl::example_span_subspan, "example_span_subspan");
     example(&bsl::example_swap_overview, "example_swap_overview");
     example(&bsl::example_true_type_overview, "example_true_type_overview");
     example(&bsl::example_underlying_type_overview, "example_underlying_type_overview");

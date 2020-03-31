@@ -31,6 +31,15 @@
 #include "details/invoke_impl.hpp"
 #include "forward.hpp"
 
+// TODO
+//
+// For some reason, the use of invoke in bsl::delegate for mfp types
+// is not working. We should track this down to figure out what is
+// wrong with the code as the unit tests suggest everything works
+// as expected, but we are getting a substituion issue on the the
+// delegate side of things.
+//
+
 namespace bsl
 {
     /// <!-- description -->

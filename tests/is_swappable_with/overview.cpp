@@ -27,9 +27,6 @@
 
 namespace
 {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunneeded-internal-declaration"
-
     struct mystruct1 final
     {};
 
@@ -50,8 +47,6 @@ namespace
     void swap(mystruct3, mystruct4);
     void swap(mystruct4, mystruct3);
     void swap(mystruct1, mystruct3) noexcept;
-
-#pragma clang diagnostic pop
 }
 
 /// <!-- description -->
