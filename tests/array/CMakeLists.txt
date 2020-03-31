@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019 Assured Information Security, Inc.
+# Copyright (C) 2020 Assured Information Security, Inc.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,3 +20,4 @@
 # SOFTWARE.
 
 bf_add_test(requirements)
+bf_add_test(behavior)

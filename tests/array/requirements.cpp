@@ -1,5 +1,5 @@
 /// @copyright
-/// Copyright (C) 2019 Assured Information Security, Inc.
+/// Copyright (C) 2020 Assured Information Security, Inc.
 ///
 /// @copyright
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,8 +23,12 @@
 /// SOFTWARE.
 
 #include <bsl/array.hpp>
-#include <bsl/is_aggregate.hpp>
 #include <bsl/ut.hpp>
+
+namespace
+{
+
+}
 
 /// <!-- description -->
 ///   @brief Main function for this unit test. If a call to ut_check() fails
@@ -38,7 +42,16 @@ bsl::exit_code
 main() noexcept
 {
     using namespace bsl;
-    static_assert(is_aggregate<bsl::array<bool, 42>>::value);
+
+    bsl::ut_scenario{"verify except"} = []() {
+        static_assert(!noexcept(bsl::fill(g_arr1, copy_except{})));
+        static_assert(!noexcept(bsl::fill(g_arr1.begin(), g_arr1.end(), copy_except{})));
+    };
+
+    bsl::ut_scenario{"verify noexcept"} = []() {
+        static_assert(noexcept(bsl::fill(g_arr2, copy_noexcept{})));
+        static_assert(noexcept(bsl::fill(g_arr2.begin(), g_arr2.end(), copy_noexcept{})));
+    };
 
     return bsl::ut_success();
 }

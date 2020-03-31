@@ -1,5 +1,5 @@
 /// @copyright
-/// Copyright (C) 2019 Assured Information Security, Inc.
+/// Copyright (C) 2020 Assured Information Security, Inc.
 ///
 /// @copyright
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
