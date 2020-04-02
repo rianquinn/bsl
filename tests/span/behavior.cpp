@@ -74,6 +74,40 @@ tests() noexcept
         };
 
         bsl::ut_given{} = []() {
+            bsl::span<bool> spn{nullptr, 5};
+            bsl::ut_then{} = [&spn]() {
+                bsl::ut_check(spn.at_if(0) == nullptr);
+                bsl::ut_check(spn.at_if(max_size) == nullptr);
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::span<bool> const spn{nullptr, 5};
+            bsl::ut_then{} = [&spn]() {
+                bsl::ut_check(spn.at_if(0) == nullptr);
+                bsl::ut_check(spn.at_if(max_size) == nullptr);
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::array<bsl::uintmax, 6> arr = {4, 8, 15, 16, 23, 42};
+            bsl::span spn{arr.data(), 0};
+            bsl::ut_then{} = [&spn]() {
+                bsl::ut_check(spn.at_if(0) == nullptr);
+                bsl::ut_check(spn.at_if(max_size) == nullptr);
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::array<bsl::uintmax, 6> arr = {4, 8, 15, 16, 23, 42};
+            bsl::span const spn{arr.data(), 0};
+            bsl::ut_then{} = [&spn]() {
+                bsl::ut_check(spn.at_if(0) == nullptr);
+                bsl::ut_check(spn.at_if(max_size) == nullptr);
+            };
+        };
+
+        bsl::ut_given{} = []() {
             bsl::array<bsl::uintmax, 6> arr = {4, 8, 15, 16, 23, 42};
             bsl::span spn{arr.data(), arr.size()};
             bsl::ut_then{} = [&spn]() {
