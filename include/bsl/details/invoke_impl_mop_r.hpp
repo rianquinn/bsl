@@ -74,12 +74,17 @@ namespace bsl
 
         protected:
             /// <!-- description -->
+            ///   @brief Destroyes a previously created bsl::invoke_impl_mop_r
+            ///
+            ~invoke_impl_mop_r() noexcept = default;
+
+            /// <!-- description -->
             ///   @brief copy constructor
             ///
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///
-            constexpr invoke_impl_mop_r(invoke_impl_mop_r const &o) noexcept = default;
+            invoke_impl_mop_r(invoke_impl_mop_r const &o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief move constructor
@@ -87,7 +92,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
-            constexpr invoke_impl_mop_r(invoke_impl_mop_r &&o) noexcept = default;
+            invoke_impl_mop_r(invoke_impl_mop_r &&o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief copy assignment
@@ -96,7 +101,7 @@ namespace bsl
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            constexpr invoke_impl_mop_r &operator=(invoke_impl_mop_r const &o) &noexcept = default;
+            invoke_impl_mop_r &operator=(invoke_impl_mop_r const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
@@ -105,12 +110,7 @@ namespace bsl
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            constexpr invoke_impl_mop_r &operator=(invoke_impl_mop_r &&o) &noexcept = default;
-
-            /// <!-- description -->
-            ///   @brief Destroyes a previously created bsl::invoke_impl_mop_r
-            ///
-            ~invoke_impl_mop_r() noexcept = default;
+            invoke_impl_mop_r &operator=(invoke_impl_mop_r &&o) &noexcept = default;
         };
     }
 }

@@ -23,9 +23,22 @@
 /// SOFTWARE.
 
 #include <bsl/array.hpp>
-#include <bsl/for_each.hpp>
 #include <bsl/numeric_limits.hpp>
 #include <bsl/ut.hpp>
+
+namespace
+{
+    struct aggregate final
+    {
+        bsl::uintmax m_data;
+    };
+
+    constexpr bool
+    operator==(aggregate const &lhs, aggregate const &rhs) noexcept
+    {
+        return lhs.m_data == rhs.m_data;
+    }
+}
 
 /// <!-- description -->
 ///   @brief Used to execute the actual checks. We put the checks in this
@@ -373,8 +386,18 @@ tests() noexcept
 
     bsl::ut_scenario{"equals"} = []() {
         bsl::ut_given{} = []() {
-            bsl::array<bsl::uintmax, 6> arr1 = {4, 8, 15, 16, 23, 42};
-            bsl::array<bsl::uintmax, 6> arr2 = {4, 8, 15, 16, 23, 42};
+            bsl::array<bsl::uintmax, 6> const arr1 = {4, 8, 15, 16, 23, 42};
+            bsl::array<bsl::uintmax, 6> const arr2 = {4, 8, 15, 16, 23, 42};
+            bsl::ut_then{} = [&arr1, &arr2]() {
+                bsl::ut_check(arr1 == arr2);
+            };
+        };
+    };
+
+    bsl::ut_scenario{"equals"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::array<aggregate, 6> const arr1 = {4, 8, 15, 16, 23, 42};
+            bsl::array<aggregate, 6> const arr2 = {4, 8, 15, 16, 23, 42};
             bsl::ut_then{} = [&arr1, &arr2]() {
                 bsl::ut_check(arr1 == arr2);
             };
@@ -383,8 +406,18 @@ tests() noexcept
 
     bsl::ut_scenario{"not equals"} = []() {
         bsl::ut_given{} = []() {
-            bsl::array<bsl::uintmax, 6> arr1 = {4, 8, 15, 16, 23, 42};
-            bsl::array<bsl::uintmax, 6> arr2 = {4, 8, 15, 16, 0, 42};
+            bsl::array<bsl::uintmax, 6> const arr1 = {4, 8, 15, 16, 23, 42};
+            bsl::array<bsl::uintmax, 6> const arr2 = {};
+            bsl::ut_then{} = [&arr1, &arr2]() {
+                bsl::ut_check(arr1 != arr2);
+            };
+        };
+    };
+
+    bsl::ut_scenario{"not equals"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::array<aggregate, 6> const arr1 = {4, 8, 15, 16, 23, 42};
+            bsl::array<aggregate, 6> const arr2 = {};
             bsl::ut_then{} = [&arr1, &arr2]() {
                 bsl::ut_check(arr1 != arr2);
             };

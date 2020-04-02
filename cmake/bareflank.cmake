@@ -24,7 +24,12 @@
 
 include(ProcessorCount)
 
-set(CMAKE_CXX_STANDARD 17)
+if(CMAKE_BUILD_TYPE STREQUAL PERFORCE)
+    set(CMAKE_CXX_STANDARD 17)
+else()
+    set(CMAKE_CXX_STANDARD 20)
+endif()
+
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -434,22 +439,20 @@ if(CMAKE_BUILD_TYPE STREQUAL PERFORCE)
     set(BSL_BUILTIN_FILE "\"file\"")
     set(BSL_BUILTIN_FUNCTION "\"function\"")
     set(BSL_BUILTIN_LINE "0")
-    set(BSL_BUILTIN_MEMSET "p")
-    set(BSL_BUILTIN_MEMMOVE "dst")
-    set(BSL_BUILTIN_MEMCPY "dst")
-    set(BSL_BUILTIN_MEMCHR "p")
+    set(BSL_BUILTIN_MEMSET "nullptr")
+    set(BSL_BUILTIN_MEMCMP "0")
     set(BSL_BUILTIN_STRNCMP "0")
     set(BSL_BUILTIN_STRLEN "0U")
+    set(BSL_BUILTIN_CHAR_MEMCHR "0")
 else()
     set(BSL_BUILTIN_FILE "__builtin_FILE()")
     set(BSL_BUILTIN_FUNCTION "__builtin_FUNCTION()")
     set(BSL_BUILTIN_LINE "__builtin_LINE()")
-    set(BSL_BUILTIN_MEMSET "__builtin_memset(p, a, count)")
-    set(BSL_BUILTIN_MEMMOVE "__builtin_memmove(dst, src, count)")
-    set(BSL_BUILTIN_MEMCPY "__builtin_memcpy(dst, src, count)")
-    set(BSL_BUILTIN_MEMCHR "__builtin_memchr(p, ch, count)")
-    set(BSL_BUILTIN_STRNCMP "__builtin_strncmp(s1, s2, count)")
-    set(BSL_BUILTIN_STRLEN "__builtin_strlen(s)")
+    set(BSL_BUILTIN_MEMSET "__builtin_memset(dst,ch,count)")
+    set(BSL_BUILTIN_MEMCMP "__builtin_memcmp(lhs,rhs,count)")
+    set(BSL_BUILTIN_STRNCMP "__builtin_strncmp(lhs,rhs,count)")
+    set(BSL_BUILTIN_STRLEN "__builtin_strlen(str)")
+    set(BSL_BUILTIN_CHAR_MEMCHR "__builtin_char_memchr(str,ch,min(__builtin_strlen(str)+1,count))")
 endif()
 
 list(APPEND BSL_DEFAULT_DEFINES
@@ -459,11 +462,10 @@ list(APPEND BSL_DEFAULT_DEFINES
     BSL_BUILTIN_FUNCTION=${BSL_BUILTIN_FUNCTION}
     BSL_BUILTIN_LINE=${BSL_BUILTIN_LINE}
     BSL_BUILTIN_MEMSET=${BSL_BUILTIN_MEMSET}
-    BSL_BUILTIN_MEMMOVE=${BSL_BUILTIN_MEMMOVE}
-    BSL_BUILTIN_MEMCPY=${BSL_BUILTIN_MEMCPY}
-    BSL_BUILTIN_MEMCHR=${BSL_BUILTIN_MEMCHR}
+    BSL_BUILTIN_MEMCMP=${BSL_BUILTIN_MEMCMP}
     BSL_BUILTIN_STRNCMP=${BSL_BUILTIN_STRNCMP}
     BSL_BUILTIN_STRLEN=${BSL_BUILTIN_STRLEN}
+    BSL_BUILTIN_CHAR_MEMCHR=${BSL_BUILTIN_CHAR_MEMCHR}
 )
 
 # ------------------------------------------------------------------------------

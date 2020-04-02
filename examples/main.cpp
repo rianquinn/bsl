@@ -87,7 +87,6 @@
 #include "basic_string_view/example_basic_string_view_rend.hpp"
 #include "basic_string_view/example_basic_string_view_riter.hpp"
 #include "basic_string_view/example_basic_string_view_s_constructor.hpp"
-#include "basic_string_view/example_basic_string_view_s_count_constructor.hpp"
 #include "basic_string_view/example_basic_string_view_size_bytes.hpp"
 #include "basic_string_view/example_basic_string_view_size.hpp"
 #include "basic_string_view/example_basic_string_view_starts_with.hpp"
@@ -111,7 +110,6 @@
 #include "byte/example_byte_xor_assign.hpp"
 #include "byte/example_byte_xor.hpp"
 #include "example_char_traits_overview.hpp"
-#include "char_traits/example_char_traits_assign.hpp"
 #include "char_traits/example_char_traits_compare.hpp"
 #include "char_traits/example_char_traits_eof.hpp"
 #include "char_traits/example_char_traits_eq_int_type.hpp"
@@ -427,7 +425,6 @@ main() noexcept
     example(&bsl::example_basic_string_view_rend, "example_basic_string_view_rend");
     example(&bsl::example_basic_string_view_riter, "example_basic_string_view_riter");
     example(&bsl::example_basic_string_view_s_constructor, "example_basic_string_view_s_constructor");
-    example(&bsl::example_basic_string_view_s_count_constructor, "example_basic_string_view_s_count_constructor");
     example(&bsl::example_basic_string_view_size_bytes, "example_basic_string_view_size_bytes");
     example(&bsl::example_basic_string_view_size, "example_basic_string_view_size");
     example(&bsl::example_basic_string_view_starts_with, "example_basic_string_view_starts_with");
@@ -451,7 +448,6 @@ main() noexcept
     example(&bsl::example_byte_xor_assign, "example_byte_xor_assign");
     example(&bsl::example_byte_xor, "example_byte_xor");
     example(&bsl::example_char_traits_overview, "example_char_traits_overview");
-    example(&bsl::example_char_traits_assign, "example_char_traits_assign");
     example(&bsl::example_char_traits_compare, "example_char_traits_compare");
     example(&bsl::example_char_traits_eof, "example_char_traits_eof");
     example(&bsl::example_char_traits_eq_int_type, "example_char_traits_eq_int_type");

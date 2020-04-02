@@ -40,6 +40,7 @@
 #pragma clang diagnostic ignored "-Wunused-member-function"
 #pragma clang diagnostic ignored "-Wunneeded-member-function"
 #pragma clang diagnostic ignored "-Wunneeded-internal-declaration"
+#pragma clang diagnostic ignored "-Wmissing-braces"
 
 namespace bsl
 {

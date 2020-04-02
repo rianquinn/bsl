@@ -99,24 +99,6 @@ namespace bsl
         constexpr basic_string_view() noexcept = default;
 
         /// <!-- description -->
-        ///   @brief ptr/count constructor. Creates a bsl::basic_string_view
-        ///     given a pointer to a string and the number of characters in
-        ///     the string.
-        ///   @include basic_string_view/example_basic_string_view_s_count_constructor.hpp
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param s a pointer to the string
-        ///   @param count the number of characters in the string
-        ///
-        constexpr basic_string_view(pointer_type const s, size_type const count) noexcept
-            : m_ptr{s}, m_count{count}
-        {
-            if ((nullptr == m_ptr) || (0U == m_count)) {
-                *this = basic_string_view{};
-            }
-        }
-
-        /// <!-- description -->
         ///   @brief ptr constructor. This creates a bsl::basic_string_view
         ///     given a pointer to a string. The number of characters in the
         ///     string is determined using Traits<CharT>::length,
@@ -633,6 +615,19 @@ namespace bsl
         }
 
         /// <!-- description -->
+        ///   @brief Returns size() == 0
+        ///   @include basic_string_view/example_basic_string_view_empty.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @return Returns size() == 0
+        ///
+        [[nodiscard]] constexpr bool
+        empty() const noexcept
+        {
+            return 0U == m_count;
+        }
+
+        /// <!-- description -->
         ///   @brief Returns the number of elements in the string being
         ///     viewed. If this is a default constructed view, or the view
         ///     was constructed in error, this will return 0.
@@ -690,19 +685,6 @@ namespace bsl
         size_bytes() const noexcept
         {
             return m_count * sizeof(CharT);
-        }
-
-        /// <!-- description -->
-        ///   @brief Returns size() == 0
-        ///   @include basic_string_view/example_basic_string_view_empty.hpp
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @return Returns size() == 0
-        ///
-        [[nodiscard]] constexpr bool
-        empty() const noexcept
-        {
-            return 0U == m_count;
         }
 
         /// <!-- description -->
@@ -868,6 +850,12 @@ namespace bsl
         ///   @brief Same as substr(pos, count1).compare(basic_string_view{s, count2})
         ///   @include basic_string_view/example_basic_string_view_compare.hpp
         ///
+        /// <!-- notes -->
+        ///   @note Unlike the standard library version of this function, the
+        ///     BSL implements this function as the following to prevent
+        ///     potential corruption:
+        ///     compare(pos, count1, basic_string_view{s}, 0, count2)
+        ///
         /// <!-- inputs/outputs -->
         ///   @param pos the starting position of "this" to compare from
         ///   @param count1 the number of characters of "this" to compare
@@ -882,7 +870,7 @@ namespace bsl
             pointer_type const s,    // --
             size_type count2) const noexcept
         {
-            return this->substr(pos, count1).compare(basic_string_view{s, count2});
+            return this->compare(pos, count1, basic_string_view{s}, 0, count2);
         }
 
         /// <!-- description -->
@@ -917,7 +905,7 @@ namespace bsl
         starts_with(value_type const c) const noexcept
         {
             if (auto *const ptr = this->front_if()) {
-                return *ptr == c;
+                return Traits::eq(*ptr, c);
             }
 
             return false;
@@ -970,7 +958,7 @@ namespace bsl
         ends_with(value_type const c) const noexcept
         {
             if (auto *const ptr = this->back_if()) {
-                return *ptr == c;
+                return Traits::eq(*ptr, c);
             }
 
             return false;
@@ -992,6 +980,24 @@ namespace bsl
         }
 
     private:
+        /// <!-- description -->
+        ///   @brief ptr/count constructor. Creates a bsl::basic_string_view
+        ///     given a pointer to a string and the number of characters in
+        ///     the string.
+        ///   @include basic_string_view/example_basic_string_view_s_count_constructor.hpp
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param s a pointer to the string
+        ///   @param count the number of characters in the string
+        ///
+        constexpr basic_string_view(pointer_type const s, size_type const count) noexcept
+            : m_ptr{s}, m_count{count}
+        {
+            if ((nullptr == m_ptr) || (0U == m_count)) {
+                *this = basic_string_view{};
+            }
+        }
+
         /// @brief stores a pointer to the string being viewed
         pointer_type m_ptr;
         /// @brief stores the number of elements in the string being viewed

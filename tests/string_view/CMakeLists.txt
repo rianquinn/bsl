@@ -19,13 +19,4 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-bf_add_test(requirements)
-bf_add_test(behavior)
-bf_add_test(behavior_compare1)
-bf_add_test(behavior_compare2)
-bf_add_test(behavior_compare3)
-bf_add_test(behavior_compare4)
-bf_add_test(behavior_compare5)
-bf_add_test(behavior_starts_with)
-bf_add_test(behavior_ends_with)
-bf_add_test(behavior_operators)
+bf_add_test(overview)

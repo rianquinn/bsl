@@ -28,6 +28,15 @@
 #include <bsl/span.hpp>
 #include <bsl/ut.hpp>
 
+namespace
+{
+    enum myenum : bsl::uintmax
+    {
+        init = 1,
+        zero = 0
+    };
+}
+
 /// <!-- description -->
 ///   @brief Used to execute the actual checks. We put the checks in this
 ///     function so that we can validate the tests both at compile-time
@@ -57,6 +66,30 @@ tests() noexcept
                 bsl::ut_then{} = [&arr]() {
                     bsl::for_each(arr, [](auto &e) {
                         bsl::ut_check(e);
+                    });
+                };
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::array<bsl::uintmax, 5> arr{1, 1, 1, 1, 1};
+            bsl::ut_when{} = [&arr]() {
+                bsl::fill(arr, 0U);
+                bsl::ut_then{} = [&arr]() {
+                    bsl::for_each(arr, [](auto &e) {
+                        bsl::ut_check(e == 0);
+                    });
+                };
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::array<myenum, 5> arr{init, init, init, init, init};
+            bsl::ut_when{} = [&arr]() {
+                bsl::fill(arr, zero);
+                bsl::ut_then{} = [&arr]() {
+                    bsl::for_each(arr, [](auto &e) {
+                        bsl::ut_check(e == zero);
                     });
                 };
             };

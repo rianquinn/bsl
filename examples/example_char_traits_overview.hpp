@@ -22,8 +22,8 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef EXAMPLE_CHAR_TRAITS_HPP
-#define EXAMPLE_CHAR_TRAITS_HPP
+#ifndef EXAMPLE_CHAR_TRAITS_OVERVIEW_HPP
+#define EXAMPLE_CHAR_TRAITS_OVERVIEW_HPP
 
 #include <bsl/char_traits.hpp>
 #include <bsl/print.hpp>
@@ -36,11 +36,8 @@ namespace bsl
     inline void
     example_char_traits_overview() noexcept
     {
-        bsl::char_type val1{};
-        bsl::char_type const val2{static_cast<bsl::char_type>(42)};
-
-        bsl::char_traits<bsl::char_type>::assign(val1, val2);
-        if (val2 == val1) {
+        constexpr bsl::uintmax n{2U};
+        if (bsl::char_traits<bsl::char_type>::compare("42", "42", n) == 0) {
             bsl::print("success\n");
         }
     }

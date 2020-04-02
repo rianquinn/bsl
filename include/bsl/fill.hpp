@@ -29,13 +29,28 @@
 #define BSL_FILL_HPP
 
 #include "cstdint.hpp"
+#include "cstring.hpp"
 #include "enable_if.hpp"
-#include "for_each.hpp"
+#include "is_constant_evaluated.hpp"
+#include "is_fundamental.hpp"
 #include "is_copy_assignable.hpp"
 #include "is_nothrow_copy_assignable.hpp"
 
 namespace bsl
 {
+    namespace details
+    {
+        template<typename VIEW, typename T>
+        constexpr void
+        fill_impl(VIEW &v, T const &value) noexcept(    // --
+            is_nothrow_copy_assignable<T>::value)
+        {
+            for (bsl::uintmax i{}; i < v.size(); ++i) {
+                *v.at_if(i) = value;
+            }
+        }
+    }
+
     /// <!-- description -->
     ///   @brief Sets all elements of a view to "value". T must be
     ///     copy assignable.
@@ -55,9 +70,17 @@ namespace bsl
     fill(VIEW &v, T const &value) noexcept(    // --
         is_nothrow_copy_assignable<T>::value)
     {
-        bsl::for_each(v, [&value](auto &e) {
-            e = value;
-        });
+        if (is_fundamental<T>::value && !is_constant_evaluated()) {
+            if (T{} == value) {
+                memset(v.data(), 0, v.size_bytes());
+            }
+            else {
+                details::fill_impl(v, value);
+            }
+        }
+        else {
+            details::fill_impl(v, value);
+        }
     }
 
     /// <!-- description -->
@@ -77,11 +100,12 @@ namespace bsl
     ///
     template<typename ITER, typename T>
     constexpr enable_if_t<is_copy_assignable<T>::value>
-    fill(ITER first, ITER last, T const &value) noexcept(is_nothrow_copy_assignable<T>::value)
+    fill(ITER first, ITER last, T const &value) noexcept(    // --
+        is_nothrow_copy_assignable<T>::value)
     {
-        bsl::for_each(first, last, [&value](auto &e) {
-            e = value;
-        });
+        for (; first < last; ++first) {
+            *first.get_if() = value;
+        }
     }
 }
 

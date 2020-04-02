@@ -22,28 +22,24 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef EXAMPLE_CHAR_TRAITS_ASSIGN_HPP
-#define EXAMPLE_CHAR_TRAITS_ASSIGN_HPP
+#include <bsl/errc_type.hpp>
+#include <bsl/is_same.hpp>
 
-#include <bsl/char_traits.hpp>
-#include <bsl/print.hpp>
+#include <bsl/ut.hpp>
 
-namespace bsl
+/// <!-- description -->
+///   @brief Main function for this unit test. If a call to ut_check() fails
+///     the application will fast fail. If all calls to ut_check() pass, this
+///     function will successfully return with bsl::exit_success.
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+bsl::exit_code
+main() noexcept
 {
-    /// <!-- description -->
-    ///   @brief Provides the example's main function
-    ///
-    inline void
-    example_char_traits_assign() noexcept
-    {
-        bsl::char_type val1{};
-        bsl::char_type const val2{static_cast<bsl::char_type>(42)};
+    using namespace bsl;
+    static_assert(is_same<errc_type, basic_errc_type<>>::value);
 
-        bsl::char_traits<bsl::char_type>::assign(val1, val2);
-        if (val2 == val1) {
-            bsl::print("success\n");
-        }
-    }
+    return bsl::ut_success();
 }
-
-#endif

@@ -167,7 +167,7 @@ CheckOptions:
   - key:             hicpp-function-size.ParameterThreshold
     value:           '4294967295'
   - key:             hicpp-function-size.StatementThreshold
-    value:           '800'
+    value:           '4294967295'
   - key:             hicpp-function-size.VariableThreshold
     value:           '4294967295'
   - key:             hicpp-member-init.IgnoreArrays
@@ -319,7 +319,7 @@ CheckOptions:
   - key:             readability-function-size.ParameterThreshold
     value:           '4294967295'
   - key:             readability-function-size.StatementThreshold
-    value:           '800'
+    value:           '4294967295'
   - key:             readability-function-size.VariableThreshold
     value:           '4294967295'
   - key:             readability-identifier-naming.IgnoreFailedSplit

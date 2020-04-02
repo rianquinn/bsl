@@ -30,9 +30,11 @@
 
 #include "contiguous_iterator.hpp"
 #include "cstdint.hpp"
-#include "for_each.hpp"
+#include "cstring.hpp"
 #include "min.hpp"
 #include "npos.hpp"
+#include "is_constant_evaluated.hpp"
+#include "is_fundamental.hpp"
 #include "numeric_limits.hpp"
 #include "reverse_iterator.hpp"
 
@@ -723,7 +725,7 @@ namespace bsl
         ///   @return Returns subspan(0, count). If count is 0, an invalid
         ///     span is returned.
         ///
-        [[nodiscard]] constexpr span<T const>
+        [[nodiscard]] constexpr span<T>
         first(size_type count = npos) const noexcept
         {
             return this->subspan(0, count);
@@ -767,7 +769,7 @@ namespace bsl
         ///     current span is returned. If the count is 0, an invalid span
         ///     is returned.
         ///
-        [[nodiscard]] constexpr span<T const>
+        [[nodiscard]] constexpr span<T>
         last(size_type count = npos) const noexcept
         {
             if (count > this->size()) {
@@ -813,14 +815,14 @@ namespace bsl
         ///     the provided "pos" is greater than or equal to the size of
         ///     the current span, an invalid span is returned.
         ///
-        [[nodiscard]] constexpr span<T const>
+        [[nodiscard]] constexpr span<T>
         subspan(size_type pos, size_type count = npos) const noexcept
         {
             if (pos >= this->size()) {
                 return {};
             }
 
-            return span<T const>{this->at_if(pos), min(count, this->size() - pos)};
+            return span<T>{this->at_if(pos), min(count, this->size() - pos)};
         }
 
     private:
@@ -847,22 +849,22 @@ namespace bsl
     constexpr bool
     operator==(bsl::span<T> const &lhs, bsl::span<T> const &rhs) noexcept
     {
-        bool eq{true};
-
         if (lhs.size() != rhs.size()) {
             return false;
         }
 
-        bsl::for_each(lhs, [&rhs, &eq](auto &e, auto i) -> bool {
-            if (e != *rhs.at_if(i)) {
-                eq = false;
-                return bsl::for_each_break;
+        if (is_fundamental<T>::value && !is_constant_evaluated()) {
+            return bsl::memcmp(lhs.data(), rhs.data(), lhs.size_bytes()) == 0;
+        }
+        else {
+            for (bsl::uintmax i{}; i < lhs.size(); ++i) {
+                if (*lhs.at_if(i) != *rhs.at_if(i)) {
+                    return false;
+                }
             }
 
-            return bsl::for_each_continue;
-        });
-
-        return eq;
+            return true;
+        }
     }
 
     /// <!-- description -->

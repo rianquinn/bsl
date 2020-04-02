@@ -22,28 +22,24 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef EXAMPLE_BASIC_STRING_VIEW_S_COUNT_CONSTRUCTOR_HPP
-#define EXAMPLE_BASIC_STRING_VIEW_S_COUNT_CONSTRUCTOR_HPP
+#include <bsl/string_view.hpp>
+#include <bsl/is_same.hpp>
 
-#include <bsl/basic_string_view.hpp>
-#include <bsl/print.hpp>
+#include <bsl/ut.hpp>
 
-namespace bsl
+/// <!-- description -->
+///   @brief Main function for this unit test. If a call to ut_check() fails
+///     the application will fast fail. If all calls to ut_check() pass, this
+///     function will successfully return with bsl::exit_success.
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+bsl::exit_code
+main() noexcept
 {
-    /// <!-- description -->
-    ///   @brief Provides the example's main function
-    ///
-    inline void
-    example_basic_string_view_s_count_constructor() noexcept
-    {
-        constexpr bsl::uintmax count{5U};
-        constexpr bsl::basic_string_view<bsl::char_type> str1{"Hello", count};
-        constexpr bsl::basic_string_view<bsl::char_type> str2{"Hello", count};
+    using namespace bsl;
+    static_assert(is_same<string_view, basic_string_view<char_type>>::value);
 
-        if (str1 == str2) {
-            bsl::print("success\n");
-        }
-    }
+    return bsl::ut_success();
 }
-
-#endif

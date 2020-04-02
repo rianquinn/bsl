@@ -23,6 +23,7 @@
 /// SOFTWARE.
 
 #include <bsl/char_traits.hpp>
+#include <bsl/numeric_limits.hpp>
 #include <bsl/ut.hpp>
 
 /// <!-- description -->
@@ -38,32 +39,6 @@ main() noexcept
 {
     using namespace bsl;
     using traits = char_traits<char_type>;
-
-    bsl::ut_scenario{"assign"} = []() {
-        bsl::ut_given{} = []() {
-            char_type a{23};
-            char_type b{42};
-            bsl::ut_when{} = [&a, &b]() {
-                traits::assign(a, b);
-                bsl::ut_then{} = [&a, &b]() {
-                    bsl::ut_check(a == 42);
-                    bsl::ut_check(b == 42);
-                };
-            };
-        };
-
-        bsl::ut_given{} = []() {
-            char_type a{23};
-            char_type b{42};
-            bsl::ut_when{} = [&a, &b]() {
-                traits::assign(&a, 1, b);
-                bsl::ut_then{} = [&a, &b]() {
-                    bsl::ut_check(a == 42);
-                    bsl::ut_check(b == 42);
-                };
-            };
-        };
-    };
 
     bsl::ut_scenario{"eq"} = []() {
         bsl::ut_given{} = []() {

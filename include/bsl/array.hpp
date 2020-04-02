@@ -30,7 +30,9 @@
 
 #include "contiguous_iterator.hpp"
 #include "cstdint.hpp"
-#include "for_each.hpp"
+#include "cstring.hpp"
+#include "is_constant_evaluated.hpp"
+#include "is_fundamental.hpp"
 #include "numeric_limits.hpp"
 #include "reverse_iterator.hpp"
 
@@ -675,18 +677,18 @@ namespace bsl
     constexpr bool
     operator==(bsl::array<T, N> const &lhs, bsl::array<T, N> const &rhs) noexcept
     {
-        bool eq{true};
-
-        bsl::for_each(lhs, [&rhs, &eq](auto &e, auto i) -> bool {
-            if (e != *rhs.at_if(i)) {
-                eq = false;
-                return bsl::for_each_break;
+        if (is_fundamental<T>::value && !is_constant_evaluated()) {
+            return bsl::memcmp(lhs.data(), rhs.data(), lhs.size_bytes()) == 0;
+        }
+        else {
+            for (bsl::uintmax i{}; i < lhs.size(); ++i) {
+                if (*lhs.at_if(i) != *rhs.at_if(i)) {
+                    return false;
+                }
             }
 
-            return bsl::for_each_continue;
-        });
-
-        return eq;
+            return true;
+        }
     }
 
     /// <!-- description -->

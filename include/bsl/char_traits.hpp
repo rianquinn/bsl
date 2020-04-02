@@ -30,8 +30,7 @@
 
 #include "char_type.hpp"
 #include "cstdint.hpp"
-#include "discard.hpp"
-#include "numeric_limits.hpp"
+#include "cstring.hpp"
 
 namespace bsl
 {
@@ -59,56 +58,18 @@ namespace bsl
     ///     this class directly, and we only provide it for compatibility.
     ///     Note that there are some BSL specific changes to the library, which
     ///     should not change the "valid" behavior of this class, but will
-    ///     change "invalid" behavior to comply better with AUTOSAR. We also
-    ///     do not have support for the type aliases yet as they either collide
-    ///     with existing global typedefs, or are not compliant with AUTOSAR.
+    ///     change "invalid" behavior to comply better with AUTOSAR. Also,
+    ///     we do not provide support for the type aliases (due to name
+    ///     collisions), and there are some functions that we do not support
+    ///     as they are not really AUTOSAR compliant (requiring the use of
+    ///     C-style array types). Once again, do not use this directly.
+    ///     Instead, find a BSL alternative to this functionality.
     ///   @include example_char_traits_overview.hpp
     ///
     template<>
     class char_traits<char_type> final
     {
     public:
-        /// <!-- description -->
-        ///   @brief Assigns a to r
-        ///   @include char_traits/example_char_traits_assign.hpp
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param r the left hand side of the assignment
-        ///   @param a the right hand side of the assignment
-        ///
-        static constexpr void
-        assign(char_type &r, char_type const &a) noexcept
-        {
-            r = a;
-        }
-
-        /// <!-- description -->
-        ///   @brief Same as std::memset (with the args rearranged)
-        ///   @include char_traits/example_char_traits_assign.hpp
-        ///
-        /// <!-- notes -->
-        ///   @note The BSL adds a nullptr check to this call, and will
-        ///     not perform the operation if p == nullptr.
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param p the location of the string to set to a
-        ///   @param count the number of characters to set
-        ///   @param a the character to set the string to
-        ///   @return returns p
-        ///
-        [[maybe_unused]] static char_type *
-        assign(char_type *const p, bsl::uintmax const count, char_type const a) noexcept
-        {
-            bsl::discard(count);
-            bsl::discard(a);
-
-            if (nullptr == p) {
-                return nullptr;
-            }
-
-            return static_cast<char_type *>(BSL_BUILTIN_MEMSET);
-        }
-
         /// <!-- description -->
         ///   @brief Returns true if "a" == "b"
         ///   @include char_traits/example_char_traits_eq.hpp
@@ -166,13 +127,7 @@ namespace bsl
             char_type const *const s2,    // --
             bsl::uintmax const count) noexcept
         {
-            bsl::discard(count);
-
-            if ((nullptr == s1) || (nullptr == s2)) {
-                return 0;
-            }
-
-            return BSL_BUILTIN_STRNCMP;
+            return bsl::strncmp(s1, s2, count);
         }
 
         /// <!-- description -->
@@ -190,11 +145,7 @@ namespace bsl
         [[nodiscard]] static constexpr bsl::uintmax
         length(char_type const *const s) noexcept
         {
-            if (nullptr == s) {
-                return 0U;
-            }
-
-            return BSL_BUILTIN_STRLEN;
+            return bsl::strlen(s);
         }
 
         /// <!-- description -->
@@ -215,14 +166,7 @@ namespace bsl
         [[nodiscard]] static constexpr char_type const *
         find(char_type const *const p, bsl::uintmax const count, char_type const &ch) noexcept
         {
-            bsl::discard(count);
-            bsl::discard(ch);
-
-            if (nullptr == p) {
-                return nullptr;
-            }
-
-            return static_cast<char_type const *>(BSL_BUILTIN_MEMCHR);
+            return bsl::strnchr(p, ch, count);
         }
 
         /// <!-- description -->

@@ -85,7 +85,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being copied
             ///
-            constexpr invoke_impl_mop_p(invoke_impl_mop_p const &o) noexcept = default;
+            invoke_impl_mop_p(invoke_impl_mop_p const &o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief move constructor
@@ -93,7 +93,7 @@ namespace bsl
             /// <!-- inputs/outputs -->
             ///   @param o the object being moved
             ///
-            constexpr invoke_impl_mop_p(invoke_impl_mop_p &&o) noexcept = default;
+            invoke_impl_mop_p(invoke_impl_mop_p &&o) noexcept = default;
 
             /// <!-- description -->
             ///   @brief copy assignment
@@ -102,7 +102,7 @@ namespace bsl
             ///   @param o the object being copied
             ///   @return a reference to *this
             ///
-            constexpr invoke_impl_mop_p &operator=(invoke_impl_mop_p const &o) &noexcept = default;
+            invoke_impl_mop_p &operator=(invoke_impl_mop_p const &o) &noexcept = default;
 
             /// <!-- description -->
             ///   @brief move assignment
@@ -111,7 +111,7 @@ namespace bsl
             ///   @param o the object being moved
             ///   @return a reference to *this
             ///
-            constexpr invoke_impl_mop_p &operator=(invoke_impl_mop_p &&o) &noexcept = default;
+            invoke_impl_mop_p &operator=(invoke_impl_mop_p &&o) &noexcept = default;
         };
     }
 }
