@@ -22,9 +22,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/new.hpp>
-#include <bsl/addressof.hpp>
-
+#include <bsl/char_traits.hpp>
 #include <bsl/ut.hpp>
 
 /// <!-- description -->
@@ -39,17 +37,19 @@ bsl::exit_code
 main() noexcept
 {
     using namespace bsl;
+    using traits = bsl::char_traits<bsl::char_type>;
 
-    bsl::ut_scenario{"move"} = []() {
-        bsl::ut_given{} = []() {
-            bool val{};
-            bsl::ut_when{} = [&val]() {
-                void *ptr = new (bsl::addressof(val)) bool;
-                bsl::ut_then{} = [&val, &ptr]() {
-                    bsl::ut_check(bsl::addressof(val) == ptr);
-                };
-            };
-        };
+    bsl::ut_scenario{"verify noexcept"} = []() {
+        static_assert(noexcept(traits::eq('H', 'H')));
+        static_assert(noexcept(traits::lt('H', 'H')));
+        static_assert(noexcept(traits::compare(nullptr, nullptr, 0)));
+        static_assert(noexcept(traits::length(nullptr)));
+        static_assert(noexcept(traits::find(nullptr, 0, 0)));
+        static_assert(noexcept(traits::to_char_type(0)));
+        static_assert(noexcept(traits::to_int_type(0)));
+        static_assert(noexcept(traits::eq_int_type(0, 0)));
+        static_assert(noexcept(traits::eof()));
+        static_assert(noexcept(traits::not_eof(0)));
     };
 
     return bsl::ut_success();

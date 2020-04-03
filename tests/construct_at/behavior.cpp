@@ -22,10 +22,41 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/move_if_noexcept.hpp>
-#include <bsl/discard.hpp>
+#include <bsl/construct_at.hpp>
 #include <bsl/ut.hpp>
 
+/// <!-- description -->
+///   @brief Used to execute the actual checks. We put the checks in this
+///     function so that we can validate the tests both at compile-time
+///     and at run-time. If a bsl::ut_check fails, the tests will either
+///     fail fast at run-time, or will produce a compile-time error.
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+constexpr bsl::exit_code
+tests() noexcept
+{
+    bsl::ut_scenario{"construct_at"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::ut_when{} = []() {
+                bsl::construct_at<bsl::int32>(nullptr, 42);
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::int32 mydata{};
+            bsl::ut_when{} = [&mydata]() {
+                bsl::construct_at<bsl::int32>(&mydata, 42);
+                bsl::ut_then{} = [&mydata]() {
+                    bsl::ut_check(mydata == 42);
+                };
+            };
+        };
+    };
+
+    return bsl::ut_success();
+}
 
 /// <!-- description -->
 ///   @brief Main function for this unit test. If a call to ut_check() fails
@@ -38,11 +69,6 @@
 bsl::exit_code
 main() noexcept
 {
-    using namespace bsl;
-    bsl::set_ut_reset_handler([]() {
-        g_moved = false;
-    });
-
-
-    return bsl::ut_success();
+    static_assert(tests() == bsl::ut_success());
+    return tests();
 }

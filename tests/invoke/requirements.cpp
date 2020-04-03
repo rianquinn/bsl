@@ -24,13 +24,18 @@
 
 #include <bsl/invoke.hpp>
 #include <bsl/reference_wrapper.hpp>
-
 #include <bsl/ut.hpp>
 
 namespace
 {
     [[nodiscard]] constexpr bool
     test_func(bool val)
+    {
+        return val;
+    }
+
+    [[nodiscard]] constexpr bool
+    test_func_noexcept(bool val) noexcept
     {
         return val;
     }
@@ -87,51 +92,46 @@ namespace
 bsl::exit_code
 main() noexcept
 {
-    using namespace bsl;
+    bsl::ut_scenario{"1.1 noexceptness"} = []() {
+        static_assert(!noexcept(bsl::invoke(&test_base::operator(), g_test_final, true)));
+        static_assert(!noexcept(bsl::invoke(&test_final::operator(), g_test_final, true)));
+        static_assert(noexcept(bsl::invoke(&test_noexcept::operator(), g_test_noexcept, true)));
+    };
 
-    // (1.1) If std::is_base_of<T, std::decay_t<decltype(t1)>>::value
-    //       is true, then INVOKE(f, t1, t2, ..., tN) is equivalent to
-    //       (t1.*f)(t2, ..., tN)
-    static_assert(bsl::invoke(&test_base::operator(), g_test_final, true));
-    static_assert(bsl::invoke(&test_final::operator(), g_test_final, true));
-    static_assert(bsl::invoke(&test_noexcept::operator(), g_test_noexcept, true));
+    bsl::ut_scenario{"1.2 noexceptness"} = []() {
+        static_assert(!noexcept(bsl::invoke(&test_base::operator(), g_rw_test_final, true)));
+        static_assert(!noexcept(bsl::invoke(&test_final::operator(), g_rw_test_final, true)));
+        static_assert(noexcept(bsl::invoke(&test_noexcept::operator(), g_rw_test_noexcept, true)));
+    };
 
-    // (1.2) If std::decay_t<decltype(t1)> is a specialization of
-    //       std::reference_wrapper, then INVOKE(f, t1, t2, ..., tN) is
-    //       equivalent to (t1.get().*f)(t2, ..., tN)
-    static_assert(bsl::invoke(&test_base::operator(), g_rw_test_final, true));
-    static_assert(bsl::invoke(&test_final::operator(), g_rw_test_final, true));
-    static_assert(bsl::invoke(&test_noexcept::operator(), g_rw_test_noexcept, true));
+    bsl::ut_scenario{"1.3 noexceptness"} = []() {
+        static_assert(!noexcept(bsl::invoke(&test_base::operator(), &g_test_final, true)));
+        static_assert(!noexcept(bsl::invoke(&test_final::operator(), &g_test_final, true)));
+        static_assert(noexcept(bsl::invoke(&test_noexcept::operator(), &g_test_noexcept, true)));
+    };
 
-    // (1.3) If t1 does not satisfy the previous items, then
-    //       INVOKE(f, t1, t2, ..., tN) is equivalent to
-    //       ((*t1).*f)(t2, ..., tN)
-    static_assert(bsl::invoke(&test_base::operator(), &g_test_final, true));
-    static_assert(bsl::invoke(&test_final::operator(), &g_test_final, true));
-    static_assert(bsl::invoke(&test_noexcept::operator(), &g_test_noexcept, true));
+    bsl::ut_scenario{"2.1 noexceptness"} = []() {
+        static_assert(noexcept(bsl::invoke(&test_base::data, g_test_final) == 42));
+        static_assert(noexcept(bsl::invoke(&test_final::data, g_test_final) == 42));
+        static_assert(noexcept(bsl::invoke(&test_noexcept::data, g_test_noexcept) == 42));
+    };
 
-    // (2.1) If std::is_base_of<T, std::decay_t<decltype(t1)>>::value is true,
-    //       then INVOKE(f, t1) is equivalent to t1.*f
-    static_assert(bsl::invoke(&test_base::data, g_test_final) == 42);
-    static_assert(bsl::invoke(&test_final::data, g_test_final) == 42);
-    static_assert(bsl::invoke(&test_noexcept::data, g_test_noexcept) == 42);
+    bsl::ut_scenario{"2.2 noexceptness"} = []() {
+        static_assert(noexcept(bsl::invoke(&test_base::data, g_rw_test_final) == 42));
+        static_assert(noexcept(bsl::invoke(&test_final::data, g_rw_test_final) == 42));
+        static_assert(noexcept(bsl::invoke(&test_noexcept::data, g_rw_test_noexcept) == 42));
+    };
 
-    // (2.2) If std::decay_t<decltype(t1)> is a specialization of
-    //       std::reference_wrapper, then INVOKE(f, t1) is
-    //       equivalent to t1.get().*f
-    static_assert(bsl::invoke(&test_base::data, g_rw_test_final) == 42);
-    static_assert(bsl::invoke(&test_final::data, g_rw_test_final) == 42);
-    static_assert(bsl::invoke(&test_noexcept::data, g_rw_test_noexcept) == 42);
+    bsl::ut_scenario{"2.3 noexceptness"} = []() {
+        static_assert(noexcept(bsl::invoke(&test_base::data, &g_test_final) == 42));
+        static_assert(noexcept(bsl::invoke(&test_final::data, &g_test_final) == 42));
+        static_assert(noexcept(bsl::invoke(&test_noexcept::data, &g_test_noexcept) == 42));
+    };
 
-    // (2.3) If t1 does not satisfy the previous items, then INVOKE(f, t1)
-    //       is equivalent to (*t1).*f
-    static_assert(bsl::invoke(&test_base::data, &g_test_final) == 42);
-    static_assert(bsl::invoke(&test_final::data, &g_test_final) == 42);
-    static_assert(bsl::invoke(&test_noexcept::data, &g_test_noexcept) == 42);
-
-    // (3.1) Otherwise, INVOKE(f, t1, t2, ..., tN) is equivalent to
-    //       f(t1, t2, ..., tN)
-    static_assert(bsl::invoke(&test_func, true));
+    bsl::ut_scenario{"3.1 noexceptness"} = []() {
+        static_assert(!noexcept(bsl::invoke(&test_func, true)));
+        static_assert(noexcept(bsl::invoke(&test_func_noexcept, true)));
+    };
 
     return bsl::ut_success();
 }

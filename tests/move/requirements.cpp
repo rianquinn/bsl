@@ -22,44 +22,8 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/forward.hpp>
-#include <bsl/is_const.hpp>
-#include <bsl/is_lvalue_reference.hpp>
-#include <bsl/is_rvalue_reference.hpp>
-#include <bsl/remove_reference.hpp>
-
+#include <bsl/move.hpp>
 #include <bsl/ut.hpp>
-
-namespace
-{
-    template<typename T>
-    [[nodiscard]] constexpr bsl::int32
-    detector(T &&t) noexcept
-    {
-        using namespace bsl;
-
-        if constexpr (is_const<remove_reference_t<T>>::value) {
-            return 1;
-        }
-
-        if constexpr (is_lvalue_reference<decltype(t)>::value) {
-            return 2;
-        }
-
-        if constexpr (is_rvalue_reference<decltype(t)>::value) {
-            return 3;
-        }
-
-        return 0;
-    }
-
-    template<typename T>
-    [[nodiscard]] constexpr bsl::int32
-    forwarder(T &&t) noexcept
-    {
-        return detector(bsl::forward<T>(t));
-    }
-}
 
 /// <!-- description -->
 ///   @brief Main function for this unit test. If a call to ut_check() fails
@@ -74,12 +38,14 @@ main() noexcept
 {
     using namespace bsl;
 
-    bsl::int32 const val1{42};
-    bsl::int32 val2{val1};
-
-    static_assert(forwarder(val1) == 1);
-    static_assert(forwarder(val2) == 2);
-    static_assert(forwarder(42) == 3);
+    bsl::ut_scenario{"verify except"} = []() {
+        bsl::ut_given{} = []() {
+            bool mydata{};
+            bsl::ut_then{} = []() {
+                static_assert(noexcept(bsl::move(mydata)));
+            };
+        };
+    };
 
     return bsl::ut_success();
 }

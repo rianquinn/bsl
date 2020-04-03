@@ -22,10 +22,28 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/move_if_noexcept.hpp>
-#include <bsl/discard.hpp>
+#include <bsl/destroy_at.hpp>
 #include <bsl/ut.hpp>
 
+// TODO:
+// - Once C++20 is fully supported we need to verify that destruct_at can
+//   be used in a constexpr and then update all of the classes that use this
+//   to reflect the new support
+//
+
+namespace
+{
+    bool g_called{false};
+
+    class myclass final    // NOLINT
+    {
+    public:
+        ~myclass() noexcept
+        {
+            g_called = true;
+        }
+    };
+}
 
 /// <!-- description -->
 ///   @brief Main function for this unit test. If a call to ut_check() fails
@@ -39,10 +57,27 @@ bsl::exit_code
 main() noexcept
 {
     using namespace bsl;
-    bsl::set_ut_reset_handler([]() {
-        g_moved = false;
-    });
 
+    bsl::ut_scenario{"attempting to destroy nullptr is ignored"} = []() {
+        bsl::ut_given{} = []() {
+            myclass *c{};
+            bsl::ut_when{} = [&c]() {
+                bsl::destroy_at(c);
+            };
+        };
+    };
+
+    bsl::ut_scenario{"detroy_at"} = []() {
+        bsl::ut_given{} = []() {
+            myclass c;
+            bsl::ut_when{} = [&c]() {
+                bsl::destroy_at(&c);
+                bsl::ut_then{} = []() {
+                    bsl::ut_check(g_called);
+                };
+            };
+        };
+    };
 
     return bsl::ut_success();
 }

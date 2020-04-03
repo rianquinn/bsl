@@ -38,11 +38,11 @@ main() noexcept
 {
     using namespace bsl;
 
-    bsl::ut_scenario{"discard"} = []() {
+    bsl::ut_scenario{"verify noexcept"} = []() {
         bsl::ut_given{} = []() {
-            bool val{};
-            bsl::ut_then{} = [&val]() {
-                bsl::discard(val);    // <--- Removes compilers warning
+            bool mydata{};
+            bsl::ut_then{} = []() {
+                static_assert(noexcept(discard(mydata)));
             };
         };
     };

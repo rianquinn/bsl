@@ -124,7 +124,6 @@
 #include "example_common_type_overview.hpp"
 #include "example_conditional_overview.hpp"
 #include "example_conjunction_overview.hpp"
-#include "example_construct_at_overview.hpp"
 #include "example_contiguous_iterator_overview.hpp"
 #include "contiguous_iterator/example_contiguous_iterator_data.hpp"
 #include "contiguous_iterator/example_contiguous_iterator_decrement.hpp"
@@ -462,7 +461,6 @@ main() noexcept
     example(&bsl::example_common_type_overview, "example_common_type_overview");
     example(&bsl::example_conditional_overview, "example_conditional_overview");
     example(&bsl::example_conjunction_overview, "example_conjunction_overview");
-    example(&bsl::example_construct_at_overview, "example_construct_at_overview");
     example(&bsl::example_contiguous_iterator_overview, "example_contiguous_iterator_overview");
     example(&bsl::example_contiguous_iterator_data, "example_contiguous_iterator_data");
     example(&bsl::example_contiguous_iterator_decrement, "example_contiguous_iterator_decrement");

@@ -24,10 +24,13 @@
 
 #include <bsl/basic_string_view.hpp>
 #include <bsl/discard.hpp>
+#include <bsl/is_pod.hpp>
 #include <bsl/ut.hpp>
 
 namespace
 {
+    bsl::basic_string_view<bsl::char_type> pod;
+
     class fixture_t final
     {
         bsl::basic_string_view<bsl::char_type> msg{"Hello World"};
@@ -57,7 +60,6 @@ namespace
             bsl::discard(msg.length());
             bsl::discard(msg.max_size());
             bsl::discard(msg.size_bytes());
-
             bsl::discard(msg.substr());
             bsl::discard(msg.compare(bsl::basic_string_view<bsl::char_type>{}));
             bsl::discard(msg.compare({}, {}, bsl::basic_string_view<bsl::char_type>{}));
@@ -99,7 +101,6 @@ namespace
             bsl::discard(msg.length());
             bsl::discard(msg.max_size());
             bsl::discard(msg.size_bytes());
-
             bsl::discard(msg.remove_prefix(0));
             bsl::discard(msg.remove_suffix(0));
             bsl::discard(msg.substr());
@@ -135,6 +136,65 @@ bsl::exit_code
 main() noexcept
 {
     using namespace bsl;
+    using bsv_type = bsl::basic_string_view<bsl::char_type>;
+
+    bsl::ut_scenario{"verify supports global POD"} = []() {
+        bsl::discard(pod);
+        static_assert(is_pod<decltype(pod)>::value);
+    };
+
+    bsl::ut_scenario{"verify noexcept"} = []() {
+        bsl::ut_given{} = []() {
+            bsv_type msg1{};
+            bsv_type msg2{};
+            bsl::ut_then{} = []() {
+                static_assert(noexcept(bsv_type{}));
+                static_assert(noexcept(bsv_type{""}));
+                static_assert(noexcept(msg1.at_if(0)));
+                static_assert(noexcept(msg1.front_if()));
+                static_assert(noexcept(msg1.back_if()));
+                static_assert(noexcept(msg1.data()));
+                static_assert(noexcept(msg1.begin()));
+                static_assert(noexcept(msg1.cbegin()));
+                static_assert(noexcept(msg1.end()));
+                static_assert(noexcept(msg1.cend()));
+                static_assert(noexcept(msg1.iter(0)));
+                static_assert(noexcept(msg1.citer(0)));
+                static_assert(noexcept(msg1.rbegin()));
+                static_assert(noexcept(msg1.crbegin()));
+                static_assert(noexcept(msg1.rend()));
+                static_assert(noexcept(msg1.crend()));
+                static_assert(noexcept(msg1.riter(0)));
+                static_assert(noexcept(msg1.criter(0)));
+                static_assert(noexcept(msg1.empty()));
+                static_assert(noexcept(msg1.size()));
+                static_assert(noexcept(msg1.length()));
+                static_assert(noexcept(msg1.max_size()));
+                static_assert(noexcept(msg1.size_bytes()));
+                static_assert(noexcept(msg1.remove_prefix(0)));
+                static_assert(noexcept(msg1.remove_suffix(0)));
+                static_assert(noexcept(msg1.substr()));
+                static_assert(noexcept(msg1.compare(bsv_type{})));
+                static_assert(noexcept(msg1.compare({}, {}, bsv_type{})));
+                static_assert(noexcept(msg1.compare({}, {}, bsv_type{}, {}, {})));
+                static_assert(noexcept(msg1.compare("")));
+                static_assert(noexcept(msg1.compare({}, {}, "")));
+                static_assert(noexcept(msg1.compare({}, {}, "", {})));
+                static_assert(noexcept(msg1.starts_with(bsv_type{})));
+                static_assert(noexcept(msg1.starts_with('H')));
+                static_assert(noexcept(msg1.starts_with("")));
+                static_assert(noexcept(msg1.ends_with(bsv_type{})));
+                static_assert(noexcept(msg1.ends_with('H')));
+                static_assert(noexcept(msg1.ends_with("")));
+                static_assert(noexcept(msg1 == msg2));    // NOLINT
+                static_assert(noexcept(msg1 == ""));      // NOLINT
+                static_assert(noexcept("" == msg2));      // NOLINT
+                static_assert(noexcept(msg1 != msg2));    // NOLINT
+                static_assert(noexcept(msg1 != ""));      // NOLINT
+                static_assert(noexcept("" != msg2));      // NOLINT
+            };
+        };
+    };
 
     bsl::ut_scenario{"verify constness"} = []() {
         bsl::ut_given{} = []() {

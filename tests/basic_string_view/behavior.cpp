@@ -625,6 +625,146 @@ tests() noexcept
         };
     };
 
+    bsl::ut_scenario{"remove_prefix"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::basic_string_view<bsl::char_type> msg{};
+            bsl::ut_when{} = [&msg]() {
+                msg.remove_prefix(0);
+                bsl::ut_then{} = [&msg]() {
+                    bsl::ut_check(msg.empty());
+                };
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::basic_string_view<bsl::char_type> msg{};
+            bsl::ut_when{} = [&msg]() {
+                msg.remove_prefix(bsl::npos);
+                bsl::ut_then{} = [&msg]() {
+                    bsl::ut_check(msg.empty());
+                };
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::basic_string_view<bsl::char_type> msg{"Hello World"};
+            bsl::ut_when{} = [&msg]() {
+                msg.remove_prefix(0);
+                bsl::ut_then{} = [&msg]() {
+                    bsl::ut_check(msg == "Hello World");
+                };
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::basic_string_view<bsl::char_type> msg{"Hello World"};
+            bsl::ut_when{} = [&msg]() {
+                msg.remove_prefix(6);
+                bsl::ut_then{} = [&msg]() {
+                    bsl::ut_check(msg == "World");
+                };
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::basic_string_view<bsl::char_type> msg{"Hello World"};
+            bsl::ut_when{} = [&msg]() {
+                msg.remove_prefix(bsl::npos);
+                bsl::ut_then{} = [&msg]() {
+                    bsl::ut_check(msg.empty());
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"remove_suffix"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::basic_string_view<bsl::char_type> msg{};
+            bsl::ut_when{} = [&msg]() {
+                msg.remove_suffix(0);
+                bsl::ut_then{} = [&msg]() {
+                    bsl::ut_check(msg.empty());
+                };
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::basic_string_view<bsl::char_type> msg{};
+            bsl::ut_when{} = [&msg]() {
+                msg.remove_suffix(bsl::npos);
+                bsl::ut_then{} = [&msg]() {
+                    bsl::ut_check(msg.empty());
+                };
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::basic_string_view<bsl::char_type> msg{"Hello World"};
+            bsl::ut_when{} = [&msg]() {
+                msg.remove_suffix(0);
+                bsl::ut_then{} = [&msg]() {
+                    bsl::ut_check(msg == "Hello World");
+                };
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::basic_string_view<bsl::char_type> msg{"Hello World"};
+            bsl::ut_when{} = [&msg]() {
+                msg.remove_suffix(6);
+                bsl::ut_then{} = [&msg]() {
+                    bsl::ut_check(msg == "Hello");
+                };
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::basic_string_view<bsl::char_type> msg{"Hello World"};
+            bsl::ut_when{} = [&msg]() {
+                msg.remove_suffix(bsl::npos);
+                bsl::ut_then{} = [&msg]() {
+                    bsl::ut_check(msg.empty());
+                };
+            };
+        };
+    };
+
+    bsl::ut_scenario{"substr"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::basic_string_view<bsl::char_type> msg{};
+            bsl::ut_when{} = [&msg]() {
+                bsl::ut_then{} = [&msg]() {
+                    bsl::ut_check(msg.substr(0, 0).empty());
+                    bsl::ut_check(msg.substr(0, 3).empty());
+                    bsl::ut_check(msg.substr(0, bsl::npos).empty());
+                    bsl::ut_check(msg.substr(1, 0).empty());
+                    bsl::ut_check(msg.substr(1, 3).empty());
+                    bsl::ut_check(msg.substr(1, bsl::npos).empty());
+                    bsl::ut_check(msg.substr(bsl::npos, 0).empty());
+                    bsl::ut_check(msg.substr(bsl::npos, 3).empty());
+                    bsl::ut_check(msg.substr(bsl::npos, bsl::npos).empty());
+                };
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            bsl::basic_string_view<bsl::char_type> msg{"Hello World"};
+            bsl::ut_when{} = [&msg]() {
+                bsl::ut_then{} = [&msg]() {
+                    bsl::ut_check(msg.substr(0, 0).empty());
+                    bsl::ut_check(msg.substr(0, 3) == "Hel");
+                    bsl::ut_check(msg.substr(0, bsl::npos) == "Hello World");
+                    bsl::ut_check(msg.substr(1, 0).empty());
+                    bsl::ut_check(msg.substr(1, 3) == "ell");
+                    bsl::ut_check(msg.substr(1, bsl::npos) == "ello World");
+                    bsl::ut_check(msg.substr(bsl::npos, 0).empty());
+                    bsl::ut_check(msg.substr(bsl::npos, 3).empty());
+                    bsl::ut_check(msg.substr(bsl::npos, bsl::npos).empty());
+                };
+            };
+        };
+    };
+
     return bsl::ut_success();
 }
 

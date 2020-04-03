@@ -269,8 +269,6 @@ FILE(GLOB_RECURSE BF_HEADERS_INCLUDE RELATIVE ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE
 FILE(GLOB_RECURSE BF_SOURCES_INCLUDE RELATIVE ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/include/*.cpp)
 FILE(GLOB_RECURSE BF_HEADERS_TESTS RELATIVE ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/tests/*.hpp)
 FILE(GLOB_RECURSE BF_SOURCES_TESTS RELATIVE ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/tests/*.cpp)
-FILE(GLOB_RECURSE BF_HEADERS_SRC RELATIVE ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/src/*.hpp)
-FILE(GLOB_RECURSE BF_SOURCES_SRC RELATIVE ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/src/*.cpp)
 
 if(CMAKE_BUILD_TYPE STREQUAL DEBUG OR
    CMAKE_BUILD_TYPE STREQUAL CLANG_TIDY OR
@@ -287,11 +285,9 @@ if(ENABLE_CLANG_FORMAT)
     bf_find_program(BF_CLANG_FORMAT "clang-format" "https://clang.llvm.org/docs/ClangFormat.html")
     add_custom_target(
         format
-        COMMAND ${BF_CLANG_FORMAT} -i
-        ${BF_HEADERS_EXAMPLES} ${BF_SOURCES_EXAMPLES}
-        ${BF_HEADERS_INCLUDE} ${BF_SOURCES_INCLUDE}
-        ${BF_HEADERS_TESTS} ${BF_SOURCES_TESTS}
-        ${BF_HEADERS_SRC} ${BF_SOURCES_SRC}
+        COMMAND ${BF_CLANG_FORMAT} -i ${BF_HEADERS_EXAMPLES} ${BF_SOURCES_EXAMPLES}
+        COMMAND ${BF_CLANG_FORMAT} -i ${BF_HEADERS_INCLUDE} ${BF_SOURCES_INCLUDE}
+        COMMAND ${BF_CLANG_FORMAT} -i ${BF_HEADERS_TESTS} ${BF_SOURCES_TESTS}
     )
     add_custom_command(TARGET info
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --yellow  "   ninja format                          formats the source code"
@@ -388,13 +384,13 @@ string(APPEND CMAKE_CXX_FLAGS
     "-fcomment-block-commands=include "
     "-fcomment-block-commands=cond "
     "-fcomment-block-commands=endcond "
-    "-Weverything "
-    "-Wno-c++98-compat "
-    "-Wno-c++98-compat-pedantic "
-    "-Wno-padded "
-    "-Wno-weak-vtables "
-    "-Wno-ctad-maybe-unsupported "
-    "-Wno-enum-compare-conditional"
+    # "-Weverything "
+    # "-Wno-c++98-compat "
+    # "-Wno-c++98-compat-pedantic "
+    # "-Wno-padded "
+    # "-Wno-weak-vtables "
+    # "-Wno-ctad-maybe-unsupported "
+    # "-Wno-enum-compare-conditional"
 )
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -Werror")

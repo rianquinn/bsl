@@ -22,10 +22,32 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/exchange.hpp>
-#include <bsl/is_same.hpp>
-
+#include <bsl/discard.hpp>
 #include <bsl/ut.hpp>
+
+/// <!-- description -->
+///   @brief Used to execute the actual checks. We put the checks in this
+///     function so that we can validate the tests both at compile-time
+///     and at run-time. If a bsl::ut_check fails, the tests will either
+///     fail fast at run-time, or will produce a compile-time error.
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+constexpr bsl::exit_code
+tests() noexcept
+{
+    bsl::ut_scenario{"discard"} = []() {
+        bsl::ut_given{} = []() {
+            bool val{};
+            bsl::ut_then{} = [&val]() {
+                bsl::discard(val);    // <--- Removes compilers warning
+            };
+        };
+    };
+
+    return bsl::ut_success();
+}
 
 /// <!-- description -->
 ///   @brief Main function for this unit test. If a call to ut_check() fails
@@ -38,21 +60,6 @@
 bsl::exit_code
 main() noexcept
 {
-    using namespace bsl;
-
-    bsl::ut_scenario{"exchange"} = []() {
-        bsl::ut_given{} = []() {
-            bsl::int32 val1{23};
-            bsl::int32 val2{42};
-            bsl::ut_when{} = [&val1, &val2]() {
-                val2 = bsl::exchange(val1, val2);
-                bsl::ut_then{} = [&val1, &val2]() {
-                    bsl::ut_check(val1 == 42);
-                    bsl::ut_check(val2 == 23);
-                };
-            };
-        };
-    };
-
-    return bsl::ut_success();
+    static_assert(tests() == bsl::ut_success());
+    return tests();
 }

@@ -25,43 +25,43 @@
 #ifndef BSL_CONSTRUCT_AT_HPP
 #define BSL_CONSTRUCT_AT_HPP
 
+#include "discard.hpp"
 #include "declval.hpp"
-#include "new.hpp"
 #include "forward.hpp"
 
-namespace bsl
+#ifndef PERFORCE
+
+/// <!-- description -->
+///   @brief This function implements the placement new operator. Note that
+///     this function is passed a count and pointer, both of which are ignored.
+///
+/// <!-- inputs/outputs -->
+///   @param count ignored
+///   @param ptr the ptr to return
+///   @return returns ptr
+///
+constexpr void *
+operator new(bsl::uintmax count, void *ptr) noexcept
+{
+    bsl::discard(count);
+    return ptr;
+}
+
+namespace std
 {
     /// <!-- description -->
-    ///   @brief Used to construct T at a specific location in memory using
-    ///     a placement-new. The difference is, this function takes a void *
-    ///     and returns a T *. This should be used instead of using the
-    ///     placement new operator directly as it encapsulates issues with
-    ///     PRQA.
-    ///   @include example_construct_at_overview.hpp
+    ///   @brief Implements a constexpr version of placement new. that can
+    ///     be used by BSL's APIs to support constexpr based APIs
     ///
-    ///   SUPPRESSION: PRQA 5217 - false positive
-    ///   - We suppress this because A18-5-2 states that non-placement
-    ///     new and delete expressions are not allowed. This is a false
-    ///     positive because this uses a placement new, which is allowed.
-    ///
-    ///   SUPPRESSION: PRQA 3058 - false positive
-    ///   - We suppress this because M8-4-4 states that function pointers
-    ///     should be preceeded by an &. In some cases, even if it is, this
-    ///     rule still triggers (some sort of bug with PRQA)
-    ///
-    ///   SUPPRESSION: PRQA 2706 - false positive
-    ///   - We suppress this because 18-5-5 states that all allocated memory
-    ///     shall be deallocated. This is a placement new, which is not
-    ///     allocating memory.
-    ///
-    ///   SUPPRESSION: PRQA 4327 - false positive
-    ///   - We suppress this because A0-1-4 states that all function parameters
-    ///     should be used. PRQA thinks that "args" is not being used, which
-    ///     is not true as "args" is passed to the placement new operator
-    ///     which is then used to determine which constructor to use. Even if
-    ///     the resulting constructor was not using a parameter, that
-    ///     constructor would fail this test, not this function. Something is
-    ///     buggy with this test.
+    /// <!-- notes -->
+    ///   @note C++20 right now only allows for constexpr placement new to
+    ///     occur from the standard library (a practice I hope changes in the
+    ///     next release as that is horrible). For this reason, we implement
+    ///     the placement new from the std namespace (uhg) and then call this
+    ///     from our BSL function. This rule is so easy to bypass, I am at
+    ///     a loss as to why they did this, but at least this approach works
+    ///     so that third party libraries can still take advantage of this
+    ///     C++20 feature.
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type of object to initialize
@@ -72,13 +72,66 @@ namespace bsl
     /// <!-- exceptions -->
     ///   @throw throws if T throws during construction
     ///
-    template<typename T, typename... ARGS>
+    template<typename T, typename ...ARGS>
     constexpr void
-    construct_at(void *const ptr, ARGS &&... args)    // PRQA S 4327
+    construct_at_impl(void *ptr, ARGS &&...args) // --
         noexcept(noexcept(new (ptr) T{bsl::declval<ARGS>()...}))
     {
-        bsl::discard(new (ptr) T{bsl::forward<ARGS>(args)...});    // PRQA S 1-10000 // NOLINT
+        if (nullptr == ptr) {
+            return;
+        }
+
+        bsl::discard(new (ptr) T{bsl::forward<ARGS>(args)...});
     }
 }
+
+namespace bsl
+{
+    /// <!-- description -->
+    ///   @brief Implements a constexpr version of placement new. that can
+    ///     be used by BSL's APIs to support constexpr based APIs
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the type of object to initialize
+    ///   @tparam ARGS the types of args to initialize T with
+    ///   @param ptr a pointer to the object to initialize
+    ///   @param args the args to initialize T with
+    ///
+    /// <!-- exceptions -->
+    ///   @throw throws if T throws during construction
+    ///
+    template<typename T, typename ...ARGS>
+    constexpr void
+    construct_at(void *ptr, ARGS &&...args) // --
+        noexcept(noexcept(std::construct_at_impl<T, ARGS...>(ptr, bsl::declval<ARGS>()...)))
+    {
+        std::construct_at_impl<T, ARGS...>(ptr, bsl::forward<ARGS>(args)...);
+    }
+}
+
+#else
+
+namespace bsl
+{
+    /// <!-- description -->
+    ///   @brief Implements a constexpr version of placement new. that can
+    ///     be used by BSL's APIs to support constexpr based APIs
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the type of object to initialize
+    ///   @tparam ARGS the types of args to initialize T with
+    ///   @param ptr a pointer to the object to initialize
+    ///   @param args the args to initialize T with
+    ///
+    template<typename T, typename ...ARGS>
+    constexpr void
+    construct_at(void *ptr, ARGS &&...args) noexcept
+    {
+        bsl::discard(ptr);
+        bsl::discard(bsl::forward<ARGS>(args)...);
+    }
+}
+
+#endif
 
 #endif

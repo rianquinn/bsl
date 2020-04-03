@@ -22,8 +22,33 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/addressof.hpp>
+#include <bsl/as_const.hpp>
 #include <bsl/ut.hpp>
+
+/// <!-- description -->
+///   @brief Used to execute the actual checks. We put the checks in this
+///     function so that we can validate the tests both at compile-time
+///     and at run-time. If a bsl::ut_check fails, the tests will either
+///     fail fast at run-time, or will produce a compile-time error.
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+constexpr bsl::exit_code
+tests() noexcept
+{
+    bsl::ut_scenario{"verify as_const result"} = []() {
+        bsl::ut_given{} = []() {
+            bool mydata1{true};
+            bool const mydata2{bsl::as_const(mydata1)};
+            bsl::ut_then{} = [&mydata1, &mydata2]() {
+                bsl::ut_check(mydata1 == mydata2);
+            };
+        };
+    };
+
+    return bsl::ut_success();
+}
 
 /// <!-- description -->
 ///   @brief Main function for this unit test. If a call to ut_check() fails
@@ -36,10 +61,6 @@
 bsl::exit_code
 main() noexcept
 {
-    using namespace bsl;
-
-    bool const mydata{};
-    static_assert(addressof(mydata) == &mydata);
-
-    return bsl::ut_success();
+    static_assert(tests() == bsl::ut_success());
+    return tests();
 }

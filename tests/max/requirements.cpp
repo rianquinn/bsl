@@ -22,7 +22,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/move.hpp>
+#include <bsl/max.hpp>
 #include <bsl/ut.hpp>
 
 /// <!-- description -->
@@ -38,15 +38,9 @@ main() noexcept
 {
     using namespace bsl;
 
-    bsl::ut_scenario{"move"} = []() {
-        bsl::ut_given{} = []() {
-            bool val1{true};
-            bsl::ut_when{} = [&val1]() {
-                bool &&val2{bsl::move(val1)};
-                bsl::ut_then{} = [&val2]() {
-                    bsl::ut_check(val2);
-                };
-            };
+    bsl::ut_scenario{"verify noexcept"} = []() {
+        bsl::ut_then{} = []() {
+            static_assert(noexcept(max(23, 42)));
         };
     };
 

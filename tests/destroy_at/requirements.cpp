@@ -22,10 +22,17 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/max.hpp>
-#include <bsl/is_bool.hpp>
-
+#include <bsl/destroy_at.hpp>
 #include <bsl/ut.hpp>
+
+namespace
+{
+    class myclass final    // NOLINT
+    {
+    public:
+        ~myclass() noexcept(false) = default;
+    };
+}
 
 /// <!-- description -->
 ///   @brief Main function for this unit test. If a call to ut_check() fails
@@ -40,8 +47,21 @@ main() noexcept
 {
     using namespace bsl;
 
-    static_assert(max(23, 42) == 42);
-    static_assert(max(42, 23) == 42);
+    bsl::ut_scenario{"verify noexcept"} = []() {
+        bsl::ut_given{} = []() {
+            bool mydata{};
+            bsl::ut_then{} = []() {
+                static_assert(noexcept(destroy_at(&mydata)));
+            };
+        };
+
+        bsl::ut_given{} = []() {
+            myclass c{};
+            bsl::ut_then{} = []() {
+                static_assert(!noexcept(destroy_at(&c)));
+            };
+        };
+    };
 
     return bsl::ut_success();
 }

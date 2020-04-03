@@ -63,65 +63,89 @@ namespace
 
     class myclass final
     {
-        mutable bool m_data{};
-
     public:
         [[nodiscard]] constexpr bool
-        test_memfunc(bool const val)
+        test_memfunc(bool const val)    // NOLINT
         {
-            m_data = val;
             return val;
         }
 
         [[nodiscard]] constexpr bool
-        test_memfunc_noexcept(bool const val) noexcept
+        test_memfunc_noexcept(bool const val) noexcept    // NOLINT
         {
-            m_data = val;
             return val;
         }
 
         void
-        test_memfunc_void(bool const val)
+        test_memfunc_void(bool const val)    // NOLINT
         {
-            m_data = val;
+            bsl::discard(val);
             g_called = true;
         }
 
         void
-        test_memfunc_void_noexcept(bool const val) noexcept
+        test_memfunc_void_noexcept(bool const val) noexcept    // NOLINT
         {
-            m_data = val;
+            bsl::discard(val);
             g_called = true;
         }
 
         [[nodiscard]] constexpr bool
-        test_cmemfunc(bool const val) const
+        test_cmemfunc(bool const val) const    // NOLINT
         {
-            m_data = val;
             return val;
         }
 
         [[nodiscard]] constexpr bool
-        test_cmemfunc_noexcept(bool const val) const noexcept
+        test_cmemfunc_noexcept(bool const val) const noexcept    // NOLINT
         {
-            m_data = val;
             return val;
         }
 
         void
-        test_cmemfunc_void(bool const val) const
+        test_cmemfunc_void(bool const val) const    // NOLINT
         {
-            m_data = val;
+            bsl::discard(val);
             g_called = true;
         }
 
         void
-        test_cmemfunc_void_noexcept(bool const val) const noexcept
+        test_cmemfunc_void_noexcept(bool const val) const noexcept    // NOLINT
         {
-            m_data = val;
+            bsl::discard(val);
             g_called = true;
         }
     };
+}
+
+/// <!-- description -->
+///   @brief Used to execute the actual checks. We put the checks in this
+///     function so that we can validate the tests both at compile-time
+///     and at run-time. If a bsl::ut_check fails, the tests will either
+///     fail fast at run-time, or will produce a compile-time error.
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+constexpr bsl::exit_code
+tests() noexcept
+{
+    bsl::ut_scenario{"func"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::delegate const func{&test_func};
+            bsl::ut_when{} = [&func]() {
+                auto const res{func(true)};
+                bsl::ut_then{} = [&res]() {
+                    bsl::ut_check(res.get_if() != nullptr);
+                    bsl::ut_check(*res.get_if());
+                };
+            };
+
+            static_assert(!noexcept(func(true)));
+        };
+    };
+
+    return bsl::ut_success();
 }
 
 /// <!-- description -->
@@ -137,6 +161,8 @@ main() noexcept
 {
     using namespace bsl;
     bsl::set_ut_reset_handler(&reset_handler);
+
+    static_assert(tests() == bsl::ut_success());
 
     bsl::ut_scenario{"func"} = []() {
         bsl::ut_given{} = []() {

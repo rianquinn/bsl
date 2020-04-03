@@ -24,10 +24,13 @@
 
 #include <bsl/array.hpp>
 #include <bsl/discard.hpp>
+#include <bsl/is_pod.hpp>
 #include <bsl/ut.hpp>
 
 namespace
 {
+    bsl::array<bsl::uintmax, 6> pod;
+
     class fixture_t final
     {
         bsl::array<bool, 5> arr{};
@@ -101,6 +104,44 @@ bsl::exit_code
 main() noexcept
 {
     using namespace bsl;
+
+    bsl::ut_scenario{"verify supports global POD"} = []() {
+        bsl::discard(pod);
+        static_assert(is_pod<decltype(pod)>::value);
+    };
+
+    bsl::ut_scenario{"verify noexcept"} = []() {
+        bsl::ut_given{} = []() {
+            bsl::array<bool, 5> arr1{};
+            bsl::array<bool, 5> arr2{};
+            bsl::ut_then{} = []() {
+                static_assert(noexcept(arr1.at_if(0)));
+                static_assert(noexcept(arr1.front()));
+                static_assert(noexcept(arr1.front_if()));
+                static_assert(noexcept(arr1.back()));
+                static_assert(noexcept(arr1.back_if()));
+                static_assert(noexcept(arr1.data()));
+                static_assert(noexcept(arr1.begin()));
+                static_assert(noexcept(arr1.cbegin()));
+                static_assert(noexcept(arr1.end()));
+                static_assert(noexcept(arr1.cend()));
+                static_assert(noexcept(arr1.iter(0)));
+                static_assert(noexcept(arr1.citer(0)));
+                static_assert(noexcept(arr1.rbegin()));
+                static_assert(noexcept(arr1.crbegin()));
+                static_assert(noexcept(arr1.rend()));
+                static_assert(noexcept(arr1.crend()));
+                static_assert(noexcept(arr1.riter(0)));
+                static_assert(noexcept(arr1.criter(0)));
+                static_assert(noexcept(arr1.empty()));
+                static_assert(noexcept(arr1.size()));
+                static_assert(noexcept(arr1.max_size()));
+                static_assert(noexcept(arr1.size_bytes()));
+                static_assert(noexcept(arr1 == arr2));
+                static_assert(noexcept(arr1 != arr2));
+            };
+        };
+    };
 
     bsl::ut_scenario{"verify constness"} = []() {
         bsl::ut_given{} = []() {

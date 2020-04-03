@@ -28,8 +28,6 @@
 #ifndef BSL_DELEGATE_HPP
 #define BSL_DELEGATE_HPP
 
-#include "details/delegate_vtbl.hpp"
-
 #include "aligned_storage.hpp"
 #include "conditional.hpp"
 #include "cstdint.hpp"
@@ -44,6 +42,53 @@ namespace bsl
     class delegate;
 
     /// @endcond doxygen on
+
+    namespace details
+    {
+        /// <!-- description -->
+        ///   @brief Converts a heap to a function.
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam FUNC the function type to convert the heap to
+        ///   @param heap the heap to convert to FUNC
+        ///   @return A pointer to heap, as a FUNC
+        ///
+        template<typename FUNC>
+        [[nodiscard]] static constexpr FUNC const &
+        get_func(void const *const heap) noexcept
+        {
+            return *static_cast<FUNC const *>(heap);
+        }
+
+        /// <!-- description -->
+        ///   @brief The type erased version of the wrapped function given
+        ///     a pointer to the heap that is actually storing the wrapped
+        ///     function. This is the indirection that the delegate calls
+        ///     when calling the wrapped function. Remember the whole point
+        ///     of a delegate is to be able to call either a function or a
+        ///     member function pointer, without knowing which version it
+        ///     has. The heap stores the function/member function pointer
+        ///     information. Since this function's signature does not include
+        ///     FUNC (only a void * and ARGS), a pointer to this function
+        ///     can be stored and called by the delegate. All this function
+        ///     has to do is convert the provided heap to FUNC and call it.
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @tparam FUNC the function type to move
+        ///   @tparam R the return value of the function
+        ///   @tparam ARGS the argument to pass to the function
+        ///   @param heap the memory containing the wrapped function.
+        ///   @param args the arguments to pass to the wrapped function.
+        ///   @return Returns the result of executing the wrapped function.
+        ///
+        template<typename FUNC, typename R, typename... ARGS>
+        [[maybe_unused]] constexpr R
+        call_func_generic(void const *const heap, ARGS &&... args) noexcept(false)
+        {
+            return get_func<FUNC>(heap)(bsl::forward<ARGS>(args)...);
+        }
+
+    }
 
     /// @brief the total size of the heap
     constexpr bsl::uintmax delegate_heap_size{16};
@@ -69,12 +114,6 @@ namespace bsl
     ///       instead of R and throwing if the delegate is empty().
     ///     - We support noexcept. That is, if you wrap a function marked as
     ///       noexcept, the delegate is also noexcept.
-    ///     Internally, the delegate is written using an implementation that
-    ///     is similar to the proposed std::inplace_function, with some
-    ///     optimizations similar to the approach taken by Ben Diamand that
-    ///     places the call function directly into the delegate. The result
-    ///     is the fastest possible implementation of a delegate type that
-    ///     is also AUOTSAR compliant.
     ///   @include example_delegate_overview.hpp
     ///
     /// <!-- template parameters -->
@@ -86,52 +125,13 @@ namespace bsl
     {
         /// @brief defines the type used to store the wrapped function
         using heap_type = aligned_storage_t<delegate_heap_size, delegate_heap_align>;
-        /// @brief defines the type used to copy, move and free the delegate
-        using vtbl_type = details::delegate_vtbl<R, ARGS...> *;
         /// @brief defines the type of function to call when op() is called
         using call_type = R (*)(void const *const, ARGS &&...);
 
         /// @brief stores the wrapped function
         heap_type m_heap;
-        /// @brief used to copy, move and free the delegate
-        vtbl_type m_vtbl;
         /// @brief stores the function to call when op() is called.
         call_type m_call;
-
-        /// <!-- description -->
-        ///   @brief Swaps *this with other
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param lhs the left hand side of the exchange
-        ///   @param rhs the right hand side of the exchange
-        ///
-        static constexpr void
-        private_swap(delegate &lhs, delegate &rhs) noexcept
-        {
-            if (!lhs.empty()) {
-                if (!rhs.empty()) {
-                    delegate tmp{};
-                    lhs.m_vtbl->m_move_func(&tmp.m_heap, &lhs.m_heap);
-                    rhs.m_vtbl->m_move_func(&lhs.m_heap, &rhs.m_heap);
-                    lhs.m_vtbl->m_move_func(&rhs.m_heap, &tmp.m_heap);
-
-                    bsl::swap(lhs.m_vtbl, rhs.m_vtbl);
-                    bsl::swap(lhs.m_call, rhs.m_call);
-                }
-                else {
-                    lhs.m_vtbl->m_move_func(&rhs.m_heap, &lhs.m_heap);
-                    bsl::swap(lhs.m_vtbl, rhs.m_vtbl);
-                    bsl::swap(lhs.m_call, rhs.m_call);
-                }
-            }
-            else {
-                if (!rhs.empty()) {
-                    rhs.m_vtbl->m_move_func(&lhs.m_heap, &rhs.m_heap);
-                    bsl::swap(lhs.m_vtbl, rhs.m_vtbl);
-                    bsl::swap(lhs.m_call, rhs.m_call);
-                }
-            }
-        }
 
     public:
         /// @brief the return type of the wrapped function.
@@ -139,7 +139,7 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief Default constructor that creates a delegate with
-        ///     m_heap and m_vtbl all set to 0. Note that like other types
+        ///     m_heap and m_call set to 0. Note that like other types
         ///     in the BSL, the bsl::delegate is a POD type. This
         ///     means that when declaring a global, default constructed
         ///     bsl::delegate, DO NOT include the {} for
@@ -163,12 +163,11 @@ namespace bsl
         ///   @param func a pointer to the function to wrap
         ///
         constexpr delegate(R (*func)(ARGS...)) noexcept    // NOLINT
-            : m_heap{}, m_vtbl{}, m_call{}
+            : m_heap{}, m_call{}
         {
             if (nullptr != func) {
-                m_vtbl = details::get_delegate_vtbl<decltype(func), R, ARGS...>();
                 m_call = &details::call_func_generic<decltype(func), R, ARGS...>;
-                details::copy_func(&m_heap, func);
+                bsl::construct_at<decltype(func)>(&m_heap, func);
             }
         }
 
@@ -182,7 +181,8 @@ namespace bsl
         ///   @param mfp a pointer to the member function to wrap
         ///
         template<typename T, typename U>
-        constexpr delegate(T *t, R (U::*mfp)(ARGS...)) noexcept : m_heap{}, m_vtbl{}, m_call{}
+        constexpr delegate(T *t, R (U::*mfp)(ARGS...)) noexcept    // --
+            : m_heap{}, m_call{}
         {
             if (nullptr != t && nullptr != mfp) {
                 auto func = [mfp, t](ARGS &&... args) -> R {
@@ -191,9 +191,8 @@ namespace bsl
 
                 static_assert(sizeof(func) <= sizeof(heap_type));
 
-                m_vtbl = details::get_delegate_vtbl<decltype(func), R, ARGS...>();
                 m_call = &details::call_func_generic<decltype(func), R, ARGS...>;
-                details::copy_func(&m_heap, func);
+                bsl::construct_at<decltype(func)>(&m_heap, func);
             }
         }
 
@@ -207,7 +206,8 @@ namespace bsl
         ///   @param mfp a pointer to the member function to wrap
         ///
         template<typename T, typename U>
-        constexpr delegate(T *t, R (U::*mfp)(ARGS...) const) noexcept : m_heap{}, m_vtbl{}, m_call{}
+        constexpr delegate(T *t, R (U::*mfp)(ARGS...) const) noexcept    // --
+            : m_heap{}, m_call{}
         {
             if (nullptr != t && nullptr != mfp) {
                 auto func = [mfp, t](ARGS &&... args) -> R {
@@ -216,77 +216,8 @@ namespace bsl
 
                 static_assert(sizeof(func) <= sizeof(heap_type));
 
-                m_vtbl = details::get_delegate_vtbl<decltype(func), R, ARGS...>();
                 m_call = &details::call_func_generic<decltype(func), R, ARGS...>;
-                details::copy_func(&m_heap, func);
-            }
-        }
-
-        /// <!-- description -->
-        ///   @brief Copies a delegate
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param o the delegate to copy
-        ///
-        constexpr delegate(delegate const &o) noexcept
-            : m_heap{}, m_vtbl{o.m_vtbl}, m_call{o.m_call}
-        {
-            if (!this->empty()) {
-                m_vtbl->m_copy_func(&m_heap, &o.m_heap);
-            }
-        }
-
-        /// <!-- description -->
-        ///   @brief Moves a delegate
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param o the delegate to move
-        ///
-        constexpr delegate(delegate &&o) noexcept
-            : m_heap{}, m_vtbl{bsl::move(o.m_vtbl)}, m_call{bsl::move(o.m_call)}
-        {
-            if (!this->empty()) {
-                m_vtbl->m_move_func(&m_heap, &o.m_heap);
-            }
-        }
-
-        /// <!-- description -->
-        ///   @brief Copies a delegate
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param o the delegate to copy
-        ///   @return Returns *this
-        ///
-        constexpr delegate &
-        operator=(delegate const &o) &noexcept
-        {
-            delegate tmp{o};
-            private_swap(*this, tmp);
-            return *this;
-        }
-
-        /// <!-- description -->
-        ///   @brief Moves a delegate
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param o the delegate to move
-        ///   @return Returns *this
-        ///
-        constexpr delegate &
-        operator=(delegate &&o) &noexcept
-        {
-            delegate tmp{bsl::move(o)};
-            private_swap(*this, tmp);
-            return *this;
-        }
-
-        /// <!-- description -->
-        ///   @brief Destroys a delegate
-        ///
-        ~delegate() noexcept
-        {
-            if (!this->empty()) {
-                m_vtbl->m_free_func(&m_heap);
+                bsl::construct_at<decltype(func)>(&m_heap, func);
             }
         }
 
@@ -344,7 +275,7 @@ namespace bsl
         [[nodiscard]] constexpr bool
         empty() const noexcept
         {
-            return nullptr == m_vtbl;
+            return nullptr == m_call;
         }
     };
 
@@ -369,12 +300,6 @@ namespace bsl
     ///       instead of R and throwing if the delegate is empty().
     ///     - We support noexcept. That is, if you wrap a function marked as
     ///       noexcept, the delegate is also noexcept.
-    ///     Internally, the delegate is written using an implementation that
-    ///     is similar to the proposed std::inplace_function, with some
-    ///     optimizations similar to the approach taken by Ben Diamand that
-    ///     places the call function directly into the delegate. The result
-    ///     is the fastest possible implementation of a delegate type that
-    ///     is also AUOTSAR compliant.
     ///   @include example_delegate_overview.hpp
     ///
     /// <!-- template parameters -->
@@ -386,52 +311,13 @@ namespace bsl
     {
         /// @brief defines the type used to store the wrapped function
         using heap_type = aligned_storage_t<delegate_heap_size, delegate_heap_align>;
-        /// @brief defines the type used to copy, move and free the delegate
-        using vtbl_type = details::delegate_vtbl<R, ARGS...> *;
         /// @brief defines the type of function to call when op() is called
         using call_type = R (*)(void const *const, ARGS &&...);
 
         /// @brief stores the wrapped function
         heap_type m_heap;
-        /// @brief used to copy, move and free the delegate
-        vtbl_type m_vtbl;
         /// @brief stores the function to call when op() is called.
         call_type m_call;
-
-        /// <!-- description -->
-        ///   @brief Swaps *this with other
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param lhs the left hand side of the exchange
-        ///   @param rhs the right hand side of the exchange
-        ///
-        static constexpr void
-        private_swap(delegate &lhs, delegate &rhs) noexcept
-        {
-            if (!lhs.empty()) {
-                if (!rhs.empty()) {
-                    delegate tmp{};
-                    lhs.m_vtbl->m_move_func(&tmp.m_heap, &lhs.m_heap);
-                    rhs.m_vtbl->m_move_func(&lhs.m_heap, &rhs.m_heap);
-                    lhs.m_vtbl->m_move_func(&rhs.m_heap, &tmp.m_heap);
-
-                    bsl::swap(lhs.m_vtbl, rhs.m_vtbl);
-                    bsl::swap(lhs.m_call, rhs.m_call);
-                }
-                else {
-                    lhs.m_vtbl->m_move_func(&rhs.m_heap, &lhs.m_heap);
-                    bsl::swap(lhs.m_vtbl, rhs.m_vtbl);
-                    bsl::swap(lhs.m_call, rhs.m_call);
-                }
-            }
-            else {
-                if (!rhs.empty()) {
-                    rhs.m_vtbl->m_move_func(&lhs.m_heap, &rhs.m_heap);
-                    bsl::swap(lhs.m_vtbl, rhs.m_vtbl);
-                    bsl::swap(lhs.m_call, rhs.m_call);
-                }
-            }
-        }
 
     public:
         /// @brief the return type of the wrapped function.
@@ -439,7 +325,7 @@ namespace bsl
 
         /// <!-- description -->
         ///   @brief Default constructor that creates a delegate with
-        ///     m_heap and m_vtbl all set to 0. Note that like other types
+        ///     m_heap and m_call set to 0. Note that like other types
         ///     in the BSL, the bsl::delegate is a POD type. This
         ///     means that when declaring a global, default constructed
         ///     bsl::delegate, DO NOT include the {} for
@@ -463,12 +349,11 @@ namespace bsl
         ///   @param func a pointer to the function to wrap
         ///
         constexpr delegate(R (*func)(ARGS...) noexcept) noexcept    // NOLINT
-            : m_heap{}, m_vtbl{}, m_call{}
+            : m_heap{}, m_call{}
         {
             if (nullptr != func) {
-                m_vtbl = details::get_delegate_vtbl<decltype(func), R, ARGS...>();
                 m_call = &details::call_func_generic<decltype(func), R, ARGS...>;
-                details::copy_func(&m_heap, func);
+                bsl::construct_at<decltype(func)>(&m_heap, func);
             }
         }
 
@@ -482,8 +367,8 @@ namespace bsl
         ///   @param mfp a pointer to the member function to wrap
         ///
         template<typename T, typename U>
-        constexpr delegate(T *t, R (U::*mfp)(ARGS...) noexcept) noexcept
-            : m_heap{}, m_vtbl{}, m_call{}
+        constexpr delegate(T *t, R (U::*mfp)(ARGS...) noexcept) noexcept    // --
+            : m_heap{}, m_call{}
         {
             if (nullptr != t && nullptr != mfp) {
                 auto func = [mfp, t](ARGS &&... args) noexcept -> R {
@@ -492,9 +377,8 @@ namespace bsl
 
                 static_assert(sizeof(func) <= sizeof(heap_type));
 
-                m_vtbl = details::get_delegate_vtbl<decltype(func), R, ARGS...>();
                 m_call = &details::call_func_generic<decltype(func), R, ARGS...>;
-                details::copy_func(&m_heap, func);
+                bsl::construct_at<decltype(func)>(&m_heap, func);
             }
         }
 
@@ -508,8 +392,8 @@ namespace bsl
         ///   @param mfp a pointer to the member function to wrap
         ///
         template<typename T, typename U>
-        constexpr delegate(T *t, R (U::*mfp)(ARGS...) const noexcept) noexcept
-            : m_heap{}, m_vtbl{}, m_call{}
+        constexpr delegate(T *t, R (U::*mfp)(ARGS...) const noexcept) noexcept    // --
+            : m_heap{}, m_call{}
         {
             if (nullptr != t && nullptr != mfp) {
                 auto func = [mfp, t](ARGS &&... args) noexcept -> R {
@@ -518,81 +402,8 @@ namespace bsl
 
                 static_assert(sizeof(func) <= sizeof(heap_type));
 
-                m_vtbl = details::get_delegate_vtbl<decltype(func), R, ARGS...>();
                 m_call = &details::call_func_generic<decltype(func), R, ARGS...>;
-                details::copy_func(&m_heap, func);
-            }
-        }
-
-        /// <!-- description -->
-        ///   @brief Copies a delegate
-        ///   @include delegate/example_delegate_copy_constructor.hpp
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param o the delegate to copy
-        ///
-        constexpr delegate(delegate const &o) noexcept
-            : m_heap{}, m_vtbl{o.m_vtbl}, m_call{o.m_call}
-        {
-            if (!this->empty()) {
-                m_vtbl->m_copy_func(&m_heap, &o.m_heap);
-            }
-        }
-
-        /// <!-- description -->
-        ///   @brief Moves a delegate
-        ///   @include delegate/example_delegate_move_constructor.hpp
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param o the delegate to move
-        ///
-        constexpr delegate(delegate &&o) noexcept
-            : m_heap{}, m_vtbl{bsl::move(o.m_vtbl)}, m_call{bsl::move(o.m_call)}
-        {
-            if (!this->empty()) {
-                m_vtbl->m_move_func(&m_heap, &o.m_heap);
-            }
-        }
-
-        /// <!-- description -->
-        ///   @brief Copies a delegate
-        ///   @include delegate/example_delegate_copy_assignment.hpp
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param o the delegate to copy
-        ///   @return Returns *this
-        ///
-        constexpr delegate &
-        operator=(delegate const &o) &noexcept
-        {
-            delegate tmp{o};
-            private_swap(*this, tmp);
-            return *this;
-        }
-
-        /// <!-- description -->
-        ///   @brief Moves a delegate
-        ///   @include delegate/example_delegate_move_assignment.hpp
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @param o the delegate to move
-        ///   @return Returns *this
-        ///
-        constexpr delegate &
-        operator=(delegate &&o) &noexcept
-        {
-            delegate tmp{bsl::move(o)};
-            private_swap(*this, tmp);
-            return *this;
-        }
-
-        /// <!-- description -->
-        ///   @brief Destroys a delegate
-        ///
-        ~delegate() noexcept
-        {
-            if (!this->empty()) {
-                m_vtbl->m_free_func(&m_heap);
+                bsl::construct_at<decltype(func)>(&m_heap, func);
             }
         }
 
@@ -650,7 +461,7 @@ namespace bsl
         [[nodiscard]] constexpr bool
         empty() const noexcept
         {
-            return nullptr == m_vtbl;
+            return nullptr == m_call;
         }
     };
 

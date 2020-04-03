@@ -856,15 +856,14 @@ namespace bsl
         if (is_fundamental<T>::value && !is_constant_evaluated()) {
             return bsl::memcmp(lhs.data(), rhs.data(), lhs.size_bytes()) == 0;
         }
-        else {
-            for (bsl::uintmax i{}; i < lhs.size(); ++i) {
-                if (*lhs.at_if(i) != *rhs.at_if(i)) {
-                    return false;
-                }
-            }
 
-            return true;
+        for (bsl::uintmax i{}; i < lhs.size(); ++i) {
+            if (*lhs.at_if(i) != *rhs.at_if(i)) {
+                return false;
+            }
         }
+
+        return true;
     }
 
     /// <!-- description -->

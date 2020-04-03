@@ -22,16 +22,8 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/as_const.hpp>
-#include <bsl/is_same.hpp>
-
+#include <bsl/addressof.hpp>
 #include <bsl/ut.hpp>
-
-namespace
-{
-    constexpr bool var{};
-    constexpr bool const &const_var = bsl::as_const(var);
-}
 
 /// <!-- description -->
 ///   @brief Main function for this unit test. If a call to ut_check() fails
@@ -46,8 +38,14 @@ main() noexcept
 {
     using namespace bsl;
 
-    static_assert(&var == &const_var);
-    static_assert(is_same<decltype(as_const(var)), bool const &>::value);
+    bsl::ut_scenario{"verify noexcept"} = []() {
+        bsl::ut_given{} = []() {
+            bool mydata{};
+            bsl::ut_then{} = []() {
+                static_assert(noexcept(addressof(mydata)));
+            };
+        };
+    };
 
     return bsl::ut_success();
 }

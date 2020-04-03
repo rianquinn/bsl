@@ -22,7 +22,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#include <bsl/construct_at.hpp>
+#include <bsl/min.hpp>
 #include <bsl/ut.hpp>
 
 /// <!-- description -->
@@ -38,15 +38,9 @@ main() noexcept
 {
     using namespace bsl;
 
-    bsl::ut_scenario{"construct_at"} = []() {
-        bsl::ut_given{} = []() {
-            bsl::int32 mydata{};
-            bsl::ut_when{} = [&mydata]() {
-                bsl::construct_at<bsl::int32>(&mydata, 42);
-                bsl::ut_then{} = [&mydata]() {
-                    bsl::ut_check(mydata == 42);
-                };
-            };
+    bsl::ut_scenario{"verify noexcept"} = []() {
+        bsl::ut_then{} = []() {
+            static_assert(noexcept(min(23, 42)));
         };
     };
 

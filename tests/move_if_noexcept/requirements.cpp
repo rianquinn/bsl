@@ -22,27 +22,30 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-#ifndef EXAMPLE_CONSTRUCT_AT_OVERVIEW_HPP
-#define EXAMPLE_CONSTRUCT_AT_OVERVIEW_HPP
+#include <bsl/discard.hpp>
+#include <bsl/ut.hpp>
 
-#include <bsl/construct_at.hpp>
-#include <bsl/print.hpp>
-
-namespace bsl
+/// <!-- description -->
+///   @brief Main function for this unit test. If a call to ut_check() fails
+///     the application will fast fail. If all calls to ut_check() pass, this
+///     function will successfully return with bsl::exit_success.
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+bsl::exit_code
+main() noexcept
 {
-    /// <!-- description -->
-    ///   @brief Provides the example's main function
-    ///
-    inline void
-    example_construct_at_overview() noexcept
-    {
-        bool mydata{};
-        bsl::construct_at<bool>(&mydata, true);
+    using namespace bsl;
 
-        if (mydata) {
-            bsl::print("success\n");
-        }
-    }
+    bsl::ut_scenario{"verify noexcept"} = []() {
+        bsl::ut_given{} = []() {
+            bool mydata{};
+            bsl::ut_then{} = []() {
+                static_assert(noexcept(discard(mydata)));
+            };
+        };
+    };
+
+    return bsl::ut_success();
 }
-
-#endif

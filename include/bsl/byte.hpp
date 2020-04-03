@@ -82,22 +82,21 @@ namespace bsl
         {}
 
         /// <!-- description -->
-        ///   @brief This constructor allows for single argument constructors
-        ///     without the need to mark them as explicit as it will absorb
-        ///     any incoming potential implicit conversion and prevent it.
-        ///
-        ///   SUPPRESSION: PRQA 2180 - false positive
-        ///   - We suppress this because A12-1-4 states that all constructors
-        ///     that are callable from a fundamental type should be marked as
-        ///     explicit. This is callable with a fundamental type, but it
-        ///     is marked as "delete" which means it does not apply.
+        ///   @brief Returns the bsl::byte as a given integer type using a
+        ///     static_cast to perform the conversion.
+        ///   @include byte/example_byte_to_integer.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @tparam O the type that could be implicitly converted
-        ///   @param val the value that could be implicitly converted
+        ///   @tparam T the type of integer to convert the bsl::byte to
+        ///   @return Returns the bsl::byte as a given integer type using a
+        ///     static_cast to perform the conversion.
         ///
-        template<typename O>
-        byte(O val) noexcept = delete;    // PRQA S 2180
+        template<typename T = value_type, enable_if_t<is_integral<T>::value, bool> = true>
+        [[nodiscard]] constexpr T
+        to_integer() const noexcept
+        {
+            return static_cast<T>(m_data);
+        }
 
         /// <!-- description -->
         ///   @brief Destroyes a previously created bsl::byte
@@ -139,21 +138,22 @@ namespace bsl
         constexpr byte &operator=(byte &&o) &noexcept = default;
 
         /// <!-- description -->
-        ///   @brief Returns the bsl::byte as a given integer type using a
-        ///     static_cast to perform the conversion.
-        ///   @include byte/example_byte_to_integer.hpp
+        ///   @brief This constructor allows for single argument constructors
+        ///     without the need to mark them as explicit as it will absorb
+        ///     any incoming potential implicit conversion and prevent it.
+        ///
+        ///   SUPPRESSION: PRQA 2180 - false positive
+        ///   - We suppress this because A12-1-4 states that all constructors
+        ///     that are callable from a fundamental type should be marked as
+        ///     explicit. This is callable with a fundamental type, but it
+        ///     is marked as "delete" which means it does not apply.
         ///
         /// <!-- inputs/outputs -->
-        ///   @tparam T the type of integer to convert the bsl::byte to
-        ///   @return Returns the bsl::byte as a given integer type using a
-        ///     static_cast to perform the conversion.
+        ///   @tparam O the type that could be implicitly converted
+        ///   @param val the value that could be implicitly converted
         ///
-        template<typename T = value_type, enable_if_t<is_integral<T>::value, bool> = true>
-        [[nodiscard]] constexpr T
-        to_integer() const noexcept
-        {
-            return static_cast<T>(m_data);
-        }
+        template<typename O>
+        byte(O val) noexcept = delete;    // PRQA S 2180
 
     private:
         /// @brief stores the byte itself

@@ -21,43 +21,45 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
-///
-/// @file exchange.hpp
-///
 
-#ifndef BSL_EXCHANGE_HPP
-#define BSL_EXCHANGE_HPP
+#include <bsl/addressof.hpp>
+#include <bsl/ut.hpp>
 
-#include "forward.hpp"
-#include "move.hpp"
-
-namespace bsl
+namespace
 {
-    /// <!-- description -->
-    ///   @brief Replaces the value of obj with new_value and returns the old
-    ///     value of obj.
-    ///   @include example_exchange_overview.hpp
-    ///
-    /// <!-- inputs/outputs -->
-    ///   @tparam T the type that defines the obj being exchanged
-    ///   @tparam U the type that defines the new value for obj
-    ///   @param obj the object whose value will be set to new_value
-    ///   @param new_value the new value to set the obj to
-    ///   @return returns the old value of obj prior to the exchange
-    ///
-    /// <!-- exceptions -->
-    ///   @throw throws if obj's move constructor or obj's copy/move
-    ///     assignment throws
-    ///
-    template<typename T, typename U = T>
-    constexpr T
-    exchange(T &obj, U &&new_value) noexcept(false)
-    {
-        T const old_value{bsl::move(obj)};
-        obj = bsl::forward<U>(new_value);
-        return old_value;
-    }
-
+    constexpr bool mydata{};
 }
 
-#endif
+/// <!-- description -->
+///   @brief Used to execute the actual checks. We put the checks in this
+///     function so that we can validate the tests both at compile-time
+///     and at run-time. If a bsl::ut_check fails, the tests will either
+///     fail fast at run-time, or will produce a compile-time error.
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+constexpr bsl::exit_code
+tests() noexcept
+{
+    bsl::ut_scenario{"verify addressof"} = []() {
+        bsl::ut_check(bsl::addressof(mydata) == &mydata);
+    };
+
+    return bsl::ut_success();
+}
+
+/// <!-- description -->
+///   @brief Main function for this unit test. If a call to ut_check() fails
+///     the application will fast fail. If all calls to ut_check() pass, this
+///     function will successfully return with bsl::exit_success.
+///
+/// <!-- inputs/outputs -->
+///   @return Always returns bsl::exit_success.
+///
+bsl::exit_code
+main() noexcept
+{
+    static_assert(tests() == bsl::ut_success());
+    return tests();
+}
