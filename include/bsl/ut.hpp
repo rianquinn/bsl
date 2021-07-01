@@ -42,6 +42,8 @@
 #include "ut_then.hpp"
 #include "ut_then_at_runtime.hpp"
 #include "ut_when.hpp"
+#include "ut_cleanup.hpp"
+#include "ut_cleanup_at_runtime.hpp"
 
 #include <bsl/enable_color.hpp>
 

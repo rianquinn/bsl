@@ -141,7 +141,7 @@ namespace bsl
         ///   @return Returns size() == 0
         ///
         [[nodiscard]] constexpr auto
-        empty() const &noexcept -> bool
+        empty() const noexcept -> bool
         {
             return m_size.is_zero();
         }
@@ -153,7 +153,7 @@ namespace bsl
         ///   @return Returns the size of the map
         ///
         [[nodiscard]] constexpr auto
-        size() const &noexcept -> safe_uintmax const &
+        size() const noexcept -> safe_uintmax const &
         {
             return m_size;
         }
@@ -186,7 +186,7 @@ namespace bsl
         ///   @return Returns a reference to the requested value in the map
         ///
         [[nodiscard]] constexpr auto
-        at(KEY_TYPE const &key) &noexcept -> T &
+        at(KEY_TYPE const &key) noexcept -> T &
         {
             auto node{m_head};
             while (nullptr != node) {
@@ -218,7 +218,7 @@ namespace bsl
         ///   @return Returns a reference to the requested value in the map
         ///
         [[nodiscard]] constexpr auto
-        at(KEY_TYPE const &key) const &noexcept -> T const &
+        at(KEY_TYPE const &key) const noexcept -> T const &
         {
             auto node{m_head};
             while (nullptr != node) {
@@ -236,6 +236,43 @@ namespace bsl
         }
 
         /// <!-- description -->
+        ///   @brief Removes the requested element from the map.
+        ///
+        /// <!-- inputs/outputs -->
+        ///   @param key the element to remove from the map
+        ///   @return Returns true if the element was removed, false if the
+        ///     element was not (meaning it did not exist in the first place).
+        ///
+        [[nodiscard]] constexpr auto
+        erase(KEY_TYPE const &key) noexcept -> bool
+        {
+            auto node{m_head};
+            details::unordered_map_node_type<KEY_TYPE, T> *prev{};
+            while (nullptr != node) {
+                if (key == node->key) {
+                    break;
+                }
+                prev = node;
+                node = node->next;
+            }
+
+            if (nullptr == node) {
+                return false;
+            }
+
+            if (nullptr == prev) {
+                m_head = node->next;
+            }
+            else {
+                prev->next = node->next;
+            }
+
+            // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
+            delete node;    // GRCOV_EXCLUDE_BR
+            return true;
+        }
+
+        /// <!-- description -->
         ///   @brief Returns true if the map contains the provided key,
         ///     returns false otherwise.
         ///
@@ -245,7 +282,7 @@ namespace bsl
         ///     returns false otherwise.
         ///
         [[nodiscard]] constexpr auto
-        contains(KEY_TYPE const &key) const &noexcept -> bool
+        contains(KEY_TYPE const &key) const noexcept -> bool
         {
             auto node{m_head};
             while (nullptr != node) {
