@@ -92,28 +92,6 @@
 #include "basic_string_view/example_basic_string_view_size_bytes.hpp"
 #include "basic_string_view/example_basic_string_view_starts_with.hpp"
 #include "basic_string_view/example_basic_string_view_substr.hpp"
-#include "byte/example_byte_and.hpp"
-#include "byte/example_byte_and_assign.hpp"
-#include "byte/example_byte_by_safe_int_constructor.hpp"
-#include "byte/example_byte_by_value_constructor.hpp"
-#include "byte/example_byte_complement.hpp"
-#include "byte/example_byte_default_constructor.hpp"
-#include "byte/example_byte_equal.hpp"
-#include "byte/example_byte_lshift.hpp"
-#include "byte/example_byte_lshift_assign.hpp"
-#include "byte/example_byte_lshift_assign_safe_int.hpp"
-#include "byte/example_byte_lshift_safe_int.hpp"
-#include "byte/example_byte_not_equal.hpp"
-#include "byte/example_byte_or.hpp"
-#include "byte/example_byte_or_assign.hpp"
-#include "byte/example_byte_ostream.hpp"
-#include "byte/example_byte_rshift.hpp"
-#include "byte/example_byte_rshift_assign.hpp"
-#include "byte/example_byte_rshift_assign_safe_int.hpp"
-#include "byte/example_byte_rshift_safe_int.hpp"
-#include "byte/example_byte_to_integer.hpp"
-#include "byte/example_byte_xor.hpp"
-#include "byte/example_byte_xor_assign.hpp"
 #include "char_traits/example_char_traits_compare.hpp"
 #include "char_traits/example_char_traits_eof.hpp"
 #include "char_traits/example_char_traits_eq.hpp"
@@ -162,8 +140,6 @@
 #include "example_add_pointer_overview.hpp"
 #include "example_add_rvalue_reference_overview.hpp"
 #include "example_addressof_overview.hpp"
-#include "example_aligned_storage_overview.hpp"
-#include "example_aligned_union_overview.hpp"
 #include "example_alignment_of_overview.hpp"
 #include "example_always_false_overview.hpp"
 #include "example_arguments_overview.hpp"
@@ -172,7 +148,6 @@
 #include "example_basic_errc_type_overview.hpp"
 #include "example_basic_string_view_overview.hpp"
 #include "example_bool_constant_overview.hpp"
-#include "example_byte_overview.hpp"
 #include "example_char_traits_overview.hpp"
 #include "example_char_type_overview.hpp"
 #include "example_color_overview.hpp"
@@ -441,10 +416,6 @@
 #include "source_location/example_source_location_line.hpp"
 #include "source_location/example_source_location_ostream.hpp"
 #include "span/example_span_array_constructor.hpp"
-#include "span/example_span_as_bytes.hpp"
-#include "span/example_span_as_t.hpp"
-#include "span/example_span_as_writable_bytes.hpp"
-#include "span/example_span_as_writable_t.hpp"
 #include "span/example_span_at_if.hpp"
 #include "span/example_span_back_if.hpp"
 #include "span/example_span_begin.hpp"
@@ -511,8 +482,6 @@ main() noexcept -> bsl::exit_code
     example(&bsl::example_add_pointer_overview, "example_add_pointer_overview");
     example(&bsl::example_add_rvalue_reference_overview, "example_add_rvalue_reference_overview");
     example(&bsl::example_addressof_overview, "example_addressof_overview");
-    example(&bsl::example_aligned_storage_overview, "example_aligned_storage_overview");
-    example(&bsl::example_aligned_union_overview, "example_aligned_union_overview");
     example(&bsl::example_alignment_of_overview, "example_alignment_of_overview");
     example(&bsl::example_always_false_overview, "example_always_false_overview");
     example(&bsl::example_arguments_overview, "example_arguments_overview");
@@ -591,29 +560,6 @@ main() noexcept -> bsl::exit_code
     example(&bsl::example_basic_string_view_starts_with, "example_basic_string_view_starts_with");
     example(&bsl::example_basic_string_view_substr, "example_basic_string_view_substr");
     example(&bsl::example_bool_constant_overview, "example_bool_constant_overview");
-    example(&bsl::example_byte_overview, "example_byte_overview");
-    example(&bsl::example_byte_and_assign, "example_byte_and_assign");
-    example(&bsl::example_byte_and, "example_byte_and");
-    example(&bsl::example_byte_by_safe_int_constructor, "example_byte_by_safe_int_constructor");
-    example(&bsl::example_byte_by_value_constructor, "example_byte_by_value_constructor");
-    example(&bsl::example_byte_complement, "example_byte_complement");
-    example(&bsl::example_byte_default_constructor, "example_byte_default_constructor");
-    example(&bsl::example_byte_equal, "example_byte_equal");
-    example(&bsl::example_byte_lshift_assign_safe_int, "example_byte_lshift_assign_safe_int");
-    example(&bsl::example_byte_lshift_assign, "example_byte_lshift_assign");
-    example(&bsl::example_byte_lshift_safe_int, "example_byte_lshift_safe_int");
-    example(&bsl::example_byte_lshift, "example_byte_lshift");
-    example(&bsl::example_byte_not_equal, "example_byte_not_equal");
-    example(&bsl::example_byte_or_assign, "example_byte_or_assign");
-    example(&bsl::example_byte_or, "example_byte_or");
-    example(&bsl::example_byte_ostream, "example_byte_ostream");
-    example(&bsl::example_byte_rshift_assign_safe_int, "example_byte_rshift_assign_safe_int");
-    example(&bsl::example_byte_rshift_assign, "example_byte_rshift_assign");
-    example(&bsl::example_byte_rshift_safe_int, "example_byte_rshift_safe_int");
-    example(&bsl::example_byte_rshift, "example_byte_rshift");
-    example(&bsl::example_byte_to_integer, "example_byte_to_integer");
-    example(&bsl::example_byte_xor_assign, "example_byte_xor_assign");
-    example(&bsl::example_byte_xor, "example_byte_xor");
     example(&bsl::example_char_traits_overview, "example_char_traits_overview");
     example(&bsl::example_char_traits_compare, "example_char_traits_compare");
     example(&bsl::example_char_traits_eof, "example_char_traits_eof");
@@ -915,10 +861,6 @@ main() noexcept -> bsl::exit_code
     example(&bsl::example_source_location_ostream, "example_source_location_ostream");
     example(&bsl::example_span_overview, "example_span_overview");
     example(&bsl::example_span_array_constructor, "example_span_array_constructor");
-    example(&bsl::example_span_as_bytes, "example_span_as_bytes");
-    example(&bsl::example_span_as_t, "example_span_as_t");
-    example(&bsl::example_span_as_writable_bytes, "example_span_as_writable_bytes");
-    example(&bsl::example_span_as_writable_t, "example_span_as_writable_t");
     example(&bsl::example_span_at_if, "example_span_at_if");
     example(&bsl::example_span_back_if, "example_span_back_if");
     example(&bsl::example_span_begin, "example_span_begin");

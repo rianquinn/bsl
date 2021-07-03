@@ -32,7 +32,6 @@
 #include "is_same.hpp"
 #include "is_same_signedness.hpp"
 #include "is_signed.hpp"
-#include "is_standard_layout.hpp"
 #include "numeric_limits.hpp"
 #include "safe_integral.hpp"
 #include "string_view.hpp"
@@ -679,8 +678,6 @@ namespace bsl
     to_umax(T const val) noexcept -> bsl::safe_uintmax
     {
         if constexpr (bsl::is_pointer<T>::value) {
-            static_assert(is_standard_layout<T>::value);
-
             if (unlikely(nullptr == val)) {
                 return bsl::safe_uintmax::failure();
             }
@@ -745,7 +742,6 @@ namespace bsl
     to_ptr(bsl::safe_uintmax const &val) noexcept -> T
     {
         static_assert(is_pointer<T>::value);
-        static_assert(is_standard_layout<T>::value);
 
         if (unlikely(!val)) {
             return nullptr;
