@@ -719,28 +719,28 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Returns size() == 0
+        ///   @brief Returns size().is_zero();
         ///   @include basic_string_view/example_basic_string_view_empty.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @return Returns size() == 0
+        ///   @return Returns size().is_zero();
         ///
         [[nodiscard]] constexpr auto
         empty() const noexcept -> bool
         {
-            return m_count.is_zero();
+            return this->size().is_zero();
         }
 
         /// <!-- description -->
-        ///   @brief Returns false if the string points to null
+        ///   @brief Returns data() != nullptr;
         ///   @include basic_string_view/example_basic_string_view_operator_bool.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @return Returns false if the string points to null
+        ///   @return Returns data() != nullptr;
         ///
         [[nodiscard]] constexpr explicit operator bool() const noexcept
         {
-            return nullptr != m_ptr;
+            return this->data() != nullptr;
         }
 
         /// <!-- description -->

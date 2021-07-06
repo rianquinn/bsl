@@ -734,28 +734,28 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Returns size() == 0
+        ///   @brief Returns size().is_zero()
         ///   @include span/example_span_empty.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @return Returns size() == 0
+        ///   @return Returns size().is_zero()
         ///
         [[nodiscard]] constexpr auto
         empty() const noexcept -> bool
         {
-            return (nullptr == m_ptr);
+            return this->size().is_zero();
         }
 
         /// <!-- description -->
-        ///   @brief Returns !empty()
+        ///   @brief Returns data() != nullptr
         ///   @include span/example_span_operator_bool.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @return Returns !empty()
+        ///   @return Returns data() != nullptr
         ///
         [[nodiscard]] constexpr explicit operator bool() const noexcept
         {
-            return !this->empty();
+            return this->data() != nullptr;
         }
 
         /// <!-- description -->

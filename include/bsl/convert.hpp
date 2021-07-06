@@ -677,20 +677,7 @@ namespace bsl
     [[nodiscard]] constexpr auto
     to_umax(T const val) noexcept -> bsl::safe_uintmax
     {
-        if constexpr (bsl::is_pointer<T>::value) {
-            if (unlikely(nullptr == val)) {
-                return bsl::safe_uintmax::failure();
-            }
-
-            // A reinterpret cast is needed her as there is no other way
-            // to perform the conversion. If a conversion like this is
-            // needed, this is the compliant way to do it.
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            return convert<bsl::uintmax>(reinterpret_cast<bsl::uintmax>(val));
-        }
-        else {
-            return convert<bsl::uintmax>(val);
-        }
+        return convert<bsl::uintmax>(val);
     }
 
     /// <!-- description -->
@@ -725,48 +712,6 @@ namespace bsl
     to_umax_unsafe(T const val) noexcept -> bsl::safe_uintmax
     {
         return static_cast<bsl::uintmax>(val);
-    }
-
-    /// <!-- description -->
-    ///   @brief Returns reinterpret_cast<T *>(val.get())
-    ///   @include convert/example_convert_to_ptr.hpp
-    ///   @related bsl::safe_integral
-    ///
-    /// <!-- inputs/outputs -->
-    ///   @tparam T the type of integral to convert
-    ///   @param val the integral to convert
-    ///   @return Returns reinterpret_cast<T *>(val.get())
-    ///
-    template<typename T>
-    [[nodiscard]] constexpr auto
-    to_ptr(bsl::safe_uintmax const &val) noexcept -> T
-    {
-        static_assert(is_pointer<T>::value);
-
-        if (unlikely(!val)) {
-            return nullptr;
-        }
-
-        // A reinterpret cast is needed her as there is no other way
-        // to perform the conversion. If a conversion like this is
-        // needed, this is the compliant way to do it.
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-        return reinterpret_cast<T>(val.get());
-    }
-
-    /// <!-- description -->
-    ///   @brief Returns to_umax(sizeof(T))
-    ///   @related bsl::safe_integral
-    ///
-    /// <!-- inputs/outputs -->
-    ///   @tparam T the type of integral to get the sizeof
-    ///   @return Returns to_umax(sizeof(T))
-    ///
-    template<typename T>
-    [[nodiscard]] constexpr auto
-    size_of() noexcept -> bsl::safe_uintmax
-    {
-        return to_umax(sizeof(T));
     }
 }
 

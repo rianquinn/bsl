@@ -706,27 +706,6 @@ namespace
                         bsl::to_umax_unsafe(val.get()) == bsl::to_umax(0xFFFFFFFFFFFFFFFFU));
                 };
             };
-
-            bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(42U)};
-                bsl::ut_then{} = [&val]() {
-                    bsl::ut_check(bsl::to_umax(bsl::to_ptr<void *>(val)) == bsl::to_umax(42U));
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uintmax val{bsl::safe_uintmax::failure()};
-                bsl::ut_then{} = [&val]() {
-                    bsl::ut_check(bsl::to_ptr<void *>(val) == nullptr);
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() {
-                bool *const val{};
-                bsl::ut_then{} = [&val]() {
-                    bsl::ut_check(!bsl::to_umax(val));
-                };
-            };
         };
 
         return bsl::ut_success();

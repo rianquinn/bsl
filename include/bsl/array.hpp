@@ -782,13 +782,11 @@ namespace bsl
             -> const_reverse_iterator_type = delete;
 
         /// <!-- description -->
-        ///   @brief Since arrays of size 0 are not allowed, always returns
-        ///     false.
+        ///   @brief Returns false
         ///   @include array/example_array_empty.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @return Since arrays of size 0 are not allowed, always returns
-        ///     false.
+        ///   @return Returns false
         ///
         [[nodiscard]] static constexpr auto
         empty() noexcept -> bool
@@ -797,15 +795,15 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Returns !empty()
+        ///   @brief Returns true
         ///   @include array/example_array_operator_bool.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @return Returns !empty()
+        ///   @return Returns true
         ///
         [[nodiscard]] constexpr explicit operator bool() const noexcept
         {
-            return !this->empty();
+            return true;
         }
 
         /// <!-- description -->
