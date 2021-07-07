@@ -48,14 +48,14 @@ namespace bsl
     ///     fmt support for their own types.
     ///
     /// <!-- inputs/outputs -->
-    ///   @tparam OUT_T the type of out (i.e., debug, alert, etc)
+    ///   @tparam T the type of out (i.e., debug, alert, etc)
     ///   @param o the instance of out<T> to output to
     ///   @param ops ops the fmt options used to format the output
     ///   @param b the bool being outputted
     ///
-    template<typename OUT_T>
+    template<typename T>
     constexpr void
-    fmt_impl(OUT_T &&o, fmt_options const &ops, bool const b) noexcept
+    fmt_impl(out<T> const o, fmt_options const &ops, bool const b) noexcept
     {
         if (is_constant_evaluated()) {
             return;
@@ -68,7 +68,7 @@ namespace bsl
                 case fmt_type::fmt_type_d:
                 case fmt_type::fmt_type_x: {
                     details::fmt_impl_integral(
-                        bsl::forward<OUT_T>(o), ops, safe_uint32{static_cast<bsl::uint32>(1)});
+                        o, ops, safe_uint32{static_cast<bsl::uint32>(1)});
                     break;
                 }
 
@@ -76,7 +76,7 @@ namespace bsl
                 case fmt_type::fmt_type_default: {
                     constexpr safe_uintmax len_true{static_cast<bsl::uintmax>(4)};
                     details::fmt_impl_align_pre(o, ops, len_true, true);
-                    o.write("true");
+                    o.write_to_console("true");
                     details::fmt_impl_align_suf(o, ops, len_true, true);
                     break;
                 }
@@ -89,7 +89,7 @@ namespace bsl
                 case fmt_type::fmt_type_d:
                 case fmt_type::fmt_type_x: {
                     details::fmt_impl_integral(
-                        bsl::forward<OUT_T>(o), ops, safe_uint32{static_cast<bsl::uint32>(0)});
+                        o, ops, safe_uint32{static_cast<bsl::uint32>(0)});
                     break;
                 }
 
@@ -97,7 +97,7 @@ namespace bsl
                 case fmt_type::fmt_type_default: {
                     constexpr safe_uintmax len_false{static_cast<bsl::uintmax>(5)};
                     details::fmt_impl_align_pre(o, ops, len_false, true);
-                    o.write("false");
+                    o.write_to_console("false");
                     details::fmt_impl_align_suf(o, ops, len_false, true);
                     break;
                 }
@@ -128,10 +128,10 @@ namespace bsl
         }
 
         if (b) {
-            o.write("true");
+            o.write_to_console("true");
         }
         else {
-            o.write("false");
+            o.write_to_console("false");
         }
 
         return o;

@@ -43,19 +43,19 @@ namespace
     {
         bsl::ut_scenario{"attempting to destroy nullptr is ignored"} = []() {
             bsl::ut_given_at_runtime{} = []() {
-                bool *b{};
-                bsl::ut_when{} = [b]() {
-                    bsl::destroy_at(b);
+                bool *mut_b{};
+                bsl::ut_when{} = [mut_b]() {
+                    bsl::destroy_at(mut_b);
                 };
             };
         };
 
         bsl::ut_scenario{"detroy_at"} = []() {
             bsl::ut_given{} = []() {
-                bool b{};
-                bsl::ut_when{} = [&b]() {
-                    bsl::destroy_at(&b);
-                    bsl::discard(bsl::construct_at<bool>(&b));
+                bool mut_b{};
+                bsl::ut_when{} = [&mut_b]() {
+                    bsl::destroy_at(&mut_b);
+                    bsl::discard(bsl::construct_at<bool>(&mut_b));
                 };
             };
         };

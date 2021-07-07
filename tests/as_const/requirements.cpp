@@ -39,18 +39,18 @@ main() noexcept -> bsl::exit_code
 {
     bsl::ut_scenario{"verify noexcept"} = []() {
         bsl::ut_given{} = []() {
-            bool mydata{};
+            bool mut_mydata{};
             bsl::ut_then{} = []() {
-                static_assert(noexcept(bsl::as_const(mydata)));
+                static_assert(noexcept(bsl::as_const(mut_mydata)));
             };
         };
     };
 
     bsl::ut_scenario{"verify constness"} = []() {
         bsl::ut_given{} = []() {
-            bool mydata{};
+            bool mut_mydata{};
             bsl::ut_then{} = []() {
-                static_assert(bsl::is_same<decltype(bsl::as_const(mydata)), bool const &>::value);
+                static_assert(bsl::is_same<decltype(bsl::as_const(mut_mydata)), bool const &>::value);
             };
         };
     };

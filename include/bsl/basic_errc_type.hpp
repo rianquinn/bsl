@@ -111,9 +111,9 @@ namespace bsl
         ///   @brief move constructor
         ///
         /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
+        ///   @param mut_o the object being moved
         ///
-        constexpr basic_errc_type(basic_errc_type &&o) noexcept = default;
+        constexpr basic_errc_type(basic_errc_type &&mut_o) noexcept = default;
 
         /// <!-- description -->
         ///   @brief copy assignment
@@ -129,10 +129,10 @@ namespace bsl
         ///   @brief move assignment
         ///
         /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
+        ///   @param mut_o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr auto operator=(basic_errc_type &&o) &noexcept
+        [[maybe_unused]] constexpr auto operator=(basic_errc_type &&mut_o) &noexcept
             -> basic_errc_type & = default;
 
         /// <!-- description -->

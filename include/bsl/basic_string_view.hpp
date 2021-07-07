@@ -159,9 +159,9 @@ namespace bsl
         ///   @brief move constructor
         ///
         /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
+        ///   @param mut_o the object being moved
         ///
-        constexpr basic_string_view(basic_string_view &&o) noexcept = default;
+        constexpr basic_string_view(basic_string_view &&mut_o) noexcept = default;
 
         /// <!-- description -->
         ///   @brief copy assignment
@@ -177,10 +177,10 @@ namespace bsl
         ///   @brief move assignment
         ///
         /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
+        ///   @param mut_o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr auto operator=(basic_string_view &&o) &noexcept
+        [[maybe_unused]] constexpr auto operator=(basic_string_view &&mut_o) &noexcept
             -> basic_string_view & = default;
 
         /// <!-- description -->
@@ -190,10 +190,10 @@ namespace bsl
         ///
         /// <!-- inputs/outputs -->
         ///   @tparam O the type that could be implicitly converted
-        ///   @param val the value that could be implicitly converted
+        ///   @param mut_val the value that could be implicitly converted
         ///
         template<typename O>
-        constexpr basic_string_view(O val) noexcept = delete;
+        constexpr basic_string_view(O mut_val) noexcept = delete;
 
         /// <!-- description -->
         ///   @brief ptr assignment. This assigns a bsl::basic_string_view
@@ -1162,9 +1162,9 @@ namespace bsl
             }
 
             auto const len{(view.length() - str.length()) + offset};
-            for (size_type i{}; i < len; ++i) {
-                if (view.compare(i, npos, str) == 0) {
-                    return i + pos;
+            for (size_type mut_i{}; mut_i < len; ++mut_i) {
+                if (view.compare(mut_i, npos, str) == 0) {
+                    return mut_i + pos;
                 }
 
                 bsl::touch();
@@ -1195,9 +1195,9 @@ namespace bsl
                 return size_type::failure();
             }
 
-            for (size_type i{}; i < view.length(); ++i) {
-                if (*view.at_if(i) == ch) {
-                    return i + pos;
+            for (size_type mut_i{}; mut_i < view.length(); ++mut_i) {
+                if (*view.at_if(mut_i) == ch) {
+                    return mut_i + pos;
                 }
 
                 bsl::touch();

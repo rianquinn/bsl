@@ -310,24 +310,24 @@ namespace bsl
         ///   @include result/example_result_move_constructor.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
+        ///   @param mut_o the object being moved
         ///
         /// <!-- exceptions -->
         ///   @throw throws if the bsl::result stores a T and T's move
         ///     constructor throws
         ///
-        constexpr result(result &&o) noexcept(is_nothrow_move_constructible<T>::value)
-            : m_which{o.m_which}
+        constexpr result(result &&mut_o) noexcept(is_nothrow_move_constructible<T>::value)
+            : m_which{mut_o.m_which}
         {
             if (details::result_type::contains_t == m_which) {
                 // A BitCast conversion is needed when working with unions
                 // NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access, bsl-implicit-conversions-forbidden)
-                bsl::discard(construct_at<T>(&m_t, bsl::move(o.m_t)));
+                bsl::discard(construct_at<T>(&m_t, bsl::move(mut_o.m_t)));
             }
             else {
                 // A BitCast conversion is needed when working with unions
                 // NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access, bsl-implicit-conversions-forbidden)
-                bsl::discard(construct_at<E>(&m_e, bsl::move(o.m_e)));
+                bsl::discard(construct_at<E>(&m_e, bsl::move(mut_o.m_e)));
             }
         }
 
@@ -358,7 +358,7 @@ namespace bsl
         ///   @include result/example_result_move_assignment.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
+        ///   @param mut_o the object being moved
         ///   @return a reference to *this
         ///
         /// <!-- exceptions -->
@@ -366,11 +366,11 @@ namespace bsl
         ///     constructor throws or swapping T throws
         ///
         [[maybe_unused]] constexpr auto
-        operator=(result &&o) &noexcept(
+        operator=(result &&mut_o) &noexcept(
             conjunction<is_nothrow_move_constructible<T>, is_nothrow_swappable<T>>::value)
             -> result &
         {
-            result tmp{bsl::move(o)};
+            result tmp{bsl::move(mut_o)};
             this->private_swap(*this, tmp);
             return *this;
         }

@@ -29,39 +29,6 @@
 namespace
 {
     constinit bsl::unordered_map<bool, bool> const verify_constinit{};
-
-    // NOLINTNEXTLINE(bsl-user-defined-type-names-match-header-name)
-    class fixture_t final
-    {
-        bsl::unordered_map<bool, bool> map{};
-
-    public:
-        [[nodiscard]] constexpr auto
-        test_member_const() const noexcept -> bool
-        {
-            bsl::discard(map.empty());
-            bsl::discard(map.size());
-            bsl::discard(map.at({}));
-            bsl::discard(map.contains({}));
-
-            return true;
-        }
-
-        [[nodiscard]] constexpr auto
-        test_member_nonconst() noexcept -> bool
-        {
-            bsl::discard(bsl::unordered_map<bool, bool>{});
-            bsl::discard(map.empty());
-            bsl::discard(map.size());
-            map.clear();
-            bsl::discard(map.at({}));
-            bsl::discard(map.contains({}));
-
-            return true;
-        }
-    };
-
-    constexpr fixture_t fixture1{};
 }
 
 /// <!-- description -->
@@ -81,24 +48,22 @@ main() noexcept -> bsl::exit_code
 
     bsl::ut_scenario{"verify noexcept"} = []() {
         bsl::ut_given{} = []() {
-            bsl::unordered_map<bool, bool> map{};
+            bsl::unordered_map<bool, bool> mut_map{};
+            bsl::unordered_map<bool, bool> const map{};
             bsl::ut_then{} = []() {
                 static_assert(noexcept(bsl::unordered_map<bool, bool>{}));
+
+                static_assert(noexcept(mut_map.empty()));
+                static_assert(noexcept(mut_map.size()));
+                static_assert(noexcept(mut_map.clear()));
+                static_assert(noexcept(mut_map.at({})));
+                static_assert(noexcept(mut_map.erase({})));
+                static_assert(noexcept(mut_map.contains({})));
+
                 static_assert(noexcept(map.empty()));
                 static_assert(noexcept(map.size()));
-                static_assert(noexcept(map.clear()));
                 static_assert(noexcept(map.at({})));
                 static_assert(noexcept(map.contains({})));
-            };
-        };
-    };
-
-    bsl::ut_scenario{"verify constness"} = []() {
-        bsl::ut_given{} = []() {
-            fixture_t fixture2{};
-            bsl::ut_then{} = [&fixture2]() {
-                static_assert(fixture1.test_member_const());
-                bsl::ut_check(fixture2.test_member_nonconst());
             };
         };
     };

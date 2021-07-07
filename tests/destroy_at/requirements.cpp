@@ -40,16 +40,16 @@ main() noexcept -> bsl::exit_code
 {
     bsl::ut_scenario{"verify noexcept"} = []() {
         bsl::ut_given{} = []() {
-            bool mydata{};
+            bool mut_mydata{};
             bsl::ut_then{} = []() {
-                static_assert(noexcept(bsl::destroy_at(&mydata)));
+                static_assert(noexcept(bsl::destroy_at(&mut_mydata)));
             };
         };
 
         bsl::ut_given{} = []() {
-            test::class_destructor_throws c{};
+            test::class_destructor_throws mut_c{};
             bsl::ut_then{} = []() {
-                static_assert(!noexcept(bsl::destroy_at(&c)));
+                static_assert(!noexcept(bsl::destroy_at(&mut_c)));
             };
         };
     };

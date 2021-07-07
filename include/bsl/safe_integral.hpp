@@ -340,9 +340,9 @@ namespace bsl
         ///   @brief move constructor
         ///
         /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
+        ///   @param mut_o the object being moved
         ///
-        constexpr safe_integral(safe_integral &&o) noexcept = default;
+        constexpr safe_integral(safe_integral &&mut_o) noexcept = default;
 
         /// <!-- description -->
         ///   @brief copy assignment
@@ -358,10 +358,10 @@ namespace bsl
         ///   @brief move assignment
         ///
         /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
+        ///   @param mut_o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr auto operator=(safe_integral &&o) &noexcept
+        [[maybe_unused]] constexpr auto operator=(safe_integral &&mut_o) &noexcept
             -> safe_integral & = default;
 
         /// <!-- description -->
@@ -2196,8 +2196,8 @@ namespace bsl
     [[nodiscard]] constexpr auto
     operator+(safe_integral<T> const &lhs, safe_integral<T> const &rhs) noexcept -> safe_integral<T>
     {
-        safe_integral<T> tmp{lhs};
-        return tmp += rhs;
+        safe_integral<T> mut_tmp{lhs};
+        return mut_tmp += rhs;
     }
 
     /// <!-- description -->
@@ -2251,8 +2251,8 @@ namespace bsl
     [[nodiscard]] constexpr auto
     operator-(safe_integral<T> const &lhs, safe_integral<T> const &rhs) noexcept -> safe_integral<T>
     {
-        safe_integral<T> tmp{lhs};
-        return tmp -= rhs;
+        safe_integral<T> mut_tmp{lhs};
+        return mut_tmp -= rhs;
     }
 
     /// <!-- description -->
@@ -2306,8 +2306,8 @@ namespace bsl
     [[nodiscard]] constexpr auto
     operator*(safe_integral<T> const &lhs, safe_integral<T> const &rhs) noexcept -> safe_integral<T>
     {
-        safe_integral<T> tmp{lhs};
-        return tmp *= rhs;
+        safe_integral<T> mut_tmp{lhs};
+        return mut_tmp *= rhs;
     }
 
     /// <!-- description -->
@@ -2361,8 +2361,8 @@ namespace bsl
     [[nodiscard]] constexpr auto
     operator/(safe_integral<T> const &lhs, safe_integral<T> const &rhs) noexcept -> safe_integral<T>
     {
-        safe_integral<T> tmp{lhs};
-        return tmp /= rhs;
+        safe_integral<T> mut_tmp{lhs};
+        return mut_tmp /= rhs;
     }
 
     /// <!-- description -->
@@ -2416,8 +2416,8 @@ namespace bsl
     [[nodiscard]] constexpr auto
     operator%(safe_integral<T> const &lhs, safe_integral<T> const &rhs) noexcept -> safe_integral<T>
     {
-        safe_integral<T> tmp{lhs};
-        return tmp %= rhs;
+        safe_integral<T> mut_tmp{lhs};
+        return mut_tmp %= rhs;
     }
 
     /// <!-- description -->
@@ -2476,8 +2476,8 @@ namespace bsl
     operator<<(safe_integral<T> const &lhs, safe_integral<T> const &rhs) noexcept
         -> safe_integral<T>
     {
-        safe_integral<T> tmp{lhs};
-        return tmp <<= rhs;
+        safe_integral<T> mut_tmp{lhs};
+        return mut_tmp <<= rhs;
     }
 
     /// <!-- description -->
@@ -2532,8 +2532,8 @@ namespace bsl
     operator>>(safe_integral<T> const &lhs, safe_integral<T> const &rhs) noexcept
         -> safe_integral<T>
     {
-        safe_integral<T> tmp{lhs};
-        return tmp >>= rhs;
+        safe_integral<T> mut_tmp{lhs};
+        return mut_tmp >>= rhs;
     }
 
     /// <!-- description -->
@@ -2591,8 +2591,8 @@ namespace bsl
     [[nodiscard]] constexpr auto
     operator&(safe_integral<T> const &lhs, safe_integral<T> const &rhs) noexcept -> safe_integral<T>
     {
-        safe_integral<T> tmp{lhs};
-        return tmp &= rhs;
+        safe_integral<T> mut_tmp{lhs};
+        return mut_tmp &= rhs;
     }
 
     /// <!-- description -->
@@ -2646,8 +2646,8 @@ namespace bsl
     [[nodiscard]] constexpr auto
     operator|(safe_integral<T> const &lhs, safe_integral<T> const &rhs) noexcept -> safe_integral<T>
     {
-        safe_integral<T> tmp{lhs};
-        return tmp |= rhs;
+        safe_integral<T> mut_tmp{lhs};
+        return mut_tmp |= rhs;
     }
 
     /// <!-- description -->
@@ -2701,8 +2701,8 @@ namespace bsl
     [[nodiscard]] constexpr auto
     operator^(safe_integral<T> const &lhs, safe_integral<T> const &rhs) noexcept -> safe_integral<T>
     {
-        safe_integral<T> tmp{lhs};
-        return tmp ^= rhs;
+        safe_integral<T> mut_tmp{lhs};
+        return mut_tmp ^= rhs;
     }
 
     /// <!-- description -->

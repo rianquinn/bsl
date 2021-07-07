@@ -44,39 +44,39 @@ namespace
     {
         bsl::ut_scenario{"get positional string_view"} = []() {
             bsl::ut_given_at_runtime{} = []() {
-                bsl::arguments args{bsl::to_umax(0), nullptr};
+                bsl::arguments const args{bsl::to_umax(0), nullptr};
                 bsl::ut_then{} = [&args]() {
                     bsl::ut_check(args.get<bsl::string_view>(bsl::to_umax(0)).empty());
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::array argv{"app"};
-                bsl::arguments args{argv.size(), argv.data()};
+                bsl::array const argv{"app"};
+                bsl::arguments const args{argv.size(), argv.data()};
                 bsl::ut_then{} = [&args]() {
                     bsl::ut_check(args.get<bsl::string_view>(bsl::safe_uintmax::failure()).empty());
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::array argv{"-app"};
-                bsl::arguments args{argv.size(), argv.data()};
+                bsl::array const argv{"-app"};
+                bsl::arguments const args{argv.size(), argv.data()};
                 bsl::ut_then{} = [&args]() {
                     bsl::ut_check(args.get<bsl::string_view>(bsl::to_umax(0)).empty());
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::array argv{"42"};
-                bsl::arguments args{argv.size(), argv.data()};
+                bsl::array const argv{"42"};
+                bsl::arguments const args{argv.size(), argv.data()};
                 bsl::ut_then{} = [&args]() {
                     bsl::ut_check(args.get<bsl::string_view>(bsl::to_umax(1)).empty());
                 };
             };
 
             bsl::ut_given{} = []() {
-                bsl::array argv{"4", "-opt1", "8", "15", "16", "-opt2", "23", "42"};
-                bsl::arguments args{argv.size(), argv.data()};
+                bsl::array const argv{"4", "-opt1", "8", "15", "16", "-opt2", "23", "42"};
+                bsl::arguments const args{argv.size(), argv.data()};
                 bsl::ut_then{} = [&args]() {
                     bsl::ut_check(args.get<bsl::string_view>(bsl::to_umax(0)) == "4");
                     bsl::ut_check(args.get<bsl::string_view>(bsl::to_umax(1)) == "8");

@@ -108,7 +108,7 @@ namespace
 
         bsl::ut_scenario{"pointer from constexpr"} = []() {
             bsl::ut_given{} = []() {
-                bool val{};
+                bool const val{};
                 bsl::ut_then{} = [&val]() {
                     bsl::print() << &val << '\n';
                     bsl::debug() << &val << '\n';

@@ -55,21 +55,21 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bool b{};
-                bsl::ut_when{} = [&b]() {
-                    bsl::discard(bsl::construct_at<bool>(&b, true));
-                    bsl::ut_then{} = [&b]() {
-                        bsl::ut_check(b);
+                bool mut_b{};
+                bsl::ut_when{} = [&mut_b]() {
+                    bsl::discard(bsl::construct_at<bool>(&mut_b, true));
+                    bsl::ut_then{} = [&mut_b]() {
+                        bsl::ut_check(mut_b);
                     };
                 };
             };
 
             bsl::ut_given{} = []() {
-                bool b{true};
-                bsl::ut_when{} = [&b]() {
-                    bsl::discard(bsl::construct_at<bool>(&b, false));
-                    bsl::ut_then{} = [&b]() {
-                        bsl::ut_check(!b);
+                bool mut_b{true};
+                bsl::ut_when{} = [&mut_b]() {
+                    bsl::discard(bsl::construct_at<bool>(&mut_b, false));
+                    bsl::ut_then{} = [&mut_b]() {
+                        bsl::ut_check(!mut_b);
                     };
                 };
             };
@@ -91,21 +91,21 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::errc_type errc{bsl::errc_failure};
-                bsl::ut_when{} = [&errc]() {
-                    bsl::discard(bsl::construct_at<bsl::errc_type>(&errc, bsl::errc_success.get()));
-                    bsl::ut_then{} = [&errc]() {
-                        bsl::ut_check(errc);
+                bsl::errc_type mut_errc{bsl::errc_failure};
+                bsl::ut_when{} = [&mut_errc]() {
+                    bsl::discard(bsl::construct_at<bsl::errc_type>(&mut_errc, bsl::errc_success.get()));
+                    bsl::ut_then{} = [&mut_errc]() {
+                        bsl::ut_check(mut_errc);
                     };
                 };
             };
 
             bsl::ut_given{} = []() {
-                bsl::errc_type errc{};
-                bsl::ut_when{} = [&errc]() {
-                    bsl::discard(bsl::construct_at<bsl::errc_type>(&errc, bsl::errc_failure.get()));
-                    bsl::ut_then{} = [&errc]() {
-                        bsl::ut_check(!errc);
+                bsl::errc_type mut_errc{};
+                bsl::ut_when{} = [&mut_errc]() {
+                    bsl::discard(bsl::construct_at<bsl::errc_type>(&mut_errc, bsl::errc_failure.get()));
+                    bsl::ut_then{} = [&mut_errc]() {
+                        bsl::ut_check(!mut_errc);
                     };
                 };
             };

@@ -53,16 +53,16 @@ namespace bsl
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam ARG the type that define the provided argument
-    ///   @param a the arguments check
+    ///   @param mut_a the arguments check
     ///   @return Returns the boolean output of __builtin_expect, or false
     ///     if in release mode.
     ///
     template<typename ARG>
     [[nodiscard]] constexpr auto
-    unlikely_contract(ARG &&a) noexcept -> bool
+    unlikely_contract(ARG &&mut_a) noexcept -> bool
     {
         unlikely_contract_failure();
-        return __builtin_expect(!!(a), 0L) != 0L;
+        return __builtin_expect(!!(mut_a), 0L) != 0L;
     }
 }
 

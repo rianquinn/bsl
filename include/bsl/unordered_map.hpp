@@ -110,9 +110,9 @@ namespace bsl
         ///   @brief move constructor
         ///
         /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
+        ///   @param mut_o the object being moved
         ///
-        constexpr unordered_map(unordered_map &&o) noexcept = delete;
+        constexpr unordered_map(unordered_map &&mut_o) noexcept = delete;
 
         /// <!-- description -->
         ///   @brief copy assignment
@@ -128,10 +128,10 @@ namespace bsl
         ///   @brief move assignment
         ///
         /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
+        ///   @param mut_o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr auto operator=(unordered_map &&o) &noexcept
+        [[maybe_unused]] constexpr auto operator=(unordered_map &&mut_o) &noexcept
             -> unordered_map & = delete;
 
         /// <!-- description -->

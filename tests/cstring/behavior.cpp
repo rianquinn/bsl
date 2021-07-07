@@ -43,9 +43,9 @@ namespace
     {
         bsl::ut_scenario{"builtin_strncmp"} = []() {
             bsl::ut_given_at_runtime{} = []() {
-                bsl::cstr_type msg1{"Hello World"};
-                bsl::cstr_type msg2{"Hello World"};
-                bsl::cstr_type msg3{"Hello World with more stuff"};
+                bsl::cstr_type const msg1{"Hello World"};
+                bsl::cstr_type const msg2{"Hello World"};
+                bsl::cstr_type const msg3{"Hello World with more stuff"};
                 bsl::ut_then{} = [&msg1, &msg2, &msg3]() {
                     bsl::ut_check(!bsl::builtin_strncmp(nullptr, msg2, bsl::builtin_strlen(msg1)));
                     bsl::ut_check(!bsl::builtin_strncmp(msg1, nullptr, bsl::builtin_strlen(msg1)));
@@ -56,11 +56,11 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::cstr_type msg1{"Hello"};
-                bsl::cstr_type msg2{"Hello World"};
-                bsl::cstr_type msg3{"Hello World"};
-                bsl::cstr_type msg4{"Hello Plant"};
-                bsl::cstr_type msg5{"Something Else"};
+                bsl::cstr_type const msg1{"Hello"};
+                bsl::cstr_type const msg2{"Hello World"};
+                bsl::cstr_type const msg3{"Hello World"};
+                bsl::cstr_type const msg4{"Hello Plant"};
+                bsl::cstr_type const msg5{"Something Else"};
                 bsl::ut_then{} = [&msg1, &msg2, &msg3, &msg4, &msg5]() {
                     bsl::ut_check(bsl::builtin_strncmp(msg1, msg2, bsl::builtin_strlen(msg1)) == 0);
                     bsl::ut_check(bsl::builtin_strncmp(msg2, msg3, bsl::builtin_strlen(msg2)) == 0);
@@ -73,7 +73,7 @@ namespace
 
         bsl::ut_scenario{"builtin_strlen"} = []() {
             bsl::ut_given_at_runtime{} = []() {
-                bsl::cstr_type msg1{};
+                bsl::cstr_type const msg1{};
                 bsl::ut_then{} = [&msg1]() {
                     bsl::ut_check(!bsl::builtin_strlen(nullptr));
                     bsl::ut_check(!bsl::builtin_strlen(msg1));
@@ -81,8 +81,8 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::cstr_type msg1{""};
-                bsl::cstr_type msg2{"Hello"};
+                bsl::cstr_type const msg1{""};
+                bsl::cstr_type const msg2{"Hello"};
                 bsl::ut_then{} = [&msg1, &msg2]() {
                     bsl::ut_check(bsl::builtin_strlen(msg1) == bsl::to_umax(0));
                     bsl::ut_check(bsl::builtin_strlen(msg2) == bsl::to_umax(5));
@@ -92,32 +92,32 @@ namespace
 
         bsl::ut_scenario{"builtin_memset"} = []() {
             bsl::ut_given_at_runtime{} = []() {
-                bsl::array arr{true, true, true, true, true};
-                bsl::ut_then{} = [&arr]() {
-                    bsl::ut_check(bsl::builtin_memset<bool>(nullptr, '\0', arr.size()) == nullptr);
+                bsl::array mut_arr{true, true, true, true, true};
+                bsl::ut_then{} = [&mut_arr]() {
+                    bsl::ut_check(bsl::builtin_memset<bool>(nullptr, '\0', mut_arr.size()) == nullptr);
                     bsl::ut_check(
-                        bsl::builtin_memset(arr.data(), '\0', bsl::safe_uintmax::failure()) ==
+                        bsl::builtin_memset(mut_arr.data(), '\0', bsl::safe_uintmax::failure()) ==
                         nullptr);
-                    bsl::ut_check(bsl::builtin_memset(arr.data(), '\0', 0_umax) == arr.data());
-                    for (auto const elem : arr) {
+                    bsl::ut_check(bsl::builtin_memset(mut_arr.data(), '\0', 0_umax) == mut_arr.data());
+                    for (auto const elem : mut_arr) {
                         bsl::ut_check(*elem.data);
                     }
-                    bsl::ut_check(bsl::builtin_memset(arr.data(), '\0', arr.size()) == arr.data());
-                    for (auto const elem : arr) {
+                    bsl::ut_check(bsl::builtin_memset(mut_arr.data(), '\0', mut_arr.size()) == mut_arr.data());
+                    for (auto const elem : mut_arr) {
                         bsl::ut_check(!*elem.data);
                     }
                 };
             };
 
             bsl::ut_given{} = []() {
-                bsl::array arr{true, true, true, true, true};
-                bsl::ut_then{} = [&arr]() {
-                    bsl::ut_check(bsl::builtin_memset(arr.data(), '\0', 0_umax) == arr.data());
-                    for (auto const elem : arr) {
+                bsl::array mut_arr{true, true, true, true, true};
+                bsl::ut_then{} = [&mut_arr]() {
+                    bsl::ut_check(bsl::builtin_memset(mut_arr.data(), '\0', 0_umax) == mut_arr.data());
+                    for (auto const elem : mut_arr) {
                         bsl::ut_check(*elem.data);
                     }
-                    bsl::ut_check(bsl::builtin_memset(arr.data(), '\0', arr.size()) == arr.data());
-                    for (auto const elem : arr) {
+                    bsl::ut_check(bsl::builtin_memset(mut_arr.data(), '\0', mut_arr.size()) == mut_arr.data());
+                    for (auto const elem : mut_arr) {
                         bsl::ut_check(!*elem.data);
                     }
                 };
@@ -128,52 +128,52 @@ namespace
             ///
 
             // bsl::ut_given{} = []() {
-            //     bsl::array arr{42, 42, 42, 42, 42};
-            //     bsl::ut_then{} = [&arr]() {
-            //         bsl::ut_check(bsl::builtin_memset(arr.data(), '*', arr.size()) == nullptr);
-            //         bsl::ut_check(bsl::builtin_memset(arr.data(), '\0', 1_umax) == nullptr);
-            //         bsl::ut_check(bsl::builtin_memset(arr.data(), '\0', 128_umax) == arr.data());
+            //     bsl::array mut_arr{42, 42, 42, 42, 42};
+            //     bsl::ut_then{} = [&mut_arr]() {
+            //         bsl::ut_check(bsl::builtin_memset(mut_arr.data(), '*', mut_arr.size()) == nullptr);
+            //         bsl::ut_check(bsl::builtin_memset(mut_arr.data(), '\0', 1_umax) == nullptr);
+            //         bsl::ut_check(bsl::builtin_memset(mut_arr.data(), '\0', 128_umax) == mut_arr.data());
             //     };
             // };
         };
 
         bsl::ut_scenario{"builtin_memcpy"} = []() {
             bsl::ut_given_at_runtime{} = []() {
-                bsl::array arr1{true, true, true, true, true};
-                bsl::array arr2{false, false, false, false, false};
-                bsl::ut_then{} = [&arr1, &arr2]() {
+                bsl::array mut_arr1{true, true, true, true, true};
+                bsl::array mut_arr2{false, false, false, false, false};
+                bsl::ut_then{} = [&mut_arr1, &mut_arr2]() {
                     bsl::ut_check(
-                        bsl::builtin_memcpy<bool>(nullptr, arr2.data(), arr1.size()) == nullptr);
+                        bsl::builtin_memcpy<bool>(nullptr, mut_arr2.data(), mut_arr1.size()) == nullptr);
                     bsl::ut_check(
-                        bsl::builtin_memcpy<bool>(arr1.data(), nullptr, arr1.size()) == nullptr);
+                        bsl::builtin_memcpy<bool>(mut_arr1.data(), nullptr, mut_arr1.size()) == nullptr);
                     bsl::ut_check(
                         bsl::builtin_memcpy(
-                            arr1.data(), arr2.data(), bsl::safe_uintmax::failure()) == nullptr);
+                            mut_arr1.data(), mut_arr2.data(), bsl::safe_uintmax::failure()) == nullptr);
                     bsl::ut_check(
-                        bsl::builtin_memcpy(arr1.data(), arr2.data(), 0_umax) == arr1.data());
-                    for (auto const elem : arr1) {
+                        bsl::builtin_memcpy(mut_arr1.data(), mut_arr2.data(), 0_umax) == mut_arr1.data());
+                    for (auto const elem : mut_arr1) {
                         bsl::ut_check(*elem.data);
                     }
                     bsl::ut_check(
-                        bsl::builtin_memcpy(arr1.data(), arr2.data(), arr1.size()) == arr1.data());
-                    for (auto const elem : arr1) {
+                        bsl::builtin_memcpy(mut_arr1.data(), mut_arr2.data(), mut_arr1.size()) == mut_arr1.data());
+                    for (auto const elem : mut_arr1) {
                         bsl::ut_check(!*elem.data);
                     }
                 };
             };
 
             bsl::ut_given{} = []() {
-                bsl::array arr1{true, true, true, true, true};
-                bsl::array arr2{false, false, false, false, false};
-                bsl::ut_then{} = [&arr1, &arr2]() {
+                bsl::array mut_arr1{true, true, true, true, true};
+                bsl::array mut_arr2{false, false, false, false, false};
+                bsl::ut_then{} = [&mut_arr1, &mut_arr2]() {
                     bsl::ut_check(
-                        bsl::builtin_memcpy(arr1.data(), arr2.data(), 0_umax) == arr1.data());
-                    for (auto const elem : arr1) {
+                        bsl::builtin_memcpy(mut_arr1.data(), mut_arr2.data(), 0_umax) == mut_arr1.data());
+                    for (auto const elem : mut_arr1) {
                         bsl::ut_check(*elem.data);
                     }
                     bsl::ut_check(
-                        bsl::builtin_memcpy(arr1.data(), arr2.data(), arr1.size()) == arr1.data());
-                    for (auto const elem : arr1) {
+                        bsl::builtin_memcpy(mut_arr1.data(), mut_arr2.data(), mut_arr1.size()) == mut_arr1.data());
+                    for (auto const elem : mut_arr1) {
                         bsl::ut_check(!*elem.data);
                     }
                 };
@@ -184,11 +184,11 @@ namespace
             ///
 
             // bsl::ut_given{} = []() {
-            //     bsl::array arr1{42, 42, 42, 42, 42};
-            //     bsl::array arr2{0, 0, 0, 0, 0};
-            //     bsl::ut_then{} = [&arr1, &arr2]() {
-            //         bsl::ut_check(bsl::builtin_memcpy(arr1.data(), arr2.data(), 1_umax) == nullptr);
-            //         bsl::ut_check(bsl::builtin_memcpy(arr1.data(), arr2.data(), 128_umax) == arr1.data());
+            //     bsl::array mut_arr1{42, 42, 42, 42, 42};
+            //     bsl::array mut_arr2{0, 0, 0, 0, 0};
+            //     bsl::ut_then{} = [&mut_arr1, &mut_arr2]() {
+            //         bsl::ut_check(bsl::builtin_memcpy(mut_arr1.data(), mut_arr2.data(), 1_umax) == nullptr);
+            //         bsl::ut_check(bsl::builtin_memcpy(mut_arr1.data(), mut_arr2.data(), 128_umax) == mut_arr1.data());
             //     };
             // };
         };

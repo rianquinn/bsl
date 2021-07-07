@@ -870,8 +870,8 @@ namespace bsl
     [[nodiscard]] constexpr auto
     operator==(bsl::array<T, N> const &lhs, bsl::array<T, N> const &rhs) noexcept -> bool
     {
-        for (safe_uintmax i{}; i < lhs.size(); ++i) {
-            if (*lhs.at_if(i) != *rhs.at_if(i)) {
+        for (safe_uintmax mut_i{}; mut_i < lhs.size(); ++mut_i) {
+            if (*lhs.at_if(mut_i) != *rhs.at_if(mut_i)) {
                 return false;
             }
 
@@ -924,12 +924,12 @@ namespace bsl
             return o;
         }
 
-        for (safe_uintmax i{}; i < val.size(); ++i) {
-            if (i.is_zero()) {
-                o << "[" << *val.at_if(i);
+        for (safe_uintmax mut_i{}; mut_i < val.size(); ++mut_i) {
+            if (mut_i.is_zero()) {
+                o << "[" << *val.at_if(mut_i);
             }
             else {
-                o << ", " << *val.at_if(i);
+                o << ", " << *val.at_if(mut_i);
             }
         }
 

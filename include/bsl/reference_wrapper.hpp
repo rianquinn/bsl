@@ -67,10 +67,10 @@ namespace bsl
         ///   @include reference_wrapper/example_reference_wrapper_constructor.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @param val the thing to get the address of and store.
+        ///   @param mut_val the thing to get the address of and store.
         ///
-        explicit constexpr reference_wrapper(T &val) noexcept    // --
-            : m_ptr{addressof(val)}
+        explicit constexpr reference_wrapper(T &mut_val) noexcept    // --
+            : m_ptr{addressof(mut_val)}
         {}
 
         /// <!-- description -->
@@ -95,7 +95,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @tparam ARGS the types of arguments to pass to the wrapped
         ///     function.
-        ///   @param a the arguments to pass to the wrapped function.
+        ///   @param mut_a the arguments to pass to the wrapped function.
         ///   @return Returns the result of the wrapped function given the
         ///     provided arguments.
         ///
@@ -104,9 +104,9 @@ namespace bsl
         ///
         template<typename... ARGS>
         [[nodiscard]] constexpr auto
-        operator()(ARGS &&...a) const -> invoke_result_t<T &, ARGS...>
+        operator()(ARGS &&...mut_a) const -> invoke_result_t<T &, ARGS...>
         {
-            return invoke(this->get(), bsl::forward<ARGS>(a)...);
+            return invoke(this->get(), bsl::forward<ARGS>(mut_a)...);
         }
     };
 
@@ -115,14 +115,14 @@ namespace bsl
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type of reference to wrap
-    ///   @param val the thing to get the address of and store.
+    ///   @param mut_val the thing to get the address of and store.
     ///   @return Returns bsl::reference_wrapper<T>(val)
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    ref(T &val) noexcept -> reference_wrapper<T>
+    ref(T &mut_val) noexcept -> reference_wrapper<T>
     {
-        return reference_wrapper<T>(val);
+        return reference_wrapper<T>(mut_val);
     }
 
     /// <!-- description -->
@@ -135,7 +135,7 @@ namespace bsl
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    ref(reference_wrapper<T> val) noexcept -> reference_wrapper<T>
+    ref(reference_wrapper<T> const val) noexcept -> reference_wrapper<T>
     {
         return ref(val.get());
     }
@@ -148,7 +148,7 @@ namespace bsl
     ///   @param val the thing to get the address of and store.
     ///
     template<typename T>
-    void ref(const T &&val) = delete;
+    void ref(T const &&val) = delete;
 
     /// <!-- description -->
     ///   @brief Helper function that returns a reference_wrapper
@@ -160,7 +160,7 @@ namespace bsl
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    cref(const T &val) noexcept -> reference_wrapper<const T>
+    cref(T const &val) noexcept -> reference_wrapper<T const>
     {
         return reference_wrapper<const T>(val);
     }
@@ -175,7 +175,7 @@ namespace bsl
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    cref(reference_wrapper<T> val) noexcept -> reference_wrapper<const T>
+    cref(reference_wrapper<T> const val) noexcept -> reference_wrapper<T const>
     {
         return cref(val.get());
     }
@@ -188,7 +188,7 @@ namespace bsl
     ///   @param val the thing to get the address of and store.
     ///
     template<typename T>
-    void cref(const T &&val) = delete;
+    void cref(T const &&val) = delete;
 
     /// <!-- description -->
     ///   @brief Outputs the provided bsl::reference_wrapper to the provided

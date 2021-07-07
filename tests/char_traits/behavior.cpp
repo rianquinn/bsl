@@ -46,9 +46,9 @@ namespace
 
         bsl::ut_scenario{"eq"} = []() {
             bsl::ut_given{} = []() {
-                bsl::char_type a{static_cast<bsl::char_type>(42)};
-                bsl::char_type b{static_cast<bsl::char_type>(42)};
-                bsl::ut_then{} = [&a, &b]() {
+                constexpr bsl::char_type a{static_cast<bsl::char_type>(42)};
+                constexpr bsl::char_type b{static_cast<bsl::char_type>(42)};
+                bsl::ut_then{} = []() {
                     bsl::ut_check(traits::eq(a, b));
                 };
             };
@@ -56,9 +56,9 @@ namespace
 
         bsl::ut_scenario{"lt"} = []() {
             bsl::ut_given{} = []() {
-                bsl::char_type a{static_cast<bsl::char_type>(23)};
-                bsl::char_type b{static_cast<bsl::char_type>(42)};
-                bsl::ut_then{} = [&a, &b]() {
+                constexpr bsl::char_type a{static_cast<bsl::char_type>(23)};
+                constexpr bsl::char_type b{static_cast<bsl::char_type>(42)};
+                bsl::ut_then{} = []() {
                     bsl::ut_check(traits::lt(a, b));
                 };
             };

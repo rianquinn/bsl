@@ -40,14 +40,14 @@
 ///
 /// <!-- inputs/outputs -->
 ///   @param count ignored
-///   @param ptr the ptr to return
+///   @param mut_ptr the ptr to return
 ///   @return returns ptr
 ///
 [[maybe_unused]] constexpr auto
-operator new(bsl::uintmax count, void *ptr) noexcept -> void *
+operator new(bsl::uintmax const count, void *mut_ptr) noexcept -> void *
 {
     bsl::discard(count);
-    return ptr;
+    return mut_ptr;
 }
 
 // Currently, the new operator is only allowed in a constexpr if the constexpr
@@ -73,7 +73,7 @@ namespace std
     ///   @tparam T the type of object to initialize
     ///   @tparam ARGS the types of args to initialize T with
     ///   @param ptr a pointer to the object to initialize
-    ///   @param a the args to initialize T with
+    ///   @param mut_a the args to initialize T with
     ///   @return returns a pointer to the newly constructed T
     ///
     /// <!-- exceptions -->
@@ -81,7 +81,7 @@ namespace std
     ///
     template<typename T, typename... ARGS>
     [[nodiscard]] constexpr auto
-    construct_at_impl(void *const ptr, ARGS &&...a)    // --
+    construct_at_impl(void *const ptr, ARGS &&...mut_a)    // --
         noexcept(noexcept(new (ptr) T{bsl::declval<ARGS>()...})) -> T *
     {
         if (bsl::unlikely(nullptr == ptr)) {
@@ -89,7 +89,7 @@ namespace std
             return nullptr;
         }
 
-        return new (ptr) T{bsl::forward<ARGS>(a)...};
+        return new (ptr) T{bsl::forward<ARGS>(mut_a)...};
     }
 }
 
@@ -103,7 +103,7 @@ namespace bsl
     ///   @tparam T the type of object to initialize
     ///   @tparam ARGS the types of args to initialize T with
     ///   @param ptr a pointer to the object to initialize
-    ///   @param a the args to initialize T with
+    ///   @param mut_a the args to initialize T with
     ///   @return returns a pointer to the newly constructed T
     ///
     /// <!-- exceptions -->
@@ -111,10 +111,10 @@ namespace bsl
     ///
     template<typename T, typename... ARGS>
     [[nodiscard]] constexpr auto
-    construct_at(void *const ptr, ARGS &&...a)    // --
+    construct_at(void *const ptr, ARGS &&...mut_a)    // --
         noexcept(noexcept(std::construct_at_impl<T, ARGS...>(ptr, bsl::declval<ARGS>()...))) -> T *
     {
-        return std::construct_at_impl<T, ARGS...>(ptr, bsl::forward<ARGS>(a)...);
+        return std::construct_at_impl<T, ARGS...>(ptr, bsl::forward<ARGS>(mut_a)...);
     }
 }
 

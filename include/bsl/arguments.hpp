@@ -311,18 +311,18 @@ namespace bsl
         [[nodiscard]] constexpr auto
         size() const noexcept -> size_type
         {
-            size_type ret{};
+            size_type mut_ret{};
 
-            for (safe_uintmax i{}; i < m_args.size(); ++i) {
-                if (!bsl::string_view{*m_args.at_if(i)}.starts_with('-')) {
-                    ++ret;
+            for (safe_uintmax mut_i{}; mut_i < m_args.size(); ++mut_i) {
+                if (!bsl::string_view{*m_args.at_if(mut_i)}.starts_with('-')) {
+                    ++mut_ret;
                 }
                 else {
                     bsl::touch();
                 }
             }
 
-            return ret;
+            return mut_ret;
         }
 
         /// <!-- description -->

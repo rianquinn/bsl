@@ -34,17 +34,17 @@ namespace
 {
     template<typename T>
     [[nodiscard]] constexpr auto
-    detector(T &&val) noexcept -> bsl::safe_int32
+    detector(T &&mut_val) noexcept -> bsl::safe_int32
     {
         if constexpr (bsl::is_const<bsl::remove_reference_t<T>>::value) {
             return bsl::to_i32(1);
         }
 
-        if constexpr (bsl::is_lvalue_reference<decltype(val)>::value) {
+        if constexpr (bsl::is_lvalue_reference<decltype(mut_val)>::value) {
             return bsl::to_i32(2);
         }
 
-        if constexpr (bsl::is_rvalue_reference<decltype(val)>::value) {
+        if constexpr (bsl::is_rvalue_reference<decltype(mut_val)>::value) {
             return bsl::to_i32(3);
         }
 
@@ -53,9 +53,9 @@ namespace
 
     template<typename T>
     [[nodiscard]] constexpr auto
-    forwarder(T &&val) noexcept -> bsl::safe_int32
+    forwarder(T &&mut_val) noexcept -> bsl::safe_int32
     {
-        return detector(bsl::forward<T>(val));
+        return detector(bsl::forward<T>(mut_val));
     }
 
     /// <!-- description -->
@@ -79,9 +79,9 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_int32 val{42};
-                bsl::ut_then{} = [&val]() {
-                    bsl::ut_check(forwarder(val) == 2);
+                bsl::safe_int32 mut_val{42};
+                bsl::ut_then{} = [&mut_val]() {
+                    bsl::ut_check(forwarder(mut_val) == 2);
                 };
             };
 

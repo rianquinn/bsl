@@ -71,7 +71,6 @@ main() noexcept -> bsl::exit_code
                 static_assert(noexcept(bsl::to_umax(bsl::safe_int32{})));
                 static_assert(noexcept(bsl::to_umax_unsafe(0)));
                 static_assert(noexcept(bsl::to_umax_unsafe(bsl::safe_int32{})));
-                static_assert(noexcept(bsl::size_of<bsl::int32>()));
             };
         };
     };

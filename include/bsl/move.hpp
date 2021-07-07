@@ -40,14 +40,14 @@ namespace bsl
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type that defines the value being moved
-    ///   @param val the value being moved
+    ///   @param mut_val the value being moved
     ///   @return returns an xvalue expression that identifies "val"
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    move(T &&val) noexcept -> bsl::remove_reference_t<T> &&
+    move(T &&mut_val) noexcept -> bsl::remove_reference_t<T> &&
     {
-        return static_cast<bsl::remove_reference_t<T> &&>(val);
+        return static_cast<bsl::remove_reference_t<T> &&>(mut_val);
     }
 }
 

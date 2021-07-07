@@ -41,21 +41,21 @@ namespace
     {
         bsl::ut_scenario{"the basics"} = []() {
             bsl::ut_given{} = []() {
-                bsl::safe_int32 val{42};
+                bsl::safe_int32 const val{42};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::convert<bsl::int32>(val.get()) == 42);
                 };
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_int32 val{42};
+                bsl::safe_int32 const val{42};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::convert<bsl::int32>(val) == 42);
                 };
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_int32 val{42, true};
+                bsl::safe_int32 const val{42, true};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::convert<bsl::int32>(val).invalid());
                 };
@@ -64,7 +64,7 @@ namespace
 
         bsl::ut_scenario{"up bsl::convert signed to signed"} = []() {
             bsl::ut_given{} = []() {
-                bsl::safe_int8 val{bsl::safe_int8::max()};
+                bsl::safe_int8 const val{bsl::safe_int8::max()};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val) == bsl::to_i8(bsl::safe_int8::max()));
                     bsl::ut_check(bsl::to_i16(val) == bsl::to_i16(bsl::safe_int8::max()));
@@ -75,7 +75,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_int8 val{bsl::safe_int8::min()};
+                bsl::safe_int8 const val{bsl::safe_int8::min()};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val) == bsl::to_i8(bsl::safe_int8::min()));
                     bsl::ut_check(bsl::to_i16(val) == bsl::to_i16(bsl::safe_int8::min()));
@@ -88,7 +88,7 @@ namespace
 
         bsl::ut_scenario{"up bsl::convert unsigned to unsigned"} = []() {
             bsl::ut_given{} = []() {
-                bsl::safe_uint8 val{bsl::safe_uint8::max()};
+                bsl::safe_uint8 const val{bsl::safe_uint8::max()};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val) == bsl::to_u8(bsl::safe_uint8::max()));
                     bsl::ut_check(bsl::to_u16(val) == bsl::to_u16(bsl::safe_uint8::max()));
@@ -101,7 +101,7 @@ namespace
 
         bsl::ut_scenario{"up bsl::convert signed to unsigned"} = []() {
             bsl::ut_given{} = []() {
-                bsl::safe_int8 val{bsl::safe_int8::max()};
+                bsl::safe_int8 const val{bsl::safe_int8::max()};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val) == bsl::to_u8(bsl::safe_int8::max()));
                     bsl::ut_check(bsl::to_u16(val) == bsl::to_u16(bsl::safe_int8::max()));
@@ -112,7 +112,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_int8 val{bsl::safe_int8::min()};
+                bsl::safe_int8 const val{bsl::safe_int8::min()};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val).invalid());
                     bsl::ut_check(bsl::to_u16(val).invalid());
@@ -125,14 +125,14 @@ namespace
 
         bsl::ut_scenario{"up bsl::convert unsigned to signed"} = []() {
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uint8 val{bsl::safe_uint8::max()};
+                bsl::safe_uint8 const val{bsl::safe_uint8::max()};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                 };
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_uint8 val{bsl::safe_uint8::max()};
+                bsl::safe_uint8 const val{bsl::safe_uint8::max()};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i16(val) == bsl::to_i16(bsl::safe_uint8::max()));
                     bsl::ut_check(bsl::to_i32(val) == bsl::to_i32(bsl::safe_uint8::max()));
@@ -142,7 +142,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uint16 val{bsl::safe_uint16::max()};
+                bsl::safe_uint16 const val{bsl::safe_uint16::max()};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                     bsl::ut_check(bsl::to_i16(val).invalid());
@@ -150,7 +150,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_uint16 val{bsl::safe_uint16::max()};
+                bsl::safe_uint16 const val{bsl::safe_uint16::max()};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i32(val) == bsl::to_i32(bsl::safe_uint16::max()));
                     bsl::ut_check(bsl::to_i64(val) == bsl::to_i64(bsl::safe_uint16::max()));
@@ -159,7 +159,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uint32 val{bsl::safe_uint32::max()};
+                bsl::safe_uint32 const val{bsl::safe_uint32::max()};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                     bsl::ut_check(bsl::to_i16(val).invalid());
@@ -168,7 +168,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_uint32 val{bsl::safe_uint32::max()};
+                bsl::safe_uint32 const val{bsl::safe_uint32::max()};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i64(val) == bsl::to_i64(bsl::safe_uint32::max()));
                     bsl::ut_check(bsl::to_imax(val) == bsl::to_imax(bsl::safe_uint32::max()));
@@ -176,7 +176,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uint64 val{bsl::safe_uint64::max()};
+                bsl::safe_uint64 const val{bsl::safe_uint64::max()};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                     bsl::ut_check(bsl::to_i16(val).invalid());
@@ -187,7 +187,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uintmax val{bsl::safe_uintmax::max()};
+                bsl::safe_uintmax const val{bsl::safe_uintmax::max()};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                     bsl::ut_check(bsl::to_i16(val).invalid());
@@ -200,7 +200,7 @@ namespace
 
         bsl::ut_scenario{"down bsl::convert signed to signed"} = []() {
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int8::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int8::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val) == bsl::to_i8(bsl::safe_int8::max()));
                     bsl::ut_check(bsl::to_i16(val) == bsl::to_i16(bsl::safe_int8::max()));
@@ -211,14 +211,14 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int16::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int16::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                 };
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int16::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int16::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i16(val) == bsl::to_i16(bsl::safe_int16::max()));
                     bsl::ut_check(bsl::to_i32(val) == bsl::to_i32(bsl::safe_int16::max()));
@@ -228,7 +228,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int32::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int32::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                     bsl::ut_check(bsl::to_i16(val).invalid());
@@ -236,7 +236,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int32::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int32::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i32(val) == bsl::to_i32(bsl::safe_int32::max()));
                     bsl::ut_check(bsl::to_i64(val) == bsl::to_i64(bsl::safe_int32::max()));
@@ -245,7 +245,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int64::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int64::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                     bsl::ut_check(bsl::to_i16(val).invalid());
@@ -254,7 +254,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int64::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int64::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i64(val) == bsl::to_i64(bsl::safe_int64::max()));
                     bsl::ut_check(bsl::to_imax(val) == bsl::to_imax(bsl::safe_int64::max()));
@@ -262,7 +262,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_intmax::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_intmax::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                     bsl::ut_check(bsl::to_i16(val).invalid());
@@ -271,7 +271,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_intmax::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_intmax::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i64(val) == bsl::to_i64(bsl::safe_intmax::max()));
                     bsl::ut_check(bsl::to_imax(val) == bsl::to_imax(bsl::safe_intmax::max()));
@@ -279,7 +279,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int8::min())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int8::min())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val) == bsl::to_i8(bsl::safe_int8::min()));
                     bsl::ut_check(bsl::to_i16(val) == bsl::to_i16(bsl::safe_int8::min()));
@@ -290,14 +290,14 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int16::min())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int16::min())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                 };
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int16::min())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int16::min())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i16(val) == bsl::to_i16(bsl::safe_int16::min()));
                     bsl::ut_check(bsl::to_i32(val) == bsl::to_i32(bsl::safe_int16::min()));
@@ -307,7 +307,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int32::min())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int32::min())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                     bsl::ut_check(bsl::to_i16(val).invalid());
@@ -315,7 +315,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int32::min())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int32::min())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i32(val) == bsl::to_i32(bsl::safe_int32::min()));
                     bsl::ut_check(bsl::to_i64(val) == bsl::to_i64(bsl::safe_int32::min()));
@@ -324,7 +324,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int64::min())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int64::min())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                     bsl::ut_check(bsl::to_i16(val).invalid());
@@ -333,7 +333,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int64::min())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int64::min())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i64(val) == bsl::to_i64(bsl::safe_int64::min()));
                     bsl::ut_check(bsl::to_imax(val) == bsl::to_imax(bsl::safe_int64::min()));
@@ -341,7 +341,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_intmax::min())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_intmax::min())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                     bsl::ut_check(bsl::to_i16(val).invalid());
@@ -350,7 +350,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_intmax::min())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_intmax::min())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i64(val) == bsl::to_i64(bsl::safe_intmax::min()));
                     bsl::ut_check(bsl::to_imax(val) == bsl::to_imax(bsl::safe_intmax::min()));
@@ -360,7 +360,7 @@ namespace
 
         bsl::ut_scenario{"down bsl::convert unsigned to unsigned"} = []() {
             bsl::ut_given{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uint8::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uint8::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val) == bsl::to_u8(bsl::safe_uint8::max()));
                     bsl::ut_check(bsl::to_u16(val) == bsl::to_u16(bsl::safe_uint8::max()));
@@ -371,14 +371,14 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uint16::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uint16::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val).invalid());
                 };
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uint16::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uint16::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u16(val) == bsl::to_u16(bsl::safe_uint16::max()));
                     bsl::ut_check(bsl::to_u32(val) == bsl::to_u32(bsl::safe_uint16::max()));
@@ -388,7 +388,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uint32::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uint32::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val).invalid());
                     bsl::ut_check(bsl::to_u16(val).invalid());
@@ -396,7 +396,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uint32::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uint32::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u32(val) == bsl::to_u32(bsl::safe_uint32::max()));
                     bsl::ut_check(bsl::to_u64(val) == bsl::to_u64(bsl::safe_uint32::max()));
@@ -405,7 +405,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uint64::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uint64::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val).invalid());
                     bsl::ut_check(bsl::to_u16(val).invalid());
@@ -414,7 +414,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uint64::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uint64::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u64(val) == bsl::to_u64(bsl::safe_uint64::max()));
                     bsl::ut_check(bsl::to_umax(val) == bsl::to_umax(bsl::safe_uint64::max()));
@@ -422,7 +422,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uintmax::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uintmax::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val).invalid());
                     bsl::ut_check(bsl::to_u16(val).invalid());
@@ -431,7 +431,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uintmax::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uintmax::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u64(val) == bsl::to_u64(bsl::safe_uintmax::max()));
                     bsl::ut_check(bsl::to_umax(val) == bsl::to_umax(bsl::safe_uintmax::max()));
@@ -441,7 +441,7 @@ namespace
 
         bsl::ut_scenario{"down bsl::convert signed to unsigned"} = []() {
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int8::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int8::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val) == bsl::to_u8(bsl::safe_int8::max()));
                     bsl::ut_check(bsl::to_u16(val) == bsl::to_u16(bsl::safe_int8::max()));
@@ -452,14 +452,14 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int16::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int16::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val).invalid());
                 };
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int16::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int16::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u16(val) == bsl::to_u16(bsl::safe_int16::max()));
                     bsl::ut_check(bsl::to_u32(val) == bsl::to_u32(bsl::safe_int16::max()));
@@ -469,7 +469,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int32::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int32::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val).invalid());
                     bsl::ut_check(bsl::to_u16(val).invalid());
@@ -477,7 +477,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int32::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int32::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u32(val) == bsl::to_u32(bsl::safe_int32::max()));
                     bsl::ut_check(bsl::to_u64(val) == bsl::to_u64(bsl::safe_int32::max()));
@@ -486,7 +486,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int64::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int64::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val).invalid());
                     bsl::ut_check(bsl::to_u16(val).invalid());
@@ -495,7 +495,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int64::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int64::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u64(val) == bsl::to_u64(bsl::safe_int64::max()));
                     bsl::ut_check(bsl::to_umax(val) == bsl::to_umax(bsl::safe_int64::max()));
@@ -503,7 +503,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_intmax::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_intmax::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val).invalid());
                     bsl::ut_check(bsl::to_u16(val).invalid());
@@ -512,7 +512,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_intmax::max())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_intmax::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u64(val) == bsl::to_u64(bsl::safe_intmax::max()));
                     bsl::ut_check(bsl::to_umax(val) == bsl::to_umax(bsl::safe_intmax::max()));
@@ -520,7 +520,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int8::min())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int8::min())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val).invalid());
                     bsl::ut_check(bsl::to_u16(val).invalid());
@@ -531,7 +531,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int16::min())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int16::min())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val).invalid());
                     bsl::ut_check(bsl::to_u16(val).invalid());
@@ -542,7 +542,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int32::min())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int32::min())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val).invalid());
                     bsl::ut_check(bsl::to_u16(val).invalid());
@@ -553,7 +553,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_int64::min())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_int64::min())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val).invalid());
                     bsl::ut_check(bsl::to_u16(val).invalid());
@@ -564,7 +564,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_intmax val{bsl::to_imax(bsl::safe_intmax::min())};
+                bsl::safe_intmax const val{bsl::to_imax(bsl::safe_intmax::min())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val).invalid());
                     bsl::ut_check(bsl::to_u16(val).invalid());
@@ -577,14 +577,14 @@ namespace
 
         bsl::ut_scenario{"down bsl::convert unsigned to signed"} = []() {
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uint8::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uint8::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                 };
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uint8::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uint8::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i16(val) == bsl::to_i16(bsl::safe_uint8::max()));
                     bsl::ut_check(bsl::to_i32(val) == bsl::to_i32(bsl::safe_uint8::max()));
@@ -594,7 +594,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uint16::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uint16::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                     bsl::ut_check(bsl::to_i16(val).invalid());
@@ -602,7 +602,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uint16::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uint16::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i32(val) == bsl::to_i32(bsl::safe_uint16::max()));
                     bsl::ut_check(bsl::to_i64(val) == bsl::to_i64(bsl::safe_uint16::max()));
@@ -611,7 +611,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uint32::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uint32::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                     bsl::ut_check(bsl::to_i16(val).invalid());
@@ -620,7 +620,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uint32::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uint32::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i64(val) == bsl::to_i64(bsl::safe_uint32::max()));
                     bsl::ut_check(bsl::to_imax(val) == bsl::to_imax(bsl::safe_uint32::max()));
@@ -628,7 +628,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uint64::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uint64::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                     bsl::ut_check(bsl::to_i16(val).invalid());
@@ -639,7 +639,7 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() {
-                bsl::safe_uintmax val{bsl::to_umax(bsl::safe_uintmax::max())};
+                bsl::safe_uintmax const val{bsl::to_umax(bsl::safe_uintmax::max())};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val).invalid());
                     bsl::ut_check(bsl::to_i16(val).invalid());
@@ -652,7 +652,7 @@ namespace
 
         bsl::ut_scenario{"to functions"} = []() {
             bsl::ut_given{} = []() {
-                bsl::safe_int32 val{42};
+                bsl::safe_int32 const val{42};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_i8(val) == bsl::to_i8(42));
                     bsl::ut_check(bsl::to_i8(42) == bsl::to_i8(42));
@@ -668,7 +668,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                bsl::safe_uint32 val{42U};
+                bsl::safe_uint32 const val{42U};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8(val) == bsl::to_u8(42U));
                     bsl::ut_check(bsl::to_u8(42U) == bsl::to_u8(42U));
@@ -684,7 +684,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                constexpr bsl::safe_uintmax val{bsl::to_umax(0xFFFFFFFFFFFFFFFFU)};
+                constexpr bsl::safe_uintmax const val{bsl::to_umax(0xFFFFFFFFFFFFFFFFU)};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8_unsafe(val) == bsl::to_u8(0xFFU));
                     bsl::ut_check(bsl::to_u16_unsafe(val) == bsl::to_u16(0xFFFFU));
@@ -695,7 +695,7 @@ namespace
             };
 
             bsl::ut_given{} = []() {
-                constexpr bsl::safe_uintmax val{0xFFFFFFFFFFFFFFFFU};
+                constexpr bsl::safe_uintmax const val{0xFFFFFFFFFFFFFFFFU};
                 bsl::ut_then{} = [&val]() {
                     bsl::ut_check(bsl::to_u8_unsafe(val.get()) == bsl::to_u8(0xFFU));
                     bsl::ut_check(bsl::to_u16_unsafe(val.get()) == bsl::to_u16(0xFFFFU));

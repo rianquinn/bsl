@@ -61,8 +61,8 @@ namespace fmt_test
     inline void
     reset() noexcept
     {
-        for (bsl::safe_uintmax i{}; i < details::g_fmt_test_buf.size(); ++i) {
-            *details::g_fmt_test_buf.at_if(i) = static_cast<bsl::char_type>(0);
+        for (bsl::safe_uintmax mut_i{}; mut_i < details::g_fmt_test_buf.size(); ++mut_i) {
+            *details::g_fmt_test_buf.at_if(mut_i) = static_cast<bsl::char_type>(0);
         }
 
         details::g_fmt_test_num = static_cast<bsl::uintmax>(0);
@@ -123,8 +123,8 @@ namespace bsl::details
     inline void
     puts_stdout(bsl::cstr_type const str) noexcept
     {
-        for (bsl::safe_uintmax i{}; i < bsl::builtin_strlen(str); ++i) {
-            putc_stdout(str[i.get()]);
+        for (bsl::safe_uintmax mut_i{}; mut_i < bsl::builtin_strlen(str); ++mut_i) {
+            putc_stdout(str[mut_i.get()]);
         }
     }
 }

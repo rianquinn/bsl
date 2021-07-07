@@ -85,7 +85,7 @@ namespace bsl
     ///     bsl::out<T> does not print a label and does not accept
     ///     a debug level (as it cannot be turned off). All output
     ///     is redirected to bsl::details::putc_stdout and
-    ///     bsl::details::puts_stdout. See bsl::fmt for formatting
+    ///     bsl::details::puts_stdout. See fmt for formatting
     ///     documentation and examples.
     ///   @include debug/example_debug_print.hpp
     ///
@@ -107,7 +107,7 @@ namespace bsl
     ///     bsl::out<T> prints "DEBUG: " when created and accepts
     ///     a debug level, allowing it to be disabled. All output
     ///     is redirected to bsl::details::putc_stdout and
-    ///     bsl::details::puts_stdout. See bsl::fmt for formatting
+    ///     bsl::details::puts_stdout. See fmt for formatting
     ///     documentation and examples.
     ///   @include debug/example_debug_debug.hpp
     ///
@@ -121,7 +121,7 @@ namespace bsl
     {
         // False positive
         // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
-        details::out_type<DL, details::out_type_debug> o{};
+        details::out_type<DL, details::out_type_debug> const o{};
 
         if constexpr (!o) {
             return o;
@@ -139,7 +139,7 @@ namespace bsl
     ///     bsl::out<T> prints "ALERT: " when created and accepts
     ///     a debug level, allowing it to be disabled. All output
     ///     is redirected to bsl::details::putc_stderr and
-    ///     bsl::details::puts_stderr. See bsl::fmt for formatting
+    ///     bsl::details::puts_stderr. See fmt for formatting
     ///     documentation and examples.
     ///   @include debug/example_debug_alert.hpp
     ///
@@ -153,7 +153,7 @@ namespace bsl
     {
         // False positive
         // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
-        details::out_type<DL, details::out_type_alert> o{};
+        details::out_type<DL, details::out_type_alert> const o{};
 
         if constexpr (!o) {
             return o;
@@ -171,7 +171,7 @@ namespace bsl
     ///     bsl::out<T> prints "ERROR: " when created and does not accept
     ///     a debug level (as it cannot be turned off). All output
     ///     is redirected to bsl::details::putc_stderr and
-    ///     bsl::details::puts_stderr. See bsl::fmt for formatting
+    ///     bsl::details::puts_stderr. See fmt for formatting
     ///     documentation and examples.
     ///   @include debug/example_debug_error.hpp
     ///
@@ -183,7 +183,7 @@ namespace bsl
     {
         // False positive
         // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
-        out<details::out_type_error> o{};
+        out<details::out_type_error> const o{};
 
         o << bsl::bold_red << "ERROR" << bsl::reset_color;
         details::print_thread_id(o);
@@ -243,55 +243,59 @@ namespace bsl
     }
 
     /// <!-- description -->
-    ///   @brief Returns bsl::fmt{"#04x", t}
+    ///   @brief Returns fmt{"#04x", t}
     ///
     /// <!-- inputs/outputs -->
-    ///   @param val the value to input into bsl::fmt
-    ///   @return Returns bsl::fmt{"#04x", t}
+    ///   @param val the value to input into fmt
+    ///   @return Returns fmt{"#04x", t}
     ///
     [[nodiscard]] constexpr auto
-    hex(bsl::safe_uint8 const &val) noexcept -> bsl::fmt<bsl::safe_uint8>
+    hex(bsl::safe_uint8 const &val) noexcept -> fmt<bsl::safe_uint8>
     {
-        return bsl::fmt{"#04x", val};
+        constexpr fmt_options ops{"#04x"};
+        return fmt{ops, val};
     }
 
     /// <!-- description -->
-    ///   @brief Returns bsl::fmt{"#06x", t}
+    ///   @brief Returns fmt{"#06x", t}
     ///
     /// <!-- inputs/outputs -->
-    ///   @param val the value to input into bsl::fmt
-    ///   @return Returns bsl::fmt{"#06x", t}
+    ///   @param val the value to input into fmt
+    ///   @return Returns fmt{"#06x", t}
     ///
     [[nodiscard]] constexpr auto
-    hex(bsl::safe_uint16 const &val) noexcept -> bsl::fmt<bsl::safe_uint16>
+    hex(bsl::safe_uint16 const &val) noexcept -> fmt<bsl::safe_uint16>
     {
-        return bsl::fmt{"#06x", val};
+        constexpr fmt_options ops{"#06x"};
+        return fmt{ops, val};
     }
 
     /// <!-- description -->
-    ///   @brief Returns bsl::fmt{"#010x", t}
+    ///   @brief Returns fmt{"#010x", t}
     ///
     /// <!-- inputs/outputs -->
-    ///   @param val the value to input into bsl::fmt
-    ///   @return Returns bsl::fmt{"#010x", t}
+    ///   @param val the value to input into fmt
+    ///   @return Returns fmt{"#010x", t}
     ///
     [[nodiscard]] constexpr auto
-    hex(bsl::safe_uint32 const &val) noexcept -> bsl::fmt<bsl::safe_uint32>
+    hex(bsl::safe_uint32 const &val) noexcept -> fmt<bsl::safe_uint32>
     {
-        return bsl::fmt{"#010x", val};
+        constexpr fmt_options ops{"#010x"};
+        return fmt{ops, val};
     }
 
     /// <!-- description -->
-    ///   @brief Returns bsl::fmt{"#018x", t}
+    ///   @brief Returns fmt{"#018x", t}
     ///
     /// <!-- inputs/outputs -->
-    ///   @param val the value to input into bsl::fmt
-    ///   @return Returns bsl::fmt{"#018x", t}
+    ///   @param val the value to input into fmt
+    ///   @return Returns fmt{"#018x", t}
     ///
     [[nodiscard]] constexpr auto
-    hex(bsl::safe_uint64 const &val) noexcept -> bsl::fmt<bsl::safe_uint64>
+    hex(bsl::safe_uint64 const &val) noexcept -> fmt<bsl::safe_uint64>
     {
-        return bsl::fmt{"#018x", val};
+        constexpr fmt_options ops{"#018x"};
+        return fmt{ops, val};
     }
 }
 

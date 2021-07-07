@@ -45,7 +45,7 @@ namespace bsl
         ///   @return only used for decltype
         ///
         template<typename T>
-        [[maybe_unused]] auto try_add_pointer(bsl::int32 ignored) noexcept
+        [[maybe_unused]] auto try_add_pointer(bsl::int32 const ignored) noexcept
             -> type_identity<remove_reference_t<T> *>;
 
         /// <!-- description -->
@@ -57,7 +57,7 @@ namespace bsl
         ///   @return only used for decltype
         ///
         template<typename T>
-        [[maybe_unused]] auto try_add_pointer(bool ignored) noexcept -> type_identity<T>;
+        [[maybe_unused]] auto try_add_pointer(bool const ignored) noexcept -> type_identity<T>;
     }
 
     /// @class bsl::add_pointer

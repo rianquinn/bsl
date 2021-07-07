@@ -87,11 +87,11 @@ namespace bsl
             return safe_int32::failure();
         }
 
-        for (safe_uintmax i{}; i < count; ++i) {
+        for (safe_uintmax mut_i{}; mut_i < count; ++mut_i) {
             // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic, cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
-            safe_int32 const lhsc{static_cast<bsl::int32>(lhs[i.get()])};
+            safe_int32 const lhsc{static_cast<bsl::int32>(lhs[mut_i.get()])};
             // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic, cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
-            safe_int32 const rhsc{static_cast<bsl::int32>(rhs[i.get()])};
+            safe_int32 const rhsc{static_cast<bsl::int32>(rhs[mut_i.get()])};
 
             if (lhsc.is_zero()) {
                 unlikely_invalid_argument_failure();
@@ -125,18 +125,18 @@ namespace bsl
     [[nodiscard]] constexpr auto
     builtin_strlen(cstr_type const str) noexcept -> safe_uintmax
     {
-        bsl::safe_uintmax len{};
+        bsl::safe_uintmax mut_len{};
 
         if (unlikely(nullptr == str)) {
             unlikely_invalid_argument_failure();
             return safe_uintmax::failure();
         }
 
-        while ('\0' != str[len.get()]) {
-            ++len;
+        while ('\0' != str[mut_len.get()]) {
+            ++mut_len;
         }
 
-        return len;
+        return mut_len;
     }
 
     /// <!-- description -->
@@ -190,9 +190,9 @@ namespace bsl
                 return nullptr;
             }
 
-            for (safe_uintmax i{}; i < count / sizeof(T); ++i) {
+            for (safe_uintmax mut_i{}; mut_i < count / sizeof(T); ++mut_i) {
                 // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic, cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
-                dst[i.get()] = {};
+                dst[mut_i.get()] = {};
             }
 
             return dst;
@@ -244,9 +244,9 @@ namespace bsl
                 return nullptr;
             }
 
-            for (safe_uintmax i{}; i < count / sizeof(T); ++i) {
+            for (safe_uintmax mut_i{}; mut_i < count / sizeof(T); ++mut_i) {
                 // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic, cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
-                dst[i.get()] = src[i.get()];
+                dst[mut_i.get()] = src[mut_i.get()];
             }
 
             return dst;

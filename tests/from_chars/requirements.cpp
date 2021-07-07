@@ -40,7 +40,7 @@ main() noexcept -> bsl::exit_code
 {
     bsl::ut_scenario{"verify noexcept"} = []() {
         bsl::ut_given{} = []() {
-            bsl::string_view str{};
+            bsl::string_view const str{};
             bsl::ut_then{} = []() {
                 static_assert(noexcept(bsl::from_chars<bsl::uint8>(str, {})));
             };

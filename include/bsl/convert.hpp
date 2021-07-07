@@ -863,7 +863,7 @@ operator""_u8(bsl::cstr_type const str) noexcept -> bsl::safe_uint8
     constexpr auto base10{bsl::to_i32(10)};
     constexpr auto base16{bsl::to_i32(16)};
 
-    bsl::string_view view{str};
+    bsl::string_view const view{str};
 
     if (view.starts_with("0x")) {
         return bsl::from_chars<bsl::uint8>(view.substr(offset, bsl::npos).data(), base16);
@@ -887,7 +887,7 @@ operator""_u16(bsl::cstr_type const str) noexcept -> bsl::safe_uint16
     constexpr auto base10{bsl::to_i32(10)};
     constexpr auto base16{bsl::to_i32(16)};
 
-    bsl::string_view view{str};
+    bsl::string_view const view{str};
 
     if (view.starts_with("0x")) {
         return bsl::from_chars<bsl::uint16>(view.substr(offset, bsl::npos).data(), base16);
@@ -912,7 +912,7 @@ operator""_u32(bsl::cstr_type const str) noexcept -> bsl::safe_uint32
     constexpr auto base10{bsl::to_i32(10)};
     constexpr auto base16{bsl::to_i32(16)};
 
-    bsl::string_view view{str};
+    bsl::string_view const view{str};
 
     if (view.starts_with("0x")) {
         return bsl::from_chars<bsl::uint32>(view.substr(offset, bsl::npos).data(), base16);
@@ -937,7 +937,7 @@ operator""_u64(bsl::cstr_type const str) noexcept -> bsl::safe_uint64
     constexpr auto base10{bsl::to_i32(10)};
     constexpr auto base16{bsl::to_i32(16)};
 
-    bsl::string_view view{str};
+    bsl::string_view const view{str};
 
     if (view.starts_with("0x")) {
         return bsl::from_chars<bsl::uint64>(view.substr(offset, bsl::npos).data(), base16);
@@ -962,7 +962,7 @@ operator""_umax(bsl::cstr_type const str) noexcept -> bsl::safe_uintmax
     constexpr auto base10{bsl::to_i32(10)};
     constexpr auto base16{bsl::to_i32(16)};
 
-    bsl::string_view view{str};
+    bsl::string_view const view{str};
 
     if (view.starts_with("0x")) {
         return bsl::from_chars<bsl::uintmax>(view.substr(offset, bsl::npos).data(), base16);

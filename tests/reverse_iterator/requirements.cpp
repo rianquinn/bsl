@@ -51,21 +51,36 @@ main() noexcept -> bsl::exit_code
 {
     bsl::ut_scenario{"verify noexcept"} = []() {
         bsl::ut_given{} = []() {
-            bsl::reverse_iterator ri1{arr.begin()};
+            bsl::reverse_iterator mut_ri1{arr.begin()};
+            bsl::reverse_iterator mut_ri2{arr.begin()};
+            bsl::reverse_iterator const ri1{arr.begin()};
             bsl::reverse_iterator const ri2{arr.begin()};
             bsl::ut_then{} = []() {
                 static_assert(noexcept(bsl::reverse_iterator{arr.begin()}));
+
+                static_assert(noexcept(mut_ri1.base()));
+                static_assert(noexcept(mut_ri1.data()));
+                static_assert(noexcept(mut_ri1.size()));
+                static_assert(noexcept(mut_ri1.index()));
+                static_assert(noexcept(mut_ri1.empty()));
+                static_assert(noexcept(!!mut_ri1));
+                static_assert(noexcept(mut_ri1.is_end()));
+                static_assert(noexcept(mut_ri1.get_if()));
+                static_assert(noexcept(++mut_ri1));
+                static_assert(noexcept(--mut_ri1));
+                static_assert(noexcept(mut_ri1 == mut_ri2));
+                static_assert(noexcept(mut_ri1 != mut_ri2));
+                static_assert(noexcept(mut_ri1 < mut_ri2));
+                static_assert(noexcept(mut_ri1 > mut_ri2));
+
                 static_assert(noexcept(ri1.base()));
                 static_assert(noexcept(ri1.data()));
-                static_assert(noexcept(ri2.data()));
                 static_assert(noexcept(ri1.size()));
                 static_assert(noexcept(ri1.index()));
                 static_assert(noexcept(ri1.empty()));
                 static_assert(noexcept(!!ri1));
                 static_assert(noexcept(ri1.is_end()));
                 static_assert(noexcept(ri1.get_if()));
-                static_assert(noexcept(++ri1));
-                static_assert(noexcept(--ri1));
                 static_assert(noexcept(ri1 == ri2));
                 static_assert(noexcept(ri1 != ri2));
                 static_assert(noexcept(ri1 < ri2));

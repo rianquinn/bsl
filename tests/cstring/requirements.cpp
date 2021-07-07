@@ -39,12 +39,12 @@ main() noexcept -> bsl::exit_code
 {
     bsl::ut_scenario{"verify noexcept"} = []() {
         bsl::ut_given{} = []() {
-            bsl::array arr{true, true, true, true, true};
+            bsl::array mut_arr{true, true, true, true, true};
             bsl::ut_then{} = []() {
                 static_assert(noexcept(bsl::builtin_strncmp("", "", {})));
                 static_assert(noexcept(bsl::builtin_strlen("")));
-                static_assert(noexcept(bsl::builtin_memset(arr.data(), '\0', arr.size())));
-                static_assert(noexcept(bsl::builtin_memcpy(arr.data(), arr.data(), arr.size())));
+                static_assert(noexcept(bsl::builtin_memset(mut_arr.data(), '\0', mut_arr.size())));
+                static_assert(noexcept(bsl::builtin_memcpy(mut_arr.data(), mut_arr.data(), mut_arr.size())));
             };
         };
     };

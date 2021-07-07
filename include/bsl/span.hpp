@@ -178,11 +178,11 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @tparam U the array's value type
         ///   @tparam N the size of the array
-        ///   @param arr the array being spaned.
+        ///   @param mut_arr the array being spaned.
         ///
         template<typename U, bsl::uintmax N>
-        explicit constexpr span(bsl::array<U, N> &arr) noexcept    // --
-            : m_ptr{arr.data()}, m_count{N}
+        explicit constexpr span(bsl::array<U, N> &mut_arr) noexcept    // --
+            : m_ptr{mut_arr.data()}, m_count{N}
         {}
 
         /// <!-- description -->
@@ -216,9 +216,9 @@ namespace bsl
         ///   @brief move constructor
         ///
         /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
+        ///   @param mut_o the object being moved
         ///
-        constexpr span(span &&o) noexcept = default;
+        constexpr span(span &&mut_o) noexcept = default;
 
         /// <!-- description -->
         ///   @brief copy assignment
@@ -233,10 +233,10 @@ namespace bsl
         ///   @brief move assignment
         ///
         /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
+        ///   @param mut_o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr auto operator=(span &&o) &noexcept -> span & = default;
+        [[maybe_unused]] constexpr auto operator=(span &&mut_o) &noexcept -> span & = default;
 
         /// <!-- description -->
         ///   @brief Returns a pointer to the instance of T stored at index
@@ -887,10 +887,10 @@ namespace bsl
     /// <!-- inputs/outputs -->
     ///   @tparam U the array's value type
     ///   @tparam N the size of the array
-    ///   @param arr the array being spaned.
+    ///   @param mut_arr the array being spaned.
     ///
     template<typename U, bsl::uintmax N>
-    span(bsl::array<U, N> &arr) -> span<U>;
+    span(bsl::array<U, N> &mut_arr) -> span<U>;
 
     /// <!-- description -->
     ///   @brief Creates user-defined deduction guide for bsl::array
@@ -924,8 +924,8 @@ namespace bsl
             return false;
         }
 
-        for (safe_uintmax i{}; i < lhs.size(); ++i) {
-            if (*lhs.at_if(i) != *rhs.at_if(i)) {
+        for (safe_uintmax mut_i{}; mut_i < lhs.size(); ++mut_i) {
+            if (*lhs.at_if(mut_i) != *rhs.at_if(mut_i)) {
                 return false;
             }
 
@@ -980,12 +980,12 @@ namespace bsl
             return o << "[]";
         }
 
-        for (safe_uintmax i{}; i < val.size(); ++i) {
-            if (i.is_zero()) {
-                o << "[" << *val.at_if(i);
+        for (safe_uintmax mut_i{}; mut_i < val.size(); ++mut_i) {
+            if (mut_i.is_zero()) {
+                o << "[" << *val.at_if(mut_i);
             }
             else {
-                o << ", " << *val.at_if(i);
+                o << ", " << *val.at_if(mut_i);
             }
         }
 

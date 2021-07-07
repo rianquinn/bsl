@@ -28,39 +28,7 @@
 
 namespace
 {
-    // Needed for requirements testing
-    // NOLINTNEXTLINE(bsl-user-defined-type-names-match-header-name)
-    class fixture_t final
-    {
-        bsl::result<bool> res{bsl::in_place, true};
-
-    public:
-        [[nodiscard]] constexpr auto
-        test_member_const() const noexcept -> bool
-        {
-            bsl::discard(res.get_if());
-            bsl::discard(res.errc());
-            bsl::discard(!!res);
-            bsl::discard(res.success());
-            bsl::discard(res.failure());
-
-            return true;
-        }
-
-        [[nodiscard]] constexpr auto
-        test_member_nonconst() noexcept -> bool
-        {
-            bsl::discard(res.get_if());
-            bsl::discard(res.errc());
-            bsl::discard(!!res);
-            bsl::discard(res.success());
-            bsl::discard(res.failure());
-
-            return true;
-        }
-    };
-
-    constexpr fixture_t fixture1{};
+    constinit bsl::result<bool> const verify_constinit{};
 }
 
 /// <!-- description -->
@@ -74,13 +42,20 @@ namespace
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
+    bsl::ut_scenario{"verify supports constinit"} = []() {
+        bsl::discard(verify_constinit);
+    };
+
     bsl::ut_scenario{"verify noexcept"} = []() {
         bsl::ut_given{} = []() {
             bool val{};
-            bsl::result<bool> res1{true};
-            bsl::result<bool> res2{false};
+            bsl::result<bool> mut_res1{true};
+            bsl::result<bool> mut_res2{false};
+            bsl::result<bool> const res1{true};
+            bsl::result<bool> const res2{false};
             bsl::errc_type myerror{};
             bsl::ut_then{} = []() {
+                static_assert(noexcept(bsl::result<bool>{}));
                 static_assert(noexcept(bsl::result<bool>{val}));
                 static_assert(noexcept(bsl::result<bool>{bsl::move(val)}));
                 static_assert(noexcept(bsl::result<bool>{bsl::in_place, true}));
@@ -88,6 +63,15 @@ main() noexcept -> bsl::exit_code
                 static_assert(noexcept(bsl::result<bool>{bsl::move(myerror)}));
                 static_assert(noexcept(bsl::result<bool>{res1}));
                 static_assert(noexcept(bsl::result<bool>{bsl::move(res1)}));
+
+                static_assert(noexcept(mut_res1 = mut_res2));
+                static_assert(noexcept(mut_res1 = bsl::move(mut_res2)));
+                static_assert(noexcept(mut_res1.get_if()));
+                static_assert(noexcept(mut_res1.errc()));
+                static_assert(noexcept(!!mut_res1));
+                static_assert(noexcept(mut_res1.success()));
+                static_assert(noexcept(mut_res1.failure()));
+
                 static_assert(noexcept(res1 = res2));
                 static_assert(noexcept(res1 = bsl::move(res2)));
                 static_assert(noexcept(res1.get_if()));
@@ -95,16 +79,6 @@ main() noexcept -> bsl::exit_code
                 static_assert(noexcept(!!res1));
                 static_assert(noexcept(res1.success()));
                 static_assert(noexcept(res1.failure()));
-            };
-        };
-    };
-
-    bsl::ut_scenario{"verify constness"} = []() {
-        bsl::ut_given{} = []() {
-            fixture_t fixture2{};
-            bsl::ut_then{} = [&fixture2]() {
-                static_assert(fixture1.test_member_const());
-                bsl::ut_check(fixture2.test_member_nonconst());
             };
         };
     };

@@ -441,9 +441,9 @@ namespace bsl
         ///   @brief move constructor
         ///
         /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
+        ///   @param mut_o the object being moved
         ///
-        constexpr fmt(fmt &&o) noexcept = delete;
+        constexpr fmt(fmt &&mut_o) noexcept = delete;
 
         /// <!-- description -->
         ///   @brief copy assignment
@@ -458,10 +458,10 @@ namespace bsl
         ///   @brief move assignment
         ///
         /// <!-- inputs/outputs -->
-        ///   @param o the object being moved
+        ///   @param mut_o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr auto operator=(fmt &&o) &noexcept -> fmt & = delete;
+        [[maybe_unused]] constexpr auto operator=(fmt &&mut_o) &noexcept -> fmt & = delete;
 
         /// <!-- description -->
         ///   @brief Outputs the provided formatted argument to the provided
@@ -478,7 +478,7 @@ namespace bsl
         ///   @tparam T the type of outputter provided
         ///   @tparam U the type of value being ouputter using bsl::fmt
         ///   @param o the instance of the outputter used to output the value.
-        ///   @param arg a bsl::fmt that contains the value being outputted as
+        ///   @param mut_arg a bsl::fmt that contains the value being outputted as
         ///     well as any format instructions.
         ///   @return return o
         ///
@@ -490,7 +490,7 @@ namespace bsl
         // see the pointer being stored. You would have to really go out
         // of your way to make a mistake.
         // NOLINTNEXTLINE(bsl-decl-forbidden)
-        friend constexpr auto operator<<(out<T> const o, fmt<U> &&arg) noexcept -> out<T>;
+        friend constexpr auto operator<<(out<T> const o, fmt<U> &&mut_arg) noexcept -> out<T>;
     };
 
     /// <!-- description -->
@@ -504,13 +504,13 @@ namespace bsl
     ///   @tparam T the type of outputter provided
     ///   @tparam U the type of value being ouputter using bsl::fmt
     ///   @param o the instance of the outputter used to output the value.
-    ///   @param arg a bsl::fmt that contains the value being outputted as
+    ///   @param mut_arg a bsl::fmt that contains the value being outputted as
     ///     well as any format instructions.
     ///   @return return o
     ///
     template<typename T, typename U>
     [[maybe_unused]] constexpr auto
-    operator<<(out<T> const o, fmt<U> &&arg) noexcept -> out<T>
+    operator<<(out<T> const o, fmt<U> &&mut_arg) noexcept -> out<T>
     {
         if constexpr (!o) {
             return o;
@@ -520,7 +520,7 @@ namespace bsl
         // false positive for this test, but either way, this is something
         // we wish to support.
         // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay, hicpp-no-array-decay, bsl-implicit-conversions-forbidden)
-        fmt_impl(o, arg.m_ops, arg.m_val);
+        fmt_impl(o, mut_arg.m_ops, mut_arg.m_val);
         return o;
     }
 

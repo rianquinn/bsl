@@ -42,21 +42,21 @@ namespace
     {
         bsl::ut_scenario{"constructor / get"} = []() {
             bsl::ut_given{} = []() {
-                bsl::basic_errc_type<> errc{};
+                bsl::basic_errc_type<> const errc{};
                 bsl::ut_then{} = [&errc]() {
                     bsl::ut_check(errc.get() == 0);
                 };
             };
 
             bsl::ut_given{} = []() {
-                bsl::basic_errc_type<> errc{42};
+                bsl::basic_errc_type<> const errc{42};
                 bsl::ut_then{} = [&errc]() {
                     bsl::ut_check(errc.get() == 42);
                 };
             };
 
             bsl::ut_given{} = []() {
-                bsl::basic_errc_type<> errc{bsl::to_i32(42)};
+                bsl::basic_errc_type<> const errc{bsl::to_i32(42)};
                 bsl::ut_then{} = [&errc]() {
                     bsl::ut_check(errc.get() == 42);
                 };
@@ -140,8 +140,8 @@ namespace
 
         bsl::ut_scenario{"equals"} = []() {
             bsl::ut_given{} = []() {
-                bsl::basic_errc_type<> errc1{42};
-                bsl::basic_errc_type<> errc2{42};
+                bsl::basic_errc_type<> const errc1{42};
+                bsl::basic_errc_type<> const errc2{42};
                 bsl::ut_then{} = [&errc1, &errc2]() {
                     bsl::ut_check(errc1 == errc2);
                 };
@@ -150,8 +150,8 @@ namespace
 
         bsl::ut_scenario{"not equals"} = []() {
             bsl::ut_given{} = []() {
-                bsl::basic_errc_type<> errc1{23};
-                bsl::basic_errc_type<> errc2{42};
+                bsl::basic_errc_type<> const errc1{23};
+                bsl::basic_errc_type<> const errc2{42};
                 bsl::ut_then{} = [&errc1, &errc2]() {
                     bsl::ut_check(errc1 != errc2);
                 };

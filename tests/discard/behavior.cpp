@@ -41,7 +41,7 @@ namespace
     {
         bsl::ut_scenario{"discard"} = []() {
             bsl::ut_given{} = []() {
-                bool val{};
+                bool const val{};
                 bsl::ut_then{} = [&val]() {
                     bsl::discard(val);    // <--- Removes compilers warning
                 };

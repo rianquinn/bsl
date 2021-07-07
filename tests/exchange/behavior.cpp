@@ -41,13 +41,13 @@ namespace
     {
         bsl::ut_scenario{"exchange"} = []() {
             bsl::ut_given{} = []() {
-                bsl::safe_int32 val1{23};
-                bsl::safe_int32 val2{42};
-                bsl::ut_when{} = [&val1, &val2]() {
-                    val2 = bsl::exchange(val1, val2);
-                    bsl::ut_then{} = [&val1, &val2]() {
-                        bsl::ut_check(val1 == 42);
-                        bsl::ut_check(val2 == 23);
+                bsl::safe_int32 mut_val1{23};
+                bsl::safe_int32 mut_val2{42};
+                bsl::ut_when{} = [&mut_val1, &mut_val2]() {
+                    mut_val2 = bsl::exchange(mut_val1, mut_val2);
+                    bsl::ut_then{} = [&mut_val1, &mut_val2]() {
+                        bsl::ut_check(mut_val1 == 42);
+                        bsl::ut_check(mut_val2 == 23);
                     };
                 };
             };

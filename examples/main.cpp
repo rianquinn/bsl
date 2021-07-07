@@ -120,7 +120,6 @@
 #include "convert/example_convert_to_i64.hpp"
 #include "convert/example_convert_to_i8.hpp"
 #include "convert/example_convert_to_imax.hpp"
-#include "convert/example_convert_to_ptr.hpp"
 #include "convert/example_convert_to_u16.hpp"
 #include "convert/example_convert_to_u16_unsafe.hpp"
 #include "convert/example_convert_to_u32.hpp"
@@ -273,7 +272,6 @@
 #include "example_is_unsigned_overview.hpp"
 #include "example_is_void_overview.hpp"
 #include "example_is_volatile_overview.hpp"
-#include "example_likely_assert_overview.hpp"
 #include "example_likely_overview.hpp"
 #include "example_make_index_sequence_overview.hpp"
 #include "example_make_integer_sequence_overview.hpp"
@@ -609,7 +607,6 @@ main() noexcept -> bsl::exit_code
     example(&bsl::example_convert_to_u64_unsafe, "example_convert_to_u64_unsafe");
     example(&bsl::example_convert_to_umax, "example_convert_to_umax");
     example(&bsl::example_convert_to_umax_unsafe, "example_convert_to_umax_unsafe");
-    example(&bsl::example_convert_to_ptr, "example_convert_to_ptr");
     // example(&bsl::example_debug_alert, "example_debug_alert");
     example(&bsl::example_debug_debug, "example_debug_debug");
     // example(&bsl::example_debug_error, "example_debug_error");
@@ -742,7 +739,6 @@ main() noexcept -> bsl::exit_code
     example(&bsl::example_is_union_overview, "example_is_union_overview");
     example(&bsl::example_is_void_overview, "example_is_void_overview");
     example(&bsl::example_is_volatile_overview, "example_is_volatile_overview");
-    example(&bsl::example_likely_assert_overview, "example_likely_assert_overview");
     example(&bsl::example_likely_overview, "example_likely_overview");
     example(&bsl::example_make_index_sequence_overview, "example_make_index_sequence_overview");
     example(&bsl::example_make_integer_sequence_overview, "example_make_integer_sequence_overview");
