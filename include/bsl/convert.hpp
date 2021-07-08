@@ -37,6 +37,8 @@
 #include "string_view.hpp"
 #include "unlikely.hpp"
 
+#include "is_integral.hpp"
+
 namespace bsl
 {
     /// <!-- description -->
@@ -231,7 +233,7 @@ namespace bsl
     ///   @param val the integral to convert
     ///   @return Returns convert<bsl::int8>(val)
     ///
-    template<typename T>
+    template<typename T, enable_if_t<is_integral<T>::value, bool> = true>
     [[nodiscard]] constexpr auto
     to_i8(T const val) noexcept -> bsl::safe_int8
     {

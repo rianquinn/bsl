@@ -124,7 +124,7 @@ namespace bsl
         ///   @param s a pointer to the string
         ///   @param count the number of characters in the string
         ///
-        constexpr basic_string_view(pointer_type const s, size_type const count) noexcept
+        constexpr basic_string_view(pointer_type const s, size_type const &count) noexcept
             : m_ptr{s}, m_count{count}
         {
             if (unlikely(nullptr == m_ptr)) {
