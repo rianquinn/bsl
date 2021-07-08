@@ -30,7 +30,7 @@
 
 namespace
 {
-    constinit bsl::array const verify_constinit{true, false};
+    constinit bsl::array const g_verify_constinit{true, false};
 }
 
 /// <!-- description -->
@@ -44,17 +44,17 @@ namespace
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    bsl::ut_scenario{"verify supports constinit"} = []() {
-        bsl::discard(verify_constinit);
+    bsl::ut_scenario{"verify supports constinit"} = []() noexcept {
+        bsl::discard(g_verify_constinit);
     };
 
-    bsl::ut_scenario{"verify noexcept"} = []() {
-        bsl::ut_given{} = []() {
+    bsl::ut_scenario{"verify noexcept"} = []() noexcept {
+        bsl::ut_given{} = []() noexcept {
             bsl::array mut_arr1{true, false};
             bsl::array mut_arr2{true, false};
             bsl::array const arr1{true, false};
             bsl::array const arr2{true, false};
-            bsl::ut_then{} = []() {
+            bsl::ut_then{} = []() noexcept {
                 static_assert(noexcept(mut_arr1.at_if(bsl::to_umax(0))));
                 static_assert(noexcept(mut_arr1.front()));
                 static_assert(noexcept(mut_arr1.front_if()));

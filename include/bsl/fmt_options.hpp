@@ -104,10 +104,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @param f the user provided format string.
         ///
-        // We use a deleted single argument template constructor to prevent
-        // implicit conversions, so this rule is OBE.
-        // NOLINTNEXTLINE(hicpp-explicit-conversions)
-        constexpr fmt_options(cstr_type const f) noexcept
+        explicit constexpr fmt_options(cstr_type const f) noexcept
         {
             details::fmt_fsm mut_fsm{};
 
@@ -757,20 +754,16 @@ namespace bsl
         get_ptrops() noexcept -> fmt_options
         {
             if (sizeof(bsl::uintptr) == sizeof(bsl::uint32)) {
-                return {"#010x"};
+                return fmt_options{"#010x"};
             }
 
-            return {"#018x"};
+            return fmt_options{"#018x"};
         }
     }
 
     /// @brief defines no formatting.
-    // We want our implementation to mimic C++ here.
-    // NOLINTNEXTLINE(bsl-name-case)
     constexpr fmt_options nullops{""};
     /// @brief defines how to format a ptr like type.
-    // We want our implementation to mimic C++ here.
-    // NOLINTNEXTLINE(bsl-name-case)
     constexpr fmt_options ptrops{details::get_ptrops()};
 }
 

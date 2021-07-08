@@ -49,13 +49,13 @@ namespace
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    bsl::ut_scenario{"verify noexcept"} = []() {
-        bsl::ut_given{} = []() {
+    bsl::ut_scenario{"verify noexcept"} = []() noexcept {
+        bsl::ut_given{} = []() noexcept {
             bsl::reverse_iterator mut_ri1{arr.begin()};
             bsl::reverse_iterator mut_ri2{arr.begin()};
             bsl::reverse_iterator const ri1{arr.begin()};
             bsl::reverse_iterator const ri2{arr.begin()};
-            bsl::ut_then{} = []() {
+            bsl::ut_then{} = []() noexcept {
                 static_assert(noexcept(bsl::reverse_iterator{arr.begin()}));
 
                 static_assert(noexcept(mut_ri1.base()));

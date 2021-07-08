@@ -32,6 +32,7 @@
 #include "details/out.hpp"
 #include "forward.hpp"
 #include "invoke_result.hpp"
+#include "is_constant_evaluated.hpp"
 
 namespace bsl
 {
@@ -207,6 +208,10 @@ namespace bsl
     [[maybe_unused]] constexpr auto
     operator<<(out<T1> const o, bsl::reference_wrapper<T2> const &val) noexcept -> out<T1>
     {
+        if (is_constant_evaluated()) {
+            return o;
+        }
+
         if constexpr (!o) {
             return o;
         }

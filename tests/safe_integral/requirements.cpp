@@ -27,7 +27,7 @@
 
 namespace
 {
-    constinit bsl::safe_int32 const verify_constinit{};
+    constinit bsl::safe_int32 const g_verify_constinit{};
 }
 
 /// <!-- description -->
@@ -41,12 +41,12 @@ namespace
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    bsl::ut_scenario{"verify supports constinit"} = []() {
-        bsl::discard(verify_constinit);
+    bsl::ut_scenario{"verify supports constinit"} = []() noexcept {
+        bsl::discard(g_verify_constinit);
     };
 
-    bsl::ut_scenario{"verify noexcept"} = []() {
-        bsl::ut_given{} = []() {
+    bsl::ut_scenario{"verify noexcept"} = []() noexcept {
+        bsl::ut_given{} = []() noexcept {
             bsl::safe_int32 mut_val1{42};
             bsl::safe_int32 mut_val2{42};
             bsl::safe_uint32 mut_val3{42U};
@@ -55,7 +55,7 @@ main() noexcept -> bsl::exit_code
             bsl::safe_int32 const val2{42};
             bsl::safe_uint32 const val3{42U};
             bsl::safe_uint32 const val4{42U};
-            bsl::ut_then{} = []() {
+            bsl::ut_then{} = []() noexcept {
                 static_assert(noexcept(bsl::safe_int32{}));
                 static_assert(noexcept(bsl::safe_int32{42}));
                 static_assert(noexcept(bsl::safe_int32{val1, true}));
@@ -134,7 +134,6 @@ main() noexcept -> bsl::exit_code
                 static_assert(noexcept(~mut_val3));
                 static_assert(noexcept(-mut_val1));
 
-                static_assert(noexcept(val1 = 42));
                 static_assert(noexcept(val1.get()));
                 static_assert(noexcept(!!val1));
                 static_assert(noexcept(val1.invalid()));
@@ -173,9 +172,7 @@ main() noexcept -> bsl::exit_code
                 static_assert(noexcept(val1 % val2));
                 static_assert(noexcept(val1 % 42));
                 static_assert(noexcept(42 % val1));
-                static_assert(noexcept(val3 <<= 42U));
                 static_assert(noexcept(val3 << 42U));
-                static_assert(noexcept(val3 >>= 42U));
                 static_assert(noexcept(val3 >> 42U));
                 static_assert(noexcept(val3 & val4));
                 static_assert(noexcept(val3 & 42U));

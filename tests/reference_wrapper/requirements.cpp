@@ -48,13 +48,13 @@ main() noexcept -> bsl::exit_code
 {
     // clang-format off
 
-    bsl::ut_scenario{"verify noexcept"} = []() {
-        bsl::ut_given{} = []() {
+    bsl::ut_scenario{"verify noexcept"} = []() noexcept {
+        bsl::ut_given{} = []() noexcept {
             // BUG: Need to figure out why we cannot use & here
             // NOLINTNEXTLINE(bsl-function-name-use)
             bsl::reference_wrapper<bsl::safe_int32(bsl::safe_int32)> mut_rw{func};
             bsl::reference_wrapper<bsl::safe_int32(bsl::safe_int32)> const rw{func};
-            bsl::ut_then{} = []() {
+            bsl::ut_then{} = []() noexcept {
                 // BUG: Need to figure out why we cannot use & here
                 // NOLINTNEXTLINE(bsl-function-name-use)
                 static_assert(noexcept(bsl::reference_wrapper<bsl::safe_int32(bsl::safe_int32)>{func}));

@@ -287,7 +287,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         front_if() noexcept -> pointer_type
         {
-            return this->at_if(static_cast<bsl::uintmax>(0));
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+            return this->at_if(zero);
         }
 
         /// <!-- description -->
@@ -304,7 +305,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         front_if() const noexcept -> const_pointer_type
         {
-            return this->at_if(static_cast<bsl::uintmax>(0));
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+            return this->at_if(zero);
         }
 
         /// <!-- description -->
@@ -321,12 +323,15 @@ namespace bsl
         [[nodiscard]] constexpr auto
         back_if() noexcept -> pointer_type
         {
+            constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+
             if (unlikely(m_count.is_zero())) {
                 unlikely_precondition_failure();
-                return this->at_if(static_cast<bsl::uintmax>(0));
+                return this->at_if(zero);
             }
 
-            return this->at_if(m_count - static_cast<bsl::uintmax>(1));
+            return this->at_if(m_count - one);
         }
 
         /// <!-- description -->
@@ -343,12 +348,15 @@ namespace bsl
         [[nodiscard]] constexpr auto
         back_if() const noexcept -> const_pointer_type
         {
+            constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+
             if (unlikely(m_count.is_zero())) {
                 unlikely_precondition_failure();
-                return this->at_if(static_cast<bsl::uintmax>(0));
+                return this->at_if(zero);
             }
 
-            return this->at_if(m_count - static_cast<bsl::uintmax>(1));
+            return this->at_if(m_count - one);
         }
 
         /// <!-- description -->
@@ -395,7 +403,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         begin() noexcept -> iterator_type
         {
-            return iterator_type{m_ptr, m_count, static_cast<bsl::uintmax>(0)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+            return iterator_type{m_ptr, m_count, zero};
         }
 
         /// <!-- description -->
@@ -408,7 +417,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         begin() const noexcept -> const_iterator_type
         {
-            return const_iterator_type{m_ptr, m_count, static_cast<bsl::uintmax>(0)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+            return const_iterator_type{m_ptr, m_count, zero};
         }
 
         /// <!-- description -->
@@ -421,7 +431,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         cbegin() const noexcept -> const_iterator_type
         {
-            return const_iterator_type{m_ptr, m_count, static_cast<bsl::uintmax>(0)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+            return const_iterator_type{m_ptr, m_count, zero};
         }
 
         /// <!-- description -->
@@ -591,16 +602,19 @@ namespace bsl
         [[nodiscard]] constexpr auto
         riter(size_type const &i) noexcept -> reverse_iterator_type
         {
+            constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+
             if (unlikely(!i)) {
                 unlikely_invalid_argument_failure();
-                return reverse_iterator_type{this->iter(static_cast<bsl::uintmax>(0))};
+                return reverse_iterator_type{this->iter(zero)};
             }
 
             if (likely(i < m_count)) {
-                return reverse_iterator_type{this->iter(i + static_cast<bsl::uintmax>(1))};
+                return reverse_iterator_type{this->iter(i + one)};
             }
 
-            return reverse_iterator_type{this->iter(static_cast<bsl::uintmax>(0))};
+            return reverse_iterator_type{this->iter(zero)};
         }
 
         /// <!-- description -->
@@ -620,16 +634,19 @@ namespace bsl
         [[nodiscard]] constexpr auto
         riter(size_type const &i) const noexcept -> const_reverse_iterator_type
         {
+            constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+
             if (unlikely(!i)) {
                 unlikely_invalid_argument_failure();
-                return const_reverse_iterator_type{this->iter(static_cast<bsl::uintmax>(0))};
+                return const_reverse_iterator_type{this->iter(zero)};
             }
 
             if (likely(i < m_count)) {
-                return const_reverse_iterator_type{this->iter(i + static_cast<bsl::uintmax>(1))};
+                return const_reverse_iterator_type{this->iter(i + one)};
             }
 
-            return const_reverse_iterator_type{this->iter(static_cast<bsl::uintmax>(0))};
+            return const_reverse_iterator_type{this->iter(zero)};
         }
 
         /// <!-- description -->
@@ -649,16 +666,19 @@ namespace bsl
         [[nodiscard]] constexpr auto
         criter(size_type const &i) const noexcept -> const_reverse_iterator_type
         {
+            constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+
             if (unlikely(!i)) {
                 unlikely_invalid_argument_failure();
-                return const_reverse_iterator_type{this->iter(static_cast<bsl::uintmax>(0))};
+                return const_reverse_iterator_type{this->iter(zero)};
             }
 
             if (likely(i < m_count)) {
-                return const_reverse_iterator_type{this->iter(i + static_cast<bsl::uintmax>(1))};
+                return const_reverse_iterator_type{this->iter(i + one)};
             }
 
-            return const_reverse_iterator_type{this->iter(static_cast<bsl::uintmax>(0))};
+            return const_reverse_iterator_type{this->iter(zero)};
         }
 
         /// <!-- description -->
@@ -738,7 +758,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return Returns data() != nullptr;
         ///
-        [[nodiscard]] constexpr explicit operator bool() const noexcept
+        [[nodiscard]] explicit constexpr operator bool() const noexcept
         {
             return this->data() != nullptr;
         }
@@ -787,7 +807,8 @@ namespace bsl
         [[nodiscard]] static constexpr auto
         max_size() noexcept -> size_type
         {
-            return size_type::max() / static_cast<bsl::uintmax>(sizeof(CHAR_T));
+            constexpr safe_uintmax size_of_chart{static_cast<bsl::uintmax>(sizeof(CHAR_T))};
+            return size_type::max() / size_of_chart;
         }
 
         /// <!-- description -->
@@ -800,7 +821,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         size_bytes() const noexcept -> size_type
         {
-            return m_count * static_cast<bsl::uintmax>(sizeof(CHAR_T));
+            constexpr safe_uintmax size_of_chart{static_cast<bsl::uintmax>(sizeof(CHAR_T))};
+            return m_count * size_of_chart;
         }
 
         /// <!-- description -->
@@ -1012,8 +1034,8 @@ namespace bsl
             pointer_type const str,     // --
             size_type const &count2) const noexcept -> safe_int32
         {
-            return this->compare(
-                pos, count1, basic_string_view{str}, static_cast<bsl::uintmax>(0), count2);
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+            return this->compare(pos, count1, basic_string_view{str}, zero, count2);
         }
 
         /// <!-- description -->
@@ -1144,7 +1166,7 @@ namespace bsl
         [[nodiscard]] constexpr auto
         find(basic_string_view const &str, size_type const &pos = {}) const noexcept -> size_type
         {
-            constexpr bsl::safe_uintmax offset{static_cast<bsl::uintmax>(1)};
+            constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
 
             auto const view{this->substr(pos)};
             if (view.empty()) {
@@ -1161,7 +1183,7 @@ namespace bsl
                 return npos;
             }
 
-            auto const len{(view.length() - str.length()) + offset};
+            auto const len{(view.length() - str.length()) + one};
             for (size_type mut_i{}; mut_i < len; ++mut_i) {
                 if (view.compare(mut_i, npos, str) == 0) {
                     return mut_i + pos;

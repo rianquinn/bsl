@@ -73,8 +73,6 @@ namespace bsl
     struct add_rvalue_reference final
     {
         /// @brief provides the member typedef "type"
-        // We need the implicit conversion for this to work
-        // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
         using type = typename decltype(details::try_add_rvalue_reference<T>(0))::type;
     };
 

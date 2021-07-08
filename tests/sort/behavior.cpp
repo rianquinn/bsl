@@ -56,8 +56,8 @@ namespace
     [[nodiscard]] constexpr auto
     tests() noexcept -> bsl::exit_code
     {
-        bsl::ut_scenario{"sort empty doesn't crash"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"sort empty doesn't crash"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bsl::safe_int32> view{};
                 bsl::ut_when{} = [&view]() {
                     bsl::sort(view);
@@ -68,8 +68,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"sort 1 number"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"sort 1 number"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array data{bsl::to_i32(4)};
                 bsl::span view{data};
                 bsl::ut_when{} = [&view]() {
@@ -81,8 +81,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"sort 2 numbers"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"sort 2 numbers"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array data{bsl::to_i32(4), bsl::to_i32(23)};
                 bsl::span view{data};
                 bsl::ut_when{} = [&view]() {
@@ -95,8 +95,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"sort random numbers"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"sort random numbers"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array data{
                     bsl::to_i32(42),
                     bsl::to_i32(23),
@@ -119,8 +119,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"sort random descending"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"sort random descending"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array data{
                     bsl::to_i32(42),
                     bsl::to_i32(23),

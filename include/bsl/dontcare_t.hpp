@@ -90,8 +90,6 @@ namespace bsl
     };
 
     /// @brief reduces the verbosity of bsl::dontcare_t
-    // We want our implementation to mimic C++ here.
-    // NOLINTNEXTLINE(bsl-name-case)
     constexpr dontcare_t dontcare{};
 }
 

@@ -29,7 +29,7 @@
 
 namespace
 {
-    constinit bsl::basic_errc_type<> const verify_constinit{};
+    constinit bsl::basic_errc_type<> const g_verify_constinit{};
 }
 
 /// <!-- description -->
@@ -43,17 +43,17 @@ namespace
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    bsl::ut_scenario{"verify supports constinit"} = []() {
-        bsl::discard(verify_constinit);
+    bsl::ut_scenario{"verify supports constinit"} = []() noexcept {
+        bsl::discard(g_verify_constinit);
     };
 
-    bsl::ut_scenario{"verify noexcept"} = []() {
-        bsl::ut_given{} = []() {
+    bsl::ut_scenario{"verify noexcept"} = []() noexcept {
+        bsl::ut_given{} = []() noexcept {
             bsl::basic_errc_type<> mut_errc1{};
             bsl::basic_errc_type<> mut_errc2{};
             bsl::basic_errc_type<> const errc1{};
             bsl::basic_errc_type<> const errc2{};
-            bsl::ut_then{} = []() {
+            bsl::ut_then{} = []() noexcept {
                 static_assert(noexcept(bsl::basic_errc_type<>{}));
                 static_assert(noexcept(bsl::basic_errc_type<>{42}));
                 static_assert(noexcept(bsl::basic_errc_type<>{bsl::to_i32(42)}));

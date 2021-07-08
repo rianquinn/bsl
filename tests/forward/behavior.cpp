@@ -70,23 +70,23 @@ namespace
     [[nodiscard]] constexpr auto
     tests() noexcept -> bsl::exit_code
     {
-        bsl::ut_scenario{"exchange"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"exchange"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 const val{42};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(forwarder(val) == 1);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 mut_val{42};
                 bsl::ut_then{} = [&mut_val]() {
                     bsl::ut_check(forwarder(mut_val) == 2);
                 };
             };
 
-            bsl::ut_given{} = []() {
-                bsl::ut_then{} = []() {
+            bsl::ut_given{} = []() noexcept {
+                bsl::ut_then{} = []() noexcept {
                     bsl::ut_check(forwarder(bsl::to_i32(42)) == 3);
                 };
             };

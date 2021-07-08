@@ -51,22 +51,22 @@ namespace
         // test bsl::int8
         // ---------------------------------------------------------------------
 
-        bsl::ut_scenario{"invalid arguments"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"invalid arguments"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{" \t\n\v\f\r"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, bsl::safe_int32::failure()));
@@ -74,64 +74,64 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec negative"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"dec negative"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"-42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::int8>(str, 10_i32) == -42_i8);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"--42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-4-2"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-:42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-:"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"-128"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::int8>(str, 10_i32) == bsl::safe_int8::min());
@@ -139,50 +139,50 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec positive"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"dec positive"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::int8>(str, 10_i32) == 42_i8);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"127"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::int8>(str, 10_i32) == bsl::safe_int8::max());
@@ -190,8 +190,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"hex"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"hex"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int8>(str, 16_i32));
@@ -203,22 +203,22 @@ namespace
         // test bsl::int16
         // ---------------------------------------------------------------------
 
-        bsl::ut_scenario{"invalid arguments"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"invalid arguments"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{" \t\n\v\f\r"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, bsl::safe_int32::failure()));
@@ -226,64 +226,64 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec negative"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"dec negative"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"-42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::int16>(str, 10_i32) == -42_i16);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"--42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-4-2"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-:42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-:"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"-32768"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -292,50 +292,50 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec positive"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"dec positive"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::int16>(str, 10_i32) == 42_i16);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"32767"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -344,8 +344,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"hex"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"hex"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int16>(str, 16_i32));
@@ -357,22 +357,22 @@ namespace
         // test bsl::int32
         // ---------------------------------------------------------------------
 
-        bsl::ut_scenario{"invalid arguments"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"invalid arguments"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{" \t\n\v\f\r"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, bsl::safe_int32::failure()));
@@ -380,64 +380,64 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec negative"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"dec negative"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"-42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::int32>(str, 10_i32) == -42_i32);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"--42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-4-2"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-:42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-:"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"-2147483648"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -446,50 +446,50 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec positive"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"dec positive"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::int32>(str, 10_i32) == 42_i32);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"2147483647"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -498,8 +498,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"hex"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"hex"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int32>(str, 16_i32));
@@ -511,22 +511,22 @@ namespace
         // test bsl::int64
         // ---------------------------------------------------------------------
 
-        bsl::ut_scenario{"invalid arguments"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"invalid arguments"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{" \t\n\v\f\r"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, bsl::safe_int32::failure()));
@@ -534,64 +534,64 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec negative"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"dec negative"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"-42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::int64>(str, 10_i32) == -42_i64);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"--42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-4-2"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-:42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-:"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"-9223372036854775808"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -600,50 +600,50 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec positive"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"dec positive"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::int64>(str, 10_i32) == 42_i64);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"9223372036854775807"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -652,8 +652,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"hex"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"hex"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::int64>(str, 16_i32));
@@ -665,22 +665,22 @@ namespace
         // test bsl::intmax
         // ---------------------------------------------------------------------
 
-        bsl::ut_scenario{"invalid arguments"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"invalid arguments"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{" \t\n\v\f\r"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, bsl::safe_int32::failure()));
@@ -688,64 +688,64 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec negative"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"dec negative"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"-42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::intmax>(str, 10_i32) == -42_imax);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"--42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-4-2"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-:42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-:"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"-9223372036854775808"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -754,50 +754,50 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec positive"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"dec positive"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::intmax>(str, 10_i32) == 42_imax);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"9223372036854775807"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -806,8 +806,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"hex"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"hex"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::intmax>(str, 16_i32));
@@ -819,22 +819,22 @@ namespace
         // test bsl::uint8
         // ---------------------------------------------------------------------
 
-        bsl::ut_scenario{"invalid arguments"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"invalid arguments"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{" \t\n\v\f\r"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, bsl::safe_int32::failure()));
@@ -842,8 +842,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec negative"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"dec negative"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 10_i32));
@@ -851,43 +851,43 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec positive"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"dec positive"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint8>(str, 10_i32) == 42_u8);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"255"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -896,141 +896,141 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"hex positive"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"hex positive"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint8>(str, 16_i32) == 0x42_u8);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"90"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint8>(str, 16_i32) == 0x90_u8);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"af"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint8>(str, 16_i32) == 0xAF_u8);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"Af"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint8>(str, 16_i32) == 0xAF_u8);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"aF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint8>(str, 16_i32) == 0xAF_u8);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"AF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint8>(str, 16_i32) == 0xAF_u8);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"@42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"G42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"`42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"g42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"@"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"G"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"`"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"g"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint8>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"0"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -1038,7 +1038,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"FF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -1051,22 +1051,22 @@ namespace
         // test bsl::uint16
         // ---------------------------------------------------------------------
 
-        bsl::ut_scenario{"invalid arguments"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"invalid arguments"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{" \t\n\v\f\r"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, bsl::safe_int32::failure()));
@@ -1074,8 +1074,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec negative"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"dec negative"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 10_i32));
@@ -1083,43 +1083,43 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec positive"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"dec positive"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint16>(str, 10_i32) == 42_u16);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"65535"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -1128,141 +1128,141 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"hex positive"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"hex positive"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint16>(str, 16_i32) == 0x42_u16);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"90"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint16>(str, 16_i32) == 0x90_u16);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"af"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint16>(str, 16_i32) == 0xAF_u16);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"Af"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint16>(str, 16_i32) == 0xAF_u16);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"aF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint16>(str, 16_i32) == 0xAF_u16);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"AF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint16>(str, 16_i32) == 0xAF_u16);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"@42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"G42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"`42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"g42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"@"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"G"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"`"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"g"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint16>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"0"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -1270,7 +1270,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"FFFF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -1283,22 +1283,22 @@ namespace
         // test bsl::uint32
         // ---------------------------------------------------------------------
 
-        bsl::ut_scenario{"invalid arguments"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"invalid arguments"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{" \t\n\v\f\r"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, bsl::safe_int32::failure()));
@@ -1306,8 +1306,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec negative"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"dec negative"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 10_i32));
@@ -1315,43 +1315,43 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec positive"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"dec positive"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint32>(str, 10_i32) == 42_u32);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"4294967295"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -1360,141 +1360,141 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"hex positive"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"hex positive"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint32>(str, 16_i32) == 0x42_u32);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"90"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint32>(str, 16_i32) == 0x90_u32);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"af"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint32>(str, 16_i32) == 0xAF_u32);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"Af"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint32>(str, 16_i32) == 0xAF_u32);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"aF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint32>(str, 16_i32) == 0xAF_u32);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"AF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint32>(str, 16_i32) == 0xAF_u32);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"@42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"G42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"`42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"g42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"@"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"G"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"`"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"g"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint32>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"0"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -1502,7 +1502,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"FFFFFFFF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -1515,22 +1515,22 @@ namespace
         // test bsl::uint64
         // ---------------------------------------------------------------------
 
-        bsl::ut_scenario{"invalid arguments"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"invalid arguments"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{" \t\n\v\f\r"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, bsl::safe_int32::failure()));
@@ -1538,8 +1538,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec negative"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"dec negative"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 10_i32));
@@ -1547,43 +1547,43 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec positive"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"dec positive"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint64>(str, 10_i32) == 42_u64);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"18446744073709551615"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -1592,141 +1592,141 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"hex positive"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"hex positive"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint64>(str, 16_i32) == 0x42_u64);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"90"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint64>(str, 16_i32) == 0x90_u64);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"af"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint64>(str, 16_i32) == 0xAF_u64);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"Af"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint64>(str, 16_i32) == 0xAF_u64);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"aF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint64>(str, 16_i32) == 0xAF_u64);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"AF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uint64>(str, 16_i32) == 0xAF_u64);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"@42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"G42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"`42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"g42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"@"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"G"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"`"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"g"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uint64>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"0"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -1734,7 +1734,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"FFFFFFFFFFFFFFFF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -1747,22 +1747,22 @@ namespace
         // test bsl::uintmax
         // ---------------------------------------------------------------------
 
-        bsl::ut_scenario{"invalid arguments"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"invalid arguments"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{" \t\n\v\f\r"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, bsl::safe_int32::failure()));
@@ -1770,8 +1770,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec negative"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"dec negative"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"-42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 10_i32));
@@ -1779,43 +1779,43 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dec positive"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"dec positive"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uintmax>(str, 10_i32) == 42_umax);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 10_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"18446744073709551615"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -1824,141 +1824,141 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"hex positive"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"hex positive"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uintmax>(str, 16_i32) == 0x42_umax);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"90"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uintmax>(str, 16_i32) == 0x90_umax);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"af"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uintmax>(str, 16_i32) == 0xAF_umax);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"Af"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uintmax>(str, 16_i32) == 0xAF_umax);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"aF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uintmax>(str, 16_i32) == 0xAF_umax);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"AF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(bsl::from_chars<bsl::uintmax>(str, 16_i32) == 0xAF_umax);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"@42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"G42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"`42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"g42"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"/"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{":"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"@"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"G"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"`"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"g"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::string_view const str{"42424242424242424242424242424242"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(!bsl::from_chars<bsl::uintmax>(str, 16_i32));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"0"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(
@@ -1966,7 +1966,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::string_view const str{"FFFFFFFFFFFFFFFF"};
                 bsl::ut_then{} = [&str]() {
                     bsl::ut_check(

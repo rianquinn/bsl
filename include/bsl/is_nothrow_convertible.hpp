@@ -82,8 +82,6 @@ namespace bsl
         ///
         template<typename FROM, typename TO>
         [[maybe_unused]] auto test_is_nothrow_convertible2(bsl::int32 const ignored) noexcept
-            // We rely on the implicit cast to perform detection here.
-            // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
             -> bool_constant<noexcept(declval<void (&)(TO) noexcept>()(declval<FROM>()))>;
 
         /// <!-- description -->
@@ -120,11 +118,7 @@ namespace bsl
             }
 
             return conjunction<
-                // We rely on the implicit cast to perform detection here.
-                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 decltype(test_is_nothrow_convertible2<FROM, TO>(0)),
-                // We rely on the implicit cast to perform detection here.
-                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 decltype(test_is_nothrow_convertible1<TO>(0))>::value;
         }
     }

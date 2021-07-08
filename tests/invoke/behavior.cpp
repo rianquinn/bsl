@@ -56,37 +56,37 @@ namespace
     [[nodiscard]] constexpr auto
     tests() noexcept -> bsl::exit_code
     {
-        bsl::ut_scenario{"1.1"} = []() {
+        bsl::ut_scenario{"1.1"} = []() noexcept {
             bsl::ut_check(bsl::invoke(&test::class_base::get, g_class_base));
             bsl::ut_check(bsl::invoke(&test::class_base::get, g_class_subclass));
             bsl::ut_check(bsl::invoke(&test::class_subclass::get, g_class_subclass));
         };
 
-        bsl::ut_scenario{"1.2"} = []() {
+        bsl::ut_scenario{"1.2"} = []() noexcept {
             bsl::ut_check(bsl::invoke(&test::class_base::get, g_rw_class_base));
             bsl::ut_check(bsl::invoke(&test::class_base::get, g_rw_class_subclass));
             bsl::ut_check(bsl::invoke(&test::class_subclass::get, g_rw_class_subclass));
         };
 
-        bsl::ut_scenario{"1.3"} = []() {
+        bsl::ut_scenario{"1.3"} = []() noexcept {
             bsl::ut_check(bsl::invoke(&test::class_base::get, &g_class_base));
             bsl::ut_check(bsl::invoke(&test::class_base::get, &g_class_subclass));
             bsl::ut_check(bsl::invoke(&test::class_subclass::get, &g_class_subclass));
         };
 
-        bsl::ut_scenario{"2.1"} = []() {
+        bsl::ut_scenario{"2.1"} = []() noexcept {
             bsl::ut_check(bsl::invoke(&test::class_pod::val1, g_class_pod));
         };
 
-        bsl::ut_scenario{"2.2"} = []() {
+        bsl::ut_scenario{"2.2"} = []() noexcept {
             bsl::ut_check(bsl::invoke(&test::class_pod::val1, g_rw_class_pod));
         };
 
-        bsl::ut_scenario{"2.3"} = []() {
+        bsl::ut_scenario{"2.3"} = []() noexcept {
             bsl::ut_check(bsl::invoke(&test::class_pod::val1, &g_class_pod));
         };
 
-        bsl::ut_scenario{"3.1"} = []() {
+        bsl::ut_scenario{"3.1"} = []() noexcept {
             bsl::ut_check(bsl::invoke(&test::func, true));
             bsl::ut_check(bsl::invoke(&test::func_might_throw, true));
         };

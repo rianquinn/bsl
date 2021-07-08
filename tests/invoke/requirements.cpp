@@ -55,40 +55,40 @@ namespace
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    bsl::ut_scenario{"1.1 noexceptness"} = []() {
+    bsl::ut_scenario{"1.1 noexceptness"} = []() noexcept {
         static_assert(noexcept(bsl::invoke(&test::class_base::get, g_class_base)));
         static_assert(noexcept(bsl::invoke(&test::class_base::get, g_class_subclass)));
         static_assert(
             !noexcept(bsl::invoke(&test::class_subclass::get_might_throw, g_class_subclass)));
     };
 
-    bsl::ut_scenario{"1.2 noexceptness"} = []() {
+    bsl::ut_scenario{"1.2 noexceptness"} = []() noexcept {
         static_assert(noexcept(bsl::invoke(&test::class_base::get, g_rw_class_base)));
         static_assert(noexcept(bsl::invoke(&test::class_base::get, g_rw_class_subclass)));
         static_assert(
             !noexcept(bsl::invoke(&test::class_subclass::get_might_throw, g_rw_class_subclass)));
     };
 
-    bsl::ut_scenario{"1.3 noexceptness"} = []() {
+    bsl::ut_scenario{"1.3 noexceptness"} = []() noexcept {
         static_assert(noexcept(bsl::invoke(&test::class_base::get, &g_class_base)));
         static_assert(noexcept(bsl::invoke(&test::class_base::get, &g_class_subclass)));
         static_assert(
             !noexcept(bsl::invoke(&test::class_subclass::get_might_throw, &g_class_subclass)));
     };
 
-    bsl::ut_scenario{"2.1 noexceptness"} = []() {
+    bsl::ut_scenario{"2.1 noexceptness"} = []() noexcept {
         static_assert(noexcept(bsl::invoke(&test::class_pod::val1, g_class_pod)));
     };
 
-    bsl::ut_scenario{"2.2 noexceptness"} = []() {
+    bsl::ut_scenario{"2.2 noexceptness"} = []() noexcept {
         static_assert(noexcept(bsl::invoke(&test::class_pod::val1, g_rw_class_pod)));
     };
 
-    bsl::ut_scenario{"2.3 noexceptness"} = []() {
+    bsl::ut_scenario{"2.3 noexceptness"} = []() noexcept {
         static_assert(noexcept(bsl::invoke(&test::class_pod::val1, &g_class_pod)));
     };
 
-    bsl::ut_scenario{"3.1 noexceptness"} = []() {
+    bsl::ut_scenario{"3.1 noexceptness"} = []() noexcept {
         static_assert(noexcept(bsl::invoke(&test::func, true)));
         static_assert(!noexcept(bsl::invoke(&test::func_might_throw, true)));
     };

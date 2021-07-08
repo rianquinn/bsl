@@ -71,12 +71,8 @@ namespace bsl::details
         template<typename FUNC, typename U, typename T1>
         [[maybe_unused]] static constexpr auto
         call(FUNC U::*mut_f, T1 &&mut_val1) noexcept(noexcept(mut_val1.get().*mut_f))    // --
-            // Subclass to base conversions are needed here for invoke to work
-            // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
             -> decltype(mut_val1.get().*mut_f)
         {
-            // Subclass to base conversions are needed here for invoke to work
-            // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
             return mut_val1.get().*mut_f;
         }
 

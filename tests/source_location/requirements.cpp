@@ -28,7 +28,7 @@
 
 namespace
 {
-    constinit bsl::source_location const verify_constinit{bsl::here()};
+    constinit bsl::source_location const g_verify_constinit{bsl::here()};
 }
 
 /// <!-- description -->
@@ -42,15 +42,15 @@ namespace
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    bsl::ut_scenario{"verify supports constinit"} = []() {
-        bsl::discard(verify_constinit);
+    bsl::ut_scenario{"verify supports constinit"} = []() noexcept {
+        bsl::discard(g_verify_constinit);
     };
 
-    bsl::ut_scenario{"verify noexcept"} = []() {
-        bsl::ut_given{} = []() {
+    bsl::ut_scenario{"verify noexcept"} = []() noexcept {
+        bsl::ut_given{} = []() noexcept {
             bsl::source_location mut_sloc{bsl::here()};
             bsl::source_location const sloc{bsl::here()};
-            bsl::ut_then{} = []() {
+            bsl::ut_then{} = []() noexcept {
                 static_assert(noexcept(bsl::source_location::current()));
 
                 static_assert(noexcept(mut_sloc.file_name()));

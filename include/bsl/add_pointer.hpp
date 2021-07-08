@@ -74,8 +74,6 @@ namespace bsl
     struct add_pointer final
     {
         /// @brief provides the member typedef "type"
-        // We need the implicit conversion for this to work
-        // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
         using type = typename decltype(details::try_add_pointer<T>(0))::type;
     };
 

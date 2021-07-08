@@ -92,8 +92,6 @@ namespace bsl
     };
 
     /// @brief reduces the verbosity of bsl::in_place_t
-    // We want our implementation to mimic C++ here.
-    // NOLINTNEXTLINE(bsl-name-case)
     constexpr in_place_t in_place{};
 }
 

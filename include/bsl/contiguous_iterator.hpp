@@ -251,7 +251,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return Returns !is_end()
         ///
-        [[nodiscard]] constexpr explicit operator bool() const noexcept
+        [[nodiscard]] explicit constexpr operator bool() const noexcept
         {
             return !this->is_end();
         }

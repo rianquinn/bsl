@@ -39,13 +39,13 @@ namespace
     [[nodiscard]] constexpr auto
     tests() noexcept -> bsl::exit_code
     {
-        bsl::ut_scenario{"exchange"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"exchange"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 mut_val1{23};
                 bsl::safe_int32 mut_val2{42};
-                bsl::ut_when{} = [&mut_val1, &mut_val2]() {
+                bsl::ut_when{} = [&]() noexcept {
                     mut_val2 = bsl::exchange(mut_val1, mut_val2);
-                    bsl::ut_then{} = [&mut_val1, &mut_val2]() {
+                    bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check(mut_val1 == 42);
                         bsl::ut_check(mut_val2 == 23);
                     };

@@ -76,7 +76,7 @@ namespace bsl
     {
         // This is how Clang presents the builtins, which we are required
         // top use.
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg, hicpp-vararg,-warnings-as-errors)
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg, hicpp-vararg)
         if (unlikely(__builtin_add_overflow(lhs, rhs, res))) {
             integral_overflow_underflow_wrap_error();
             return true;
@@ -101,7 +101,7 @@ namespace bsl
     {
         // This is how Clang presents the builtins, which we are required
         // top use.
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg, hicpp-vararg,-warnings-as-errors)
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg, hicpp-vararg)
         if (unlikely(__builtin_sub_overflow(lhs, rhs, res))) {
             integral_overflow_underflow_wrap_error();
             return true;
@@ -126,7 +126,7 @@ namespace bsl
     {
         // This is how Clang presents the builtins, which we are required
         // top use.
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg, hicpp-vararg,-warnings-as-errors)
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg, hicpp-vararg)
         if (unlikely(__builtin_mul_overflow(lhs, rhs, res))) {
             integral_overflow_underflow_wrap_error();
             return true;
@@ -285,9 +285,7 @@ namespace bsl
         ///   @param val the value to set the bsl::safe_integral to
         ///
         template<typename U, enable_if_t<is_same<T, U>::value, bool> = true>
-        // This is non-issue due to the use of is_same above
-        // NOLINTNEXTLINE(bsl-explicit-constructor,-warnings-as-errors, hicpp-explicit-conversions,-warnings-as-errors)
-        constexpr safe_integral(U const val) noexcept    // --
+        explicit constexpr safe_integral(U const val) noexcept    // --
             : m_val{val}, m_error{}
         {}
 
@@ -474,7 +472,7 @@ namespace bsl
         ///   @return Returns true if the safe_integral has never experienced
         ///     a wrap, overflow, underflow, divide by 0, etc.
         ///
-        [[nodiscard]] constexpr explicit operator bool() const noexcept
+        [[nodiscard]] explicit constexpr operator bool() const noexcept
         {
             return !m_error;
         }
@@ -489,8 +487,7 @@ namespace bsl
         [[nodiscard]] static constexpr auto
         failure() noexcept -> safe_integral<value_type>
         {
-            constexpr value_type val{static_cast<value_type>(0)};
-            return safe_integral<value_type>{val, true};
+            return safe_integral<value_type>{static_cast<value_type>(0), true};
         }
 
         /// <!-- description -->
@@ -503,7 +500,7 @@ namespace bsl
         [[nodiscard]] static constexpr auto
         max() noexcept -> safe_integral<value_type>
         {
-            return numeric_limits<value_type>::max();
+            return safe_integral<value_type>{numeric_limits<value_type>::max()};
         }
 
         /// <!-- description -->
@@ -579,7 +576,7 @@ namespace bsl
         [[nodiscard]] static constexpr auto
         min() noexcept -> safe_integral<value_type>
         {
-            return numeric_limits<value_type>::min();
+            return safe_integral<value_type>{numeric_limits<value_type>::min()};
         }
 
         /// <!-- description -->
@@ -682,7 +679,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         is_pos() const noexcept -> bool
         {
-            return safe_integral<value_type>{static_cast<value_type>(0)} < *this;
+            constexpr safe_integral<value_type> zero{static_cast<value_type>(0)};
+            return zero < *this;
         }
 
         /// <!-- description -->
@@ -718,7 +716,8 @@ namespace bsl
                 return false;
             }
 
-            return safe_integral<value_type>{static_cast<value_type>(0)} > *this;
+            constexpr safe_integral<value_type> zero{static_cast<value_type>(0)};
+            return zero > *this;
         }
 
         /// <!-- description -->
@@ -732,7 +731,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         is_zero() const noexcept -> bool
         {
-            return safe_integral<value_type>{static_cast<value_type>(0)} == *this;
+            constexpr safe_integral<value_type> zero{static_cast<value_type>(0)};
+            return zero == *this;
         }
 
         /// <!-- description -->
@@ -750,7 +750,8 @@ namespace bsl
                 return true;
             }
 
-            return safe_integral<value_type>{static_cast<value_type>(0)} == *this;
+            constexpr safe_integral<value_type> zero{static_cast<value_type>(0)};
+            return zero == *this;
         }
 
         /// <!-- description -->
@@ -1295,11 +1296,6 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed shift not supported");
             }
             else {
-                // This is needed to silence when the compiler might produce
-                // a conversion because it wants to. The code is written such
-                // that a conversion cannot take place, but it is possible
-                // that the compiler will perform a conversion anyways.
-                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val <<= rhs.m_val;
 
                 if (unlikely(this->invalid())) {
@@ -1349,11 +1345,6 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed shift not supported");
             }
             else {
-                // This is needed to silence when the compiler might produce
-                // a conversion because it wants to. The code is written such
-                // that a conversion cannot take place, but it is possible
-                // that the compiler will perform a conversion anyways.
-                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val <<= rhs;
 
                 if (unlikely(this->invalid())) {
@@ -1394,11 +1385,6 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed shift not supported");
             }
             else {
-                // This is needed to silence when the compiler might produce
-                // a conversion because it wants to. The code is written such
-                // that a conversion cannot take place, but it is possible
-                // that the compiler will perform a conversion anyways.
-                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val >>= rhs.get();
 
                 if (unlikely(this->invalid())) {
@@ -1448,11 +1434,6 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed shift not supported");
             }
             else {
-                // This is needed to silence when the compiler might produce
-                // a conversion because it wants to. The code is written such
-                // that a conversion cannot take place, but it is possible
-                // that the compiler will perform a conversion anyways.
-                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val >>= rhs;
 
                 if (unlikely(this->invalid())) {
@@ -1493,11 +1474,6 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed and not supported");
             }
             else {
-                // This is needed to silence when the compiler might produce
-                // a conversion because it wants to. The code is written such
-                // that a conversion cannot take place, but it is possible
-                // that the compiler will perform a conversion anyways.
-                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val &= rhs.get();
 
                 if (unlikely(this->invalid())) {
@@ -1547,11 +1523,6 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed and not supported");
             }
             else {
-                // This is needed to silence when the compiler might produce
-                // a conversion because it wants to. The code is written such
-                // that a conversion cannot take place, but it is possible
-                // that the compiler will perform a conversion anyways.
-                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val &= rhs;
 
                 if (unlikely(this->invalid())) {
@@ -1592,11 +1563,6 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed or not supported");
             }
             else {
-                // This is needed to silence when the compiler might produce
-                // a conversion because it wants to. The code is written such
-                // that a conversion cannot take place, but it is possible
-                // that the compiler will perform a conversion anyways.
-                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val |= rhs.get();
 
                 if (unlikely(this->invalid())) {
@@ -1646,11 +1612,6 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed or not supported");
             }
             else {
-                // This is needed to silence when the compiler might produce
-                // a conversion because it wants to. The code is written such
-                // that a conversion cannot take place, but it is possible
-                // that the compiler will perform a conversion anyways.
-                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val |= rhs;
 
                 if (unlikely(this->invalid())) {
@@ -1691,11 +1652,6 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed xor not supported");
             }
             else {
-                // This is needed to silence when the compiler might produce
-                // a conversion because it wants to. The code is written such
-                // that a conversion cannot take place, but it is possible
-                // that the compiler will perform a conversion anyways.
-                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val ^= rhs.get();
 
                 if (unlikely(this->invalid())) {
@@ -1745,11 +1701,6 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed xor not supported");
             }
             else {
-                // This is needed to silence when the compiler might produce
-                // a conversion because it wants to. The code is written such
-                // that a conversion cannot take place, but it is possible
-                // that the compiler will perform a conversion anyways.
-                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val ^= rhs;
 
                 if (unlikely(this->invalid())) {
@@ -1789,7 +1740,8 @@ namespace bsl
         [[maybe_unused]] constexpr auto
         operator++() &noexcept -> safe_integral<value_type> &
         {
-            return *this += safe_integral<value_type>{static_cast<value_type>(1)};
+            constexpr safe_integral<value_type> one{static_cast<value_type>(1)};
+            return *this += one;
         }
 
         /// <!-- description -->
@@ -1815,7 +1767,8 @@ namespace bsl
         [[maybe_unused]] constexpr auto
         operator--() &noexcept -> safe_integral<value_type> &
         {
-            return *this -= safe_integral<value_type>{static_cast<value_type>(1)};
+            constexpr safe_integral<value_type> one{static_cast<value_type>(1)};
+            return *this -= one;
         }
 
         /// <!-- description -->
@@ -2776,7 +2729,8 @@ namespace bsl
     [[nodiscard]] constexpr auto
     operator-(safe_integral<T> const &rhs) noexcept -> safe_integral<T>
     {
-        return safe_integral<T>{static_cast<T>(0)} - rhs;
+        constexpr safe_integral<T> zero{static_cast<T>(0)};
+        return zero - rhs;
     }
 
     // -------------------------------------------------------------------------

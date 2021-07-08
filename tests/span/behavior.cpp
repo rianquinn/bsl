@@ -58,8 +58,8 @@ namespace
     [[nodiscard]] constexpr auto
     tests() noexcept -> bsl::exit_code
     {
-        bsl::ut_scenario{"default constructor"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"default constructor"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.empty());
@@ -69,8 +69,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"ptr/count constructor"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"ptr/count constructor"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), 0_umax};
                 bsl::ut_then{} = [&spn]() {
@@ -78,7 +78,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), bsl::safe_uintmax::failure()};
                 bsl::ut_then{} = [&spn]() {
@@ -86,7 +86,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -101,7 +101,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -110,8 +110,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"array constructors"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"array constructors"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span const spn{arr};
                 bsl::ut_then{} = [&spn]() {
@@ -126,7 +126,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span const spn{arr};
                 bsl::ut_then{} = [&spn]() {
@@ -134,7 +134,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr};
                 bsl::ut_then{} = [&spn]() {
@@ -149,7 +149,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr};
                 bsl::ut_then{} = [&spn]() {
@@ -158,8 +158,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"at_if"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"at_if"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.at_if(bsl::to_umax(0)) == nullptr);
@@ -167,14 +167,14 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.at_if(bsl::safe_uintmax::failure()) == nullptr);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.at_if(bsl::to_umax(0)) == nullptr);
@@ -182,14 +182,14 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.at_if(bsl::safe_uintmax::failure()) == nullptr);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::span<bool> spn{nullptr, bsl::to_umax(5)};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.at_if(bsl::to_umax(0)) == nullptr);
@@ -198,7 +198,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::span<bool> const spn{nullptr, bsl::to_umax(5)};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.at_if(bsl::to_umax(0)) == nullptr);
@@ -207,7 +207,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&spn]() {
@@ -216,7 +216,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&spn]() {
@@ -224,7 +224,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span const spn{arr.data(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&spn]() {
@@ -233,7 +233,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span const spn{arr.data(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&spn]() {
@@ -241,7 +241,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -256,7 +256,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -264,7 +264,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -279,7 +279,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -288,22 +288,22 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"front_if"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"front_if"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.front_if() == nullptr);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.front_if() == nullptr);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -311,7 +311,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -320,22 +320,22 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"back_if"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"back_if"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.back_if() == nullptr);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.back_if() == nullptr);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -343,7 +343,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -352,22 +352,22 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"data"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"data"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.data() == nullptr);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.data() == nullptr);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -375,7 +375,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -384,8 +384,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"begin"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"begin"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.begin().get_if() == nullptr);
@@ -393,7 +393,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.begin().get_if() == nullptr);
@@ -401,7 +401,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.begin().get_if() == nullptr);
@@ -409,7 +409,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -418,7 +418,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -427,7 +427,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -437,8 +437,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"end"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"end"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.end().get_if() == nullptr);
@@ -446,7 +446,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.end().get_if() == nullptr);
@@ -454,7 +454,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.end().get_if() == nullptr);
@@ -462,7 +462,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -471,7 +471,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -480,7 +480,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -490,8 +490,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"iter"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"iter"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.iter(bsl::to_umax(0)).get_if() == nullptr);
@@ -499,7 +499,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.iter(bsl::to_umax(0)).get_if() == nullptr);
@@ -507,7 +507,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.citer(bsl::to_umax(0)).get_if() == nullptr);
@@ -515,7 +515,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -524,7 +524,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -533,7 +533,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -542,7 +542,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -551,7 +551,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -560,7 +560,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -569,7 +569,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -578,7 +578,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -587,7 +587,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -597,8 +597,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"rbegin"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"rbegin"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.rbegin().get_if() == nullptr);
@@ -606,7 +606,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.rbegin().get_if() == nullptr);
@@ -614,7 +614,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.rbegin().get_if() == nullptr);
@@ -622,7 +622,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -631,7 +631,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -640,7 +640,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -650,8 +650,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"rend"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"rend"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.rend().get_if() == nullptr);
@@ -659,7 +659,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.rend().get_if() == nullptr);
@@ -667,7 +667,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.rend().get_if() == nullptr);
@@ -675,7 +675,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -684,7 +684,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -693,7 +693,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -703,8 +703,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"riter"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"riter"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.riter(bsl::to_umax(0)).get_if() == nullptr);
@@ -712,7 +712,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.riter(bsl::to_umax(0)).get_if() == nullptr);
@@ -720,7 +720,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.criter(bsl::to_umax(0)).get_if() == nullptr);
@@ -728,7 +728,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -737,7 +737,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -746,7 +746,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -755,7 +755,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -764,7 +764,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -773,7 +773,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -782,7 +782,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -791,7 +791,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -800,7 +800,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -810,22 +810,22 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"empty"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"empty"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.empty());
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.empty());
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -833,7 +833,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -842,22 +842,22 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"operator bool"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"operator bool"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(!spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(!spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -865,7 +865,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -874,22 +874,22 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"size"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"size"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.size() == bsl::to_umax(0));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.size() == bsl::to_umax(0));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -897,7 +897,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -906,22 +906,22 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"max_size"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"max_size"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.max_size() == bsl::safe_uintmax::max() / sizeof(bool));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.max_size() == bsl::safe_uintmax::max() / sizeof(bool));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -930,7 +930,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -940,22 +940,22 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"size_bytes"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"size_bytes"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.size_bytes() == bsl::to_umax(0));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.size_bytes() == bsl::to_umax(0));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -963,7 +963,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -972,50 +972,50 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"first"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"first"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.first() == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.first() == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.first(bsl::to_umax(3)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.first(bsl::to_umax(3)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.first(bsl::to_umax(0)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.first(bsl::to_umax(0)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -1023,7 +1023,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -1031,7 +1031,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr1{test_arr};
                 bsl::array arr2{bsl::to_i32(4), bsl::to_i32(8), bsl::to_i32(15)};
                 bsl::span spn1{arr1.data(), arr1.size()};
@@ -1041,7 +1041,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr1{test_arr};
                 bsl::array const arr2{bsl::to_i32(4), bsl::to_i32(8), bsl::to_i32(15)};
                 bsl::span const spn1{arr1.data(), arr1.size()};
@@ -1051,7 +1051,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn1{arr.data(), arr.size()};
                 bsl::span<bsl::safe_int32> spn2{};
@@ -1060,7 +1060,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn1{arr.data(), arr.size()};
                 bsl::span<bsl::safe_int32 const> const spn2{};
@@ -1069,7 +1069,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn1{arr.data(), arr.size()};
                 bsl::span<bsl::safe_int32> spn2{};
@@ -1078,7 +1078,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn1{arr.data(), arr.size()};
                 bsl::span<bsl::safe_int32 const> const spn2{};
@@ -1088,50 +1088,50 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"last"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"last"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.last() == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.last() == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.last(bsl::to_umax(3)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.last(bsl::to_umax(3)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.last(bsl::to_umax(0)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.last(bsl::to_umax(0)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -1139,7 +1139,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -1147,7 +1147,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr1{test_arr};
                 bsl::array arr2{bsl::to_i32(16), bsl::to_i32(23), bsl::to_i32(42)};
                 bsl::span spn1{arr1.data(), arr1.size()};
@@ -1157,7 +1157,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr1{test_arr};
                 bsl::array const arr2{bsl::to_i32(16), bsl::to_i32(23), bsl::to_i32(42)};
                 bsl::span const spn1{arr1.data(), arr1.size()};
@@ -1167,7 +1167,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn1{arr.data(), arr.size()};
                 bsl::span<bsl::safe_int32> spn2{};
@@ -1176,7 +1176,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn1{arr.data(), arr.size()};
                 bsl::span<bsl::safe_int32 const> const spn2{};
@@ -1185,7 +1185,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn1{arr.data(), arr.size()};
                 bsl::span<bsl::safe_int32> spn2{};
@@ -1194,7 +1194,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn1{arr.data(), arr.size()};
                 bsl::span<bsl::safe_int32 const> const spn2{};
@@ -1204,120 +1204,120 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"subspan"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"subspan"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::to_umax(0)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::to_umax(0)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::to_umax(3)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::to_umax(3)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::to_umax(0), bsl::to_umax(3)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::to_umax(0), bsl::to_umax(3)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::to_umax(1), bsl::to_umax(3)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::to_umax(1), bsl::to_umax(3)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::npos) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::npos) == spn);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::safe_uintmax::failure()) == spn);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::safe_uintmax::failure()) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::npos, bsl::to_umax(3)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::npos, bsl::to_umax(3)) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::npos, bsl::npos) == spn);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(spn.subspan(bsl::npos, bsl::npos) == spn);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(
@@ -1325,7 +1325,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::ut_check(
@@ -1333,7 +1333,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -1341,7 +1341,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {
@@ -1349,7 +1349,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr1{test_arr};
                 bsl::array arr2{bsl::to_i32(16), bsl::to_i32(23), bsl::to_i32(42)};
                 bsl::span spn1{arr1.data(), arr1.size()};
@@ -1359,7 +1359,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr1{test_arr};
                 bsl::array const arr2{bsl::to_i32(16), bsl::to_i32(23), bsl::to_i32(42)};
                 bsl::span const spn1{arr1.data(), arr1.size()};
@@ -1369,7 +1369,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr1{test_arr};
                 bsl::array arr2{bsl::to_i32(4), bsl::to_i32(8), bsl::to_i32(15)};
                 bsl::span spn1{arr1.data(), arr1.size()};
@@ -1379,7 +1379,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr1{test_arr};
                 bsl::array const arr2{bsl::to_i32(4), bsl::to_i32(8), bsl::to_i32(15)};
                 bsl::span const spn1{arr1.data(), arr1.size()};
@@ -1389,7 +1389,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr1{test_arr};
                 bsl::array arr2{bsl::to_i32(8), bsl::to_i32(15), bsl::to_i32(16)};
                 bsl::span spn1{arr1.data(), arr1.size()};
@@ -1399,7 +1399,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr1{test_arr};
                 bsl::array const arr2{bsl::to_i32(8), bsl::to_i32(15), bsl::to_i32(16)};
                 bsl::span const spn1{arr1.data(), arr1.size()};
@@ -1409,7 +1409,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn1{arr.data(), arr.size()};
                 bsl::span<bsl::safe_int32> spn2{};
@@ -1418,7 +1418,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn1{arr.data(), arr.size()};
                 bsl::span<bsl::safe_int32 const> const spn2{};
@@ -1427,7 +1427,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn1{arr.data(), arr.size()};
                 bsl::span<bsl::safe_int32> spn2{};
@@ -1436,7 +1436,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn1{arr.data(), arr.size()};
                 bsl::span<bsl::safe_int32 const> const spn2{};
@@ -1445,7 +1445,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr{test_arr};
                 bsl::span spn1{arr.data(), arr.size()};
                 bsl::span<bsl::safe_int32> spn2{};
@@ -1454,7 +1454,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span const spn1{arr.data(), arr.size()};
                 bsl::span<bsl::safe_int32 const> const spn2{};
@@ -1464,8 +1464,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"equals"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"equals"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr1{test_arr};
                 bsl::array arr2{test_arr};
                 bsl::span spn1{arr1.data(), arr1.size()};
@@ -1476,8 +1476,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"not equals"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"not equals"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr1{test_arr};
                 bsl::span spn1{arr1.data(), arr1.size()};
                 bsl::span<bsl::safe_int32> spn2{};
@@ -1486,7 +1486,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr1{test_arr};
                 bsl::span spn1{arr1.data(), arr1.size()};
                 bsl::span<bsl::safe_int32> spn2{};
@@ -1495,7 +1495,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr1{test_arr};
                 bsl::array arr2{bsl::to_i32(4), bsl::to_i32(8), bsl::to_i32(15)};
                 bsl::span spn1{arr1.data(), arr1.size()};
@@ -1505,7 +1505,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr1{test_arr};
                 bsl::array arr2{bsl::to_i32(4), bsl::to_i32(8), bsl::to_i32(15)};
                 bsl::span spn1{arr1.data(), arr1.size()};
@@ -1515,7 +1515,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array arr1{test_arr};
                 bsl::array arr2{test_arr2};
                 bsl::span spn1{arr1.data(), arr1.size()};
@@ -1526,15 +1526,15 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"output doesn't crash"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"output doesn't crash"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::span<bool> spn{};
                 bsl::ut_then{} = [&spn]() {
                     bsl::debug() << spn << '\n';
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::array const arr{test_arr};
                 bsl::span spn{arr.data(), arr.size()};
                 bsl::ut_then{} = [&spn]() {

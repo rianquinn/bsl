@@ -34,7 +34,7 @@
 #include <bsl/cstdlib.hpp>
 #include <bsl/cstr_type.hpp>
 #include <bsl/cstring.hpp>
-#include <bsl/details/carray.hpp>
+#include <bsl/array.hpp>
 #include <bsl/discard.hpp>
 #include <bsl/safe_integral.hpp>
 
@@ -48,8 +48,7 @@ namespace fmt_test
         /// @brief stores the total number of chars that have been outputted
         constinit inline bsl::safe_uintmax g_fmt_test_num{};
         /// @brief stores the chars that have been outputted
-        constinit inline bsl::details::carray<bsl::char_type, FMT_TEST_BUF_SIZE.get()>
-            g_fmt_test_buf{};
+        constinit inline bsl::array<bsl::char_type, FMT_TEST_BUF_SIZE.get()> g_fmt_test_buf{};
     }
 
     /// <!-- description -->

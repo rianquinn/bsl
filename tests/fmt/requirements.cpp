@@ -38,9 +38,9 @@
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    bsl::ut_scenario{"verify noexcept"} = []() {
-        bsl::ut_given{} = []() {
-            bsl::ut_then{} = []() {
+    bsl::ut_scenario{"verify noexcept"} = []() noexcept {
+        bsl::ut_given{} = []() noexcept {
+            bsl::ut_then{} = []() noexcept {
                 static_assert(noexcept(bsl::fmt{bsl::fmt_options{""}, ""}));
                 static_assert(noexcept(bsl::fmt{bsl::fmt_options{""}, "", bsl::to_umax(42)}));
                 static_assert(noexcept(bsl::fmt{"", ""}));

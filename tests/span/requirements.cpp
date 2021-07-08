@@ -30,8 +30,8 @@
 
 namespace
 {
-    constinit bsl::array<bool, static_cast<bsl::uintmax>(5)> verify_constinit_arr{};
-    constinit bsl::span<bool> const verify_constinit{verify_constinit_arr};
+    constinit bsl::array<bool, static_cast<bsl::uintmax>(5)> g_verify_constinit_arr{};
+    constinit bsl::span<bool> const g_verify_constinit{g_verify_constinit_arr};
 }
 
 /// <!-- description -->
@@ -45,19 +45,19 @@ namespace
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    bsl::ut_scenario{"verify supports constinit"} = []() {
-        bsl::discard(verify_constinit);
+    bsl::ut_scenario{"verify supports constinit"} = []() noexcept {
+        bsl::discard(g_verify_constinit);
     };
 
-    bsl::ut_scenario{"verify noexcept"} = []() {
-        bsl::ut_given{} = []() {
+    bsl::ut_scenario{"verify noexcept"} = []() noexcept {
+        bsl::ut_given{} = []() noexcept {
             bsl::span<bool> mut_spn1{};
             bsl::span<bool> mut_spn2{};
             bsl::span<bool> const spn1{};
             bsl::span<bool> const spn2{};
             bsl::array<bool, static_cast<bsl::uintmax>(5)> mut_arr{};
             bsl::array<bool, static_cast<bsl::uintmax>(5)> const arr{};
-            bsl::ut_then{} = []() {
+            bsl::ut_then{} = []() noexcept {
                 static_assert(noexcept(bsl::span<bool>{}));
                 static_assert(noexcept(bsl::span<bool>{{}, {}}));
                 static_assert(noexcept(bsl::span<bool>{mut_arr}));

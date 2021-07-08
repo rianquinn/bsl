@@ -87,8 +87,6 @@ namespace bsl
     };
 
     /// @brief reduces the verbosity of bsl::dormant_t
-    // We want our implementation to mimic C++ here.
-    // NOLINTNEXTLINE(bsl-name-case)
     constexpr dormant_t dormant{};
 }
 

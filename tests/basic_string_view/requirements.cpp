@@ -29,7 +29,7 @@
 
 namespace
 {
-    constinit bsl::basic_string_view<bsl::char_type> const verify_constinit{"Hello World"};
+    constinit bsl::basic_string_view<bsl::char_type> const g_verify_constinit{"Hello World"};
 }
 
 /// <!-- description -->
@@ -45,17 +45,17 @@ main() noexcept -> bsl::exit_code
 {
     using bsv_type = bsl::basic_string_view<bsl::char_type>;
 
-    bsl::ut_scenario{"verify supports constinit"} = []() {
-        bsl::discard(verify_constinit);
+    bsl::ut_scenario{"verify supports constinit"} = []() noexcept {
+        bsl::discard(g_verify_constinit);
     };
 
-    bsl::ut_scenario{"verify noexcept"} = []() {
-        bsl::ut_given{} = []() {
+    bsl::ut_scenario{"verify noexcept"} = []() noexcept {
+        bsl::ut_given{} = []() noexcept {
             bsv_type mut_msg1{};
             bsv_type mut_msg2{};
             bsv_type const msg1{};
             bsv_type const msg2{};
-            bsl::ut_then{} = []() {
+            bsl::ut_then{} = []() noexcept {
                 static_assert(noexcept(bsv_type{}));
                 static_assert(noexcept(bsv_type{""}));
                 static_assert(noexcept(bsv_type{"", bsl::to_umax(0)}));

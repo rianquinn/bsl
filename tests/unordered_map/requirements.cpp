@@ -28,7 +28,7 @@
 
 namespace
 {
-    constinit bsl::unordered_map<bool, bool> const verify_constinit{};
+    constinit bsl::unordered_map<bool, bool> const g_verify_constinit{};
 }
 
 /// <!-- description -->
@@ -42,15 +42,15 @@ namespace
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    bsl::ut_scenario{"verify supports constinit"} = []() {
-        bsl::discard(verify_constinit);
+    bsl::ut_scenario{"verify supports constinit"} = []() noexcept {
+        bsl::discard(g_verify_constinit);
     };
 
-    bsl::ut_scenario{"verify noexcept"} = []() {
-        bsl::ut_given{} = []() {
+    bsl::ut_scenario{"verify noexcept"} = []() noexcept {
+        bsl::ut_given{} = []() noexcept {
             bsl::unordered_map<bool, bool> mut_map{};
             bsl::unordered_map<bool, bool> const map{};
-            bsl::ut_then{} = []() {
+            bsl::ut_then{} = []() noexcept {
                 static_assert(noexcept(bsl::unordered_map<bool, bool>{}));
 
                 static_assert(noexcept(mut_map.empty()));

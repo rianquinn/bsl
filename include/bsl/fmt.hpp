@@ -28,6 +28,7 @@
 #ifndef BSL_FMT_HPP
 #define BSL_FMT_HPP
 
+#include "details/fmt_impl_array.hpp"
 #include "details/fmt_impl_bool.hpp"
 #include "details/fmt_impl_char_type.hpp"
 #include "details/fmt_impl_cstr_type.hpp"
@@ -46,6 +47,7 @@
 #include "is_same.hpp"
 #include "safe_integral.hpp"
 #include "unlikely.hpp"
+#include "is_constant_evaluated.hpp"
 
 namespace bsl
 {
@@ -342,9 +344,6 @@ namespace bsl
         ///   @param ops the format options used to format the output of val
         ///   @param val the value to output given the provided format string
         ///
-        // If we attempt to output an integer literal, this check with trigger
-        // which is a ok, since this functionality is needed.
-        // NOLINTNEXTLINE(bsl-non-safe-integral-types-are-forbidden)
         constexpr fmt(fmt_options const &ops, VAL_T const &val) noexcept    // --
             : m_ops{ops}, m_val{val}
         {}
@@ -363,9 +362,6 @@ namespace bsl
         ///   @param width a dynamic width which overrides the width field
         ///     in the format string (used to set the width field at runtime).
         ///
-        // If we attempt to output an integer literal, this check with trigger
-        // which is a ok, since this functionality is needed.
-        // NOLINTNEXTLINE(bsl-non-safe-integral-types-are-forbidden)
         constexpr fmt(fmt_options const &ops, VAL_T const &val, safe_uintmax const &width) noexcept
             : m_ops{ops}, m_val{val}
         {
@@ -396,9 +392,6 @@ namespace bsl
         ///   @param str the format options used to format the output of val
         ///   @param val the value to output given the provided format string
         ///
-        // If we attempt to output an integer literal, this check with trigger
-        // which is a ok, since this functionality is needed.
-        // NOLINTNEXTLINE(bsl-non-safe-integral-types-are-forbidden)
         constexpr fmt(cstr_type const str, VAL_T const &val) noexcept    // --
             : fmt{fmt_options{str}, val}
         {}
@@ -417,9 +410,6 @@ namespace bsl
         ///   @param width a dynamic width which overrides the width field
         ///     in the format string (used to set the width field at runtime).
         ///
-        // If we attempt to output an integer literal, this check with trigger
-        // which is a ok, since this functionality is needed.
-        // NOLINTNEXTLINE(bsl-non-safe-integral-types-are-forbidden)
         constexpr fmt(cstr_type const str, VAL_T const &val, safe_uintmax const &width) noexcept
             : fmt{fmt_options{str}, val, width}
         {}
@@ -512,6 +502,10 @@ namespace bsl
     [[maybe_unused]] constexpr auto
     operator<<(out<T> const o, fmt<U> &&mut_arg) noexcept -> out<T>
     {
+        if (is_constant_evaluated()) {
+            return o;
+        }
+
         if constexpr (!o) {
             return o;
         }
@@ -519,7 +513,7 @@ namespace bsl
         // These trigger for c-style strings. Not really sure if this is a
         // false positive for this test, but either way, this is something
         // we wish to support.
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay, hicpp-no-array-decay, bsl-implicit-conversions-forbidden)
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay, hicpp-no-array-decay)
         fmt_impl(o, mut_arg.m_ops, mut_arg.m_val);
         return o;
     }
@@ -563,6 +557,10 @@ namespace bsl
     [[maybe_unused]] constexpr auto
     operator<<(out<T> const o, U const &arg) noexcept -> out<T>
     {
+        if (is_constant_evaluated()) {
+            return o;
+        }
+
         if constexpr (!o) {
             return o;
         }

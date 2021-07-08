@@ -29,6 +29,7 @@
 #define BSL_ARGUMENTS_HPP
 
 #include "cstdint.hpp"
+#include "convert.hpp"
 #include "cstr_type.hpp"
 #include "details/arguments_impl.hpp"
 #include "details/out.hpp"
@@ -37,6 +38,7 @@
 #include "span.hpp"
 #include "string_view.hpp"
 #include "unlikely.hpp"
+#include "is_constant_evaluated.hpp"
 
 namespace bsl
 {
@@ -257,19 +259,20 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Returns this->at<T, B>(static_cast<bsl::uintmax>(0)).
+        ///   @brief Returns this->at<T, B>(0).
         ///   @include arguments/example_arguments_front.hpp
         ///
         /// <!-- inputs/outputs -->
         ///   @tparam T either bsl::safe_integral, bsl::string_view or bool
         ///   @tparam B the base to convert the argument to
-        ///   @return Returns this->at<T, B>(static_cast<bsl::uintmax>(0)).
+        ///   @return Returns this->at<T, B>(0).
         ///
         template<typename T, bsl::int32 B = details::ARGUMENTS_DEFAULT_BASE.get()>
         [[nodiscard]] constexpr auto
         front() const noexcept -> T
         {
-            return this->at<T, B>(static_cast<bsl::uintmax>(0));
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+            return this->at<T, B>(zero);
         }
 
         /// <!-- description -->
@@ -292,7 +295,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return Returns !this->empty()
         ///
-        [[nodiscard]] constexpr explicit operator bool() const noexcept
+        [[nodiscard]] explicit constexpr operator bool() const noexcept
         {
             return !this->empty();
         }

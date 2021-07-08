@@ -41,8 +41,8 @@ namespace
     [[nodiscard]] constexpr auto
     tests() noexcept -> bsl::exit_code
     {
-        bsl::ut_scenario{"empty"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"empty"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::unordered_map<bool, bool> map{};
                 bsl::ut_when{} = [&map]() {
                     bsl::ut_then{} = [&map]() {
@@ -67,8 +67,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"size"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"size"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::unordered_map<bool, bool> map{};
                 bsl::ut_when{} = [&map]() {
                     bsl::ut_then{} = [&map]() {
@@ -93,8 +93,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"clear"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"clear"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::unordered_map<bool, bool> map{};
                 bsl::ut_when{} = [&map]() {
                     bsl::ut_then{} = [&map]() {
@@ -129,8 +129,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"at"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"at"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::unordered_map<bool, bool> map{};
                 bsl::ut_when{} = [&map]() {
                     bsl::ut_then{} = [&map]() {
@@ -171,8 +171,8 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"contains"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"contains"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::unordered_map<bool, bool> map{};
                 bsl::ut_when{} = [&map]() {
                     bsl::ut_then{} = [&map]() {

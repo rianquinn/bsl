@@ -74,17 +74,20 @@ namespace bsl::details
         out<T> const o, fmt_options const &ops, safe_uintmax const &len, bool const left) noexcept
         -> safe_uintmax
     {
+        constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
+        constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+
         auto const padding{fmt_impl_align_padding(ops, len)};
 
         if (!ops.sign_aware()) {
-            if (padding != static_cast<bsl::uintmax>(0)) {
+            if (padding != zero) {
                 switch (ops.align()) {
                     case fmt_align::fmt_align_left: {
                         break;
                     }
 
                     case fmt_align::fmt_align_center: {
-                        safe_uintmax const half{padding >> static_cast<bsl::uintmax>(1)};
+                        safe_uintmax const half{padding >> one};
                         for (safe_uintmax mut_cpi{}; mut_cpi < half; ++mut_cpi) {
                             o.write_to_console(ops.fill());
                         }
@@ -144,10 +147,13 @@ namespace bsl::details
     fmt_impl_align_suf(
         out<T> const o, fmt_options const &ops, safe_uintmax const &len, bool const left) noexcept
     {
+        constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
+        constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+
         auto const padding{fmt_impl_align_padding(ops, len)};
 
         if (!ops.sign_aware()) {
-            if (padding != static_cast<bsl::uintmax>(0)) {
+            if (padding != zero) {
                 switch (ops.align()) {
                     case fmt_align::fmt_align_left: {
                         for (safe_uintmax mut_lpi{}; mut_lpi < padding; ++mut_lpi) {
@@ -157,7 +163,7 @@ namespace bsl::details
                     }
 
                     case fmt_align::fmt_align_center: {
-                        safe_uintmax const half{padding - (padding >> static_cast<bsl::uintmax>(1))};
+                        safe_uintmax const half{padding - (padding >> one)};
                         for (safe_uintmax mut_cpi{}; mut_cpi < half; ++mut_cpi) {
                             o.write_to_console(ops.fill());
                         }

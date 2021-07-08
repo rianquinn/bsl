@@ -88,9 +88,9 @@ namespace bsl
         }
 
         for (safe_uintmax mut_i{}; mut_i < count; ++mut_i) {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic, cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
             safe_int32 const lhsc{static_cast<bsl::int32>(lhs[mut_i.get()])};
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic, cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
             safe_int32 const rhsc{static_cast<bsl::int32>(rhs[mut_i.get()])};
 
             if (lhsc.is_zero()) {
@@ -110,7 +110,8 @@ namespace bsl
             bsl::touch();
         }
 
-        return static_cast<bsl::int32>(0);
+        constexpr safe_int32 zero{static_cast<bsl::int32>(0)};
+        return zero;
     }
 
     /// <!-- description -->
@@ -191,7 +192,7 @@ namespace bsl
             }
 
             for (safe_uintmax mut_i{}; mut_i < count / sizeof(T); ++mut_i) {
-                // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic, cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                 dst[mut_i.get()] = {};
             }
 

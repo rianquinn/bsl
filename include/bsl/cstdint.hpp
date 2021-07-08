@@ -101,7 +101,6 @@ namespace bsl
 
     /// @brief ensure that uint8 is a proper byte type. otherwise, UB can
     ///   occur for byte arrays that are used with trivial types.
-    // NOLINTNEXTLINE(bsl-types-fixed-width-ints)
     static_assert(is_same<bsl::uint8, unsigned char>::value);
 }
 

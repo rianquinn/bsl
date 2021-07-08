@@ -39,6 +39,7 @@
 #include "safe_integral.hpp"
 #include "touch.hpp"
 #include "unlikely.hpp"
+#include "is_constant_evaluated.hpp"
 
 namespace bsl
 {
@@ -312,7 +313,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         front_if() noexcept -> pointer_type
         {
-            return this->at_if(static_cast<bsl::uintmax>(0));
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+            return this->at_if(zero);
         }
 
         /// <!-- description -->
@@ -329,7 +331,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         front_if() const noexcept -> const_pointer_type
         {
-            return this->at_if(static_cast<bsl::uintmax>(0));
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+            return this->at_if(zero);
         }
 
         /// <!-- description -->
@@ -346,7 +349,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         back_if() noexcept -> pointer_type
         {
-            return this->at_if(m_count - static_cast<bsl::uintmax>(1));
+            constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
+            return this->at_if(m_count - one);
         }
 
         /// <!-- description -->
@@ -363,7 +367,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         back_if() const noexcept -> const_pointer_type
         {
-            return this->at_if(m_count - static_cast<bsl::uintmax>(1));
+            constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
+            return this->at_if(m_count - one);
         }
 
         /// <!-- description -->
@@ -410,7 +415,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         begin() noexcept -> iterator_type
         {
-            return iterator_type{m_ptr, m_count, static_cast<bsl::uintmax>(0)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+            return iterator_type{m_ptr, m_count, zero};
         }
 
         /// <!-- description -->
@@ -423,7 +429,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         begin() const noexcept -> const_iterator_type
         {
-            return const_iterator_type{m_ptr, m_count, static_cast<bsl::uintmax>(0)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+            return const_iterator_type{m_ptr, m_count, zero};
         }
 
         /// <!-- description -->
@@ -436,7 +443,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         cbegin() const noexcept -> const_iterator_type
         {
-            return const_iterator_type{m_ptr, m_count, static_cast<bsl::uintmax>(0)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+            return const_iterator_type{m_ptr, m_count, zero};
         }
 
         /// <!-- description -->
@@ -606,16 +614,19 @@ namespace bsl
         [[nodiscard]] constexpr auto
         riter(size_type const &i) noexcept -> reverse_iterator_type
         {
+            constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+
             if (unlikely(!i)) {
                 unlikely_invalid_argument_failure();
-                return reverse_iterator_type{this->iter(static_cast<bsl::uintmax>(0))};
+                return reverse_iterator_type{this->iter(zero)};
             }
 
             if (likely(i < m_count)) {
-                return reverse_iterator_type{this->iter(i + static_cast<bsl::uintmax>(1))};
+                return reverse_iterator_type{this->iter(i + one)};
             }
 
-            return reverse_iterator_type{this->iter(static_cast<bsl::uintmax>(0))};
+            return reverse_iterator_type{this->iter(zero)};
         }
 
         /// <!-- description -->
@@ -635,16 +646,19 @@ namespace bsl
         [[nodiscard]] constexpr auto
         riter(size_type const &i) const noexcept -> const_reverse_iterator_type
         {
+            constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+
             if (unlikely(!i)) {
                 unlikely_invalid_argument_failure();
-                return const_reverse_iterator_type{this->iter(static_cast<bsl::uintmax>(0))};
+                return const_reverse_iterator_type{this->iter(zero)};
             }
 
             if (likely(i < m_count)) {
-                return const_reverse_iterator_type{this->iter(i + static_cast<bsl::uintmax>(1))};
+                return const_reverse_iterator_type{this->iter(i + one)};
             }
 
-            return const_reverse_iterator_type{this->iter(static_cast<bsl::uintmax>(0))};
+            return const_reverse_iterator_type{this->iter(zero)};
         }
 
         /// <!-- description -->
@@ -664,16 +678,19 @@ namespace bsl
         [[nodiscard]] constexpr auto
         criter(size_type const &i) const noexcept -> const_reverse_iterator_type
         {
+            constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+
             if (unlikely(!i)) {
                 unlikely_invalid_argument_failure();
-                return const_reverse_iterator_type{this->iter(static_cast<bsl::uintmax>(0))};
+                return const_reverse_iterator_type{this->iter(zero)};
             }
 
             if (likely(i < m_count)) {
-                return const_reverse_iterator_type{this->iter(i + static_cast<bsl::uintmax>(1))};
+                return const_reverse_iterator_type{this->iter(i + one)};
             }
 
-            return const_reverse_iterator_type{this->iter(static_cast<bsl::uintmax>(0))};
+            return const_reverse_iterator_type{this->iter(zero)};
         }
 
         /// <!-- description -->
@@ -753,7 +770,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @return Returns data() != nullptr
         ///
-        [[nodiscard]] constexpr explicit operator bool() const noexcept
+        [[nodiscard]] explicit constexpr operator bool() const noexcept
         {
             return this->data() != nullptr;
         }
@@ -772,7 +789,7 @@ namespace bsl
         [[nodiscard]] constexpr auto
         size() const noexcept -> size_type
         {
-            return {m_count};
+            return size_type{m_count};
         }
 
         /// <!-- description -->
@@ -785,7 +802,8 @@ namespace bsl
         [[nodiscard]] static constexpr auto
         max_size() noexcept -> size_type
         {
-            return size_type::max() / static_cast<bsl::uintmax>(sizeof(T));
+            constexpr safe_uintmax size_of_t{static_cast<bsl::uintmax>(sizeof(T))};
+            return size_type::max() / size_of_t;
         }
 
         /// <!-- description -->
@@ -798,7 +816,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         size_bytes() const noexcept -> size_type
         {
-            return m_count * static_cast<bsl::uintmax>(sizeof(T));
+            constexpr safe_uintmax size_of_t{static_cast<bsl::uintmax>(sizeof(T))};
+            return m_count * size_of_t;
         }
 
         /// <!-- description -->
@@ -814,7 +833,8 @@ namespace bsl
         [[nodiscard]] constexpr auto
         first(size_type const &count = npos) const noexcept -> span<T>
         {
-            return this->subspan(static_cast<bsl::uintmax>(0), count);
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+            return this->subspan(zero, count);
         }
 
         /// <!-- description -->
@@ -838,7 +858,8 @@ namespace bsl
                 return this->subspan(this->size() - count, count);
             }
 
-            return this->subspan(static_cast<bsl::uintmax>(0), count);
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+            return this->subspan(zero, count);
         }
 
         /// <!-- description -->
@@ -972,6 +993,10 @@ namespace bsl
     [[maybe_unused]] constexpr auto
     operator<<(out<T1> const o, bsl::span<T2> const &val) noexcept -> out<T1>
     {
+        if (is_constant_evaluated()) {
+            return o;
+        }
+
         if constexpr (!o) {
             return o;
         }

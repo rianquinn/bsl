@@ -39,8 +39,8 @@ namespace
     [[nodiscard]] constexpr auto
     tests_rational() noexcept -> bsl::exit_code
     {
-        bsl::ut_scenario{"equals"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"equals"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val1{42};
                 bsl::safe_int32 val2{42};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -48,7 +48,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val1{42};
                 bsl::safe_int32 val2{23};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -56,7 +56,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val1{42, true};
                 bsl::safe_int32 val2{42, false};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -64,7 +64,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val1{42, false};
                 bsl::safe_int32 val2{42, true};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -72,7 +72,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val1{42, true};
                 bsl::safe_int32 val2{42, true};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -81,52 +81,52 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"equals with a value"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"equals with a value"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{42};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(val == 42);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{42};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(42 == val);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{42};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!(val == 23));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{42};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!(23 == val));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val{42, true};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!(val == 42));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val{42, true};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!(42 == val));
                 };
             };
         };
 
-        bsl::ut_scenario{"not equals"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"not equals"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val1{42};
                 bsl::safe_int32 val2{23};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -134,7 +134,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val1{42};
                 bsl::safe_int32 val2{42};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -142,7 +142,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val1{42, true};
                 bsl::safe_int32 val2{42, false};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -150,7 +150,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val1{42, false};
                 bsl::safe_int32 val2{42, true};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -158,7 +158,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val1{42, true};
                 bsl::safe_int32 val2{42, true};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -167,52 +167,52 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"not equals with a value"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"not equals with a value"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{42};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(val != 23);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{42};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(23 != val);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{42};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!(val != 42));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{42};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!(42 != val));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val{42, true};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(val != 42);
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val{42, true};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(42 != val);
                 };
             };
         };
 
-        bsl::ut_scenario{"lt"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"lt"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val1{23};
                 bsl::safe_int32 val2{42};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -220,7 +220,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val1{42};
                 bsl::safe_int32 val2{23};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -228,7 +228,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val1{23, true};
                 bsl::safe_int32 val2{42, false};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -236,7 +236,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val1{23, false};
                 bsl::safe_int32 val2{42, true};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -244,7 +244,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val1{23, true};
                 bsl::safe_int32 val2{42, true};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -253,52 +253,52 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"lt with a value"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"lt with a value"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{23};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(val < 42);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{42};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(23 < val);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{42};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!(val < 23));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{23};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!(42 < val));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val{23, true};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!(42 < val));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val{42, true};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!(val < 23));
                 };
             };
         };
 
-        bsl::ut_scenario{"gt"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"gt"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val1{42};
                 bsl::safe_int32 val2{23};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -306,7 +306,7 @@ namespace
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val1{23};
                 bsl::safe_int32 val2{42};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -314,7 +314,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val1{42, true};
                 bsl::safe_int32 val2{23, false};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -322,7 +322,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val1{42, false};
                 bsl::safe_int32 val2{23, true};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -330,7 +330,7 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val1{42, true};
                 bsl::safe_int32 val2{23, true};
                 bsl::ut_then{} = [&val1, &val2]() {
@@ -339,45 +339,45 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"gt with a value"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"gt with a value"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{42};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(val > 23);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{23};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(42 > val);
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{23};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!(val > 42));
                 };
             };
 
-            bsl::ut_given{} = []() {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{42};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!(23 > val));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val{42, true};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!(23 > val));
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_int32 val{23, true};
-                bsl::ut_then{} = [&val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!(val > 42));
                 };
             };

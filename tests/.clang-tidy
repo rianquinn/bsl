@@ -23,12 +23,6 @@ Checks:
   '
     -*,
     bsl-*,
-      -bsl-comparison-operators-forbidden,
-      -bsl-boolean-operators-forbidden,
-      -bsl-function-noexcept,
-      -bsl-name-prefixes,
-      -bsl-name-case,
-      -bsl-literals-user-defined,
     bugprone-*,
       -bugprone-branch-clone,
     cert-*,

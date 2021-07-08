@@ -39,11 +39,11 @@ namespace
     [[nodiscard]] constexpr auto
     tests() noexcept -> bsl::exit_code
     {
-        bsl::ut_scenario{"verify as_const result"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"verify as_const result"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bool mut_mydata1{true};
                 bool const mydata2{bsl::as_const(mut_mydata1)};
-                bsl::ut_then{} = [&mut_mydata1, &mydata2]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(mut_mydata1 == mydata2);
                 };
             };

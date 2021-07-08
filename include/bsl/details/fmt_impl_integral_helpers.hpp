@@ -283,8 +283,9 @@ namespace bsl::details
             o.write_to_console('0');
         }
         else {
+            constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
             for (safe_uintmax mut_i{info.digits}; mut_i.is_pos(); --mut_i) {
-                o.write_to_console(*info.buf.at_if(mut_i - static_cast<bsl::uintmax>(1)));
+                o.write_to_console(*info.buf.at_if(mut_i - one));
             }
         }
 

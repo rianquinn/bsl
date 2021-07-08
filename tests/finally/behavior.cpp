@@ -52,10 +52,10 @@ namespace
     [[nodiscard]] constexpr auto
     tests() noexcept -> bsl::exit_code
     {
-        bsl::ut_scenario{"finally"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"finally"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 g_executed = {};
-                bsl::ut_then{} = []() {
+                bsl::ut_then{} = []() noexcept {
                     {
                         bsl::finally test{&finally_function};
                     }
@@ -64,10 +64,10 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"ignore finally"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"ignore finally"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 g_executed = {};
-                bsl::ut_then{} = []() {
+                bsl::ut_then{} = []() noexcept {
                     {
                         bsl::finally test{&finally_function};
                         test.ignore();
@@ -77,10 +77,10 @@ namespace
             };
         };
 
-        bsl::ut_scenario{"dormant finally"} = []() {
-            bsl::ut_given_at_runtime{} = []() {
+        bsl::ut_scenario{"dormant finally"} = []() noexcept {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 g_executed = {};
-                bsl::ut_then{} = []() {
+                bsl::ut_then{} = []() noexcept {
                     {
                         bsl::finally test{bsl::dormant, &finally_function};
                     }
@@ -88,9 +88,9 @@ namespace
                 };
             };
 
-            bsl::ut_given_at_runtime{} = []() {
+            bsl::ut_given_at_runtime{} = []() noexcept {
                 g_executed = {};
-                bsl::ut_then{} = []() {
+                bsl::ut_then{} = []() noexcept {
                     {
                         bsl::finally test{bsl::dormant, &finally_function};
                         test.activate();

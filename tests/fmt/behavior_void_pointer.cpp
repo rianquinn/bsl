@@ -38,23 +38,23 @@
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    bsl::ut_scenario{"void pointer"} = []() {
-        bsl::ut_when{} = []() {
+    bsl::ut_scenario{"void pointer"} = []() noexcept {
+        bsl::ut_when{} = []() noexcept {
             fmt_test::reset();
             void *const val{};
             bsl::print() << val;
-            bsl::ut_then{} = []() {
+            bsl::ut_then{} = []() noexcept {
                 bsl::ut_check(fmt_test::was_this_outputted("nullptr"));
             };
         };
 
-        bsl::ut_when{} = []() {
+        bsl::ut_when{} = []() noexcept {
             fmt_test::reset();
             // Needed to validate the output of the fmt logic for a pointer
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             void *const val{reinterpret_cast<void *>(0x0000000000000042)};
             bsl::print() << val;
-            bsl::ut_then{} = []() {
+            bsl::ut_then{} = []() noexcept {
                 bsl::ut_check(fmt_test::was_this_outputted("0x0000000000000042"));
             };
         };

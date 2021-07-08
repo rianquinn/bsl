@@ -43,6 +43,7 @@
 #include "fmt.hpp"
 #include "safe_integral.hpp"
 #include "source_location.hpp"
+#include "is_constant_evaluated.hpp"
 
 #include <bsl/details/print_thread_id.hpp>
 
@@ -58,8 +59,6 @@ namespace bsl
     constexpr bsl::uintmax VVV{static_cast<bsl::uintmax>(3)};
 
     /// @brief newline constant
-    // We want our implementation to mimic C++ here.
-    // NOLINTNEXTLINE(bsl-name-case)
     constexpr bsl::char_type endl{'\n'};
 
     namespace details
@@ -74,7 +73,7 @@ namespace bsl
         using out_type =    // --
             conditional_t < disjunction<
                                 bool_constant<
-                                    DL<static_cast<bsl::uintmax>(BSL_DEBUG_LEVEL)>,
+                                    DL<BSL_DEBUG_LEVEL>,
                                     bool_constant<DL == BSL_DEBUG_LEVEL>>::value,
                                 out<T>,
                                 out<out_type_empty>>;
@@ -123,6 +122,10 @@ namespace bsl
         // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
         details::out_type<DL, details::out_type_debug> const o{};
 
+        if (is_constant_evaluated()) {
+            return o;
+        }
+
         if constexpr (!o) {
             return o;
         }
@@ -154,6 +157,10 @@ namespace bsl
         // False positive
         // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
         details::out_type<DL, details::out_type_alert> const o{};
+
+        if (is_constant_evaluated()) {
+            return o;
+        }
 
         if constexpr (!o) {
             return o;
@@ -208,6 +215,10 @@ namespace bsl
     [[maybe_unused]] constexpr auto
     operator<<(out<T> const o, source_location const &sloc) noexcept -> out<T>
     {
+        if (is_constant_evaluated()) {
+            return o;
+        }
+
         if constexpr (!o) {
             return o;
         }
@@ -243,56 +254,112 @@ namespace bsl
     }
 
     /// <!-- description -->
-    ///   @brief Returns fmt{"#04x", t}
+    ///   @brief Returns fmt{"#04x", val}
     ///
     /// <!-- inputs/outputs -->
     ///   @param val the value to input into fmt
-    ///   @return Returns fmt{"#04x", t}
+    ///   @return Returns fmt{"#04x", val}
     ///
     [[nodiscard]] constexpr auto
-    hex(bsl::safe_uint8 const &val) noexcept -> fmt<bsl::safe_uint8>
+    hex(safe_uint8 const &val) noexcept -> fmt<safe_uint8>
     {
         constexpr fmt_options ops{"#04x"};
         return fmt{ops, val};
     }
 
     /// <!-- description -->
-    ///   @brief Returns fmt{"#06x", t}
+    ///   @brief Returns fmt{"#04x", val}
     ///
     /// <!-- inputs/outputs -->
     ///   @param val the value to input into fmt
-    ///   @return Returns fmt{"#06x", t}
+    ///   @return Returns fmt{"#04x", val}
     ///
     [[nodiscard]] constexpr auto
-    hex(bsl::safe_uint16 const &val) noexcept -> fmt<bsl::safe_uint16>
+    hex(bsl::uint8 const val) noexcept -> fmt<bsl::uint8>
+    {
+        constexpr fmt_options ops{"#04x"};
+        return fmt{ops, val};
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns fmt{"#06x", val}
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @param val the value to input into fmt
+    ///   @return Returns fmt{"#06x", val}
+    ///
+    [[nodiscard]] constexpr auto
+    hex(safe_uint16 const &val) noexcept -> fmt<safe_uint16>
     {
         constexpr fmt_options ops{"#06x"};
         return fmt{ops, val};
     }
 
     /// <!-- description -->
-    ///   @brief Returns fmt{"#010x", t}
+    ///   @brief Returns fmt{"#06x", val}
     ///
     /// <!-- inputs/outputs -->
     ///   @param val the value to input into fmt
-    ///   @return Returns fmt{"#010x", t}
+    ///   @return Returns fmt{"#06x", val}
     ///
     [[nodiscard]] constexpr auto
-    hex(bsl::safe_uint32 const &val) noexcept -> fmt<bsl::safe_uint32>
+    hex(bsl::uint16 const val) noexcept -> fmt<bsl::uint16>
+    {
+        constexpr fmt_options ops{"#06x"};
+        return fmt{ops, val};
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns fmt{"#010x", val}
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @param val the value to input into fmt
+    ///   @return Returns fmt{"#010x", val}
+    ///
+    [[nodiscard]] constexpr auto
+    hex(safe_uint32 const &val) noexcept -> fmt<safe_uint32>
     {
         constexpr fmt_options ops{"#010x"};
         return fmt{ops, val};
     }
 
     /// <!-- description -->
-    ///   @brief Returns fmt{"#018x", t}
+    ///   @brief Returns fmt{"#010x", val}
     ///
     /// <!-- inputs/outputs -->
     ///   @param val the value to input into fmt
-    ///   @return Returns fmt{"#018x", t}
+    ///   @return Returns fmt{"#010x", val}
     ///
     [[nodiscard]] constexpr auto
-    hex(bsl::safe_uint64 const &val) noexcept -> fmt<bsl::safe_uint64>
+    hex(bsl::uint32 const val) noexcept -> fmt<bsl::uint32>
+    {
+        constexpr fmt_options ops{"#010x"};
+        return fmt{ops, val};
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns fmt{"#018x", val}
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @param val the value to input into fmt
+    ///   @return Returns fmt{"#018x", val}
+    ///
+    [[nodiscard]] constexpr auto
+    hex(safe_uint64 const &val) noexcept -> fmt<safe_uint64>
+    {
+        constexpr fmt_options ops{"#018x"};
+        return fmt{ops, val};
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns fmt{"#018x", val}
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @param val the value to input into fmt
+    ///   @return Returns fmt{"#018x", val}
+    ///
+    [[nodiscard]] constexpr auto
+    hex(bsl::uint64 const val) noexcept -> fmt<bsl::uint64>
     {
         constexpr fmt_options ops{"#018x"};
         return fmt{ops, val};

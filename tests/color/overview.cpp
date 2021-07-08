@@ -39,13 +39,20 @@ namespace
     check(bsl::cstr_type const lhs, bsl::cstr_type const rhs) noexcept -> bool
     {
         bsl::safe_uintmax mut_i{};
-        for (; (lhs[mut_i.get()] != '\0') && (rhs[mut_i.get()] != '\0'); ++mut_i) {
+        
+        while (true) {
             if (lhs[mut_i.get()] != rhs[mut_i.get()]) {
                 return false;
             }
+
+            if (lhs[mut_i.get()] == '\0') {
+                break;
+            }
+
+            ++mut_i;
         }
 
-        return lhs[mut_i.get()] == rhs[mut_i.get()];
+        return true;
     }
 }
 

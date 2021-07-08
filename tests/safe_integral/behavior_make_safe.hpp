@@ -39,12 +39,12 @@ namespace
     [[nodiscard]] constexpr auto
     tests_make_safe() noexcept -> bsl::exit_code
     {
-        bsl::ut_scenario{"make_safe"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"make_safe"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 val{42};
-                bsl::ut_when{} = [&val]() {
+                bsl::ut_when{} = [&]() noexcept {
                     --val;
-                    bsl::ut_then{} = [&val]() {
+                    bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check(val == 42 - 1);
                         bsl::ut_check(!val.invalid());
                     };

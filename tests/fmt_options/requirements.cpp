@@ -28,7 +28,7 @@
 
 namespace
 {
-    constinit bsl::fmt_options const verify_constinit{""};
+    constinit bsl::fmt_options const g_verify_constinit{""};
 }
 
 /// <!-- description -->
@@ -42,15 +42,15 @@ namespace
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    bsl::ut_scenario{"verify supports constinit"} = []() {
-        bsl::discard(verify_constinit);
+    bsl::ut_scenario{"verify supports constinit"} = []() noexcept {
+        bsl::discard(g_verify_constinit);
     };
 
-    bsl::ut_scenario{"verify noexcept"} = []() {
-        bsl::ut_given{} = []() {
+    bsl::ut_scenario{"verify noexcept"} = []() noexcept {
+        bsl::ut_given{} = []() noexcept {
             bsl::fmt_options mut_ops{""};
             bsl::fmt_options const ops{""};
-            bsl::ut_then{} = []() {
+            bsl::ut_then{} = []() noexcept {
                 static_assert(noexcept(bsl::fmt_options{""}));
 
                 static_assert(noexcept(mut_ops.fill()));

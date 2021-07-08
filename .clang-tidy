@@ -24,7 +24,6 @@ Checks:
   '
     -*,
     bsl-*,
-      -bsl-literals-user-defined,
     bugprone-*,
       -bugprone-branch-clone,
     cert-*,

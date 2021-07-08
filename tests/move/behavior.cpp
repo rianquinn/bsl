@@ -39,8 +39,8 @@ namespace
     [[nodiscard]] constexpr auto
     tests() noexcept -> bsl::exit_code
     {
-        bsl::ut_scenario{"move"} = []() {
-            bsl::ut_given{} = []() {
+        bsl::ut_scenario{"move"} = []() noexcept {
+            bsl::ut_given{} = []() noexcept {
                 bool val1{true};
                 bsl::ut_when{} = [&val1]() {
                     bool &&val2{bsl::move(val1)};
