@@ -41,13 +41,13 @@ namespace
     {
         bsl::ut_scenario{"swap"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bool val1{true};
-                bool val2{false};
-                bsl::ut_when{} = [&val1, &val2]() {
-                    bsl::swap(val1, val2);
-                    bsl::ut_then{} = [&val1, &val2]() {
-                        bsl::ut_check(!val1);
-                        bsl::ut_check(val2);
+                bool mut_val1{true};
+                bool mut_val2{false};
+                bsl::ut_when{} = [&]() noexcept {
+                    bsl::swap(mut_val1, mut_val2);
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check(!mut_val1);
+                        bsl::ut_check(mut_val2);
                     };
                 };
             };

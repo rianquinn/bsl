@@ -350,6 +350,12 @@ namespace bsl
         back_if() noexcept -> pointer_type
         {
             constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+
+            if (m_count == zero) {
+                return nullptr;
+            }
+
             return this->at_if(m_count - one);
         }
 
@@ -368,6 +374,12 @@ namespace bsl
         back_if() const noexcept -> const_pointer_type
         {
             constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
+            constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
+
+            if (m_count == zero) {
+                return nullptr;
+            }
+
             return this->at_if(m_count - one);
         }
 
@@ -416,7 +428,7 @@ namespace bsl
         begin() noexcept -> iterator_type
         {
             constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
-            return iterator_type{m_ptr, m_count, zero};
+            return iterator_type{m_ptr, safe_uintmax{m_count}, zero};
         }
 
         /// <!-- description -->
@@ -430,7 +442,7 @@ namespace bsl
         begin() const noexcept -> const_iterator_type
         {
             constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
-            return const_iterator_type{m_ptr, m_count, zero};
+            return const_iterator_type{m_ptr, safe_uintmax{m_count}, zero};
         }
 
         /// <!-- description -->
@@ -444,7 +456,7 @@ namespace bsl
         cbegin() const noexcept -> const_iterator_type
         {
             constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
-            return const_iterator_type{m_ptr, m_count, zero};
+            return const_iterator_type{m_ptr, safe_uintmax{m_count}, zero};
         }
 
         /// <!-- description -->
@@ -458,7 +470,7 @@ namespace bsl
         [[nodiscard]] constexpr auto
         iter(size_type const &i) noexcept -> iterator_type
         {
-            return iterator_type{m_ptr, m_count, i};
+            return iterator_type{m_ptr, safe_uintmax{m_count}, i};
         }
 
         /// <!-- description -->
@@ -472,7 +484,7 @@ namespace bsl
         [[nodiscard]] constexpr auto
         iter(size_type const &i) const noexcept -> const_iterator_type
         {
-            return const_iterator_type{m_ptr, m_count, i};
+            return const_iterator_type{m_ptr, safe_uintmax{m_count}, i};
         }
 
         /// <!-- description -->
@@ -486,7 +498,7 @@ namespace bsl
         [[nodiscard]] constexpr auto
         citer(size_type const &i) const noexcept -> const_iterator_type
         {
-            return const_iterator_type{m_ptr, m_count, i};
+            return const_iterator_type{m_ptr, safe_uintmax{m_count}, i};
         }
 
         /// <!-- description -->
@@ -503,7 +515,7 @@ namespace bsl
         [[nodiscard]] constexpr auto
         end() noexcept -> iterator_type
         {
-            return iterator_type{m_ptr, m_count, m_count};
+            return iterator_type{m_ptr, safe_uintmax{m_count}, safe_uintmax{m_count}};
         }
 
         /// <!-- description -->
@@ -520,7 +532,7 @@ namespace bsl
         [[nodiscard]] constexpr auto
         end() const noexcept -> const_iterator_type
         {
-            return const_iterator_type{m_ptr, m_count, m_count};
+            return const_iterator_type{m_ptr, safe_uintmax{m_count}, safe_uintmax{m_count}};
         }
 
         /// <!-- description -->
@@ -537,7 +549,7 @@ namespace bsl
         [[nodiscard]] constexpr auto
         cend() const noexcept -> const_iterator_type
         {
-            return const_iterator_type{m_ptr, m_count, m_count};
+            return const_iterator_type{m_ptr, safe_uintmax{m_count}, safe_uintmax{m_count}};
         }
 
         /// <!-- description -->

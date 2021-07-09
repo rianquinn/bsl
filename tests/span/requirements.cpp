@@ -30,6 +30,7 @@
 
 namespace
 {
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
     constinit bsl::array<bool, static_cast<bsl::uintmax>(5)> g_verify_constinit_arr{};
     constinit bsl::span<bool> const g_verify_constinit{g_verify_constinit_arr};
 }

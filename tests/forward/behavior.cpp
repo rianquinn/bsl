@@ -80,7 +80,7 @@ namespace
 
             bsl::ut_given{} = []() noexcept {
                 bsl::safe_int32 mut_val{42};
-                bsl::ut_then{} = [&mut_val]() {
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(forwarder(mut_val) == 2);
                 };
             };

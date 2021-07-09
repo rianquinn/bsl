@@ -58,6 +58,7 @@ namespace bsl
         ///
         template<typename T>
         [[maybe_unused]] auto destructor_is_marked_nothrow(bsl::int32 const ignored) noexcept
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
             -> bool_constant<noexcept(bsl::declval<T &>().~T())>;
 
         /// <!-- description -->

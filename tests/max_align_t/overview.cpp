@@ -24,6 +24,7 @@
 
 #include <bsl/max_align_t.hpp>
 #include <bsl/ut.hpp>
+#include <bsl/convert.hpp>
 
 /// <!-- description -->
 ///   @brief Main function for this unit test. If a call to bsl::ut_check() fails
@@ -36,6 +37,6 @@
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    static_assert(alignof(bsl::max_align_t) >= alignof(bsl::uintmax));
+    static_assert(bsl::to_umax(alignof(bsl::max_align_t)) >= bsl::to_umax(alignof(bsl::uintmax)));
     return bsl::ut_success();
 }

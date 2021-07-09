@@ -142,7 +142,7 @@ namespace bsl
     template<typename FIELD_TYPE>
     [[maybe_unused]] constexpr auto
     ut_required_step(
-        bsl::safe_integral<FIELD_TYPE> const val, source_location const &sloc = here()) noexcept
+        bsl::safe_integral<FIELD_TYPE> const &val, source_location const &sloc = here()) noexcept
         -> bool
     {
         return ut_required_step(!!val, sloc);
@@ -221,7 +221,7 @@ namespace bsl
     template<typename FIELD_TYPE>
     [[maybe_unused]] constexpr auto
     ut_check(
-        bsl::safe_integral<FIELD_TYPE> const val, source_location const &sloc = here()) noexcept
+        bsl::safe_integral<FIELD_TYPE> const &val, source_location const &sloc = here()) noexcept
         -> bool
     {
         return ut_check(!!val, sloc);

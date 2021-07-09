@@ -875,7 +875,7 @@ namespace bsl
     /// @brief deduction guideline for bsl::array
     template<typename T, typename... U>
     // NOLINTNEXTLINE(bsl-types-fixed-width-ints-arithmetic-check)
-    array(T, U...) -> array<T, static_cast<bsl::uintmax>(1) + sizeof...(U)>;
+    array(T, U...) noexcept -> array<T, static_cast<bsl::uintmax>(1) + sizeof...(U)>;
 
     /// <!-- description -->
     ///   @brief Returns true if two arrays contain the same contents.

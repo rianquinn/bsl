@@ -418,7 +418,7 @@ namespace bsl
         ///     string being parsed.
         ///   @return Returns the fill value for alignment.
         ///
-        [[nodiscard]] constexpr auto
+        [[nodiscard]] static constexpr auto
         fmt_options_impl_align_get_fill(
             cstr_type const f, safe_uintmax const &idx, safe_uintmax const &len) noexcept
             -> char_type
@@ -442,7 +442,7 @@ namespace bsl
         ///     string being parsed.
         ///   @return Returns the alignment command for alignment.
         ///
-        [[nodiscard]] constexpr auto
+        [[nodiscard]] static constexpr auto
         fmt_options_impl_align_get_align(
             cstr_type const f, safe_uintmax const &idx, safe_uintmax const &len) noexcept
             -> char_type
@@ -465,7 +465,7 @@ namespace bsl
         ///     string being parsed.
         ///   @return Returns the increment amount for alignment.
         ///
-        [[nodiscard]] constexpr auto
+        [[nodiscard]] static constexpr auto
         fmt_options_impl_align_get_inc(safe_uintmax const &idx, safe_uintmax const &len) noexcept
             -> safe_uintmax
         {

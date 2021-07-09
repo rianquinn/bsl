@@ -164,13 +164,13 @@ namespace bsl
         constexpr void
         clear() noexcept
         {
-            auto node{m_head};
-            while (nullptr != node) {
-                auto next{node->next};
+            auto mut_node{m_head};
+            while (nullptr != mut_node) {
+                auto mut_next{mut_node->next};
 
                 // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-                delete node;    // GRCOV_EXCLUDE_BR
-                node = next;
+                delete mut_node;    // GRCOV_EXCLUDE_BR
+                mut_node = mut_next;
             }
 
             m_head = {};
@@ -188,25 +188,25 @@ namespace bsl
         [[nodiscard]] constexpr auto
         at(KEY_TYPE const &key) noexcept -> T &
         {
-            auto node{m_head};
-            while (nullptr != node) {
-                if (key == node->key) {
+            auto mut_node{m_head};
+            while (nullptr != mut_node) {
+                if (key == mut_node->key) {
                     break;
                 }
-                node = node->next;
+                mut_node = mut_node->next;
             }
 
-            if (nullptr == node) {
+            if (nullptr == mut_node) {
                 // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-                node = new details::unordered_map_node_type<KEY_TYPE, T>{key, {}, m_head};
-                m_head = node;
+                mut_node = new details::unordered_map_node_type<KEY_TYPE, T>{key, {}, m_head};
+                m_head = mut_node;
                 ++m_size;
             }
             else {
                 bsl::touch();
             }
 
-            return node->val;
+            return mut_node->val;
         }
 
         /// <!-- description -->
@@ -220,19 +220,19 @@ namespace bsl
         [[nodiscard]] constexpr auto
         at(KEY_TYPE const &key) const noexcept -> T const &
         {
-            auto node{m_head};
-            while (nullptr != node) {
-                if (key == node->key) {
+            auto mut_node{m_head};
+            while (nullptr != mut_node) {
+                if (key == mut_node->key) {
                     break;
                 }
-                node = node->next;
+                mut_node = mut_node->next;
             }
 
-            if (nullptr == node) {
+            if (nullptr == mut_node) {
                 return m_default;
             }
 
-            return node->val;
+            return mut_node->val;
         }
 
         /// <!-- description -->
@@ -246,29 +246,29 @@ namespace bsl
         [[nodiscard]] constexpr auto
         erase(KEY_TYPE const &key) noexcept -> bool
         {
-            auto node{m_head};
-            details::unordered_map_node_type<KEY_TYPE, T> *prev{};
-            while (nullptr != node) {
-                if (key == node->key) {
+            auto mut_node{m_head};
+            details::unordered_map_node_type<KEY_TYPE, T> *mut_prev{};
+            while (nullptr != mut_node) {
+                if (key == mut_node->key) {
                     break;
                 }
-                prev = node;
-                node = node->next;
+                mut_prev = mut_node;
+                mut_node = mut_node->next;
             }
 
-            if (nullptr == node) {
+            if (nullptr == mut_node) {
                 return false;
             }
 
-            if (nullptr == prev) {
-                m_head = node->next;
+            if (nullptr == mut_prev) {
+                m_head = mut_node->next;
             }
             else {
-                prev->next = node->next;
+                mut_prev->next = mut_node->next;
             }
 
             // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-            delete node;    // GRCOV_EXCLUDE_BR
+            delete mut_node;    // GRCOV_EXCLUDE_BR
             return true;
         }
 
@@ -284,12 +284,12 @@ namespace bsl
         [[nodiscard]] constexpr auto
         contains(KEY_TYPE const &key) const noexcept -> bool
         {
-            auto node{m_head};
-            while (nullptr != node) {
-                if (key == node->key) {
+            auto mut_node{m_head};
+            while (nullptr != mut_node) {
+                if (key == mut_node->key) {
                     return true;
                 }
-                node = node->next;
+                mut_node = mut_node->next;
             }
 
             return false;

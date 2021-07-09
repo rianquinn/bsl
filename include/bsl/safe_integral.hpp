@@ -2130,6 +2130,196 @@ namespace bsl
         }
     }
 
+    /// <!-- description -->
+    ///   @brief Returns lhs.get() < rhs.get(). Will always return false,
+    ///     even when comparing to 0 if the safe_integral parameters have
+    ///     encountered an error.
+    ///   @include safe_integral/example_safe_integral_lt.hpp
+    ///   @related bsl::safe_integral
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the integral type to encapsulate.
+    ///   @param lhs the left hand side of the operator
+    ///   @param rhs the right hand side of the operator
+    ///   @return Returns lhs.get() < rhs.get()
+    ///
+    template<typename T>
+    [[nodiscard]] constexpr auto
+    operator<=(safe_integral<T> const &lhs, safe_integral<T> const &rhs) noexcept -> bool
+    {
+        if (unlikely(lhs.invalid())) {
+            illegal_use_of_invalid_safe_integral();
+            return false;
+        }
+
+        if (unlikely(rhs.invalid())) {
+            illegal_use_of_invalid_safe_integral();
+            return false;
+        }
+
+        if constexpr (is_signed<T>::value) {
+            return static_cast<bsl::intmax>(lhs.get()) <= static_cast<bsl::intmax>(rhs.get());
+        }
+        else {
+            return static_cast<bsl::uintmax>(lhs.get()) <= static_cast<bsl::uintmax>(rhs.get());
+        }
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns lhs.get() < rhs. Will always return false,
+    ///     even when comparing to 0 if the safe_integral parameters have
+    ///     encountered an error.
+    ///   @include safe_integral/example_safe_integral_lt.hpp
+    ///   @related bsl::safe_integral
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the integral type to encapsulate.
+    ///   @param lhs the left hand side of the operator
+    ///   @param rhs the right hand side of the operator
+    ///   @return Returns lhs.get() < rhs
+    ///
+    template<typename T>
+    [[nodiscard]] constexpr auto
+    operator<=(safe_integral<T> const &lhs, T const rhs) noexcept -> bool
+    {
+        if (unlikely(lhs.invalid())) {
+            illegal_use_of_invalid_safe_integral();
+            return false;
+        }
+
+        if constexpr (is_signed<T>::value) {
+            return static_cast<bsl::intmax>(lhs.get()) <= static_cast<bsl::intmax>(rhs);
+        }
+        else {
+            return static_cast<bsl::uintmax>(lhs.get()) <= static_cast<bsl::uintmax>(rhs);
+        }
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns lhs < rhs.get(). Will always return false,
+    ///     even when comparing to 0 if the safe_integral parameters have
+    ///     encountered an error.
+    ///   @include safe_integral/example_safe_integral_lt.hpp
+    ///   @related bsl::safe_integral
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the integral type to encapsulate.
+    ///   @param lhs the left hand side of the operator
+    ///   @param rhs the right hand side of the operator
+    ///   @return Returns lhs < rhs.get()
+    ///
+    template<typename T>
+    [[nodiscard]] constexpr auto
+    operator<=(T const lhs, safe_integral<T> const &rhs) noexcept -> bool
+    {
+        if (unlikely(rhs.invalid())) {
+            illegal_use_of_invalid_safe_integral();
+            return false;
+        }
+
+        if constexpr (is_signed<T>::value) {
+            return static_cast<bsl::intmax>(lhs) <= static_cast<bsl::intmax>(rhs.get());
+        }
+        else {
+            return static_cast<bsl::uintmax>(lhs) <= static_cast<bsl::uintmax>(rhs.get());
+        }
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns lhs.get() > rhs.get(). Will always return false,
+    ///     even when comparing to 0 if the safe_integral parameters have
+    ///     encountered an error.
+    ///   @include safe_integral/example_safe_integral_gt.hpp
+    ///   @related bsl::safe_integral
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the integral type to encapsulate.
+    ///   @param lhs the left hand side of the operator
+    ///   @param rhs the right hand side of the operator
+    ///   @return Returns lhs.get() > rhs.get()
+    ///
+    template<typename T>
+    [[nodiscard]] constexpr auto
+    operator>=(safe_integral<T> const &lhs, safe_integral<T> const &rhs) noexcept -> bool
+    {
+        if (unlikely(lhs.invalid())) {
+            illegal_use_of_invalid_safe_integral();
+            return false;
+        }
+
+        if (unlikely(rhs.invalid())) {
+            illegal_use_of_invalid_safe_integral();
+            return false;
+        }
+
+        if constexpr (is_signed<T>::value) {
+            return static_cast<bsl::intmax>(lhs.get()) >= static_cast<bsl::intmax>(rhs.get());
+        }
+        else {
+            return static_cast<bsl::uintmax>(lhs.get()) >= static_cast<bsl::uintmax>(rhs.get());
+        }
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns lhs.get() > rhs. Will always return false,
+    ///     even when comparing to 0 if the safe_integral parameters have
+    ///     encountered an error.
+    ///   @include safe_integral/example_safe_integral_gt.hpp
+    ///   @related bsl::safe_integral
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the integral type to encapsulate.
+    ///   @param lhs the left hand side of the operator
+    ///   @param rhs the right hand side of the operator
+    ///   @return Returns lhs.get() > rhs
+    ///
+    template<typename T>
+    [[nodiscard]] constexpr auto
+    operator>=(safe_integral<T> const &lhs, T const rhs) noexcept -> bool
+    {
+        if (unlikely(lhs.invalid())) {
+            illegal_use_of_invalid_safe_integral();
+            return false;
+        }
+
+        if constexpr (is_signed<T>::value) {
+            return static_cast<bsl::intmax>(lhs.get()) >= static_cast<bsl::intmax>(rhs);
+        }
+        else {
+            return static_cast<bsl::uintmax>(lhs.get()) >= static_cast<bsl::uintmax>(rhs);
+        }
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns lhs > rhs.get(). Will always return false,
+    ///     even when comparing to 0 if the safe_integral parameters have
+    ///     encountered an error.
+    ///   @include safe_integral/example_safe_integral_gt.hpp
+    ///   @related bsl::safe_integral
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the integral type to encapsulate.
+    ///   @param lhs the left hand side of the operator
+    ///   @param rhs the right hand side of the operator
+    ///   @return Returns lhs > rhs.get()
+    ///
+    template<typename T>
+    [[nodiscard]] constexpr auto
+    operator>=(T const lhs, safe_integral<T> const &rhs) noexcept -> bool
+    {
+        if (unlikely(rhs.invalid())) {
+            illegal_use_of_invalid_safe_integral();
+            return false;
+        }
+
+        if constexpr (is_signed<T>::value) {
+            return static_cast<bsl::intmax>(lhs) >= static_cast<bsl::intmax>(rhs.get());
+        }
+        else {
+            return static_cast<bsl::uintmax>(lhs) >= static_cast<bsl::uintmax>(rhs.get());
+        }
+    }
+
     // -------------------------------------------------------------------------
     // safe_integral arithmetic operators
     // -------------------------------------------------------------------------

@@ -70,26 +70,26 @@ namespace bsl
     /// <!-- inputs/outputs -->
     ///   @tparam T the type of container to sort
     ///   @tparam COMPARE the type of comparison function to use
-    ///   @param container the container to sort
-    ///   @param cmp the comparison function to use
+    ///   @param mut_container the container to sort
+    ///   @param mut_cmp the comparison function to use
     ///
     template<typename T, typename COMPARE>
     constexpr void
-    sort(T &container, COMPARE &&cmp) noexcept
+    sort(T &mut_container, COMPARE &&mut_cmp) noexcept
     {
         constexpr safe_uintmax one{static_cast<bsl::uintmax>(1)};
         constexpr safe_uintmax zero{static_cast<bsl::uintmax>(0)};
 
-        for (safe_uintmax i{one}; i < container.size(); ++i) {
-            for (safe_uintmax j{i}; j > zero; --j) {
-                auto &elem1{*container.at_if(j)};
-                auto &elem2{*container.at_if(j - one)};
+        for (safe_uintmax mut_i{one}; mut_i < mut_container.size(); ++mut_i) {
+            for (safe_uintmax mut_j{mut_i}; mut_j > zero; --mut_j) {
+                auto &mut_elem1{*mut_container.at_if(mut_j)};
+                auto &mut_elem2{*mut_container.at_if(mut_j - one)};
 
-                if (!cmp(elem1, elem2)) {
+                if (!mut_cmp(mut_elem1, mut_elem2)) {
                     break;
                 }
 
-                swap(elem1, elem2);
+                swap(mut_elem1, mut_elem2);
             }
         }
     }
@@ -111,13 +111,13 @@ namespace bsl
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T the type of container to sort
-    ///   @param container the container to sort
+    ///   @param mut_container the container to sort
     ///
     template<typename T>
     constexpr void
-    sort(T &container) noexcept
+    sort(T &mut_container) noexcept
     {
-        return sort(container, &details::sort_cmp<typename T::value_type>);
+        return sort(mut_container, &details::sort_cmp<typename T::value_type>);
     }
 }
 

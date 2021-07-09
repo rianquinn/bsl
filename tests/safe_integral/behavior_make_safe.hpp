@@ -25,7 +25,7 @@
 #include <bsl/safe_integral.hpp>
 #include <bsl/ut.hpp>
 
-namespace
+namespace bsl
 {
     /// <!-- description -->
     ///   @brief Used to execute the actual checks. We put the checks in this
@@ -41,12 +41,12 @@ namespace
     {
         bsl::ut_scenario{"make_safe"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 val{42};
+                bsl::safe_int32 mut_val{42};
                 bsl::ut_when{} = [&]() noexcept {
-                    --val;
+                    --mut_val;
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(val == 42 - 1);
-                        bsl::ut_check(!val.invalid());
+                        bsl::ut_check(mut_val == 42 - 1);
+                        bsl::ut_check(!mut_val.invalid());
                     };
                 };
             };

@@ -41,11 +41,11 @@ main() noexcept -> bsl::exit_code
 {
     bsl::ut_scenario{"verify noexcept"} = []() noexcept {
         bsl::ut_given{} = []() noexcept {
-            test::class_empty c1{};
-            test::class_except c2{};
+            test::class_empty mut_c1{};
+            test::class_except mut_c2{};
             bsl::ut_then{} = []() noexcept {
-                static_assert(noexcept(bsl::swap(c1, c1)));
-                static_assert(!noexcept(bsl::swap(c2, c2)));
+                static_assert(noexcept(bsl::swap(mut_c1, mut_c1)));
+                static_assert(!noexcept(bsl::swap(mut_c2, mut_c2)));
             };
         };
     };

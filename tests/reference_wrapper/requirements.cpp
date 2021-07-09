@@ -53,6 +53,8 @@ main() noexcept -> bsl::exit_code
             // BUG: Need to figure out why we cannot use & here
             // NOLINTNEXTLINE(bsl-function-name-use)
             bsl::reference_wrapper<bsl::safe_int32(bsl::safe_int32)> mut_rw{func};
+            // BUG: Need to figure out why we cannot use & here
+            // NOLINTNEXTLINE(bsl-function-name-use)
             bsl::reference_wrapper<bsl::safe_int32(bsl::safe_int32)> const rw{func};
             bsl::ut_then{} = []() noexcept {
                 // BUG: Need to figure out why we cannot use & here

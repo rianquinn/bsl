@@ -105,7 +105,7 @@ namespace bsl
         ///
         template<typename... ARGS>
         [[nodiscard]] constexpr auto
-        operator()(ARGS &&...mut_a) const -> invoke_result_t<T &, ARGS...>
+        operator()(ARGS &&...mut_a) const noexcept(noexcept(invoke(this->get(), bsl::forward<ARGS>(mut_a)...))) -> invoke_result_t<T &, ARGS...>
         {
             return invoke(this->get(), bsl::forward<ARGS>(mut_a)...);
         }
@@ -149,7 +149,7 @@ namespace bsl
     ///   @param val the thing to get the address of and store.
     ///
     template<typename T>
-    void ref(T const &&val) = delete;
+    void ref(T const &&val) noexcept = delete;
 
     /// <!-- description -->
     ///   @brief Helper function that returns a reference_wrapper
@@ -189,7 +189,7 @@ namespace bsl
     ///   @param val the thing to get the address of and store.
     ///
     template<typename T>
-    void cref(T const &&val) = delete;
+    void cref(T const &&val) noexcept = delete;
 
     /// <!-- description -->
     ///   @brief Outputs the provided bsl::reference_wrapper to the provided

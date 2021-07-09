@@ -26,7 +26,7 @@
 #include <bsl/safe_integral.hpp>
 #include <bsl/ut.hpp>
 
-namespace
+namespace bsl
 {
     /// <!-- description -->
     ///   @brief Used to execute the actual checks. We put the checks in this
@@ -42,67 +42,67 @@ namespace
     {
         bsl::ut_scenario{"and assign"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val1{42U};
-                bsl::safe_uint32 val2{23U};
-                bsl::ut_when{} = [&val1, &val2]() {
-                    val1 &= val2;
-                    bsl::ut_then{} = [&val1]() {
-                        bsl::ut_check(val1 == (42U & 23U));
+                bsl::safe_uint32 mut_val1{42U};
+                bsl::safe_uint32 mut_val2{23U};
+                bsl::ut_when{} = [&]() noexcept {
+                    mut_val1 &= mut_val2;
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check(mut_val1 == (42U & 23U));
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, true};
-                bsl::safe_uint32 val2{23U, false};
-                bsl::ut_when{} = [&val1, &val2]() {
-                    val1 &= val2;
-                    bsl::ut_then{} = [&val1]() {
-                        bsl::ut_check(val1.invalid());
+                bsl::safe_uint32 mut_val1{42U, true};
+                bsl::safe_uint32 mut_val2{23U, false};
+                bsl::ut_when{} = [&]() noexcept {
+                    mut_val1 &= mut_val2;
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check(mut_val1.invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, false};
-                bsl::safe_uint32 val2{23U, true};
-                bsl::ut_when{} = [&val1, &val2]() {
-                    val1 &= val2;
-                    bsl::ut_then{} = [&val1]() {
-                        bsl::ut_check(val1.invalid());
+                bsl::safe_uint32 mut_val1{42U, false};
+                bsl::safe_uint32 mut_val2{23U, true};
+                bsl::ut_when{} = [&]() noexcept {
+                    mut_val1 &= mut_val2;
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check(mut_val1.invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, true};
-                bsl::safe_uint32 val2{23U, true};
-                bsl::ut_when{} = [&val1, &val2]() {
-                    val1 &= val2;
-                    bsl::ut_then{} = [&val1]() {
-                        bsl::ut_check(val1.invalid());
+                bsl::safe_uint32 mut_val1{42U, true};
+                bsl::safe_uint32 mut_val2{23U, true};
+                bsl::ut_when{} = [&]() noexcept {
+                    mut_val1 &= mut_val2;
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check(mut_val1.invalid());
                     };
                 };
             };
         };
 
-        bsl::ut_scenario{"and assign with value"} = []() noexcept {
+        bsl::ut_scenario{"and assign with mut_value"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val{42U};
+                bsl::safe_uint32 mut_val{42U};
                 bsl::ut_when{} = [&]() noexcept {
-                    val &= 23U;
+                    mut_val &= 23U;
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(val == (42U & 23U));
+                        bsl::ut_check(mut_val == (42U & 23U));
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val{42U, true};
+                bsl::safe_uint32 mut_val{42U, true};
                 bsl::ut_when{} = [&]() noexcept {
-                    val &= 23U;
+                    mut_val &= 23U;
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(val.invalid());
+                        bsl::ut_check(mut_val.invalid());
                     };
                 };
             };
@@ -110,33 +110,33 @@ namespace
 
         bsl::ut_scenario{"and"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val1{42U};
-                bsl::safe_uint32 val2{23U};
-                bsl::ut_then{} = [&val1, &val2]() {
+                bsl::safe_uint32 const val1{42U};
+                bsl::safe_uint32 const val2{23U};
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val1 & val2) == (42U & 23U));
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, true};
-                bsl::safe_uint32 val2{23U, false};
-                bsl::ut_then{} = [&val1, &val2]() {
+                bsl::safe_uint32 const val1{42U, true};
+                bsl::safe_uint32 const val2{23U, false};
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val1 & val2).invalid());
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, false};
-                bsl::safe_uint32 val2{23U, true};
-                bsl::ut_then{} = [&val1, &val2]() {
+                bsl::safe_uint32 const val1{42U, false};
+                bsl::safe_uint32 const val2{23U, true};
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val1 & val2).invalid());
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, true};
-                bsl::safe_uint32 val2{23U, true};
-                bsl::ut_then{} = [&val1, &val2]() {
+                bsl::safe_uint32 const val1{42U, true};
+                bsl::safe_uint32 const val2{23U, true};
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val1 & val2).invalid());
                 };
             };
@@ -144,28 +144,28 @@ namespace
 
         bsl::ut_scenario{"and with value"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val{42U};
+                bsl::safe_uint32 const val{42U};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val & 23U) == (42U & 23U));
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val{23U};
+                bsl::safe_uint32 const val{23U};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((42U & val) == (42U & 23U));
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val{42U, true};
+                bsl::safe_uint32 const val{42U, true};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val & 23U).invalid());
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val{23U, true};
+                bsl::safe_uint32 const val{23U, true};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((42U & val).invalid());
                 };
@@ -174,45 +174,45 @@ namespace
 
         bsl::ut_scenario{"or assign"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val1{42U};
-                bsl::safe_uint32 val2{23U};
-                bsl::ut_when{} = [&val1, &val2]() {
-                    val1 |= val2;
-                    bsl::ut_then{} = [&val1]() {
-                        bsl::ut_check(val1 == (42U | 23U));
+                bsl::safe_uint32 mut_val1{42U};
+                bsl::safe_uint32 mut_val2{23U};
+                bsl::ut_when{} = [&]() noexcept {
+                    mut_val1 |= mut_val2;
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check(mut_val1 == (42U | 23U));
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, true};
-                bsl::safe_uint32 val2{23U, false};
-                bsl::ut_when{} = [&val1, &val2]() {
-                    val1 |= val2;
-                    bsl::ut_then{} = [&val1]() {
-                        bsl::ut_check(val1.invalid());
+                bsl::safe_uint32 mut_val1{42U, true};
+                bsl::safe_uint32 mut_val2{23U, false};
+                bsl::ut_when{} = [&]() noexcept {
+                    mut_val1 |= mut_val2;
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check(mut_val1.invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, false};
-                bsl::safe_uint32 val2{23U, true};
-                bsl::ut_when{} = [&val1, &val2]() {
-                    val1 |= val2;
-                    bsl::ut_then{} = [&val1]() {
-                        bsl::ut_check(val1.invalid());
+                bsl::safe_uint32 mut_val1{42U, false};
+                bsl::safe_uint32 mut_val2{23U, true};
+                bsl::ut_when{} = [&]() noexcept {
+                    mut_val1 |= mut_val2;
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check(mut_val1.invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, true};
-                bsl::safe_uint32 val2{23U, true};
-                bsl::ut_when{} = [&val1, &val2]() {
-                    val1 |= val2;
-                    bsl::ut_then{} = [&val1]() {
-                        bsl::ut_check(val1.invalid());
+                bsl::safe_uint32 mut_val1{42U, true};
+                bsl::safe_uint32 mut_val2{23U, true};
+                bsl::ut_when{} = [&]() noexcept {
+                    mut_val1 |= mut_val2;
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check(mut_val1.invalid());
                     };
                 };
             };
@@ -220,21 +220,21 @@ namespace
 
         bsl::ut_scenario{"or assign with value"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val{42U};
+                bsl::safe_uint32 mut_val{42U};
                 bsl::ut_when{} = [&]() noexcept {
-                    val |= 23U;
+                    mut_val |= 23U;
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(val == (42U | 23U));
+                        bsl::ut_check(mut_val == (42U | 23U));
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val{42U, true};
+                bsl::safe_uint32 mut_val{42U, true};
                 bsl::ut_when{} = [&]() noexcept {
-                    val |= 23U;
+                    mut_val |= 23U;
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(val.invalid());
+                        bsl::ut_check(mut_val.invalid());
                     };
                 };
             };
@@ -242,33 +242,33 @@ namespace
 
         bsl::ut_scenario{"or"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val1{42U};
-                bsl::safe_uint32 val2{23U};
-                bsl::ut_then{} = [&val1, &val2]() {
+                bsl::safe_uint32 const val1{42U};
+                bsl::safe_uint32 const val2{23U};
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val1 | val2) == (42U | 23U));
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, true};
-                bsl::safe_uint32 val2{23U, false};
-                bsl::ut_then{} = [&val1, &val2]() {
+                bsl::safe_uint32 const val1{42U, true};
+                bsl::safe_uint32 const val2{23U, false};
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val1 | val2).invalid());
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, false};
-                bsl::safe_uint32 val2{23U, true};
-                bsl::ut_then{} = [&val1, &val2]() {
+                bsl::safe_uint32 const val1{42U, false};
+                bsl::safe_uint32 const val2{23U, true};
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val1 | val2).invalid());
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, true};
-                bsl::safe_uint32 val2{23U, true};
-                bsl::ut_then{} = [&val1, &val2]() {
+                bsl::safe_uint32 const val1{42U, true};
+                bsl::safe_uint32 const val2{23U, true};
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val1 | val2).invalid());
                 };
             };
@@ -276,28 +276,28 @@ namespace
 
         bsl::ut_scenario{"or with value"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val{42U};
+                bsl::safe_uint32 const val{42U};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val | 23U) == (42U | 23U));
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val{23U};
+                bsl::safe_uint32 const val{23U};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((42U | val) == (42U | 23U));
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val{42U, true};
+                bsl::safe_uint32 const val{42U, true};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val | 23U).invalid());
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val{23U, true};
+                bsl::safe_uint32 const val{23U, true};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((42U | val).invalid());
                 };
@@ -306,45 +306,45 @@ namespace
 
         bsl::ut_scenario{"xor assign"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val1{42U};
-                bsl::safe_uint32 val2{23U};
-                bsl::ut_when{} = [&val1, &val2]() {
-                    val1 ^= val2;
-                    bsl::ut_then{} = [&val1]() {
-                        bsl::ut_check(val1 == (42U ^ 23U));
+                bsl::safe_uint32 mut_val1{42U};
+                bsl::safe_uint32 mut_val2{23U};
+                bsl::ut_when{} = [&]() noexcept {
+                    mut_val1 ^= mut_val2;
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check(mut_val1 == (42U ^ 23U));
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, true};
-                bsl::safe_uint32 val2{23U, false};
-                bsl::ut_when{} = [&val1, &val2]() {
-                    val1 ^= val2;
-                    bsl::ut_then{} = [&val1]() {
-                        bsl::ut_check(val1.invalid());
+                bsl::safe_uint32 mut_val1{42U, true};
+                bsl::safe_uint32 mut_val2{23U, false};
+                bsl::ut_when{} = [&]() noexcept {
+                    mut_val1 ^= mut_val2;
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check(mut_val1.invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, false};
-                bsl::safe_uint32 val2{23U, true};
-                bsl::ut_when{} = [&val1, &val2]() {
-                    val1 ^= val2;
-                    bsl::ut_then{} = [&val1]() {
-                        bsl::ut_check(val1.invalid());
+                bsl::safe_uint32 mut_val1{42U, false};
+                bsl::safe_uint32 mut_val2{23U, true};
+                bsl::ut_when{} = [&]() noexcept {
+                    mut_val1 ^= mut_val2;
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check(mut_val1.invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, true};
-                bsl::safe_uint32 val2{23U, true};
-                bsl::ut_when{} = [&val1, &val2]() {
-                    val1 ^= val2;
-                    bsl::ut_then{} = [&val1]() {
-                        bsl::ut_check(val1.invalid());
+                bsl::safe_uint32 mut_val1{42U, true};
+                bsl::safe_uint32 mut_val2{23U, true};
+                bsl::ut_when{} = [&]() noexcept {
+                    mut_val1 ^= mut_val2;
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check(mut_val1.invalid());
                     };
                 };
             };
@@ -352,21 +352,21 @@ namespace
 
         bsl::ut_scenario{"xor assign with value"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val{42U};
+                bsl::safe_uint32 mut_val{42U};
                 bsl::ut_when{} = [&]() noexcept {
-                    val ^= 23U;
+                    mut_val ^= 23U;
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(val == (42U ^ 23U));
+                        bsl::ut_check(mut_val == (42U ^ 23U));
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val{42U, true};
+                bsl::safe_uint32 mut_val{42U, true};
                 bsl::ut_when{} = [&]() noexcept {
-                    val ^= 23U;
+                    mut_val ^= 23U;
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(val.invalid());
+                        bsl::ut_check(mut_val.invalid());
                     };
                 };
             };
@@ -374,33 +374,33 @@ namespace
 
         bsl::ut_scenario{"xor"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val1{42U};
-                bsl::safe_uint32 val2{23U};
-                bsl::ut_then{} = [&val1, &val2]() {
+                bsl::safe_uint32 const val1{42U};
+                bsl::safe_uint32 const val2{23U};
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val1 ^ val2) == (42U ^ 23U));
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, true};
-                bsl::safe_uint32 val2{23U, false};
-                bsl::ut_then{} = [&val1, &val2]() {
+                bsl::safe_uint32 const val1{42U, true};
+                bsl::safe_uint32 const val2{23U, false};
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val1 ^ val2).invalid());
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, false};
-                bsl::safe_uint32 val2{23U, true};
-                bsl::ut_then{} = [&val1, &val2]() {
+                bsl::safe_uint32 const val1{42U, false};
+                bsl::safe_uint32 const val2{23U, true};
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val1 ^ val2).invalid());
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val1{42U, true};
-                bsl::safe_uint32 val2{23U, true};
-                bsl::ut_then{} = [&val1, &val2]() {
+                bsl::safe_uint32 const val1{42U, true};
+                bsl::safe_uint32 const val2{23U, true};
+                bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val1 ^ val2).invalid());
                 };
             };
@@ -408,28 +408,28 @@ namespace
 
         bsl::ut_scenario{"xor with value"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val{42U};
+                bsl::safe_uint32 const val{42U};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val ^ 23U) == (42U ^ 23U));
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val{23U};
+                bsl::safe_uint32 const val{23U};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((42U ^ val) == (42U ^ 23U));
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val{42U, true};
+                bsl::safe_uint32 const val{42U, true};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((val ^ 23U).invalid());
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val{23U, true};
+                bsl::safe_uint32 const val{23U, true};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((42U ^ val).invalid());
                 };
@@ -438,14 +438,14 @@ namespace
 
         bsl::ut_scenario{"complement"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_uint32 val{42U};
+                bsl::safe_uint32 const val{42U};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(~val == ~42U);
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_uint32 val{42U, true};
+                bsl::safe_uint32 const val{42U, true};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check((~val).invalid());
                 };

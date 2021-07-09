@@ -28,6 +28,7 @@
 namespace
 {
     /// @brief stores whether or not the finally was executed.
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
     constinit bool g_executed{};
 
     /// <!-- description -->

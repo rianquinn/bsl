@@ -181,7 +181,6 @@
 #include "example_from_chars_overview.hpp"
 #include "example_has_unique_object_representations_overview.hpp"
 #include "example_has_virtual_destructor_overview.hpp"
-#include "example_in_place_overview.hpp"
 #include "example_index_sequence_for_overview.hpp"
 #include "example_index_sequence_overview.hpp"
 #include "example_integer_sequence_overview.hpp"
@@ -430,17 +429,17 @@ namespace
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam FUNC the type of example function to call
-    ///   @param f the example function to call
+    ///   @param mut_f the example function to call
     ///   @param name the name of the example
     ///
     template<typename FUNC>
     void
-    example(FUNC &&f, bsl::cstr_type const name) noexcept
+    example(FUNC &&mut_f, bsl::cstr_type const name) noexcept
     {
         bsl::print() << bsl::fmt{"=<80", '='} << bsl::endl;
         bsl::print() << "example: " << name << bsl::endl;
         bsl::print() << bsl::fmt{"-<80", '-'} << bsl::endl;
-        f();
+        mut_f();
         bsl::print() << bsl::endl;
     }
 }
@@ -626,7 +625,6 @@ main() noexcept -> bsl::exit_code
     example(&bsl::example_from_chars_overview, "example_from_chars_overview");
     example(&bsl::example_has_unique_object_representations_overview, "example_has_unique_object_representations_overview");
     example(&bsl::example_has_virtual_destructor_overview, "example_has_virtual_destructor_overview");
-    example(&bsl::example_in_place_overview, "example_in_place_overview");
     example(&bsl::example_index_sequence_for_overview, "example_index_sequence_for_overview");
     example(&bsl::example_index_sequence_overview, "example_index_sequence_overview");
     example(&bsl::example_integer_sequence_overview, "example_integer_sequence_overview");

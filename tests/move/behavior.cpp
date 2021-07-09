@@ -41,10 +41,10 @@ namespace
     {
         bsl::ut_scenario{"move"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bool val1{true};
-                bsl::ut_when{} = [&val1]() {
-                    bool &&val2{bsl::move(val1)};
-                    bsl::ut_then{} = [&val2]() {
+                bool mut_val1{true};
+                bsl::ut_when{} = [&]() noexcept {
+                    bool const val2{bsl::move(mut_val1)};
+                    bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check(val2);
                     };
                 };

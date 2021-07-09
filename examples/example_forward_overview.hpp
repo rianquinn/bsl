@@ -37,16 +37,16 @@ namespace bsl
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type being queired
-    ///   @param val the value of the type being provided
+    ///   @param mut_val the value of the type being provided
     ///   @return If this function is given an lvalue reference, it returns
     ///     true. Otherwise this function will return false.
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    example_detector(T &&val) noexcept -> bool
+    example_detector(T &&mut_val) noexcept -> bool
     {
-        bsl::discard(val);
-        return bsl::is_lvalue_reference<decltype(val)>::value;
+        bsl::discard(mut_val);
+        return bsl::is_lvalue_reference<decltype(mut_val)>::value;
     }
 
     /// <!-- description -->
@@ -56,15 +56,15 @@ namespace bsl
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type being queired
-    ///   @param val the value of the type being provided
+    ///   @param mut_val the value of the type being provided
     ///   @return If this function is given an lvalue reference, it returns
     ///     true. Otherwise this function will return false.
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    example_forwarder(T &&val) noexcept -> bool
+    example_forwarder(T &&mut_val) noexcept -> bool
     {
-        return example_detector(bsl::forward<T>(val));
+        return example_detector(bsl::forward<T>(mut_val));
     }
 
     /// <!-- description -->
@@ -74,7 +74,7 @@ namespace bsl
     example_forward_overview() noexcept
     {
         constexpr auto val1{42_i32};
-        auto val2{val1};
+        auto mut_val2{val1};
 
         if constexpr (example_forwarder(val1)) {
             bsl::print() << "success\n";
@@ -83,7 +83,7 @@ namespace bsl
             bsl::error() << "failure\n";
         }
 
-        if (!example_forwarder(bsl::move(val2))) {
+        if (!example_forwarder(bsl::move(mut_val2))) {
             bsl::print() << "success\n";
         }
         else {

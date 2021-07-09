@@ -38,7 +38,7 @@ main() noexcept -> bsl::exit_code
 {
     bsl::ut_scenario{"verify noexcept"} = []() noexcept {
         bsl::ut_given{} = []() noexcept {
-            bool mydata{};
+            bool const mydata{};
             bsl::ut_then{} = []() noexcept {
                 static_assert(noexcept(bsl::addressof(mydata)));
             };

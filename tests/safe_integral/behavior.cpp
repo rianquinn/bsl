@@ -40,19 +40,19 @@
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    static_assert(tests_arithmetic() == bsl::ut_success());
-    static_assert(tests_binary() == bsl::ut_success());
-    static_assert(tests_make_safe() == bsl::ut_success());
-    static_assert(tests_members() == bsl::ut_success());
-    static_assert(tests_rational() == bsl::ut_success());
-    static_assert(tests_shift() == bsl::ut_success());
+    static_assert(bsl::tests_arithmetic() == bsl::ut_success());
+    static_assert(bsl::tests_binary() == bsl::ut_success());
+    static_assert(bsl::tests_make_safe() == bsl::ut_success());
+    static_assert(bsl::tests_members() == bsl::ut_success());
+    static_assert(bsl::tests_rational() == bsl::ut_success());
+    static_assert(bsl::tests_shift() == bsl::ut_success());
 
-    bsl::discard(tests_arithmetic());
-    bsl::discard(tests_binary());
-    bsl::discard(tests_make_safe());
-    bsl::discard(tests_members());
-    bsl::discard(tests_rational());
-    bsl::discard(tests_shift());
+    bsl::discard(bsl::tests_arithmetic());
+    bsl::discard(bsl::tests_binary());
+    bsl::discard(bsl::tests_make_safe());
+    bsl::discard(bsl::tests_members());
+    bsl::discard(bsl::tests_rational());
+    bsl::discard(bsl::tests_shift());
 
     return bsl::ut_success();
 }

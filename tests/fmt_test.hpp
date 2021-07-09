@@ -46,8 +46,10 @@ namespace fmt_test
         constexpr inline bsl::safe_uintmax FMT_TEST_BUF_SIZE{static_cast<bsl::uintmax>(10000)};
 
         /// @brief stores the total number of chars that have been outputted
+        // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
         constinit inline bsl::safe_uintmax g_fmt_test_num{};
         /// @brief stores the chars that have been outputted
+        // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
         constinit inline bsl::array<bsl::char_type, FMT_TEST_BUF_SIZE.get()> g_fmt_test_buf{};
     }
 

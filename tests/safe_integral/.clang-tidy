@@ -23,14 +23,18 @@ Checks:
   '
     -*,
     bsl-*,
+      -bsl-types-fixed-width-ints-arithmetic-check,
     bugprone-*,
       -bugprone-branch-clone,
     cert-*,
       -cert-dcl21-cpp,
       -cert-oop54-cpp,
     clang-analyzer-*,
+      -clang-analyzer-core.NullDereference,
     cppcoreguidelines-*,
+      -cppcoreguidelines-avoid-magic-numbers,
     hicpp-*,
+      -hicpp-function-size,
     misc-*,
       -misc-misplaced-const,
     modernize-*,
@@ -39,7 +43,9 @@ Checks:
     readability-*,
       -readability-redundant-member-init,
       -readability-avoid-const-params-in-decls,
-      -readability-static-accessed-through-instance
+      -readability-static-accessed-through-instance,
+      -readability-function-size,
+      -readability-magic-numbers
   '
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'

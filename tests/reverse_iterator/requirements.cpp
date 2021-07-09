@@ -29,7 +29,7 @@
 
 namespace
 {
-    constexpr bsl::array arr{
+    constexpr bsl::array TEST_INIT{
         bsl::to_i32(4),
         bsl::to_i32(8),
         bsl::to_i32(15),
@@ -51,12 +51,12 @@ main() noexcept -> bsl::exit_code
 {
     bsl::ut_scenario{"verify noexcept"} = []() noexcept {
         bsl::ut_given{} = []() noexcept {
-            bsl::reverse_iterator mut_ri1{arr.begin()};
-            bsl::reverse_iterator mut_ri2{arr.begin()};
-            bsl::reverse_iterator const ri1{arr.begin()};
-            bsl::reverse_iterator const ri2{arr.begin()};
+            bsl::reverse_iterator mut_ri1{TEST_INIT.begin()};
+            bsl::reverse_iterator mut_ri2{TEST_INIT.begin()};
+            bsl::reverse_iterator const ri1{TEST_INIT.begin()};
+            bsl::reverse_iterator const ri2{TEST_INIT.begin()};
             bsl::ut_then{} = []() noexcept {
-                static_assert(noexcept(bsl::reverse_iterator{arr.begin()}));
+                static_assert(noexcept(bsl::reverse_iterator{TEST_INIT.begin()}));
 
                 static_assert(noexcept(mut_ri1.base()));
                 static_assert(noexcept(mut_ri1.data()));

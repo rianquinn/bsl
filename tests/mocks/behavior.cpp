@@ -79,7 +79,7 @@ namespace
 
         bsl::ut_scenario{"class_base"} = []() noexcept {
             bsl::ut_given_at_runtime{} = []() noexcept {
-                test::class_base base{};
+                test::class_base const base{};
                 auto const *const ptr{new test::class_base};
                 // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
                 delete ptr;    // GRCOV_EXCLUDE_BR
@@ -88,7 +88,7 @@ namespace
 
         bsl::ut_scenario{"class_subclass"} = []() noexcept {
             bsl::ut_given_at_runtime{} = []() noexcept {
-                test::class_subclass subclass{};
+                test::class_subclass const subclass{};
                 auto const *const ptr{new test::class_subclass};
                 // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
                 delete ptr;    // GRCOV_EXCLUDE_BR
