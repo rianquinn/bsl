@@ -40,19 +40,117 @@
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    static_assert(bsl::tests_arithmetic() == bsl::ut_success());
-    static_assert(bsl::tests_binary() == bsl::ut_success());
-    static_assert(bsl::tests_make_safe() == bsl::ut_success());
-    static_assert(bsl::tests_members() == bsl::ut_success());
-    static_assert(bsl::tests_rational() == bsl::ut_success());
-    static_assert(bsl::tests_shift() == bsl::ut_success());
+    static_assert(bsl::tests_arithmetic<bsl::uint8>() == bsl::ut_success());
+    static_assert(bsl::tests_arithmetic<bsl::uint16>() == bsl::ut_success());
+    static_assert(bsl::tests_arithmetic<bsl::uint32>() == bsl::ut_success());
+    static_assert(bsl::tests_arithmetic<bsl::uint64>() == bsl::ut_success());
+    static_assert(bsl::tests_arithmetic<bsl::uintmax>() == bsl::ut_success());
+    static_assert(bsl::tests_arithmetic<bsl::int8>() == bsl::ut_success());
+    static_assert(bsl::tests_arithmetic<bsl::int16>() == bsl::ut_success());
+    static_assert(bsl::tests_arithmetic<bsl::int32>() == bsl::ut_success());
+    static_assert(bsl::tests_arithmetic<bsl::int64>() == bsl::ut_success());
+    static_assert(bsl::tests_arithmetic<bsl::intmax>() == bsl::ut_success());
 
-    bsl::discard(bsl::tests_arithmetic());
-    bsl::discard(bsl::tests_binary());
-    bsl::discard(bsl::tests_make_safe());
-    bsl::discard(bsl::tests_members());
-    bsl::discard(bsl::tests_rational());
-    bsl::discard(bsl::tests_shift());
+    bsl::discard(bsl::tests_arithmetic<bsl::uint8>());
+    bsl::discard(bsl::tests_arithmetic<bsl::uint16>());
+    bsl::discard(bsl::tests_arithmetic<bsl::uint32>());
+    bsl::discard(bsl::tests_arithmetic<bsl::uint64>());
+    bsl::discard(bsl::tests_arithmetic<bsl::uintmax>());
+    bsl::discard(bsl::tests_arithmetic<bsl::int8>());
+    bsl::discard(bsl::tests_arithmetic<bsl::int16>());
+    bsl::discard(bsl::tests_arithmetic<bsl::int32>());
+    bsl::discard(bsl::tests_arithmetic<bsl::int64>());
+    bsl::discard(bsl::tests_arithmetic<bsl::intmax>());
+
+    static_assert(bsl::tests_binary<bsl::uint8>() == bsl::ut_success());
+    static_assert(bsl::tests_binary<bsl::uint16>() == bsl::ut_success());
+    static_assert(bsl::tests_binary<bsl::uint32>() == bsl::ut_success());
+    static_assert(bsl::tests_binary<bsl::uint64>() == bsl::ut_success());
+    static_assert(bsl::tests_binary<bsl::uintmax>() == bsl::ut_success());
+
+    bsl::discard(bsl::tests_binary<bsl::uint8>());
+    bsl::discard(bsl::tests_binary<bsl::uint16>());
+    bsl::discard(bsl::tests_binary<bsl::uint32>());
+    bsl::discard(bsl::tests_binary<bsl::uint64>());
+    bsl::discard(bsl::tests_binary<bsl::uintmax>());
+
+    static_assert(bsl::tests_make_safe<bsl::uint8>() == bsl::ut_success());
+    static_assert(bsl::tests_make_safe<bsl::uint16>() == bsl::ut_success());
+    static_assert(bsl::tests_make_safe<bsl::uint32>() == bsl::ut_success());
+    static_assert(bsl::tests_make_safe<bsl::uint64>() == bsl::ut_success());
+    static_assert(bsl::tests_make_safe<bsl::uintmax>() == bsl::ut_success());
+    static_assert(bsl::tests_make_safe<bsl::int8>() == bsl::ut_success());
+    static_assert(bsl::tests_make_safe<bsl::int16>() == bsl::ut_success());
+    static_assert(bsl::tests_make_safe<bsl::int32>() == bsl::ut_success());
+    static_assert(bsl::tests_make_safe<bsl::int64>() == bsl::ut_success());
+    static_assert(bsl::tests_make_safe<bsl::intmax>() == bsl::ut_success());
+
+    bsl::discard(bsl::tests_make_safe<bsl::uint8>());
+    bsl::discard(bsl::tests_make_safe<bsl::uint16>());
+    bsl::discard(bsl::tests_make_safe<bsl::uint32>());
+    bsl::discard(bsl::tests_make_safe<bsl::uint64>());
+    bsl::discard(bsl::tests_make_safe<bsl::uintmax>());
+    bsl::discard(bsl::tests_make_safe<bsl::int8>());
+    bsl::discard(bsl::tests_make_safe<bsl::int16>());
+    bsl::discard(bsl::tests_make_safe<bsl::int32>());
+    bsl::discard(bsl::tests_make_safe<bsl::int64>());
+    bsl::discard(bsl::tests_make_safe<bsl::intmax>());
+
+    static_assert(bsl::tests_members<bsl::uint8>() == bsl::ut_success());
+    static_assert(bsl::tests_members<bsl::uint16>() == bsl::ut_success());
+    static_assert(bsl::tests_members<bsl::uint32>() == bsl::ut_success());
+    static_assert(bsl::tests_members<bsl::uint64>() == bsl::ut_success());
+    static_assert(bsl::tests_members<bsl::uintmax>() == bsl::ut_success());
+    static_assert(bsl::tests_members<bsl::int8>() == bsl::ut_success());
+    static_assert(bsl::tests_members<bsl::int16>() == bsl::ut_success());
+    static_assert(bsl::tests_members<bsl::int32>() == bsl::ut_success());
+    static_assert(bsl::tests_members<bsl::int64>() == bsl::ut_success());
+    static_assert(bsl::tests_members<bsl::intmax>() == bsl::ut_success());
+
+    bsl::discard(bsl::tests_members<bsl::uint8>());
+    bsl::discard(bsl::tests_members<bsl::uint16>());
+    bsl::discard(bsl::tests_members<bsl::uint32>());
+    bsl::discard(bsl::tests_members<bsl::uint64>());
+    bsl::discard(bsl::tests_members<bsl::uintmax>());
+    bsl::discard(bsl::tests_members<bsl::int8>());
+    bsl::discard(bsl::tests_members<bsl::int16>());
+    bsl::discard(bsl::tests_members<bsl::int32>());
+    bsl::discard(bsl::tests_members<bsl::int64>());
+    bsl::discard(bsl::tests_members<bsl::intmax>());
+
+    static_assert(bsl::tests_rational<bsl::uint8>() == bsl::ut_success());
+    static_assert(bsl::tests_rational<bsl::uint16>() == bsl::ut_success());
+    static_assert(bsl::tests_rational<bsl::uint32>() == bsl::ut_success());
+    static_assert(bsl::tests_rational<bsl::uint64>() == bsl::ut_success());
+    static_assert(bsl::tests_rational<bsl::uintmax>() == bsl::ut_success());
+    static_assert(bsl::tests_rational<bsl::int8>() == bsl::ut_success());
+    static_assert(bsl::tests_rational<bsl::int16>() == bsl::ut_success());
+    static_assert(bsl::tests_rational<bsl::int32>() == bsl::ut_success());
+    static_assert(bsl::tests_rational<bsl::int64>() == bsl::ut_success());
+    static_assert(bsl::tests_rational<bsl::intmax>() == bsl::ut_success());
+
+    bsl::discard(bsl::tests_rational<bsl::uint8>());
+    bsl::discard(bsl::tests_rational<bsl::uint16>());
+    bsl::discard(bsl::tests_rational<bsl::uint32>());
+    bsl::discard(bsl::tests_rational<bsl::uint64>());
+    bsl::discard(bsl::tests_rational<bsl::uintmax>());
+    bsl::discard(bsl::tests_rational<bsl::int8>());
+    bsl::discard(bsl::tests_rational<bsl::int16>());
+    bsl::discard(bsl::tests_rational<bsl::int32>());
+    bsl::discard(bsl::tests_rational<bsl::int64>());
+    bsl::discard(bsl::tests_rational<bsl::intmax>());
+
+    static_assert(bsl::tests_shift<bsl::uint8>() == bsl::ut_success());
+    static_assert(bsl::tests_shift<bsl::uint16>() == bsl::ut_success());
+    static_assert(bsl::tests_shift<bsl::uint32>() == bsl::ut_success());
+    static_assert(bsl::tests_shift<bsl::uint64>() == bsl::ut_success());
+    static_assert(bsl::tests_shift<bsl::uintmax>() == bsl::ut_success());
+
+    bsl::discard(bsl::tests_shift<bsl::uint8>());
+    bsl::discard(bsl::tests_shift<bsl::uint16>());
+    bsl::discard(bsl::tests_shift<bsl::uint32>());
+    bsl::discard(bsl::tests_shift<bsl::uint64>());
+    bsl::discard(bsl::tests_shift<bsl::uintmax>());
 
     return bsl::ut_success();
 }

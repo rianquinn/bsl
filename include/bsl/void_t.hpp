@@ -28,7 +28,7 @@
 #ifndef BSL_VOID_T_HPP
 #define BSL_VOID_T_HPP
 
-namespace bsl 
+namespace bsl
 {
     /// @brief Utility that maps a sequence of any types to the type void
     template<typename...>

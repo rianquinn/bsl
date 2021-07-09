@@ -110,7 +110,8 @@ namespace bsl
         ///
         template<typename T>
         [[nodiscard]] constexpr auto
-        from_chars_parse_dec(string_view const &str, safe_uintmax const &idx) noexcept -> safe_integral<T>
+        from_chars_parse_dec(string_view const &str, safe_uintmax const &idx) noexcept
+            -> safe_integral<T>
         {
             constexpr safe_integral<T> base10{static_cast<T>(10)};
 

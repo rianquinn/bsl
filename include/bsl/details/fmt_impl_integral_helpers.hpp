@@ -47,7 +47,8 @@ namespace bsl::details
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    get_integral_info_base(fmt_options const &ops, fmt_impl_integral_info<T> &mut_info) noexcept -> safe_integral<T>
+    get_integral_info_base(fmt_options const &ops, fmt_impl_integral_info<T> &mut_info) noexcept
+        -> safe_integral<T>
     {
         constexpr safe_integral<T> base2{static_cast<T>(2)};
         constexpr safe_integral<T> base10{static_cast<T>(10)};
@@ -201,7 +202,8 @@ namespace bsl::details
     ///
     template<typename OUT_T, typename T>
     constexpr void
-    fmt_impl_integral(out<OUT_T> const o, fmt_options const &ops, safe_integral<T> const &val) noexcept
+    fmt_impl_integral(
+        out<OUT_T> const o, fmt_options const &ops, safe_integral<T> const &val) noexcept
     {
         fmt_impl_integral_info<T> const info{get_integral_info(ops, val)};
         safe_uintmax const padding{fmt_impl_align_pre(o, ops, info.digits + info.extras, false)};

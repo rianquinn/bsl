@@ -68,7 +68,7 @@ namespace bsl
     struct common_type<T1, T2> final
     {
         /// @brief provides the member typedef "type"
-        using type = decay_t<decltype(true ? declval<T1>() : declval<T2>())>; // NOLINT
+        using type = decay_t<decltype(true ? declval<T1>() : declval<T2>())>;    // NOLINT
     };
 
     template<typename T1, typename T2, typename... R>

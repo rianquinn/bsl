@@ -41,13 +41,13 @@
 #include "enable_if.hpp"
 #include "fmt_options.hpp"
 #include "is_bool.hpp"
+#include "is_constant_evaluated.hpp"
 #include "is_integral.hpp"
 #include "is_null_pointer.hpp"
 #include "is_pointer.hpp"
 #include "is_same.hpp"
 #include "safe_integral.hpp"
 #include "unlikely.hpp"
-#include "is_constant_evaluated.hpp"
 
 namespace bsl
 {

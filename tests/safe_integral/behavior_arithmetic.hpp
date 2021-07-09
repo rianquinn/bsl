@@ -37,21 +37,22 @@ namespace bsl
     /// <!-- inputs/outputs -->
     ///   @return Always returns bsl::exit_success.
     ///
+    template<typename T>
     [[nodiscard]] constexpr auto
     tests_arithmetic() noexcept -> bsl::exit_code
     {
         bsl::ut_scenario{"add"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val1{42};
-                bsl::safe_int32 const val2{42};
+                bsl::safe_integral<T> const val1{static_cast<T>(42)};
+                bsl::safe_integral<T> const val2{static_cast<T>(42)};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(val1 + val2 == 42 + 42);
+                    bsl::ut_check(val1 + val2 == static_cast<T>(static_cast<T>(42 + 42)));
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{bsl::numeric_limits<bsl::int32>::max()};
-                bsl::safe_int32 const val2{1};
+                bsl::safe_integral<T> const val1{bsl::numeric_limits<T>::max()};
+                bsl::safe_integral<T> const val2{static_cast<T>(1)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 + val2).invalid());
@@ -60,8 +61,20 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{bsl::numeric_limits<bsl::int32>::min()};
-                bsl::safe_int32 const val2{-1};
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val1{bsl::numeric_limits<T>::min()};
+                    bsl::safe_integral<T> const val2{static_cast<T>(static_cast<T>(-1))};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((val1 + val2).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                bsl::safe_integral<T> const val1{static_cast<T>(42), true};
+                bsl::safe_integral<T> const val2{static_cast<T>(42), false};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 + val2).invalid());
@@ -70,8 +83,8 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, true};
-                bsl::safe_int32 const val2{42, false};
+                bsl::safe_integral<T> const val1{static_cast<T>(42), false};
+                bsl::safe_integral<T> const val2{static_cast<T>(42), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 + val2).invalid());
@@ -80,18 +93,8 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, false};
-                bsl::safe_int32 const val2{42, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val1 + val2).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, true};
-                bsl::safe_int32 const val2{42, true};
+                bsl::safe_integral<T> const val1{static_cast<T>(42), true};
+                bsl::safe_integral<T> const val2{static_cast<T>(42), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 + val2).invalid());
@@ -102,73 +105,77 @@ namespace bsl
 
         bsl::ut_scenario{"add with value"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val{42};
+                bsl::safe_integral<T> const val{static_cast<T>(42)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(val + 42 == 42 + 42);
+                        bsl::ut_check(val + static_cast<T>(42) == static_cast<T>(42 + 42));
                     };
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val{42};
+                bsl::safe_integral<T> const val{static_cast<T>(42)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(42 + val == 42 + 42);
+                        bsl::ut_check(static_cast<T>(42) + val == static_cast<T>(42 + 42));
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::max()};
+                bsl::safe_integral<T> const val{bsl::numeric_limits<T>::max()};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val + 1).invalid());
+                        bsl::ut_check((val + static_cast<T>(1)).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::max()};
+                bsl::safe_integral<T> const val{bsl::numeric_limits<T>::max()};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((1 + val).invalid());
+                        bsl::ut_check((static_cast<T>(1) + val).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::min()};
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val{bsl::numeric_limits<T>::min()};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((val + static_cast<T>(static_cast<T>(-1))).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val{bsl::numeric_limits<T>::min()};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((static_cast<T>(static_cast<T>(-1)) + val).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                bsl::safe_integral<T> const val{static_cast<T>(42), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val + (-1)).invalid());
+                        bsl::ut_check((val + static_cast<T>(42)).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::min()};
+                bsl::safe_integral<T> const val{static_cast<T>(42), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(((-1) + val).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{42, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val + 42).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{42, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((42 + val).invalid());
+                        bsl::ut_check((static_cast<T>(42) + val).invalid());
                     };
                 };
             };
@@ -176,16 +183,28 @@ namespace bsl
 
         bsl::ut_scenario{"sub"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val1{42};
-                bsl::safe_int32 const val2{23};
+                bsl::safe_integral<T> const val1{static_cast<T>(42)};
+                bsl::safe_integral<T> const val2{static_cast<T>(23)};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(val1 - val2 == 42 - 23);
+                    bsl::ut_check(val1 - val2 == static_cast<T>(42 - 23));
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{bsl::numeric_limits<bsl::int32>::max()};
-                bsl::safe_int32 const val2{-1};
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val1{bsl::numeric_limits<T>::max()};
+                    bsl::safe_integral<T> const val2{static_cast<T>(-1)};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((val1 - val2).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                bsl::safe_integral<T> const val1{bsl::numeric_limits<T>::min()};
+                bsl::safe_integral<T> const val2{static_cast<T>(1)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 - val2).invalid());
@@ -194,8 +213,8 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{bsl::numeric_limits<bsl::int32>::min()};
-                bsl::safe_int32 const val2{1};
+                bsl::safe_integral<T> const val1{static_cast<T>(42), true};
+                bsl::safe_integral<T> const val2{static_cast<T>(23), false};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 - val2).invalid());
@@ -204,8 +223,8 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, true};
-                bsl::safe_int32 const val2{23, false};
+                bsl::safe_integral<T> const val1{static_cast<T>(42), false};
+                bsl::safe_integral<T> const val2{static_cast<T>(23), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 - val2).invalid());
@@ -214,18 +233,8 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, false};
-                bsl::safe_int32 const val2{23, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val1 - val2).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, true};
-                bsl::safe_int32 const val2{23, true};
+                bsl::safe_integral<T> const val1{static_cast<T>(42), true};
+                bsl::safe_integral<T> const val2{static_cast<T>(23), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 - val2).invalid());
@@ -236,73 +245,77 @@ namespace bsl
 
         bsl::ut_scenario{"sub with value"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val{42};
+                bsl::safe_integral<T> const val{static_cast<T>(42)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(val - 23 == 42 - 23);
+                        bsl::ut_check(val - static_cast<T>(23) == static_cast<T>(42 - 23));
                     };
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val{23};
+                bsl::safe_integral<T> const val{static_cast<T>(23)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(42 - val == 42 - 23);
+                        bsl::ut_check(static_cast<T>(42) - val == static_cast<T>(42 - 23));
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::max()};
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val{bsl::numeric_limits<T>::max()};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((val - (static_cast<T>(-1))).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val{static_cast<T>(-1)};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((bsl::numeric_limits<T>::max() - val).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                bsl::safe_integral<T> const val{bsl::numeric_limits<T>::min()};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val - (-1)).invalid());
+                        bsl::ut_check((val - static_cast<T>(1)).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{-1};
+                bsl::safe_integral<T> const val{static_cast<T>(1)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((bsl::numeric_limits<bsl::int32>::max() - val).invalid());
+                        bsl::ut_check((bsl::numeric_limits<T>::min() - val).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::min()};
+                bsl::safe_integral<T> const val{static_cast<T>(42), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val - 1).invalid());
+                        bsl::ut_check((val - static_cast<T>(23)).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{1};
+                bsl::safe_integral<T> const val{static_cast<T>(23), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((bsl::numeric_limits<bsl::int32>::min() - val).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{42, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val - 23).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{23, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((42 - val).invalid());
+                        bsl::ut_check((static_cast<T>(42) - val).invalid());
                     };
                 };
             };
@@ -310,16 +323,16 @@ namespace bsl
 
         bsl::ut_scenario{"mul"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val1{42};
-                bsl::safe_int32 const val2{42};
+                bsl::safe_integral<T> const val1{static_cast<T>(2)};
+                bsl::safe_integral<T> const val2{static_cast<T>(2)};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(val1 * val2 == 42 * 42);
+                    bsl::ut_check(val1 * val2 == static_cast<T>(2 * 2));
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{bsl::numeric_limits<bsl::int32>::max()};
-                bsl::safe_int32 const val2{2};
+                bsl::safe_integral<T> const val1{bsl::numeric_limits<T>::max()};
+                bsl::safe_integral<T> const val2{static_cast<T>(2)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 * val2).invalid());
@@ -328,8 +341,20 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{bsl::numeric_limits<bsl::int32>::min()};
-                bsl::safe_int32 const val2{-2};
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val1{bsl::numeric_limits<T>::min()};
+                    bsl::safe_integral<T> const val2{static_cast<T>(-2)};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((val1 * val2).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                bsl::safe_integral<T> const val1{static_cast<T>(42), true};
+                bsl::safe_integral<T> const val2{static_cast<T>(42), false};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 * val2).invalid());
@@ -338,8 +363,8 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, true};
-                bsl::safe_int32 const val2{42, false};
+                bsl::safe_integral<T> const val1{static_cast<T>(42), false};
+                bsl::safe_integral<T> const val2{static_cast<T>(42), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 * val2).invalid());
@@ -348,18 +373,8 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, false};
-                bsl::safe_int32 const val2{42, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val1 * val2).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, true};
-                bsl::safe_int32 const val2{42, true};
+                bsl::safe_integral<T> const val1{static_cast<T>(42), true};
+                bsl::safe_integral<T> const val2{static_cast<T>(42), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 * val2).invalid());
@@ -370,73 +385,77 @@ namespace bsl
 
         bsl::ut_scenario{"mul with value"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val{42};
+                bsl::safe_integral<T> const val{static_cast<T>(2)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(val * 42 == 42 * 42);
+                        bsl::ut_check(val * static_cast<T>(2) == static_cast<T>(2 * 2));
                     };
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val{42};
+                bsl::safe_integral<T> const val{static_cast<T>(2)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(42 * val == 42 * 42);
+                        bsl::ut_check(static_cast<T>(2) * val == static_cast<T>(2 * 2));
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::max()};
+                bsl::safe_integral<T> const val{bsl::numeric_limits<T>::max()};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val * 2).invalid());
+                        bsl::ut_check((val * static_cast<T>(2)).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::max()};
+                bsl::safe_integral<T> const val{bsl::numeric_limits<T>::max()};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((2 * val).invalid());
+                        bsl::ut_check((static_cast<T>(2) * val).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::min()};
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val{bsl::numeric_limits<T>::min()};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((val * static_cast<T>(-2)).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val{bsl::numeric_limits<T>::min()};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((static_cast<T>(-2) * val).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                bsl::safe_integral<T> const val{static_cast<T>(42), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val * (-2)).invalid());
+                        bsl::ut_check((val * static_cast<T>(42)).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::min()};
+                bsl::safe_integral<T> const val{static_cast<T>(42), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(((-2) * val).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{42, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val * 42).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{42, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((42 * val).invalid());
+                        bsl::ut_check((static_cast<T>(42) * val).invalid());
                     };
                 };
             };
@@ -444,16 +463,16 @@ namespace bsl
 
         bsl::ut_scenario{"div"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val1{42};
-                bsl::safe_int32 const val2{23};
+                bsl::safe_integral<T> const val1{static_cast<T>(42)};
+                bsl::safe_integral<T> const val2{static_cast<T>(23)};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(val1 / val2 == 42 / 23);
+                    bsl::ut_check(val1 / val2 == static_cast<T>(42 / 23));
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42};
-                bsl::safe_int32 const val2{0};
+                bsl::safe_integral<T> const val1{static_cast<T>(42)};
+                bsl::safe_integral<T> const val2{static_cast<T>(0)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 / val2).invalid());
@@ -462,8 +481,20 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{bsl::numeric_limits<bsl::int32>::min()};
-                bsl::safe_int32 const val2{-1};
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val1{bsl::numeric_limits<T>::min()};
+                    bsl::safe_integral<T> const val2{static_cast<T>(-1)};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((val1 / val2).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                bsl::safe_integral<T> const val1{static_cast<T>(42), true};
+                bsl::safe_integral<T> const val2{static_cast<T>(23), false};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 / val2).invalid());
@@ -472,8 +503,8 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, true};
-                bsl::safe_int32 const val2{23, false};
+                bsl::safe_integral<T> const val1{static_cast<T>(42), false};
+                bsl::safe_integral<T> const val2{static_cast<T>(23), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 / val2).invalid());
@@ -482,18 +513,8 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, false};
-                bsl::safe_int32 const val2{23, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val1 / val2).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, true};
-                bsl::safe_int32 const val2{23, true};
+                bsl::safe_integral<T> const val1{static_cast<T>(42), true};
+                bsl::safe_integral<T> const val2{static_cast<T>(23), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 / val2).invalid());
@@ -504,82 +525,86 @@ namespace bsl
 
         bsl::ut_scenario{"div with value"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val{42};
+                bsl::safe_integral<T> const val{static_cast<T>(42)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(val / 23 == 42 / 23);
+                        bsl::ut_check(val / static_cast<T>(23) == static_cast<T>(42 / 23));
                     };
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val{23};
+                bsl::safe_integral<T> const val{static_cast<T>(23)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(42 / val == 42 / 23);
+                        bsl::ut_check(static_cast<T>(42) / val == static_cast<T>(42 / 23));
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{42};
+                bsl::safe_integral<T> const val{static_cast<T>(42)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val / 0).invalid());
+                        bsl::ut_check((val / static_cast<T>(0)).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{0};
+                bsl::safe_integral<T> const val{static_cast<T>(0)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((42 / val).invalid());
+                        bsl::ut_check((static_cast<T>(42) / val).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::min()};
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val{bsl::numeric_limits<T>::min()};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((val / (static_cast<T>(-1))).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                bsl::safe_integral<T> const val{bsl::numeric_limits<T>::min()};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val / (-1)).invalid());
+                        bsl::ut_check(!(val / static_cast<T>(42)).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::min()};
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val{static_cast<T>(-1)};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((bsl::numeric_limits<T>::min() / val).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                bsl::safe_integral<T> const val{static_cast<T>(42), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(!(val / (42)).invalid());
+                        bsl::ut_check((val / static_cast<T>(23)).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{-1};
+                bsl::safe_integral<T> const val{static_cast<T>(23), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((bsl::numeric_limits<bsl::int32>::min() / val).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{42, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val / 23).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{23, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((42 / val).invalid());
+                        bsl::ut_check((static_cast<T>(42) / val).invalid());
                     };
                 };
             };
@@ -587,16 +612,16 @@ namespace bsl
 
         bsl::ut_scenario{"mod"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val1{42};
-                bsl::safe_int32 const val2{23};
+                bsl::safe_integral<T> const val1{static_cast<T>(42)};
+                bsl::safe_integral<T> const val2{static_cast<T>(23)};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(val1 % val2 == 42 % 23);
+                    bsl::ut_check(val1 % val2 == static_cast<T>(42 % 23));
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42};
-                bsl::safe_int32 const val2{0};
+                bsl::safe_integral<T> const val1{static_cast<T>(42)};
+                bsl::safe_integral<T> const val2{static_cast<T>(0)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 % val2).invalid());
@@ -605,8 +630,20 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{bsl::numeric_limits<bsl::int32>::min()};
-                bsl::safe_int32 const val2{-1};
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val1{bsl::numeric_limits<T>::min()};
+                    bsl::safe_integral<T> const val2{static_cast<T>(-1)};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((val1 % val2).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                bsl::safe_integral<T> const val1{static_cast<T>(42), true};
+                bsl::safe_integral<T> const val2{static_cast<T>(23), false};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 % val2).invalid());
@@ -615,8 +652,8 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, true};
-                bsl::safe_int32 const val2{23, false};
+                bsl::safe_integral<T> const val1{static_cast<T>(42), false};
+                bsl::safe_integral<T> const val2{static_cast<T>(23), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 % val2).invalid());
@@ -625,18 +662,8 @@ namespace bsl
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, false};
-                bsl::safe_int32 const val2{23, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val1 % val2).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val1{42, true};
-                bsl::safe_int32 const val2{23, true};
+                bsl::safe_integral<T> const val1{static_cast<T>(42), true};
+                bsl::safe_integral<T> const val2{static_cast<T>(23), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check((val1 % val2).invalid());
@@ -647,108 +674,114 @@ namespace bsl
 
         bsl::ut_scenario{"mod with value"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val{42};
+                bsl::safe_integral<T> const val{static_cast<T>(42)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(val % 23 == 42 % 23);
+                        bsl::ut_check(val % static_cast<T>(23) == static_cast<T>(42 % 23));
                     };
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val{23};
+                bsl::safe_integral<T> const val{static_cast<T>(23)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(42 % val == 42 % 23);
+                        bsl::ut_check(static_cast<T>(42) % val == static_cast<T>(42 % 23));
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{42};
+                bsl::safe_integral<T> const val{static_cast<T>(42)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val % 0).invalid());
+                        bsl::ut_check((val % static_cast<T>(0)).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{0};
+                bsl::safe_integral<T> const val{static_cast<T>(0)};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((42 % val).invalid());
+                        bsl::ut_check((static_cast<T>(42) % val).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::min()};
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val{bsl::numeric_limits<T>::min()};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((val % (static_cast<T>(-1))).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                bsl::safe_integral<T> const val{bsl::numeric_limits<T>::min()};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val % (-1)).invalid());
+                        bsl::ut_check(!(val % static_cast<T>(42)).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::min()};
+                if constexpr (bsl::is_signed<T>::value) {
+                    bsl::safe_integral<T> const val{static_cast<T>(-1)};
+                    bsl::ut_when{} = [&]() noexcept {
+                        bsl::ut_then{} = [&]() noexcept {
+                            bsl::ut_check((bsl::numeric_limits<T>::min() % val).invalid());
+                        };
+                    };
+                }
+            };
+
+            bsl::ut_given_at_runtime{} = []() noexcept {
+                bsl::safe_integral<T> const val{static_cast<T>(42), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(!(val % (42)).invalid());
+                        bsl::ut_check((val % static_cast<T>(23)).invalid());
                     };
                 };
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{-1};
+                bsl::safe_integral<T> const val{static_cast<T>(23), true};
                 bsl::ut_when{} = [&]() noexcept {
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((bsl::numeric_limits<bsl::int32>::min() % val).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{42, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((val % 23).invalid());
-                    };
-                };
-            };
-
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{23, true};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check((42 % val).invalid());
+                        bsl::ut_check((static_cast<T>(42) % val).invalid());
                     };
                 };
             };
         };
 
         bsl::ut_scenario{"unary"} = []() noexcept {
-            bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 const val{42};
-                bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(-val == -42);
+            if constexpr (bsl::is_signed<T>::value) {
+                bsl::ut_given{} = []() noexcept {
+                    bsl::safe_integral<T> const val{static_cast<T>(42)};
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check(-val == static_cast<T>(-42));
+                    };
                 };
-            };
 
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{bsl::numeric_limits<bsl::int32>::min()};
-                bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check((-val).invalid());
+                bsl::ut_given_at_runtime{} = []() noexcept {
+                    bsl::safe_integral<T> const val{bsl::numeric_limits<T>::min()};
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check((-val).invalid());
+                    };
                 };
-            };
 
-            bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::safe_int32 const val{42, true};
-                bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check((-val).invalid());
+                bsl::ut_given_at_runtime{} = []() noexcept {
+                    bsl::safe_integral<T> const val{static_cast<T>(42), true};
+                    bsl::ut_then{} = [&]() noexcept {
+                        bsl::ut_check((-val).invalid());
+                    };
                 };
-            };
+            }
         };
 
         return bsl::ut_success();

@@ -94,15 +94,19 @@ namespace
             bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::array mut_arr{true, true, true, true, true};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(bsl::builtin_memset<bool>(nullptr, '\0', mut_arr.size()) == nullptr);
+                    bsl::ut_check(
+                        bsl::builtin_memset<bool>(nullptr, '\0', mut_arr.size()) == nullptr);
                     bsl::ut_check(
                         bsl::builtin_memset(mut_arr.data(), '\0', bsl::safe_uintmax::failure()) ==
                         nullptr);
-                    bsl::ut_check(bsl::builtin_memset(mut_arr.data(), '\0', 0_umax) == mut_arr.data());
+                    bsl::ut_check(
+                        bsl::builtin_memset(mut_arr.data(), '\0', 0_umax) == mut_arr.data());
                     for (auto const elem : mut_arr) {
                         bsl::ut_check(*elem.data);
                     }
-                    bsl::ut_check(bsl::builtin_memset(mut_arr.data(), '\0', mut_arr.size()) == mut_arr.data());
+                    bsl::ut_check(
+                        bsl::builtin_memset(mut_arr.data(), '\0', mut_arr.size()) ==
+                        mut_arr.data());
                     for (auto const elem : mut_arr) {
                         bsl::ut_check(!*elem.data);
                     }
@@ -112,11 +116,14 @@ namespace
             bsl::ut_given{} = []() noexcept {
                 bsl::array mut_arr{true, true, true, true, true};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(bsl::builtin_memset(mut_arr.data(), '\0', 0_umax) == mut_arr.data());
+                    bsl::ut_check(
+                        bsl::builtin_memset(mut_arr.data(), '\0', 0_umax) == mut_arr.data());
                     for (auto const elem : mut_arr) {
                         bsl::ut_check(*elem.data);
                     }
-                    bsl::ut_check(bsl::builtin_memset(mut_arr.data(), '\0', mut_arr.size()) == mut_arr.data());
+                    bsl::ut_check(
+                        bsl::builtin_memset(mut_arr.data(), '\0', mut_arr.size()) ==
+                        mut_arr.data());
                     for (auto const elem : mut_arr) {
                         bsl::ut_check(!*elem.data);
                     }
@@ -143,19 +150,24 @@ namespace
                 bsl::array mut_arr2{false, false, false, false, false};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(
-                        bsl::builtin_memcpy<bool>(nullptr, mut_arr2.data(), mut_arr1.size()) == nullptr);
+                        bsl::builtin_memcpy<bool>(nullptr, mut_arr2.data(), mut_arr1.size()) ==
+                        nullptr);
                     bsl::ut_check(
-                        bsl::builtin_memcpy<bool>(mut_arr1.data(), nullptr, mut_arr1.size()) == nullptr);
+                        bsl::builtin_memcpy<bool>(mut_arr1.data(), nullptr, mut_arr1.size()) ==
+                        nullptr);
                     bsl::ut_check(
                         bsl::builtin_memcpy(
-                            mut_arr1.data(), mut_arr2.data(), bsl::safe_uintmax::failure()) == nullptr);
+                            mut_arr1.data(), mut_arr2.data(), bsl::safe_uintmax::failure()) ==
+                        nullptr);
                     bsl::ut_check(
-                        bsl::builtin_memcpy(mut_arr1.data(), mut_arr2.data(), 0_umax) == mut_arr1.data());
+                        bsl::builtin_memcpy(mut_arr1.data(), mut_arr2.data(), 0_umax) ==
+                        mut_arr1.data());
                     for (auto const elem : mut_arr1) {
                         bsl::ut_check(*elem.data);
                     }
                     bsl::ut_check(
-                        bsl::builtin_memcpy(mut_arr1.data(), mut_arr2.data(), mut_arr1.size()) == mut_arr1.data());
+                        bsl::builtin_memcpy(mut_arr1.data(), mut_arr2.data(), mut_arr1.size()) ==
+                        mut_arr1.data());
                     for (auto const elem : mut_arr1) {
                         bsl::ut_check(!*elem.data);
                     }
@@ -167,12 +179,14 @@ namespace
                 bsl::array mut_arr2{false, false, false, false, false};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(
-                        bsl::builtin_memcpy(mut_arr1.data(), mut_arr2.data(), 0_umax) == mut_arr1.data());
+                        bsl::builtin_memcpy(mut_arr1.data(), mut_arr2.data(), 0_umax) ==
+                        mut_arr1.data());
                     for (auto const elem : mut_arr1) {
                         bsl::ut_check(*elem.data);
                     }
                     bsl::ut_check(
-                        bsl::builtin_memcpy(mut_arr1.data(), mut_arr2.data(), mut_arr1.size()) == mut_arr1.data());
+                        bsl::builtin_memcpy(mut_arr1.data(), mut_arr2.data(), mut_arr1.size()) ==
+                        mut_arr1.data());
                     for (auto const elem : mut_arr1) {
                         bsl::ut_check(!*elem.data);
                     }

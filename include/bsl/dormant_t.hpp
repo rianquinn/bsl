@@ -83,7 +83,8 @@ namespace bsl
         ///   @param mut_o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr auto operator=(dormant_t &&mut_o) &noexcept -> dormant_t & = default;
+        [[maybe_unused]] constexpr auto operator=(dormant_t &&mut_o) &noexcept
+            -> dormant_t & = default;
     };
 
     /// @brief reduces the verbosity of bsl::dormant_t

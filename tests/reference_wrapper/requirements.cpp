@@ -47,6 +47,9 @@ namespace
 main() noexcept -> bsl::exit_code
 {
     // clang-format off
+    bsl::ut_scenario{"quiet the func"} = []() noexcept {
+        bsl::discard(func(42_i32));
+    };
 
     bsl::ut_scenario{"verify noexcept"} = []() noexcept {
         bsl::ut_given{} = []() noexcept {

@@ -36,17 +36,16 @@ namespace bsl
     /// <!-- inputs/outputs -->
     ///   @return Always returns bsl::exit_success.
     ///
+    template<typename T>
     [[nodiscard]] constexpr auto
     tests_make_safe() noexcept -> bsl::exit_code
     {
         bsl::ut_scenario{"make_safe"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::safe_int32 mut_val{42};
+                constexpr T val{static_cast<T>(42)};
                 bsl::ut_when{} = [&]() noexcept {
-                    --mut_val;
                     bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(mut_val == 42 - 1);
-                        bsl::ut_check(!mut_val.invalid());
+                        bsl::ut_check(bsl::make_safe(val) == val);
                     };
                 };
             };

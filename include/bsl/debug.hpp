@@ -41,9 +41,9 @@
 #include "details/out_type_print.hpp"
 #include "disjunction.hpp"
 #include "fmt.hpp"
+#include "is_constant_evaluated.hpp"
 #include "safe_integral.hpp"
 #include "source_location.hpp"
-#include "is_constant_evaluated.hpp"
 
 #include <bsl/details/print_thread_id.hpp>
 
@@ -71,12 +71,11 @@ namespace bsl
         ///
         template<bsl::uintmax DL, typename T>
         using out_type =    // --
-            conditional_t < disjunction<
-                                bool_constant<
-                                    DL<BSL_DEBUG_LEVEL>,
-                                    bool_constant<DL == BSL_DEBUG_LEVEL>>::value,
-                                out<T>,
-                                out<out_type_empty>>;
+            conditional_t <
+            disjunction<
+                bool_constant<DL<BSL_DEBUG_LEVEL>, bool_constant<DL == BSL_DEBUG_LEVEL>>::value,
+                out<T>,
+                out<out_type_empty>>;
     }
 
     /// <!-- description -->

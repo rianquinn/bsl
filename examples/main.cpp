@@ -365,12 +365,8 @@
 #include "safe_integral/example_safe_integral_gt.hpp"
 #include "safe_integral/example_safe_integral_inc.hpp"
 #include "safe_integral/example_safe_integral_invalid.hpp"
-#include "safe_integral/example_safe_integral_is_max.hpp"
-#include "safe_integral/example_safe_integral_is_min.hpp"
 #include "safe_integral/example_safe_integral_is_neg.hpp"
 #include "safe_integral/example_safe_integral_is_pos.hpp"
-#include "safe_integral/example_safe_integral_is_signed_type.hpp"
-#include "safe_integral/example_safe_integral_is_unsigned_type.hpp"
 #include "safe_integral/example_safe_integral_is_zero.hpp"
 #include "safe_integral/example_safe_integral_lshift.hpp"
 #include "safe_integral/example_safe_integral_lt.hpp"
@@ -785,12 +781,8 @@ main() noexcept -> bsl::exit_code
     example(&bsl::example_safe_integral_get, "example_safe_integral_get");
     example(&bsl::example_safe_integral_gt, "example_safe_integral_gt");
     example(&bsl::example_safe_integral_inc, "example_safe_integral_inc");
-    example(&bsl::example_safe_integral_is_max, "example_safe_integral_is_max");
-    example(&bsl::example_safe_integral_is_min, "example_safe_integral_is_min");
     example(&bsl::example_safe_integral_is_neg, "example_safe_integral_is_neg");
     example(&bsl::example_safe_integral_is_pos, "example_safe_integral_is_pos");
-    example(&bsl::example_safe_integral_is_signed_type, "example_safe_integral_is_signed_type");
-    example(&bsl::example_safe_integral_is_unsigned_type, "example_safe_integral_is_unsigned_type");
     example(&bsl::example_safe_integral_is_zero, "example_safe_integral_is_zero");
     example(&bsl::example_safe_integral_lshift, "example_safe_integral_lshift");
     example(&bsl::example_safe_integral_lt, "example_safe_integral_lt");

@@ -105,7 +105,9 @@ namespace bsl
         ///
         template<typename... ARGS>
         [[nodiscard]] constexpr auto
-        operator()(ARGS &&...mut_a) const noexcept(noexcept(invoke(this->get(), bsl::forward<ARGS>(mut_a)...))) -> invoke_result_t<T &, ARGS...>
+        operator()(ARGS &&...mut_a) const
+            noexcept(noexcept(invoke(this->get(), bsl::forward<ARGS>(mut_a)...)))
+                -> invoke_result_t<T &, ARGS...>
         {
             return invoke(this->get(), bsl::forward<ARGS>(mut_a)...);
         }

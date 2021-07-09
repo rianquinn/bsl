@@ -50,7 +50,8 @@ main() noexcept -> bsl::exit_code
         bsl::ut_given{} = []() noexcept {
             bool mut_mydata{};
             bsl::ut_then{} = []() noexcept {
-                static_assert(bsl::is_same<decltype(bsl::as_const(mut_mydata)), bool const &>::value);
+                static_assert(
+                    bsl::is_same<decltype(bsl::as_const(mut_mydata)), bool const &>::value);
             };
         };
     };

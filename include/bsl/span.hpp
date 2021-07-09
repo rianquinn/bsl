@@ -32,6 +32,7 @@
 #include "char_type.hpp"
 #include "contiguous_iterator.hpp"
 #include "details/out.hpp"
+#include "is_constant_evaluated.hpp"
 #include "is_same.hpp"
 #include "is_standard_layout.hpp"
 #include "npos.hpp"
@@ -39,7 +40,6 @@
 #include "safe_integral.hpp"
 #include "touch.hpp"
 #include "unlikely.hpp"
-#include "is_constant_evaluated.hpp"
 
 namespace bsl
 {

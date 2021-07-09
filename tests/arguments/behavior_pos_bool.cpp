@@ -91,7 +91,8 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::array const argv{"true", "-opt1", "false", "1", "0", "42", "-opt2", "hello", "42 "};
+                bsl::array const argv{
+                    "true", "-opt1", "false", "1", "0", "42", "-opt2", "hello", "42 "};
                 bsl::arguments const args{argv.size(), argv.data()};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!args.get<bool>(bsl::to_umax(5)));
@@ -100,7 +101,8 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::array const argv{"true", "-opt1", "false", "1", "0", "42", "-opt2", "hello", "42 "};
+                bsl::array const argv{
+                    "true", "-opt1", "false", "1", "0", "42", "-opt2", "hello", "42 "};
                 bsl::arguments const args{argv.size(), argv.data()};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(args.get<bool>(bsl::to_umax(0)));

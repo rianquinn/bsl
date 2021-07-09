@@ -22,6 +22,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
+#include <bsl/move.hpp>
 #include <bsl/safe_integral.hpp>
 #include <bsl/ut.hpp>
 
@@ -62,17 +63,22 @@ main() noexcept -> bsl::exit_code
                 static_assert(noexcept(bsl::safe_int32{42, true}));
 
                 static_assert(noexcept(mut_val1 = 42));
+                static_assert(noexcept(mut_val1 = bsl::move(42)));
                 static_assert(noexcept(mut_val1.get()));
-                static_assert(noexcept(!!mut_val1));
-                static_assert(noexcept(mut_val1.invalid()));
+                static_assert(noexcept(mut_val1.data()));
+                static_assert(noexcept(mut_val1.failure()));
                 static_assert(noexcept(mut_val1.max()));
                 static_assert(noexcept(mut_val1.max(mut_val2)));
                 static_assert(noexcept(mut_val1.max(42)));
                 static_assert(noexcept(mut_val1.min()));
                 static_assert(noexcept(mut_val1.min(mut_val2)));
                 static_assert(noexcept(mut_val1.min(42)));
-                static_assert(noexcept(mut_val1.is_signed_type()));
-                static_assert(noexcept(mut_val1.is_unsigned_type()));
+                static_assert(noexcept(mut_val1.is_pos()));
+                static_assert(noexcept(mut_val1.is_neg()));
+                static_assert(noexcept(mut_val1.is_zero()));
+                static_assert(noexcept(mut_val1.is_zero_or_invalid()));
+                static_assert(noexcept(mut_val1.invalid()));
+                static_assert(noexcept(!!mut_val1));
                 static_assert(noexcept(mut_val1 += mut_val2));
                 static_assert(noexcept(mut_val1 += 42));
                 static_assert(noexcept(mut_val1 -= mut_val2));
@@ -135,16 +141,20 @@ main() noexcept -> bsl::exit_code
                 static_assert(noexcept(-mut_val1));
 
                 static_assert(noexcept(val1.get()));
-                static_assert(noexcept(!!val1));
-                static_assert(noexcept(val1.invalid()));
+                static_assert(noexcept(val1.data()));
+                static_assert(noexcept(val1.failure()));
                 static_assert(noexcept(val1.max()));
-                static_assert(noexcept(val1.max(val2)));
+                static_assert(noexcept(val1.max(mut_val2)));
                 static_assert(noexcept(val1.max(42)));
                 static_assert(noexcept(val1.min()));
-                static_assert(noexcept(val1.min(val2)));
+                static_assert(noexcept(val1.min(mut_val2)));
                 static_assert(noexcept(val1.min(42)));
-                static_assert(noexcept(val1.is_signed_type()));
-                static_assert(noexcept(val1.is_unsigned_type()));
+                static_assert(noexcept(val1.is_pos()));
+                static_assert(noexcept(val1.is_neg()));
+                static_assert(noexcept(val1.is_zero()));
+                static_assert(noexcept(val1.is_zero_or_invalid()));
+                static_assert(noexcept(val1.invalid()));
+                static_assert(noexcept(!!val1));
                 static_assert(noexcept(val1 == val2));
                 static_assert(noexcept(val1 == 42));
                 static_assert(noexcept(42 == val1));

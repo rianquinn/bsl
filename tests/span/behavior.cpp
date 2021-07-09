@@ -574,7 +574,8 @@ namespace
                 bsl::span mut_spn{mut_arr.data(), mut_arr.size()};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(mut_spn.iter(bsl::safe_uintmax::failure()).get_if() == nullptr);
-                    bsl::ut_check(mut_spn.iter(bsl::safe_uintmax::failure()).index() == mut_spn.size());
+                    bsl::ut_check(
+                        mut_spn.iter(bsl::safe_uintmax::failure()).index() == mut_spn.size());
                 };
             };
 
@@ -787,7 +788,8 @@ namespace
                 bsl::span mut_spn{mut_arr.data(), mut_arr.size()};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(mut_spn.riter(bsl::safe_uintmax::failure()).get_if() == nullptr);
-                    bsl::ut_check(mut_spn.riter(bsl::safe_uintmax::failure()).index() == mut_spn.size());
+                    bsl::ut_check(
+                        mut_spn.riter(bsl::safe_uintmax::failure()).index() == mut_spn.size());
                 };
             };
 
@@ -959,7 +961,8 @@ namespace
                 bsl::array mut_arr{TEST_INIT1};
                 bsl::span mut_spn{mut_arr.data(), mut_arr.size()};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(mut_spn.size_bytes() == bsl::to_umax(6) * sizeof(bsl::safe_int32));
+                    bsl::ut_check(
+                        mut_spn.size_bytes() == bsl::to_umax(6) * sizeof(bsl::safe_int32));
                 };
             };
 

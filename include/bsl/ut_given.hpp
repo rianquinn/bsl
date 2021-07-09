@@ -121,7 +121,8 @@ namespace bsl
         ///   @param mut_o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr auto operator=(ut_given &&mut_o) &noexcept -> ut_given & = default;
+        [[maybe_unused]] constexpr auto operator=(ut_given &&mut_o) &noexcept
+            -> ut_given & = default;
     };
 }
 

@@ -36,14 +36,14 @@
 #include "source_location.hpp"
 #include "touch.hpp"
 #include "unlikely.hpp"
+#include "ut_cleanup.hpp"
+#include "ut_cleanup_at_runtime.hpp"
 #include "ut_given.hpp"
 #include "ut_given_at_runtime.hpp"
 #include "ut_scenario.hpp"
 #include "ut_then.hpp"
 #include "ut_then_at_runtime.hpp"
 #include "ut_when.hpp"
-#include "ut_cleanup.hpp"
-#include "ut_cleanup_at_runtime.hpp"
 
 #include <bsl/enable_color.hpp>
 

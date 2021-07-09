@@ -56,7 +56,8 @@ namespace bsl
         ///   @return only used for decltype
         ///
         template<typename T>
-        [[maybe_unused]] auto try_add_rvalue_reference(bool const ignored) noexcept -> type_identity<T>;
+        [[maybe_unused]] auto try_add_rvalue_reference(bool const ignored) noexcept
+            -> type_identity<T>;
     }
 
     /// @class bsl::add_rvalue_reference

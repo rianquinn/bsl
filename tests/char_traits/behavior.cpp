@@ -104,8 +104,10 @@ namespace
             bsl::ut_then{} = []() noexcept {
                 constexpr bsl::safe_intmax s{bsl::to_imax(42)};
                 constexpr bsl::safe_intmax b{bsl::to_imax(4242)};
-                bsl::ut_check(bsl::to_imax(static_cast<bsl::uint8>(traits::to_char_type(s.get()))) == s);
-                bsl::ut_check(bsl::to_imax(static_cast<bsl::uint8>(traits::to_char_type(b.get()))) != b);
+                bsl::ut_check(
+                    bsl::to_imax(static_cast<bsl::uint8>(traits::to_char_type(s.get()))) == s);
+                bsl::ut_check(
+                    bsl::to_imax(static_cast<bsl::uint8>(traits::to_char_type(b.get()))) != b);
             };
         };
 

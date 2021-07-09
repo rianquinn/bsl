@@ -65,7 +65,8 @@ namespace bsl
         ///   @return returns true if T is returnable, false otherwise
         ///
         template<typename T>
-        [[maybe_unused]] auto test_is_nothrow_convertible1(bool const ignored) noexcept -> false_type;
+        [[maybe_unused]] auto test_is_nothrow_convertible1(bool const ignored) noexcept
+            -> false_type;
 
         /// <!-- description -->
         ///   @brief Tests whether or not the provided to can be converted from
@@ -98,7 +99,8 @@ namespace bsl
         ///   @return returns true if T is returnable, false otherwise
         ///
         template<typename FROM, typename TO>
-        [[maybe_unused]] auto test_is_nothrow_convertible2(bool const ignored) noexcept -> false_type;
+        [[maybe_unused]] auto test_is_nothrow_convertible2(bool const ignored) noexcept
+            -> false_type;
 
         /// <!-- description -->
         ///   @brief Performs all of the tests including testing if both

@@ -29,7 +29,6 @@
 #define BSL_OUT_HPP
 
 #include "../char_type.hpp"
-#include "../color.hpp"
 #include "../cstr_type.hpp"
 #include "../is_constant_evaluated.hpp"
 #include "../is_same.hpp"

@@ -56,7 +56,8 @@ main() noexcept -> bsl::exit_code
             bsl::contiguous_iterator const ci1{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
             bsl::contiguous_iterator const ci2{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
             bsl::ut_then{} = []() noexcept {
-                static_assert(noexcept(bsl::contiguous_iterator{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)}));
+                static_assert(noexcept(
+                    bsl::contiguous_iterator{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)}));
 
                 static_assert(noexcept(mut_ci1.data()));
                 static_assert(noexcept(mut_ci1.size()));

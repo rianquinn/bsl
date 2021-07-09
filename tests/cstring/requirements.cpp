@@ -44,7 +44,8 @@ main() noexcept -> bsl::exit_code
                 static_assert(noexcept(bsl::builtin_strncmp("", "", {})));
                 static_assert(noexcept(bsl::builtin_strlen("")));
                 static_assert(noexcept(bsl::builtin_memset(mut_arr.data(), '\0', mut_arr.size())));
-                static_assert(noexcept(bsl::builtin_memcpy(mut_arr.data(), mut_arr.data(), mut_arr.size())));
+                static_assert(
+                    noexcept(bsl::builtin_memcpy(mut_arr.data(), mut_arr.data(), mut_arr.size())));
             };
         };
     };

@@ -67,8 +67,7 @@ namespace bsl
             case fmt_type::fmt_type_b:
             case fmt_type::fmt_type_d:
             case fmt_type::fmt_type_x: {
-                details::fmt_impl_integral(
-                    o, ops, safe_uint8{static_cast<bsl::uint8>(c)});
+                details::fmt_impl_integral(o, ops, safe_uint8{static_cast<bsl::uint8>(c)});
                 break;
             }
 

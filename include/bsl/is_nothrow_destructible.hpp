@@ -74,7 +74,8 @@ namespace bsl
         ///   @return returns true if T is nothrow destructible, false otherwise
         ///
         template<typename T>
-        [[maybe_unused]] auto destructor_is_marked_nothrow(bool const ignored) noexcept -> false_type;
+        [[maybe_unused]] auto destructor_is_marked_nothrow(bool const ignored) noexcept
+            -> false_type;
 
         /// <!-- description -->
         ///   @brief Checks if a type "T" is destructible and if so, returns

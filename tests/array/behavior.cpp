@@ -296,7 +296,8 @@ namespace
                 bsl::array mut_arr{TEST_INIT};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(mut_arr.iter(bsl::safe_uintmax::failure()).get_if() == nullptr);
-                    bsl::ut_check(mut_arr.iter(bsl::safe_uintmax::failure()).index() == mut_arr.size());
+                    bsl::ut_check(
+                        mut_arr.iter(bsl::safe_uintmax::failure()).index() == mut_arr.size());
                 };
             };
 
@@ -440,7 +441,8 @@ namespace
                 bsl::array mut_arr{TEST_INIT};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(mut_arr.riter(bsl::safe_uintmax::failure()).get_if() == nullptr);
-                    bsl::ut_check(mut_arr.riter(bsl::safe_uintmax::failure()).index() == mut_arr.size());
+                    bsl::ut_check(
+                        mut_arr.riter(bsl::safe_uintmax::failure()).index() == mut_arr.size());
                 };
             };
 

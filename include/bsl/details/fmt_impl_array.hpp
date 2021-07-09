@@ -26,8 +26,8 @@
 #define BSL_DETAILS_FMT_IMPL_ARRAY_HPP
 
 #include "../array.hpp"
-#include "../safe_integral.hpp"
 #include "../is_constant_evaluated.hpp"
+#include "../safe_integral.hpp"
 #include "out.hpp"
 
 namespace bsl

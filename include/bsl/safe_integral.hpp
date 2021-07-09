@@ -464,20 +464,6 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Returns true if the safe_integral has never experienced
-        ///     a wrap, overflow, underflow, divide by 0, etc.
-        ///   @include safe_integral/example_safe_integral_operator_bool.hpp
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @return Returns true if the safe_integral has never experienced
-        ///     a wrap, overflow, underflow, divide by 0, etc.
-        ///
-        [[nodiscard]] explicit constexpr operator bool() const noexcept
-        {
-            return !m_error;
-        }
-
-        /// <!-- description -->
         ///   @brief Returns safe_integral<value_type>{0, true}
         ///   @include safe_integral/example_safe_integral_failure.hpp
         ///
@@ -643,32 +629,6 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Returns true if the safe_integral is signed
-        ///   @include safe_integral/example_safe_integral_is_signed_type.hpp
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @return Returns true if the safe_integral is signed
-        ///
-        [[nodiscard]] static constexpr auto
-        is_signed_type() noexcept -> bool
-        {
-            return is_signed<value_type>::value;
-        }
-
-        /// <!-- description -->
-        ///   @brief Returns true if the safe_integral is unsigned
-        ///   @include safe_integral/example_safe_integral_is_unsigned_type.hpp
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @return Returns true if the safe_integral is unsigned
-        ///
-        [[nodiscard]] static constexpr auto
-        is_unsigned_type() noexcept -> bool
-        {
-            return is_unsigned<value_type>::value;
-        }
-
-        /// <!-- description -->
         ///   @brief Returns true if the safe_integral is positive. Will
         ///     always return false if an error has been encountered.
         ///   @include safe_integral/example_safe_integral_is_pos.hpp
@@ -711,7 +671,7 @@ namespace bsl
             ///   of this type of problem would be a good idea.
             ///
 
-            if constexpr (is_unsigned_type()) {
+            if constexpr (is_unsigned<value_type>::value) {
                 illegal_use_of_invalid_safe_integral();
                 return false;
             }
@@ -769,31 +729,17 @@ namespace bsl
         }
 
         /// <!-- description -->
-        ///   @brief Returns true if the safe_integral equals the max value.
-        ///     Will always return false if an error has been encountered.
-        ///   @include safe_integral/example_safe_integral_is_max.hpp
+        ///   @brief Returns true if the safe_integral has never experienced
+        ///     a wrap, overflow, underflow, divide by 0, etc.
+        ///   @include safe_integral/example_safe_integral_operator_bool.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @return Returns true if the safe_integral equals the max value
+        ///   @return Returns true if the safe_integral has never experienced
+        ///     a wrap, overflow, underflow, divide by 0, etc.
         ///
-        [[nodiscard]] constexpr auto
-        is_max() const noexcept -> bool
+        [[nodiscard]] explicit constexpr operator bool() const noexcept
         {
-            return max() == *this;
-        }
-
-        /// <!-- description -->
-        ///   @brief Returns true if the safe_integral equals the min value.
-        ///     Will always return false if an error has been encountered.
-        ///   @include safe_integral/example_safe_integral_is_min.hpp
-        ///
-        /// <!-- inputs/outputs -->
-        ///   @return Returns true if the safe_integral equals the min value
-        ///
-        [[nodiscard]] constexpr auto
-        is_min() const noexcept -> bool
-        {
-            return min() == *this;
+            return !m_error;
         }
 
         /// <!-- description -->
@@ -1296,7 +1242,8 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed shift not supported");
             }
             else {
-                m_val <<= rhs.m_val;
+                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
+                m_val <<= rhs.get();
 
                 if (unlikely(this->invalid())) {
                     illegal_use_of_invalid_safe_integral();
@@ -1385,6 +1332,7 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed shift not supported");
             }
             else {
+                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val >>= rhs.get();
 
                 if (unlikely(this->invalid())) {
@@ -1474,6 +1422,7 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed and not supported");
             }
             else {
+                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val &= rhs.get();
 
                 if (unlikely(this->invalid())) {
@@ -1563,6 +1512,7 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed or not supported");
             }
             else {
+                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val |= rhs.get();
 
                 if (unlikely(this->invalid())) {

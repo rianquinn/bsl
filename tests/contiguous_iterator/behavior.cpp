@@ -59,14 +59,16 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), bsl::to_umax(0), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), bsl::to_umax(0), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci.empty());
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci.data() == TEST_INIT.data());
                     bsl::ut_check(ci.size() == TEST_INIT.size());
@@ -92,7 +94,8 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), bsl::safe_uintmax::failure()};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::safe_uintmax::failure()};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci.data() == TEST_INIT.data());
                     bsl::ut_check(ci.size() == TEST_INIT.size());
@@ -110,14 +113,16 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(mut_ci.data() == TEST_INIT.data());
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci.data() == TEST_INIT.data());
                 };
@@ -133,7 +138,8 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci.size() == TEST_INIT.size());
                 };
@@ -149,14 +155,16 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci.index() == bsl::to_umax(0));
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), TEST_INIT.size()};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), TEST_INIT.size()};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci.index() == TEST_INIT.size());
                 };
@@ -179,7 +187,8 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!ci.empty());
                 };
@@ -188,7 +197,8 @@ namespace
 
         bsl::ut_scenario{"operator bool"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!!ci);
                 };
@@ -202,7 +212,8 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), TEST_INIT.size()};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), TEST_INIT.size()};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!ci);
                 };
@@ -218,14 +229,16 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), TEST_INIT.size()};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), TEST_INIT.size()};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci.is_end());
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(!ci.is_end());
                 };
@@ -248,42 +261,48 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(mut_ci.get_if() == TEST_INIT.front_if());
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci.get_if() == TEST_INIT.front_if());
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(5)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(5)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(mut_ci.get_if() == TEST_INIT.back_if());
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(5)};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(5)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci.get_if() == TEST_INIT.back_if());
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(6)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(6)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(mut_ci.get_if() == nullptr);
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(6)};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(6)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci.get_if() == nullptr);
                 };
@@ -307,42 +326,48 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(mut_ci.get_if() == TEST_INIT.front_if());
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci.get_if() == TEST_INIT.front_if());
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(5)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(5)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(mut_ci.get_if() == TEST_INIT.back_if());
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(5)};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(5)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci.get_if() == TEST_INIT.back_if());
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(6)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(6)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(mut_ci.get_if() == nullptr);
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(6)};
+                bsl::contiguous_iterator const ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(6)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci.get_if() == nullptr);
                 };
@@ -362,7 +387,8 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_when{} = [&]() noexcept {
                     ++mut_ci;
                     bsl::ut_then{} = [&]() noexcept {
@@ -373,7 +399,8 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(4)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(4)};
                 bsl::ut_when{} = [&]() noexcept {
                     ++mut_ci;
                     bsl::ut_then{} = [&]() noexcept {
@@ -384,7 +411,8 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(5)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(5)};
                 bsl::ut_when{} = [&]() noexcept {
                     ++mut_ci;
                     bsl::ut_then{} = [&]() noexcept {
@@ -395,7 +423,8 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(6)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(6)};
                 bsl::ut_when{} = [&]() noexcept {
                     ++mut_ci;
                     bsl::ut_then{} = [&]() noexcept {
@@ -427,7 +456,8 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_when{} = [&]() noexcept {
                     --mut_ci;
                     bsl::ut_then{} = [&]() noexcept {
@@ -446,7 +476,8 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(1)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(1)};
                 bsl::ut_when{} = [&]() noexcept {
                     --mut_ci;
                     bsl::ut_then{} = [&]() noexcept {
@@ -457,7 +488,8 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(5)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(5)};
                 bsl::ut_when{} = [&]() noexcept {
                     --mut_ci;
                     bsl::ut_then{} = [&]() noexcept {
@@ -467,7 +499,8 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator mut_ci{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(6)};
+                bsl::contiguous_iterator mut_ci{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(6)};
                 bsl::ut_when{} = [&]() noexcept {
                     --mut_ci;
                     bsl::ut_then{} = [&]() noexcept {
@@ -479,40 +512,50 @@ namespace
 
         bsl::ut_scenario{"comparisons"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci1{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
-                bsl::contiguous_iterator const ci2{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci1{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci2{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci1 == ci2);
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci1{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
-                bsl::contiguous_iterator const ci2{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(1)};
+                bsl::contiguous_iterator const ci1{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci2{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(1)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci1 != ci2);
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci1{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
-                bsl::contiguous_iterator const ci2{TEST_INIT.data() + 1, TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci1{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci2{
+                    TEST_INIT.data() + 1, TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci1 != ci2);
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci1{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
-                bsl::contiguous_iterator const ci2{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(1)};
+                bsl::contiguous_iterator const ci1{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci2{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(1)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci1 < ci2);
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::contiguous_iterator const ci1{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(1)};
-                bsl::contiguous_iterator const ci2{TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
+                bsl::contiguous_iterator const ci1{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(1)};
+                bsl::contiguous_iterator const ci2{
+                    TEST_INIT.data(), TEST_INIT.size(), bsl::to_umax(0)};
                 bsl::ut_then{} = [&]() noexcept {
                     bsl::ut_check(ci1 > ci2);
                 };

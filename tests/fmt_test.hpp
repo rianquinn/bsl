@@ -28,13 +28,13 @@
 #define BSL_DETAILS_PUTC_STDOUT_HPP
 #define BSL_DETAILS_PUTS_STDOUT_HPP
 
+#include <bsl/array.hpp>
 #include <bsl/char_type.hpp>
 #include <bsl/cstdint.hpp>
 #include <bsl/cstdio.hpp>
 #include <bsl/cstdlib.hpp>
 #include <bsl/cstr_type.hpp>
 #include <bsl/cstring.hpp>
-#include <bsl/array.hpp>
 #include <bsl/discard.hpp>
 #include <bsl/safe_integral.hpp>
 

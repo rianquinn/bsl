@@ -93,7 +93,8 @@ namespace
             bsl::ut_given{} = []() noexcept {
                 bsl::errc_type mut_errc{bsl::errc_failure};
                 bsl::ut_when{} = [&]() noexcept {
-                    bsl::discard(bsl::construct_at<bsl::errc_type>(&mut_errc, bsl::errc_success.get()));
+                    bsl::discard(
+                        bsl::construct_at<bsl::errc_type>(&mut_errc, bsl::errc_success.get()));
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check(mut_errc);
                     };
@@ -103,7 +104,8 @@ namespace
             bsl::ut_given{} = []() noexcept {
                 bsl::errc_type mut_errc{};
                 bsl::ut_when{} = [&]() noexcept {
-                    bsl::discard(bsl::construct_at<bsl::errc_type>(&mut_errc, bsl::errc_failure.get()));
+                    bsl::discard(
+                        bsl::construct_at<bsl::errc_type>(&mut_errc, bsl::errc_failure.get()));
                     bsl::ut_then{} = [&]() noexcept {
                         bsl::ut_check(!mut_errc);
                     };

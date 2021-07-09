@@ -49,17 +49,17 @@ namespace bsl
     ///
     template<typename FUNC, typename... TN>
     [[maybe_unused]] constexpr auto
-    invoke(FUNC &&mut_f, TN &&...mut_valn) noexcept(                    // --
+    invoke(FUNC &&mut_f, TN &&...mut_valn) noexcept(            // --
         noexcept(details::invoke_impl<FUNC, TN...>::call(       // --
-            bsl::forward<FUNC>(mut_f),                              // --
-            bsl::forward<TN>(mut_valn)...)))                        // --
+            bsl::forward<FUNC>(mut_f),                          // --
+            bsl::forward<TN>(mut_valn)...)))                    // --
         -> decltype(details::invoke_impl<FUNC, TN...>::call(    // --
-            bsl::forward<FUNC>(mut_f),                              // --
-            bsl::forward<TN>(mut_valn)...))                         // --
+            bsl::forward<FUNC>(mut_f),                          // --
+            bsl::forward<TN>(mut_valn)...))                     // --
     {                                                           // --
         return details::invoke_impl<FUNC, TN...>::call(         // --
-            bsl::forward<FUNC>(mut_f),                              // --
-            bsl::forward<TN>(mut_valn)...);                         // --
+            bsl::forward<FUNC>(mut_f),                          // --
+            bsl::forward<TN>(mut_valn)...);                     // --
     }
 }
 

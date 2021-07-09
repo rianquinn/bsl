@@ -81,7 +81,8 @@ namespace bsl
         ///   @param mut_o the object being moved
         ///   @return a reference to *this
         ///
-        [[maybe_unused]] constexpr auto operator=(nonesuch &&mut_o) &noexcept -> nonesuch & = delete;
+        [[maybe_unused]] constexpr auto operator=(nonesuch &&mut_o) &noexcept
+            -> nonesuch & = delete;
     };
 }
 

@@ -25,9 +25,9 @@
 #ifndef BSL_DETAILS_FMT_IMPL_INTEGRAL_INFO_HPP
 #define BSL_DETAILS_FMT_IMPL_INTEGRAL_INFO_HPP
 
+#include "../array.hpp"
 #include "../char_type.hpp"
 #include "../safe_integral.hpp"
-#include "../array.hpp"
 
 namespace bsl::details
 {

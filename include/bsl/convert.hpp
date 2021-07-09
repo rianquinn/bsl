@@ -28,6 +28,7 @@
 #include "forward.hpp"
 #include "from_chars.hpp"
 #include "is_constant_evaluated.hpp"
+#include "is_integral.hpp"
 #include "is_pointer.hpp"
 #include "is_same.hpp"
 #include "is_same_signedness.hpp"
@@ -36,8 +37,6 @@
 #include "safe_integral.hpp"
 #include "string_view.hpp"
 #include "unlikely.hpp"
-
-#include "is_integral.hpp"
 
 namespace bsl
 {
@@ -857,8 +856,7 @@ namespace bsl
 ///   @param str the literal to convert
 ///   @return Returns bsl::to_u8(str) using bsl::from_chars
 ///
-[[nodiscard]] constexpr auto
-operator""_u8(bsl::cstr_type const str) noexcept -> bsl::safe_uint8
+[[nodiscard]] constexpr auto operator""_u8(bsl::cstr_type const str) noexcept -> bsl::safe_uint8
 {
     constexpr auto offset{bsl::to_umax(2)};
     constexpr auto base10{bsl::to_i32(10)};
@@ -880,8 +878,7 @@ operator""_u8(bsl::cstr_type const str) noexcept -> bsl::safe_uint8
 ///   @param str the literal to convert
 ///   @return Returns bsl::to_u16(str) using bsl::from_chars
 ///
-[[nodiscard]] constexpr auto
-operator""_u16(bsl::cstr_type const str) noexcept -> bsl::safe_uint16
+[[nodiscard]] constexpr auto operator""_u16(bsl::cstr_type const str) noexcept -> bsl::safe_uint16
 {
     constexpr auto offset{bsl::to_umax(2)};
     constexpr auto base10{bsl::to_i32(10)};
@@ -904,8 +901,7 @@ operator""_u16(bsl::cstr_type const str) noexcept -> bsl::safe_uint16
 ///   @return Returns bsl::to_u32(str) using bsl::from_chars
 ///
 
-[[nodiscard]] constexpr auto
-operator""_u32(bsl::cstr_type const str) noexcept -> bsl::safe_uint32
+[[nodiscard]] constexpr auto operator""_u32(bsl::cstr_type const str) noexcept -> bsl::safe_uint32
 {
     constexpr auto offset{bsl::to_umax(2)};
     constexpr auto base10{bsl::to_i32(10)};
@@ -928,8 +924,7 @@ operator""_u32(bsl::cstr_type const str) noexcept -> bsl::safe_uint32
 ///   @return Returns bsl::to_u64(str) using bsl::from_chars
 ///
 
-[[nodiscard]] constexpr auto
-operator""_u64(bsl::cstr_type const str) noexcept -> bsl::safe_uint64
+[[nodiscard]] constexpr auto operator""_u64(bsl::cstr_type const str) noexcept -> bsl::safe_uint64
 {
     constexpr auto offset{bsl::to_umax(2)};
     constexpr auto base10{bsl::to_i32(10)};
@@ -952,8 +947,7 @@ operator""_u64(bsl::cstr_type const str) noexcept -> bsl::safe_uint64
 ///   @return Returns bsl::to_umax(str) using bsl::from_chars
 ///
 
-[[nodiscard]] constexpr auto
-operator""_umax(bsl::cstr_type const str) noexcept -> bsl::safe_uintmax
+[[nodiscard]] constexpr auto operator""_umax(bsl::cstr_type const str) noexcept -> bsl::safe_uintmax
 {
     constexpr auto offset{bsl::to_umax(2)};
     constexpr auto base10{bsl::to_i32(10)};
@@ -975,8 +969,7 @@ operator""_umax(bsl::cstr_type const str) noexcept -> bsl::safe_uintmax
 ///   @param str the literal to convert
 ///   @return Returns bsl::to_i8(str) using bsl::from_chars
 ///
-[[nodiscard]] constexpr auto
-operator""_i8(bsl::cstr_type const str) noexcept -> bsl::safe_int8
+[[nodiscard]] constexpr auto operator""_i8(bsl::cstr_type const str) noexcept -> bsl::safe_int8
 {
     constexpr auto base10{bsl::to_i32(10)};
     return bsl::from_chars<bsl::int8>(str, base10);
@@ -989,8 +982,7 @@ operator""_i8(bsl::cstr_type const str) noexcept -> bsl::safe_int8
 ///   @param str the literal to convert
 ///   @return Returns bsl::to_i16(str) using bsl::from_chars
 ///
-[[nodiscard]] constexpr auto
-operator""_i16(bsl::cstr_type const str) noexcept -> bsl::safe_int16
+[[nodiscard]] constexpr auto operator""_i16(bsl::cstr_type const str) noexcept -> bsl::safe_int16
 {
     constexpr auto base10{bsl::to_i32(10)};
     return bsl::from_chars<bsl::int16>(str, base10);
@@ -1003,8 +995,7 @@ operator""_i16(bsl::cstr_type const str) noexcept -> bsl::safe_int16
 ///   @param str the literal to convert
 ///   @return Returns bsl::to_i32(str) using bsl::from_chars
 ///
-[[nodiscard]] constexpr auto
-operator""_i32(bsl::cstr_type const str) noexcept -> bsl::safe_int32
+[[nodiscard]] constexpr auto operator""_i32(bsl::cstr_type const str) noexcept -> bsl::safe_int32
 {
     constexpr auto base10{bsl::to_i32(10)};
     return bsl::from_chars<bsl::int32>(str, base10);
@@ -1017,8 +1008,7 @@ operator""_i32(bsl::cstr_type const str) noexcept -> bsl::safe_int32
 ///   @param str the literal to convert
 ///   @return Returns bsl::to_i64(str) using bsl::from_chars
 ///
-[[nodiscard]] constexpr auto
-operator""_i64(bsl::cstr_type const str) noexcept -> bsl::safe_int64
+[[nodiscard]] constexpr auto operator""_i64(bsl::cstr_type const str) noexcept -> bsl::safe_int64
 {
     constexpr auto base10{bsl::to_i32(10)};
     return bsl::from_chars<bsl::int64>(str, base10);
@@ -1031,8 +1021,7 @@ operator""_i64(bsl::cstr_type const str) noexcept -> bsl::safe_int64
 ///   @param str the literal to convert
 ///   @return Returns bsl::to_imax(str) using bsl::from_chars
 ///
-[[nodiscard]] constexpr auto
-operator""_imax(bsl::cstr_type const str) noexcept -> bsl::safe_intmax
+[[nodiscard]] constexpr auto operator""_imax(bsl::cstr_type const str) noexcept -> bsl::safe_intmax
 {
     constexpr auto base10{bsl::to_i32(10)};
     return bsl::from_chars<bsl::intmax>(str, base10);

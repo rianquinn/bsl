@@ -81,7 +81,8 @@ namespace bsl
         ///   @param d ignored
         ///   @param mut_func the function to call on destruction
         ///
-        explicit constexpr finally_assert(bsl::dormant_t const &d, FUNC_T &&mut_func) noexcept    // --
+        explicit constexpr finally_assert(
+            bsl::dormant_t const &d, FUNC_T &&mut_func) noexcept    // --
             : m_func{bsl::move(mut_func)}, m_invoked{true}
         {
             bsl::discard(d);
