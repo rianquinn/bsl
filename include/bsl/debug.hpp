@@ -73,9 +73,54 @@ namespace bsl
         using out_type =    // --
             conditional_t <
             disjunction<
-                bool_constant<DL<BSL_DEBUG_LEVEL>, bool_constant<DL == BSL_DEBUG_LEVEL>>::value,
+                bool_constant<DL<BSL_DEBUG_LEVEL>, bool_constant<BSL_DEBUG_LEVEL == DL>>::value,
                 out<T>,
                 out<out_type_empty>>;
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns true if the debug level was set to at least V or
+    ///     higher.
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @return Returns true if the debug level was set to at least V or
+    ///     higher.
+    ///
+    [[nodiscard]] constexpr auto
+    debug_level_is_at_least_v() noexcept -> bool
+    {
+        // NOLINTNEXTLINE(misc-redundant-expression)
+        return bool_constant<BSL_DEBUG_LEVEL >= bsl::V>::value;
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns true if the debug level was set to at least V or
+    ///     higher.
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @return Returns true if the debug level was set to at least V or
+    ///     higher.
+    ///
+    [[nodiscard]] constexpr auto
+    debug_level_is_at_least_vv() noexcept -> bool
+    {
+        // NOLINTNEXTLINE(misc-redundant-expression)
+        return bool_constant<BSL_DEBUG_LEVEL >= bsl::VV>::value;
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns true if the debug level was set to at least V or
+    ///     higher.
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @return Returns true if the debug level was set to at least V or
+    ///     higher.
+    ///
+    [[nodiscard]] constexpr auto
+    debug_level_is_at_least_vvv() noexcept -> bool
+    {
+        // NOLINTNEXTLINE(misc-redundant-expression)
+        return bool_constant<BSL_DEBUG_LEVEL >= bsl::VVV>::value;
     }
 
     /// <!-- description -->

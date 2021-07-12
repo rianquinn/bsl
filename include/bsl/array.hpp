@@ -62,7 +62,7 @@ namespace bsl
     template<typename T, bsl::uintmax N>
     class array final
     {
-        static_assert(N != static_cast<bsl::uintmax>(0), "arrays of size 0 are not supported");
+        static_assert(static_cast<bsl::uintmax>(0) != N, "arrays of size 0 are not supported");
 
     public:
         /// @brief stores the array being wrapped

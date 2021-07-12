@@ -41,7 +41,7 @@ namespace
     {
         bsl::ut_scenario{"ut success"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
-                bsl::ut_check(bsl::ut_success() == bsl::exit_success);
+                bsl::ut_check(bsl::exit_success == bsl::ut_success());
             };
         };
 

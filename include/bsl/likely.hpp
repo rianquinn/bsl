@@ -43,7 +43,7 @@ namespace bsl
     [[nodiscard]] constexpr auto
     likely(ARG &&mut_a) noexcept -> bool
     {
-        return __builtin_expect(!!(mut_a), 1L) != 0L;
+        return 0L != __builtin_expect(!!(mut_a), 1L);
     }
 }
 

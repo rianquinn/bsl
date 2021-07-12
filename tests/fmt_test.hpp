@@ -85,8 +85,8 @@ namespace fmt_test
             return false;
         }
 
-        return __builtin_memcmp(
-                   details::g_mut_fmt_test_buf.data(), str, details::g_mut_fmt_test_num.get()) == 0;
+        return 0 == __builtin_memcmp(
+                   details::g_mut_fmt_test_buf.data(), str, details::g_mut_fmt_test_num.get());
     }
 }
 

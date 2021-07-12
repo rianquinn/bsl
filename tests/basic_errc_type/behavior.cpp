@@ -44,21 +44,21 @@ namespace
             bsl::ut_given{} = []() noexcept {
                 bsl::basic_errc_type<> const errc{};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(errc.get() == 0);
+                    bsl::ut_check(0 == errc.get());
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
                 bsl::basic_errc_type<> const errc{42};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(errc.get() == 42);
+                    bsl::ut_check(42 == errc.get());
                 };
             };
 
             bsl::ut_given{} = []() noexcept {
                 bsl::basic_errc_type<> const errc{bsl::to_i32(42)};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(errc.get() == 42);
+                    bsl::ut_check(42 == errc.get());
                 };
             };
         };

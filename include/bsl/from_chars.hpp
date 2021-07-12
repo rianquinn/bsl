@@ -120,7 +120,7 @@ namespace bsl
 
             auto mut_idx{idx};
             if constexpr (is_signed<T>::value) {
-                if (*str.front_if() == '-') {
+                if ('-' == *str.front_if()) {
                     mut_negate = true;
                     ++mut_idx;
                 }

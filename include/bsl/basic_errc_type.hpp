@@ -177,7 +177,7 @@ namespace bsl
         [[nodiscard]] constexpr auto
         success() const noexcept -> bool
         {
-            return m_errc == T{};
+            return T{} == m_errc;
         }
 
         /// <!-- description -->
@@ -194,7 +194,7 @@ namespace bsl
         [[nodiscard]] constexpr auto
         failure() const noexcept -> bool
         {
-            return m_errc != T{};
+            return T{} != m_errc;
         }
 
         /// <!-- description -->

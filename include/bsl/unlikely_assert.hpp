@@ -50,7 +50,7 @@ namespace bsl
             return false;
         }
 
-        return __builtin_expect(!!(pudm_udm_a), 0L) != 0L;
+        return 0L != __builtin_expect(!!(pudm_udm_a), 0L);
     }
 }
 
