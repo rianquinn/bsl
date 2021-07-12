@@ -73,13 +73,16 @@ namespace bsl
     template<typename KEY_TYPE, typename T>
     class unordered_map final
     {
+        /// @brief defines the type of node used for the linked list.
+        using nd_t = details::unordered_map_node_type<KEY_TYPE, T>;
+
         static_assert(is_copy_constructible<KEY_TYPE>::value);
         static_assert(is_default_constructible<T>::value);
 
         /// @brief stores a default T when we have nothing else to return
         T m_default{};
         /// @brief stores the head of the linked list.
-        details::unordered_map_node_type<KEY_TYPE, T> *m_head{};
+        nd_t *m_head{};
         /// @brief stores the size of the map
         safe_uintmax m_size{};
 
@@ -164,13 +167,13 @@ namespace bsl
         constexpr void
         clear() noexcept
         {
-            auto mut_node{m_head};
-            while (nullptr != mut_node) {
-                auto mut_next{mut_node->next};
+            auto *pmut_mut_node{m_head};
+            while (nullptr != pmut_mut_node) {
+                auto *pmut_mut_next{pmut_mut_node->next};
 
                 // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-                delete mut_node;    // GRCOV_EXCLUDE_BR
-                mut_node = mut_next;
+                delete pmut_mut_node;    // GRCOV_EXCLUDE_BR
+                pmut_mut_node = pmut_mut_next;
             }
 
             m_head = {};
@@ -188,25 +191,25 @@ namespace bsl
         [[nodiscard]] constexpr auto
         at(KEY_TYPE const &key) noexcept -> T &
         {
-            auto mut_node{m_head};
-            while (nullptr != mut_node) {
-                if (key == mut_node->key) {
+            auto *pmut_mut_node{m_head};
+            while (nullptr != pmut_mut_node) {
+                if (key == pmut_mut_node->key) {
                     break;
                 }
-                mut_node = mut_node->next;
+                pmut_mut_node = pmut_mut_node->next;
             }
 
-            if (nullptr == mut_node) {
+            if (nullptr == pmut_mut_node) {
                 // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-                mut_node = new details::unordered_map_node_type<KEY_TYPE, T>{key, {}, m_head};
-                m_head = mut_node;
+                pmut_mut_node = new nd_t{key, {}, m_head};
+                m_head = pmut_mut_node;
                 ++m_size;
             }
             else {
                 bsl::touch();
             }
 
-            return mut_node->val;
+            return pmut_mut_node->val;
         }
 
         /// <!-- description -->
@@ -220,19 +223,19 @@ namespace bsl
         [[nodiscard]] constexpr auto
         at(KEY_TYPE const &key) const noexcept -> T const &
         {
-            auto mut_node{m_head};
-            while (nullptr != mut_node) {
-                if (key == mut_node->key) {
+            auto *pmut_mut_node{m_head};
+            while (nullptr != pmut_mut_node) {
+                if (key == pmut_mut_node->key) {
                     break;
                 }
-                mut_node = mut_node->next;
+                pmut_mut_node = pmut_mut_node->next;
             }
 
-            if (nullptr == mut_node) {
+            if (nullptr == pmut_mut_node) {
                 return m_default;
             }
 
-            return mut_node->val;
+            return pmut_mut_node->val;
         }
 
         /// <!-- description -->
@@ -246,29 +249,29 @@ namespace bsl
         [[nodiscard]] constexpr auto
         erase(KEY_TYPE const &key) noexcept -> bool
         {
-            auto mut_node{m_head};
-            details::unordered_map_node_type<KEY_TYPE, T> *mut_prev{};
-            while (nullptr != mut_node) {
-                if (key == mut_node->key) {
+            auto *pmut_mut_node{m_head};
+            nd_t *pmut_mut_prev{};
+            while (nullptr != pmut_mut_node) {
+                if (key == pmut_mut_node->key) {
                     break;
                 }
-                mut_prev = mut_node;
-                mut_node = mut_node->next;
+                pmut_mut_prev = pmut_mut_node;
+                pmut_mut_node = pmut_mut_node->next;
             }
 
-            if (nullptr == mut_node) {
+            if (nullptr == pmut_mut_node) {
                 return false;
             }
 
-            if (nullptr == mut_prev) {
-                m_head = mut_node->next;
+            if (nullptr == pmut_mut_prev) {
+                m_head = pmut_mut_node->next;
             }
             else {
-                mut_prev->next = mut_node->next;
+                pmut_mut_prev->next = pmut_mut_node->next;
             }
 
             // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-            delete mut_node;    // GRCOV_EXCLUDE_BR
+            delete pmut_mut_node;    // GRCOV_EXCLUDE_BR
             return true;
         }
 
@@ -284,12 +287,12 @@ namespace bsl
         [[nodiscard]] constexpr auto
         contains(KEY_TYPE const &key) const noexcept -> bool
         {
-            auto mut_node{m_head};
-            while (nullptr != mut_node) {
-                if (key == mut_node->key) {
+            auto *pmut_mut_node{m_head};
+            while (nullptr != pmut_mut_node) {
+                if (key == pmut_mut_node->key) {
                     return true;
                 }
-                mut_node = mut_node->next;
+                pmut_mut_node = pmut_mut_node->next;
             }
 
             return false;

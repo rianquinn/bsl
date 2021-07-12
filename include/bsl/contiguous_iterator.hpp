@@ -102,15 +102,15 @@ namespace bsl
         ///     container's begin() function.
         ///
         /// <!-- inputs/outputs -->
-        ///   @param ptr a pointer to the array being iterated
+        ///   @param pudm_cst_ptr a pointer to the array being iterated
         ///   @param count the number of elements in the array being iterated
         ///   @param i the initial index of the iterator
         ///
-        constexpr contiguous_iterator(    // --
-            pointer_type const ptr,       // --
-            size_type const &count,       // --
+        constexpr contiguous_iterator(          // --
+            pointer_type const pudm_cst_ptr,    // --
+            size_type const &count,             // --
             size_type const &i) noexcept
-            : m_ptr{ptr}, m_count{count}, m_i{i}
+            : m_ptr{pudm_cst_ptr}, m_count{count}, m_i{i}
         {
             if (unlikely(nullptr == m_ptr)) {
                 *this = contiguous_iterator{};

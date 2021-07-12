@@ -67,17 +67,17 @@ namespace bsl
     ///   @tparam T the type of values to add
     ///   @param lhs the left hand side of the operation
     ///   @param rhs the right hand side of the operation
-    ///   @param res the result of the operation
+    ///   @param pmut_cst_res the result of the operation
     ///   @return Returns __builtin_add_overflow(x, y, res)
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    builtin_add_overflow(T const lhs, T const rhs, T *const res) noexcept -> bool
+    builtin_add_overflow(T const lhs, T const rhs, T *const pmut_cst_res) noexcept -> bool
     {
         // This is how Clang presents the builtins, which we are required
         // top use.
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg, hicpp-vararg)
-        if (unlikely(__builtin_add_overflow(lhs, rhs, res))) {
+        if (unlikely(__builtin_add_overflow(lhs, rhs, pmut_cst_res))) {
             integral_overflow_underflow_wrap_error();
             return true;
         }
@@ -92,17 +92,17 @@ namespace bsl
     ///   @tparam T the type of values to subtract
     ///   @param lhs the left hand side of the operation
     ///   @param rhs the right hand side of the operation
-    ///   @param res the result of the operation
+    ///   @param pmut_cst_res the result of the operation
     ///   @return Returns __builtin_sub_overflow(x, y, res)
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    builtin_sub_overflow(T const lhs, T const rhs, T *const res) noexcept -> bool
+    builtin_sub_overflow(T const lhs, T const rhs, T *const pmut_cst_res) noexcept -> bool
     {
         // This is how Clang presents the builtins, which we are required
         // top use.
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg, hicpp-vararg)
-        if (unlikely(__builtin_sub_overflow(lhs, rhs, res))) {
+        if (unlikely(__builtin_sub_overflow(lhs, rhs, pmut_cst_res))) {
             integral_overflow_underflow_wrap_error();
             return true;
         }
@@ -117,17 +117,17 @@ namespace bsl
     ///   @tparam T the type of values to multiply
     ///   @param lhs the left hand side of the operation
     ///   @param rhs the right hand side of the operation
-    ///   @param res the result of the operation
+    ///   @param pmut_cst_res the result of the operation
     ///   @return Returns __builtin_mul_overflow(x, y, res)
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    builtin_mul_overflow(T const lhs, T const rhs, T *const res) noexcept -> bool
+    builtin_mul_overflow(T const lhs, T const rhs, T *const pmut_cst_res) noexcept -> bool
     {
         // This is how Clang presents the builtins, which we are required
         // top use.
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg, hicpp-vararg)
-        if (unlikely(__builtin_mul_overflow(lhs, rhs, res))) {
+        if (unlikely(__builtin_mul_overflow(lhs, rhs, pmut_cst_res))) {
             integral_overflow_underflow_wrap_error();
             return true;
         }
@@ -143,13 +143,13 @@ namespace bsl
     ///   @tparam T the type of values to divide
     ///   @param lhs the left hand side of the operation
     ///   @param rhs the right hand side of the operation
-    ///   @param res the result of the operation
+    ///   @param pmut_cst_res the result of the operation
     ///   @return If no overflow, underflow, wrap occurs, sets *res to
     ///     lhs / rhs and returns false. Otherwise returns true
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    builtin_div_overflow(T const lhs, T const rhs, T *const res) noexcept -> bool
+    builtin_div_overflow(T const lhs, T const rhs, T *const pmut_cst_res) noexcept -> bool
     {
         constexpr bsl::intmax neg_one{static_cast<bsl::intmax>(-1)};
 
@@ -174,10 +174,12 @@ namespace bsl
         }
 
         if constexpr (is_signed<T>::value) {
-            *res = static_cast<T>(static_cast<bsl::intmax>(lhs) / static_cast<bsl::intmax>(rhs));
+            *pmut_cst_res =
+                static_cast<T>(static_cast<bsl::intmax>(lhs) / static_cast<bsl::intmax>(rhs));
         }
         else {
-            *res = static_cast<T>(static_cast<bsl::uintmax>(lhs) / static_cast<bsl::uintmax>(rhs));
+            *pmut_cst_res =
+                static_cast<T>(static_cast<bsl::uintmax>(lhs) / static_cast<bsl::uintmax>(rhs));
         }
 
         return false;
@@ -191,13 +193,13 @@ namespace bsl
     ///   @tparam T the type of values to mod
     ///   @param lhs the left hand side of the operation
     ///   @param rhs the right hand side of the operation
-    ///   @param res the result of the operation
+    ///   @param pmut_cst_res the result of the operation
     ///   @return If no overflow, underflow, wrap occurs, sets *res to
     ///     lhs % rhs and returns false. Otherwise returns true
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    builtin_mod_overflow(T const lhs, T const rhs, T *const res) noexcept -> bool
+    builtin_mod_overflow(T const lhs, T const rhs, T *const pmut_cst_res) noexcept -> bool
     {
         constexpr bsl::intmax neg_one{static_cast<bsl::intmax>(-1)};
 
@@ -222,10 +224,12 @@ namespace bsl
         }
 
         if constexpr (is_signed<T>::value) {
-            *res = static_cast<T>(static_cast<bsl::intmax>(lhs) % static_cast<bsl::intmax>(rhs));
+            *pmut_cst_res =
+                static_cast<T>(static_cast<bsl::intmax>(lhs) % static_cast<bsl::intmax>(rhs));
         }
         else {
-            *res = static_cast<T>(static_cast<bsl::uintmax>(lhs) % static_cast<bsl::uintmax>(rhs));
+            *pmut_cst_res =
+                static_cast<T>(static_cast<bsl::uintmax>(lhs) % static_cast<bsl::uintmax>(rhs));
         }
 
         return false;
@@ -514,11 +518,20 @@ namespace bsl
                 return safe_integral<value_type>::failure();
             }
 
-            if (m_val < other.m_val) {
-                return other;
-            }
+            if constexpr (is_signed<T>::value) {
+                if (static_cast<bsl::intmax>(m_val) < static_cast<bsl::intmax>(other.m_val)) {
+                    return other;
+                }
 
-            return *this;
+                return *this;
+            }
+            else {
+                if (static_cast<bsl::uintmax>(m_val) < static_cast<bsl::uintmax>(other.m_val)) {
+                    return other;
+                }
+
+                return *this;
+            }
         }
 
         /// <!-- description -->
@@ -545,11 +558,20 @@ namespace bsl
                 return safe_integral<value_type>::failure();
             }
 
-            if (m_val < other) {
-                return safe_integral<value_type>{other};
-            }
+            if constexpr (is_signed<T>::value) {
+                if (static_cast<bsl::intmax>(m_val) < static_cast<bsl::intmax>(other)) {
+                    return safe_integral<value_type>{other};
+                }
 
-            return *this;
+                return *this;
+            }
+            else {
+                if (static_cast<bsl::uintmax>(m_val) < static_cast<bsl::uintmax>(other)) {
+                    return safe_integral<value_type>{other};
+                }
+
+                return *this;
+            }
         }
 
         /// <!-- description -->
@@ -590,11 +612,20 @@ namespace bsl
                 return safe_integral<value_type>::failure();
             }
 
-            if (m_val < other.m_val) {
-                return *this;
-            }
+            if constexpr (is_signed<T>::value) {
+                if (static_cast<bsl::intmax>(m_val) < static_cast<bsl::intmax>(other.m_val)) {
+                    return *this;
+                }
 
-            return other;
+                return other;
+            }
+            else {
+                if (static_cast<bsl::uintmax>(m_val) < static_cast<bsl::uintmax>(other.m_val)) {
+                    return *this;
+                }
+
+                return other;
+            }
         }
 
         /// <!-- description -->
@@ -621,11 +652,20 @@ namespace bsl
                 return safe_integral<value_type>::failure();
             }
 
-            if (m_val < other) {
-                return *this;
-            }
+            if constexpr (is_signed<T>::value) {
+                if (static_cast<bsl::intmax>(m_val) < static_cast<bsl::intmax>(other)) {
+                    return *this;
+                }
 
-            return safe_integral<value_type>{other};
+                return safe_integral<value_type>{other};
+            }
+            else {
+                if (static_cast<bsl::uintmax>(m_val) < static_cast<bsl::uintmax>(other)) {
+                    return *this;
+                }
+
+                return safe_integral<value_type>{other};
+            }
         }
 
         /// <!-- description -->
@@ -1292,6 +1332,7 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed shift not supported");
             }
             else {
+                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val <<= rhs;
 
                 if (unlikely(this->invalid())) {
@@ -1382,6 +1423,7 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed shift not supported");
             }
             else {
+                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val >>= rhs;
 
                 if (unlikely(this->invalid())) {
@@ -1472,6 +1514,7 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed and not supported");
             }
             else {
+                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val &= rhs;
 
                 if (unlikely(this->invalid())) {
@@ -1562,6 +1605,7 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed or not supported");
             }
             else {
+                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val |= rhs;
 
                 if (unlikely(this->invalid())) {
@@ -1602,6 +1646,7 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed xor not supported");
             }
             else {
+                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val ^= rhs.get();
 
                 if (unlikely(this->invalid())) {
@@ -1651,6 +1696,7 @@ namespace bsl
                 static_assert(always_false<value_type>(), "signed xor not supported");
             }
             else {
+                // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
                 m_val ^= rhs;
 
                 if (unlikely(this->invalid())) {

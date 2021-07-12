@@ -37,16 +37,16 @@ namespace bsl
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type being queired
-    ///   @param mut_val the value of the type being provided
+    ///   @param pudm_udm_val the value of the type being provided
     ///   @return If this function is given an lvalue reference, it returns
     ///     true. Otherwise this function will return false.
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    example_detector(T &&mut_val) noexcept -> bool
+    example_detector(T &&pudm_udm_val) noexcept -> bool
     {
-        bsl::discard(mut_val);
-        return bsl::is_lvalue_reference<decltype(mut_val)>::value;
+        bsl::discard(pudm_udm_val);
+        return bsl::is_lvalue_reference<decltype(pudm_udm_val)>::value;
     }
 
     /// <!-- description -->
@@ -56,15 +56,15 @@ namespace bsl
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam T The type being queired
-    ///   @param mut_val the value of the type being provided
+    ///   @param pudm_udm_val the value of the type being provided
     ///   @return If this function is given an lvalue reference, it returns
     ///     true. Otherwise this function will return false.
     ///
     template<typename T>
     [[nodiscard]] constexpr auto
-    example_forwarder(T &&mut_val) noexcept -> bool
+    example_forwarder(T &&pudm_udm_val) noexcept -> bool
     {
-        return example_detector(bsl::forward<T>(mut_val));
+        return example_detector(bsl::forward<T>(pudm_udm_val));
     }
 
     /// <!-- description -->

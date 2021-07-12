@@ -34,17 +34,17 @@ namespace
 {
     template<typename T>
     [[nodiscard]] constexpr auto
-    detector(T &&mut_val) noexcept -> bsl::safe_int32
+    detector(T &&pudm_udm_val) noexcept -> bsl::safe_int32
     {
         if constexpr (bsl::is_const<bsl::remove_reference_t<T>>::value) {
             return bsl::to_i32(1);
         }
 
-        if constexpr (bsl::is_lvalue_reference<decltype(mut_val)>::value) {
+        if constexpr (bsl::is_lvalue_reference<decltype(pudm_udm_val)>::value) {
             return bsl::to_i32(2);
         }
 
-        if constexpr (bsl::is_rvalue_reference<decltype(mut_val)>::value) {
+        if constexpr (bsl::is_rvalue_reference<decltype(pudm_udm_val)>::value) {
             return bsl::to_i32(3);
         }
 
@@ -53,9 +53,9 @@ namespace
 
     template<typename T>
     [[nodiscard]] constexpr auto
-    forwarder(T &&mut_val) noexcept -> bsl::safe_int32
+    forwarder(T &&pudm_udm_val) noexcept -> bsl::safe_int32
     {
-        return detector(bsl::forward<T>(mut_val));
+        return detector(bsl::forward<T>(pudm_udm_val));
     }
 
     /// <!-- description -->

@@ -42,11 +42,11 @@ namespace bsl
     {
         bsl::ut_scenario{"make_safe"} = []() noexcept {
             bsl::ut_given{} = []() noexcept {
+                /// NOLINTNEXTLINE(bsl-non-safe-integral-types-are-forbidden)
                 constexpr T val{static_cast<T>(42)};
-                bsl::ut_when{} = [&]() noexcept {
-                    bsl::ut_then{} = [&]() noexcept {
-                        bsl::ut_check(bsl::make_safe(val) == val);
-                    };
+                bsl::ut_then{} = [&]() noexcept {
+                    /// NOLINTNEXTLINE(bsl-non-safe-integral-types-are-forbidden)
+                    bsl::ut_check(bsl::make_safe(val) == val);
                 };
             };
         };

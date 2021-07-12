@@ -43,9 +43,9 @@ namespace
     {
         bsl::ut_scenario{"attempting to destroy nullptr is ignored"} = []() noexcept {
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bool *mut_b{};
+                bool *pmut_mut_b{};
                 bsl::ut_when{} = [&]() noexcept {
-                    bsl::destroy_at(mut_b);
+                    bsl::destroy_at(pmut_mut_b);
                 };
             };
         };

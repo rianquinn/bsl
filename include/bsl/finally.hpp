@@ -66,10 +66,10 @@ namespace bsl
         ///   @include example_finally_overview.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @param mut_func the function to call on destruction
+        ///   @param pudm_udm_func the function to call on destruction
         ///
-        explicit constexpr finally(FUNC_T &&mut_func) noexcept    // --
-            : m_func{bsl::move(mut_func)}, m_invoked{}
+        explicit constexpr finally(FUNC_T &&pudm_udm_func) noexcept    // --
+            : m_func{bsl::move(pudm_udm_func)}, m_invoked{}
         {}
 
         /// <!-- description -->
@@ -79,10 +79,11 @@ namespace bsl
         ///
         /// <!-- inputs/outputs -->
         ///   @param d ignored
-        ///   @param mut_func the function to call on destruction
+        ///   @param pudm_udm_func the function to call on destruction
         ///
-        explicit constexpr finally(bsl::dormant_t const &d, FUNC_T &&mut_func) noexcept    // --
-            : m_func{bsl::move(mut_func)}, m_invoked{true}
+        explicit constexpr finally(
+            bsl::dormant_t const &d, FUNC_T &&pudm_udm_func) noexcept    // --
+            : m_func{bsl::move(pudm_udm_func)}, m_invoked{true}
         {
             bsl::discard(d);
         }

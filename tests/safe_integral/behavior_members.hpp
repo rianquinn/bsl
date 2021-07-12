@@ -107,7 +107,7 @@ namespace bsl
             bsl::ut_given{} = []() noexcept {
                 bsl::safe_integral<T> mut_val{static_cast<T>(42), false};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(mut_val.get() == static_cast<T>(42));
+                    bsl::ut_check(static_cast<bsl::uintmax>(mut_val.get()) == static_cast<bsl::uintmax>(42));
                     bsl::ut_check(!mut_val.invalid());
                 };
             };
@@ -115,7 +115,7 @@ namespace bsl
             bsl::ut_given{} = []() noexcept {
                 bsl::safe_integral<T> const val{static_cast<T>(42), false};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(val.get() == static_cast<T>(42));
+                    bsl::ut_check(static_cast<bsl::uintmax>(val.get()) == static_cast<bsl::uintmax>(42));
                     bsl::ut_check(!val.invalid());
                 };
             };
@@ -123,7 +123,7 @@ namespace bsl
             bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_integral<T> mut_val{static_cast<T>(42), true};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(mut_val.get() == static_cast<T>(0));
+                    bsl::ut_check(static_cast<bsl::uintmax>(mut_val.get()) == static_cast<bsl::uintmax>(0));
                     bsl::ut_check(mut_val.invalid());
                 };
             };
@@ -131,7 +131,7 @@ namespace bsl
             bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_integral<T> const val{static_cast<T>(42), true};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(val.get() == static_cast<T>(0));
+                    bsl::ut_check(static_cast<bsl::uintmax>(val.get()) == static_cast<bsl::uintmax>(0));
                     bsl::ut_check(val.invalid());
                 };
             };
@@ -141,7 +141,7 @@ namespace bsl
             bsl::ut_given{} = []() noexcept {
                 bsl::safe_integral<T> mut_val{static_cast<T>(42), false};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(*mut_val.data() == static_cast<T>(42));
+                    bsl::ut_check(static_cast<bsl::uintmax>(*mut_val.data()) == static_cast<bsl::uintmax>(42));
                     bsl::ut_check(!mut_val.invalid());
                 };
             };
@@ -149,7 +149,7 @@ namespace bsl
             bsl::ut_given{} = []() noexcept {
                 bsl::safe_integral<T> const val{static_cast<T>(42), false};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(*val.data() == static_cast<T>(42));
+                    bsl::ut_check(static_cast<bsl::uintmax>(*val.data()) == static_cast<bsl::uintmax>(42));
                     bsl::ut_check(!val.invalid());
                 };
             };
@@ -157,7 +157,7 @@ namespace bsl
             bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_integral<T> mut_val{static_cast<T>(42), true};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(*mut_val.data() == static_cast<T>(42));
+                    bsl::ut_check(static_cast<bsl::uintmax>(*mut_val.data()) == static_cast<bsl::uintmax>(42));
                     bsl::ut_check(mut_val.invalid());
                 };
             };
@@ -165,7 +165,7 @@ namespace bsl
             bsl::ut_given_at_runtime{} = []() noexcept {
                 bsl::safe_integral<T> const val{static_cast<T>(42), true};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(*val.data() == static_cast<T>(42));
+                    bsl::ut_check(static_cast<uintmax>(*val.data()) == static_cast<bsl::uintmax>(42));
                     bsl::ut_check(val.invalid());
                 };
             };

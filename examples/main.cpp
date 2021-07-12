@@ -425,17 +425,17 @@ namespace
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam FUNC the type of example function to call
-    ///   @param mut_f the example function to call
+    ///   @param pudm_udm_func the example function to call
     ///   @param name the name of the example
     ///
     template<typename FUNC>
     void
-    example(FUNC &&mut_f, bsl::cstr_type const name) noexcept
+    example(FUNC &&pudm_udm_func, bsl::cstr_type const name) noexcept
     {
         bsl::print() << bsl::fmt{"=<80", '='} << bsl::endl;
         bsl::print() << "example: " << name << bsl::endl;
         bsl::print() << bsl::fmt{"-<80", '-'} << bsl::endl;
-        mut_f();
+        pudm_udm_func();
         bsl::print() << bsl::endl;
     }
 }

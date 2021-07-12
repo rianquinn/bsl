@@ -87,7 +87,6 @@ main() noexcept -> bsl::exit_code
     // Defining colors using octals is the standard way of doing this.
     // NOLINTNEXTLINE(bsl-literals-no-octal)
     static_assert(bsl::bold_red == "\033[1;91m");
-    static_assert(bsl::bold_red == bsl::bold_red);
 
     // Defining colors using octals is the standard way of doing this.
     // NOLINTNEXTLINE(bsl-literals-no-octal)

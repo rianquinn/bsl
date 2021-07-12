@@ -853,9 +853,9 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::span<bool> const mut_spn{};
+                bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(!mut_spn);
+                    bsl::ut_check(!spn);
                 };
             };
 
@@ -885,9 +885,9 @@ namespace
             };
 
             bsl::ut_given{} = []() noexcept {
-                bsl::span<bool> const mut_spn{};
+                bsl::span<bool> const spn{};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(mut_spn.size() == bsl::to_umax(0));
+                    bsl::ut_check(spn.size() == bsl::to_umax(0));
                 };
             };
 

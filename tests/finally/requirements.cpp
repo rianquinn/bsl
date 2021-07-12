@@ -38,10 +38,10 @@ main() noexcept -> bsl::exit_code
 {
     bsl::ut_scenario{"verify noexcept"} = []() noexcept {
         bsl::ut_given{} = []() noexcept {
-            bsl::finally test{[]() noexcept {}};
+            bsl::finally mut_test{[]() noexcept {}};
             bsl::ut_then{} = []() noexcept {
-                static_assert(noexcept(test.ignore()));
-                static_assert(noexcept(test.activate()));
+                static_assert(noexcept(mut_test.ignore()));
+                static_assert(noexcept(mut_test.activate()));
             };
         };
     };

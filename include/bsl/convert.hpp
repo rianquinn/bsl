@@ -49,6 +49,14 @@ namespace bsl
     {}
 
     /// <!-- description -->
+    ///   @brief Used to signal to the user during compile-time that a
+    ///     conversion error occurred when attempting to perform a masking
+    ///     operation on a signed integral.
+    inline void
+    conversion_failure_bit_masks_on_signed_integral() noexcept
+    {}
+
+    /// <!-- description -->
     ///   @brief Converts from a bsl::safe_integral of type F to type T.
     ///     This function will perform both widdening and narrowing
     ///     conversions so there is no need to distinguish between the
@@ -1084,6 +1092,111 @@ namespace bsl
     static_assert(2147483647_i32 == bsl::safe_int32::max());
     static_assert(9223372036854775807_i64 == bsl::safe_int64::max());
     static_assert(9223372036854775807_imax == bsl::safe_intmax::max());
+}
+
+// -------------------------------------------------------------------------
+// upper/lower conversion
+// -------------------------------------------------------------------------
+
+namespace bsl
+{
+    /// <!-- description -->
+    ///   @brief Returns ((upper & mask) | bsl::to_umax(lower)) with mask
+    ///     being defined by the number of bits in "lower".
+    ///   @include convert/example_convert_to_umax_upper_lower.hpp
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the type of integral to operate on
+    ///   @param upper the integral to add lower to
+    ///   @param lower the integral to add to upper
+    ///   @return Returns ((upper & mask) | bsl::to_umax(lower)) with mask
+    ///     being defined by the number of bits in "lower".
+    ///
+    template<typename T>
+    [[nodiscard]] constexpr auto
+    to_umax_upper_lower(safe_uintmax const &upper, safe_integral<T> const &lower) noexcept
+        -> safe_uintmax
+    {
+        if constexpr (is_same<T, bsl::uint8>::value) {
+            constexpr auto mask{0xFFFFFFFFFFFFFF00_umax};
+            return ((upper & mask) | bsl::to_umax(lower));
+        }
+
+        if constexpr (is_same<T, bsl::uint16>::value) {
+            constexpr auto mask{0xFFFFFFFFFFFF0000_umax};
+            return ((upper & mask) | bsl::to_umax(lower));
+        }
+
+        if constexpr (is_same<T, bsl::uint32>::value) {
+            constexpr auto mask{0xFFFFFFFF00000000_umax};
+            return ((upper & mask) | bsl::to_umax(lower));
+        }
+
+        if constexpr (is_same<T, bsl::uint64>::value) {
+            return lower;
+        }
+
+        conversion_failure_bit_masks_on_signed_integral();
+        return safe_uintmax::failure();
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns ((upper & mask) | bsl::to_umax(lower)) with mask
+    ///     being defined by the number of bits in "lower".
+    ///   @include convert/example_convert_to_umax_upper_lower.hpp
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the type of integral to operate on
+    ///   @param upper the integral to add lower to
+    ///   @param lower the integral to add to upper
+    ///   @return Returns ((upper & mask) | bsl::to_umax(lower)) with mask
+    ///     being defined by the number of bits in "lower".
+    ///
+    template<typename T>
+    [[nodiscard]] constexpr auto
+    to_umax_upper_lower(bsl::uintmax const upper, safe_integral<T> const &lower) noexcept
+        -> safe_uintmax
+    {
+        return to_umax_upper_lower(safe_uintmax{upper}, lower);
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns ((upper & mask) | bsl::to_umax(lower)) with mask
+    ///     being defined by the number of bits in "lower".
+    ///   @include convert/example_convert_to_umax_upper_lower.hpp
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the type of integral to operate on
+    ///   @param upper the integral to add lower to
+    ///   @param lower the integral to add to upper
+    ///   @return Returns ((upper & mask) | bsl::to_umax(lower)) with mask
+    ///     being defined by the number of bits in "lower".
+    ///
+    template<typename T>
+    [[nodiscard]] constexpr auto
+    to_umax_upper_lower(safe_uintmax const &upper, T const lower) noexcept -> safe_uintmax
+    {
+        return to_umax_upper_lower(upper, safe_integral<T>{lower});
+    }
+
+    /// <!-- description -->
+    ///   @brief Returns ((upper & mask) | bsl::to_umax(lower)) with mask
+    ///     being defined by the number of bits in "lower".
+    ///   @include convert/example_convert_to_umax_upper_lower.hpp
+    ///
+    /// <!-- inputs/outputs -->
+    ///   @tparam T the type of integral to operate on
+    ///   @param upper the integral to add lower to
+    ///   @param lower the integral to add to upper
+    ///   @return Returns ((upper & mask) | bsl::to_umax(lower)) with mask
+    ///     being defined by the number of bits in "lower".
+    ///
+    template<typename T>
+    [[nodiscard]] constexpr auto
+    to_umax_upper_lower(bsl::uintmax const upper, T const lower) noexcept -> safe_uintmax
+    {
+        return to_umax_upper_lower(safe_uintmax{upper}, safe_integral<T>{lower});
+    }
 }
 
 #endif

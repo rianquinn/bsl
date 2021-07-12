@@ -441,7 +441,8 @@ namespace bsl
             bsl::ut_given{} = []() noexcept {
                 bsl::safe_integral<T> const val{static_cast<T>(42)};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(~val == static_cast<T>(~42));
+                    // NOLINTNEXTLINE(bsl-implicit-conversions-forbidden)
+                    bsl::ut_check(~val == static_cast<T>(~static_cast<T>(42)));
                 };
             };
 

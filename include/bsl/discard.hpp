@@ -44,11 +44,11 @@ namespace bsl
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam ARGS the types that define the provided arguments to ignore
-    ///   @param mut_a the arguments to ignore
+    ///   @param pudm_udm_a the arguments to ignore
     ///
     template<typename... ARGS>
     constexpr void
-    discard(ARGS &&...mut_a) noexcept
+    discard(ARGS &&...pudm_udm_a) noexcept
     {}
 }
 

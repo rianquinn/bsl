@@ -37,15 +37,15 @@ namespace bsl
         bool mut_executed2{};
 
         {
-            bsl::finally_assert test1{[&mut_executed1]() noexcept {
+            bsl::finally_assert mut_test1{[&mut_executed1]() noexcept {
                 mut_executed1 = true;
             }};
 
-            bsl::finally_assert test2{[&mut_executed2]() noexcept {
+            bsl::finally_assert mut_test2{[&mut_executed2]() noexcept {
                 mut_executed2 = true;
             }};
 
-            test2.ignore();
+            mut_test2.ignore();
         }
 
         if constexpr (BSL_RELEASE_MODE) {

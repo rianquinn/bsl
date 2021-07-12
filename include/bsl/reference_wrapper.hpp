@@ -68,10 +68,10 @@ namespace bsl
         ///   @include reference_wrapper/example_reference_wrapper_constructor.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @param mut_val the thing to get the address of and store.
+        ///   @param udm_val the thing to get the address of and store.
         ///
-        explicit constexpr reference_wrapper(T &mut_val) noexcept    // --
-            : m_ptr{addressof(mut_val)}
+        explicit constexpr reference_wrapper(T &udm_val) noexcept    // --
+            : m_ptr{addressof(udm_val)}
         {}
 
         /// <!-- description -->
@@ -96,7 +96,7 @@ namespace bsl
         /// <!-- inputs/outputs -->
         ///   @tparam ARGS the types of arguments to pass to the wrapped
         ///     function.
-        ///   @param mut_a the arguments to pass to the wrapped function.
+        ///   @param pudm_udm_a the arguments to pass to the wrapped function.
         ///   @return Returns the result of the wrapped function given the
         ///     provided arguments.
         ///
@@ -105,11 +105,11 @@ namespace bsl
         ///
         template<typename... ARGS>
         [[nodiscard]] constexpr auto
-        operator()(ARGS &&...mut_a) const
-            noexcept(noexcept(invoke(this->get(), bsl::forward<ARGS>(mut_a)...)))
+        operator()(ARGS &&...pudm_udm_a) const
+            noexcept(noexcept(invoke(this->get(), bsl::forward<ARGS>(pudm_udm_a)...)))
                 -> invoke_result_t<T &, ARGS...>
         {
-            return invoke(this->get(), bsl::forward<ARGS>(mut_a)...);
+            return invoke(this->get(), bsl::forward<ARGS>(pudm_udm_a)...);
         }
     };
 

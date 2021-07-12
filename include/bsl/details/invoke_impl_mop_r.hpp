@@ -63,17 +63,18 @@ namespace bsl::details
         ///   @tparam T1 the type that defines the provided object. Note
         ///     that normally, U == T, but if inheritance is used, it might
         ///     not which is why U is provided instead of just using T.
-        ///   @param mut_f a pointer to the function being called.
-        ///   @param mut_val1 a reference wrapper to the object for which the
+        ///   @param pudm_udm_func a pointer to the function being called.
+        ///   @param pudm_udm_val1 a reference wrapper to the object for which the
         ///     function is called from.
-        ///   @return Returns the result of calling "f" from "mut_val1" with "tn"
+        ///   @return Returns the result of calling "f" from "pudm_udm_val1" with "tn"
         ///
         template<typename FUNC, typename U, typename T1>
         [[maybe_unused]] static constexpr auto
-        call(FUNC U::*mut_f, T1 &&mut_val1) noexcept(noexcept(mut_val1.get().*mut_f))    // --
-            -> decltype(mut_val1.get().*mut_f)
+        call(FUNC U::*pudm_udm_func, T1 &&pudm_udm_val1) noexcept(
+            noexcept(pudm_udm_val1.get().*pudm_udm_func))    // --
+            -> decltype(pudm_udm_val1.get().*pudm_udm_func)
         {
-            return mut_val1.get().*mut_f;
+            return pudm_udm_val1.get().*pudm_udm_func;
         }
 
     protected:

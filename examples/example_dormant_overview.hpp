@@ -37,15 +37,15 @@ namespace bsl
         bool mut_executed2{};
 
         {
-            bsl::finally test1{bsl::dormant, [&mut_executed1]() noexcept {
+            bsl::finally mut_test1{bsl::dormant, [&mut_executed1]() noexcept {
                                    mut_executed1 = true;
                                }};
 
-            bsl::finally test2{bsl::dormant, [&mut_executed2]() noexcept {
+            bsl::finally mut_test2{bsl::dormant, [&mut_executed2]() noexcept {
                                    mut_executed2 = true;
                                }};
 
-            test1.activate();
+            mut_test1.activate();
         }
 
         if (mut_executed1) {

@@ -47,10 +47,10 @@ namespace fmt_test
 
         /// @brief stores the total number of chars that have been outputted
         // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-        constinit inline bsl::safe_uintmax g_fmt_test_num{};
+        constinit inline bsl::safe_uintmax g_mut_fmt_test_num{};
         /// @brief stores the chars that have been outputted
         // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-        constinit inline bsl::array<bsl::char_type, FMT_TEST_BUF_SIZE.get()> g_fmt_test_buf{};
+        constinit inline bsl::array<bsl::char_type, FMT_TEST_BUF_SIZE.get()> g_mut_fmt_test_buf{};
     }
 
     /// <!-- description -->
@@ -62,11 +62,11 @@ namespace fmt_test
     inline void
     reset() noexcept
     {
-        for (bsl::safe_uintmax mut_i{}; mut_i < details::g_fmt_test_buf.size(); ++mut_i) {
-            *details::g_fmt_test_buf.at_if(mut_i) = static_cast<bsl::char_type>(0);
+        for (bsl::safe_uintmax mut_i{}; mut_i < details::g_mut_fmt_test_buf.size(); ++mut_i) {
+            *details::g_mut_fmt_test_buf.at_if(mut_i) = static_cast<bsl::char_type>(0);
         }
 
-        details::g_fmt_test_num = static_cast<bsl::uintmax>(0);
+        details::g_mut_fmt_test_num = static_cast<bsl::uintmax>(0);
     }
 
     /// <!-- description -->
@@ -81,12 +81,12 @@ namespace fmt_test
     [[nodiscard]] inline auto
     was_this_outputted(bsl::cstr_type const str) noexcept -> bool
     {
-        if (bsl::builtin_strlen(str) != details::g_fmt_test_num) {
+        if (bsl::builtin_strlen(str) != details::g_mut_fmt_test_num) {
             return false;
         }
 
         return __builtin_memcmp(
-                   details::g_fmt_test_buf.data(), str, details::g_fmt_test_num.get()) == 0;
+                   details::g_mut_fmt_test_buf.data(), str, details::g_mut_fmt_test_num.get()) == 0;
     }
 }
 
@@ -101,9 +101,10 @@ namespace bsl::details
     inline void
     putc_stdout(bsl::char_type const c) noexcept
     {
-        auto const i{fmt_test::details::g_fmt_test_num};
-        if (auto *const ptr{fmt_test::details::g_fmt_test_buf.at_if(i)}) {    // GRCOV_EXCLUDE_BR
-            *ptr = c;
+        auto const i{fmt_test::details::g_mut_fmt_test_num};
+        if (auto *const pmut_ptr{
+                fmt_test::details::g_mut_fmt_test_buf.at_if(i)}) {    // GRCOV_EXCLUDE_BR
+            *pmut_ptr = c;
         }
         else {
             // This is required by stdio
@@ -112,7 +113,7 @@ namespace bsl::details
             exit(1);                                                // GRCOV_EXCLUDE
         }
 
-        ++fmt_test::details::g_fmt_test_num;
+        ++fmt_test::details::g_mut_fmt_test_num;
     }
 
     /// <!-- description -->

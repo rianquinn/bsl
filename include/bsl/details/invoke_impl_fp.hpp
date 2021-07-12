@@ -59,17 +59,17 @@ namespace bsl::details
         ///   @tparam FUNC the type that defines the function being called
         ///   @tparam TN the types that define the arguments passed to the
         ///     provided function when called.
-        ///   @param mut_f a pointer to the function being called.
-        ///   @param mut_valn the arguments passed to the function mut_f when called.
-        ///   @return Returns the result of calling "mut_f" with "mut_valn"
+        ///   @param pudm_udm_func a pointer to the function being called.
+        ///   @param pudm_udm_valn the arguments passed to the function pudm_udm_func when called.
+        ///   @return Returns the result of calling "pudm_udm_func" with "pudm_udm_valn"
         ///
         template<typename FUNC, typename... TN>
         [[maybe_unused]] static constexpr auto
-        call(FUNC &&mut_f, TN &&...mut_valn) noexcept(
-            noexcept(bsl::forward<FUNC>(mut_f)(bsl::forward<TN>(mut_valn)...)))
-            -> decltype(bsl::forward<FUNC>(mut_f)(bsl::forward<TN>(mut_valn)...))
+        call(FUNC &&pudm_udm_func, TN &&...pudm_udm_valn) noexcept(
+            noexcept(bsl::forward<FUNC>(pudm_udm_func)(bsl::forward<TN>(pudm_udm_valn)...)))
+            -> decltype(bsl::forward<FUNC>(pudm_udm_func)(bsl::forward<TN>(pudm_udm_valn)...))
         {
-            return bsl::forward<FUNC>(mut_f)(bsl::forward<TN>(mut_valn)...);
+            return bsl::forward<FUNC>(pudm_udm_func)(bsl::forward<TN>(pudm_udm_valn)...);
         }
 
     protected:

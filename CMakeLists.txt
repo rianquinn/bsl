@@ -24,9 +24,9 @@ project(bsl CXX)
 
 include(cmake/init_build.cmake)
 
-# if(BUILD_EXAMPLES AND NOT BSL_BUILD_EXAMPLES_OVERRIDE)
-#     add_subdirectory(examples)
-# endif()
+if(BUILD_EXAMPLES AND NOT BSL_BUILD_EXAMPLES_OVERRIDE)
+    add_subdirectory(examples)
+endif()
 
 if(BUILD_TESTS AND NOT BSL_BUILD_TESTS_OVERRIDE)
     add_subdirectory(tests)

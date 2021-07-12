@@ -36,14 +36,14 @@ namespace bsl
     ///
     /// <!-- inputs/outputs -->
     ///   @tparam ARG the type that define the provided argument
-    ///   @param mut_a the arguments check
+    ///   @param pudm_udm_a the arguments check
     ///   @return Returns the boolean output of __builtin_expect
     ///
     template<typename ARG>
     [[nodiscard]] constexpr auto
-    unlikely(ARG &&mut_a) noexcept -> bool
+    unlikely(ARG &&pudm_udm_a) noexcept -> bool
     {
-        return __builtin_expect(!!(mut_a), 0L) != 0L;
+        return __builtin_expect(!!(pudm_udm_a), 0L) != 0L;
     }
 
     /// <!-- description -->

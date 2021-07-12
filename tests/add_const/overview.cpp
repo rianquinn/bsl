@@ -26,8 +26,6 @@
 #include <bsl/is_same.hpp>
 #include <bsl/ut.hpp>
 
-#include <bsl/convert.hpp>
-
 /// <!-- description -->
 ///   @brief Main function for this unit test. If a call to bsl::ut_check() fails
 ///     the application will fast fail. If all calls to bsl::ut_check() pass, this
@@ -39,31 +37,11 @@
 [[nodiscard]] auto
 main() noexcept -> bsl::exit_code
 {
-    constexpr auto case1{23_u64};
-    constexpr auto case2{42_u64};
-    bsl::safe_uint64 mut_yourmom{case2};
-
-    switch(mut_yourmom.get()) {
-        case case1.get(): {
-            bsl::print() << "23\n";
-            break;
-        }
-
-        case case2.get(): {
-            bsl::print() << "42\n";
-            break;
-        }
-
-        default: {
-            break;
-        }
-    }
-
-    // static_assert(bsl::is_same<bsl::add_const_t<bool>, bool const>::value);
-    // static_assert(bsl::is_same<bsl::add_const_t<bool *>, bool *const>::value);
-    // static_assert(bsl::is_same<bsl::add_const_t<bool &>, bool &>::value);
-    // static_assert(bsl::is_same<bsl::add_const_t<bool(bool)>, bool(bool)>::value);
-    // static_assert(bsl::is_same<bsl::add_const_t<bool const>, bool const>::value);
+    static_assert(bsl::is_same<bsl::add_const_t<bool>, bool const>::value);
+    static_assert(bsl::is_same<bsl::add_const_t<bool *>, bool *const>::value);
+    static_assert(bsl::is_same<bsl::add_const_t<bool &>, bool &>::value);
+    static_assert(bsl::is_same<bsl::add_const_t<bool(bool)>, bool(bool)>::value);
+    static_assert(bsl::is_same<bsl::add_const_t<bool const>, bool const>::value);
 
     return bsl::ut_success();
 }

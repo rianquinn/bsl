@@ -201,9 +201,9 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::arguments const mut_args{bsl::to_umax(0), nullptr};
+                bsl::arguments const args{bsl::to_umax(0), nullptr};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(mut_args.remaining().is_zero());
+                    bsl::ut_check(args.remaining().is_zero());
                 };
             };
         };
@@ -287,9 +287,9 @@ namespace
             };
 
             bsl::ut_given_at_runtime{} = []() noexcept {
-                bsl::arguments const mut_args{bsl::to_umax(0), nullptr};
+                bsl::arguments const args{bsl::to_umax(0), nullptr};
                 bsl::ut_then{} = [&]() noexcept {
-                    bsl::ut_check(mut_args.size().is_zero());
+                    bsl::ut_check(args.size().is_zero());
                 };
             };
         };

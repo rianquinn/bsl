@@ -143,11 +143,11 @@ namespace bsl
         ///   @include span/example_span_ptr_count_constructor.hpp
         ///
         /// <!-- inputs/outputs -->
-        ///   @param ptr a pointer to the array being spaned.
+        ///   @param pudm_ptr a pointer to the array being spaned.
         ///   @param count the number of elements in the array being spaned.
         ///
-        constexpr span(pointer_type const ptr, size_type const &count) noexcept    // --
-            : m_ptr{ptr}, m_count{count.get()}
+        constexpr span(pointer_type const pudm_ptr, size_type const &count) noexcept    // --
+            : m_ptr{pudm_ptr}, m_count{count.get()}
         {
             static_assert(sizeof(span<T>) == details::EXPECTED_SPAN_SIZE);
             static_assert(is_standard_layout<span<T>>::value);
